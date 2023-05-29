@@ -1,0 +1,212 @@
+# MST_with_descriptions.yaml expects objects (includes)
+# from general_parameters_with_descriptions.yaml in the same namespace
+
+# Beginning of schema
+general_parameters:
+    description         : str(equals='The general parameter of the experiment',
+                                      required=False)
+    value               : include('General_parameters')
+
+method_specific_parameters:
+    experiment_type:
+        description     : str(equals='Type of physical parameter measured',
+                                      required=False)
+        value           : enum('Affinity','Concentration', 'Other')
+
+    signal_type:
+        description     : str(equals='Which type of signal was measured',
+                                      required=False)
+        value           : enum('Initial intensity','TRIC/MST', 'Spectral shift')
+
+    label_free:
+        description     : str(equals='Whether or not this was a label free type
+                                      of experiment', required=False)
+        value           : bool()
+
+    excitation_led_color:
+        description     : str(equals='The color of the excitation LED used for
+                                      the experiment', required=False)
+
+        value           : enum('RED (ex 605–645nm, em 660–730nm)',
+                               'RED (ex 610–645nm, em 680–730nm)',
+                               'GREEN (ex 555-585nm, em 605-690nm)',
+                               'GREEN (ex 515-550nm, em 565-600nm)',
+                               'BLUE (ex 480–500nm, em 515–550nm)',
+                               'BLUE (ex 460–500nm, em 515–560nm)',
+                               'UV (ex 260-300nm, em 330-380nm)')
+
+    excitation_led_power:
+        description     : str(equals='The power, in percentage, of the
+                                      excitation LED used in experiment',
+                                      required=False)
+        value           : int(min=0, max=100)
+
+    ir_mst_laser_power:
+        description     : str(equals='The power, in percentage, of the infrared
+                                      LASER used in experiment', required=False)
+        value           : int(min=0, max=100)
+
+    measurements:
+        description     : str(equals='List of the information about each
+                                      measurement, including, target(s),
+                                      ligand(s), chemical environment, and
+                                      position of the sample within the
+                                      instrument', required=False)
+        value           : list(include('Measurement'), min=0)
+
+    data_analysis:
+        description     : str(equals='Details of how the data was processed and
+                                      model in order to derive parameters
+                                      from it', required=False)
+        value           : list(include('MST_data_analysis'), min=1)
+
+# End of schema
+
+---
+# Support objects (includes)
+MST_data_analysis:
+    derived_parameter:
+        description     : str(equals='Link to a derived parameter that was
+                                      defined in the general parameters',
+                                      required=False)
+
+        value           : link(target='derived-parameter')
+
+
+    f_cold_and_hot:
+        description     : str(equals='If the data was analyzed with time windows
+                                      corresponding to fluorescence before and
+                                      after an IR laser was heating the sample
+                                      the edges of the time windows can be
+                                      specified here', required=False)
+        value           : include('F_cold_and_hot', required=False)
+
+    data_processing_steps:
+        description     : str(equals='Describe the steps in the data analysis
+                                      prior to fitting (removing outliers in the
+                                      raw data, applying data filter, placing
+                                      data at same start time etc. )',
+                                      required=False)
+
+        value           : list(include('Processing_step'), required=False)
+
+    data_fitting:
+        description     : str(equals='The details of how data fitting of the
+                                      data to obtain the derived parameter was
+                                      performed', required=False)
+        value           : include('Data_fitting')
+
+
+F_cold_and_hot:
+    time_unit:
+        description     : str(equals='The unit of time used for reporting
+                                      measurement data', required=False)
+        value           : include('TIME_UNITS')
+    f_cold_start:
+        description     : str(equals='Numerical value of the start point of time
+                                      interval used to establish the initial
+                                      fluorescence, F_cold', required=False)
+        value           : num(min=-100)
+
+
+    f_cold_end:
+        description     : str(equals='Numerical value of the end point of time
+                                      interval used to establish the initial
+                                      fluorescence, F_cold', required=False)
+        value           : num(min=-100)
+
+    f_hot_start:
+        description     : str(equals='Numerical value of the start point of time
+                                      interval used to establish the
+                                      fluorescence temperature induced change in
+                                      fluorescence, F_hot', required=False)
+        value           : num(min=0)
+
+    f_hot_end:
+        description     : str(equals='Numerical value of the end point of time
+                                      interval used to establish the
+                                      fluorescence temperature induced change in
+                                      fluorescence, F_hot', required=False)
+        value           : num(min=0)
+
+
+Measurement:
+    name:
+        description     : str(equals='Name (id) of the measurement which must be
+                                      unique within a record (i.e. triplicates
+                                      must be named individually in the raw data
+                                      file). The name must allow location of the
+                                      measurement data within the raw data file
+                                      as well as processed data files if these
+                                      are present', required=False)
+        value           : str()
+
+    position:
+        description     : str(equals='Position of the measured sample within the
+                                      instrument', required=False)
+        value           : keyword()
+
+    sample:
+        description     : str(equals='Information about the sample including',
+                                      required=False)
+        value           : include('Sample')
+
+    measured_data:
+        x_data:
+            description : str(equals='Values for the independent variable,
+                                      normally time, of the measured data',
+                                      required=False)
+            value       : include('Measured_data_series')
+
+        y_data:
+            description : str(equals='Values for the dependent variable,
+                                      normally fluorescence intensity, of the
+                                      measured data', required=False)
+            value       : include('Measured_data_series')
+
+Sample:
+    targets:
+        description     : str(equals='List of names (ids), from the entities of
+                                      interest defined in the general
+                                      parameters, of directly measured entities
+                                      and entities at constant concentration for
+                                      a series of measurements and their
+                                      concentration', required=False)
+        value           : list(include('Entity_constituent'), min=1)
+
+    ligands:
+        description     : str(equals='List of names (ids) of entities (from the
+                                      entities of interest defined in the
+                                      general parameters) that were used to
+                                      alter the behavior of the target(s) or
+                                      entities present at varying concentrations
+                                      for a series of measurements and their
+                                      concentration', required=False)
+        value           : list(include('Entity_constituent'))
+
+    chemical_environment:
+        description     : str(equals='Name (id) of the chemical environment of
+                                      the sample (from the chemical environments
+                                      defined in the general parameters)',
+                                      required=False)
+        value           : link(target='chemical-environment')
+
+    container:
+        description     : str(equals='The container the sample was in',
+                                      required=False)
+        value           : enum('Monolith Standard Capillary',
+                               'Monolith Premium Capillary',
+                               'Monolith LabelFree Capillary',
+                               'Monolith LabelFree Premium Capillary',
+                               'Monolith NT.Automated Capillary Chip',
+                               'Monolith NT.Automated Premium Capillary Chip',
+                               'Monolith NT.Automated LabelFree Capillary Chip',
+                               'Monolith NT.Automated LabelFree Premium
+                                Capillary Chip',
+                               '384-well plate',
+                               'other')
+
+    preparation:
+        description     : str(equals='List of steps taken to prepare the
+                                      sample', required=False)
+        value           : list(include('Step'),required=False)

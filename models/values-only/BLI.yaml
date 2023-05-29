@@ -1,0 +1,63 @@
+general_parameters: include('General_parameters')
+method_specific_parameters:
+  experiment_type: enum('Affinity','Quantification', 'Other')
+  plates: list(include('Plate'), min=1)
+  sensors: list(include('Sensor'), min=1)
+  measurement_protocol: list(include('BLI_protocol_step'), min=1)
+  measurements: list(include('BLI_Measurement'), min=1)
+  data_analysis: list(include('BLI_data_analysis'), min=1)
+---
+BLI_Measurement:
+  sensor: link(target='bli-sensor')
+  measurement_protocol_step: link(target='bli-protocol-step')
+  sample: include('Sample')
+  measured_data:
+    time: include('Measured_data_series')
+    response: include('Measured_data_series')
+Sample:
+  plate: link(target='plate')
+  well_position: keyword()
+  chemical_environment: link(target='chemical-environment')
+  analytes: list(include('Entity_constituent'), required=False)
+  temperature: include('Temperature', required=False)
+  preparation_protocol: list(include('Step'), required=False)
+BLI_protocol_step:
+  id: link_target(name='bli-protocol-step')
+  name: str()
+  type: enum('Association', 'Baseline', 'Dissociation', 'Regeneration', 'Load', 'Wash',
+    'Activation')
+  start_time: include('Time_duration')
+  time_length: include('Time_duration')
+  shaking_speed: include('Shaking_speed')
+Sensor:
+  id: link_target(name='bli-sensor')
+  name: str()
+  ligand_information: include('Ligand_information', required=False)
+  sensor_id: str(required=False)
+  surface_properties: str(required=False)
+  supplier: include('Supplier')
+  hydration_time: include('Time_duration', required=False)
+  previously_used: bool(required=False)
+Ligand_information:
+  ligand: link(target='entity', required=False)
+  ligand_immobilization_chemistry: str(required=False)
+  ligand_immobilization_protocol: list(include('Step'), required=False)
+Plate:
+  id: link_target(name='plate')
+  name: str()
+  wells: enum(96,384)
+  type: str()
+  supplier: include('Supplier')
+  sealing: str(required=False)
+  surface_modification: include('Plate_surface_modification', required=False)
+Plate_surface_modification:
+  type: str(required=False)
+  protocol: list(include('Step'))
+Shaking_speed:
+  value: int(min=0)
+  value_error: include('Value_error', required=False)
+  unit: enum('RPM')
+BLI_data_analysis:
+  derived_parameter: link(target='derived-parameter')
+  data_processing_steps: list(include('Processing_step'), required=False)
+  data_fitting: include('Data_fitting')

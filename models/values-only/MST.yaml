@@ -1,0 +1,42 @@
+general_parameters: include('General_parameters')
+method_specific_parameters:
+  experiment_type: enum('Affinity','Concentration', 'Other')
+  signal_type: enum('Initial intensity','TRIC/MST', 'Spectral shift')
+  label_free: bool()
+  excitation_led_color: enum('RED (ex 605–645nm, em 660–730nm)', 'RED (ex 610–645nm,
+    em 680–730nm)', 'GREEN (ex 555-585nm, em 605-690nm)', 'GREEN (ex 515-550nm, em
+    565-600nm)', 'BLUE (ex 480–500nm, em 515–550nm)', 'BLUE (ex 460–500nm, em 515–560nm)',
+    'UV (ex 260-300nm, em 330-380nm)')
+  excitation_led_power: int(min=0, max=100)
+  ir_mst_laser_power: int(min=0, max=100)
+  measurements: list(include('Measurement'), min=0)
+  data_analysis: list(include('MST_data_analysis'), min=1)
+---
+MST_data_analysis:
+  derived_parameter: link(target='derived-parameter')
+  f_cold_and_hot: include('F_cold_and_hot', required=False)
+  data_processing_steps: list(include('Processing_step'), required=False)
+  data_fitting: include('Data_fitting')
+F_cold_and_hot:
+  time_unit: include('TIME_UNITS')
+  f_cold_start: num(min=-100)
+  f_cold_end: num(min=-100)
+  f_hot_start: num(min=0)
+  f_hot_end: num(min=0)
+Measurement:
+  name: str()
+  position: keyword()
+  sample: include('Sample')
+  measured_data:
+    x_data: include('Measured_data_series')
+    y_data: include('Measured_data_series')
+Sample:
+  targets: list(include('Entity_constituent'), min=1)
+  ligands: list(include('Entity_constituent'))
+  chemical_environment: link(target='chemical-environment')
+  container: enum('Monolith Standard Capillary', 'Monolith Premium Capillary', 'Monolith
+    LabelFree Capillary', 'Monolith LabelFree Premium Capillary', 'Monolith NT.Automated
+    Capillary Chip', 'Monolith NT.Automated Premium Capillary Chip', 'Monolith NT.Automated
+    LabelFree Capillary Chip', 'Monolith NT.Automated LabelFree Premium Capillary
+    Chip', '384-well plate', 'other')
+  preparation: list(include('Step'),required=False)

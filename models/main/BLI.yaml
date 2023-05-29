@@ -1,0 +1,311 @@
+# BLI_with_descriptions.yaml expects objects (includes) from
+# general_parameters_with_descriptions.yaml in the same namespace
+
+
+# Beginning of schema
+general_parameters:
+    description         : str(equals='The general information of the
+                                      measurements', required=False)
+    value               : include('General_parameters')
+
+method_specific_parameters:
+    experiment_type:
+        description     : str(equals='Which type of parameter is sought with the
+                                      measurements', required=False)
+        value           : enum('Affinity','Quantification', 'Other')
+
+    plates              :
+        description     : str(equals='List of the plate types used for the
+                                      measurements',required=False)
+        value           : list(include('Plate'), min=1)
+
+    sensors:
+        description     : str(equals='List of the senors used for the
+                                  measurements, reference sensors included',
+                                      required=False)
+        value           : list(include('Sensor'), min=1)
+
+    measurement_protocol:
+        description     : str(equals='List of the steps in the measurement
+                                      protocol', required=False)
+        value           : list(include('BLI_protocol_step'), min=1)
+
+    measurements:
+        description     : str(equals='List of measurement where each step from
+                                      each sensor is considered a single
+                                      measurement', required=False)
+        value           : list(include('BLI_Measurement'), min=1)
+
+    data_analysis:
+        description     : str(equals='Details of how the data was processed and
+                                      model in order to derive parameters
+                                      from it', required=False)
+        value           : list(include('BLI_data_analysis'), min=1)
+
+# End of schema
+
+---
+# Support objects (includes)
+BLI_Measurement:
+    sensor:
+        description     : str(equals='link to the sensor used for the
+                                      measurement',required=False)
+        value           : link(target='bli-sensor')
+
+    measurement_protocol_step:
+        description     : str(equals='link to one of the measurement steps',
+                                      required=False)
+        value           : link(target='bli-protocol-step')
+
+    sample:
+        description     : str(equals='Sample the sensor was in contact with
+                                      during the measurement', required=False)
+        value           : include('Sample')
+
+    measured_data:
+        time:
+            description     : str(equals='Where the measured data time data is
+                                          stored along side an ID and the
+                                          unit', required=False)
+            value           : include('Measured_data_series')
+
+        response:
+            description     : str(equals='Where the measured response data is
+                                          stored along side an ID and the unit',
+                                          required=False)
+            value           : include('Measured_data_series')
+
+Sample:
+    plate:
+        description     : str(equals='link to one of the plates',
+                                      required=False)
+        value           : link(target='plate')
+
+    well_position:
+        description     : str(equals='The position the well (in the plate) where
+                                      the sample was during the measurement',
+                                      required=False)
+        value           : keyword()
+
+    chemical_environment:
+        description     : str(equals='Name (id) of the chemical environment of
+                                      the sample (from the chemical environments
+                                      defined in the general parameters)',
+                                      required=False)
+        value           : link(target='chemical-environment')
+
+    analytes:
+        description     : str(equals='List of names (ids) of entities (from the
+                                      entities of interest defined in the
+                                      general parameters) that was used to alter
+                                      the behavior of the target(s) or entities
+                                      present at varying concentrations for a
+                                      series of measurements and their
+                                      concentrations', required=False)
+        value           : list(include('Entity_constituent'), required=False)
+
+    temperature:
+        description     : str(equals='Temperature of the sample while being
+                                      measured',required=False)
+        value           : include('Temperature', required=False)
+
+    preparation_protocol:
+        description     : str(equals='List of steps taken to prepare the
+                                      sample', required=False)
+        value           : list(include('Step'), required=False)
+
+BLI_protocol_step:
+    id:
+        description     : str(equals='id to be used for internal links',
+                                      required=False)
+        value           : link_target(name='bli-protocol-step')
+
+    name:
+        description     : str(equals='Descriptive name (id) of the a step in the
+                                      measurement protocol which must be unique
+                                      within a record', required=False)
+        value           : str()
+
+    type:
+        description     : str(equals='Which type of step in the measurement
+                                      protocol this refers to', required=False)
+        value           : enum('Association', 'Baseline', 'Dissociation',
+                               'Regeneration', 'Load', 'Wash', 'Activation')
+
+    start_time:
+        description     : str(equals='The numerical value of the start point of
+                                      the measurement step relative to the
+                                      beginning of the measurement in the units
+                                      defined in the general parameters',
+                                      required=False)
+        value           : include('Time_duration')
+
+    time_length:
+        description     : str(equals='The numerical value of the total time of
+                                      the measurement step took in the units
+                                      defined in the general parameters',
+                                      required=False)
+        value           : include('Time_duration')
+
+    shaking_speed:
+        description     : str(equals='The numerical value of the shaking speed
+                                      of the plate during the measurement step
+                                      in the units defined in the general
+                                      parameters', required=False)
+        value           : include('Shaking_speed')
+
+Sensor:
+    id:
+        description     : str(equals='id to be used for internal links',
+                                      required=False)
+        value           : link_target(name='bli-sensor')
+
+    name:
+        description     : str(equals='Descriptive name of the sensor',
+                                      required=False)
+        value           : str()
+
+    ligand_information:
+        description     : str(equals='Information about the ligand and how it
+                                      was immobilized', required=False)
+        value           : include('Ligand_information', required=False)
+
+    sensor_id:
+        description     : str(equals='The id of the sensor as given by the
+                                      supplier', required=False)
+        value           : str(required=False)
+
+    surface_properties:
+        description     : str(equals='The type of surface properties the sensor
+                                      has, e.g. Protein A', required=False)
+        value           : str(required=False)
+
+    supplier:
+        description     : str(equals='Information about the supplier of the
+                                      senor',required=False)
+        value           : include('Supplier')
+
+
+    hydration_time:
+        description     : str(equals='How long the sensor was hydrated before
+                                      being employed ',required=False)
+        value           : include('Time_duration', required=False)
+
+    previously_used:
+        description     : str(equals='Whether or not the sensor was used for
+                                      previous measurements', required=False)
+        value           : bool(required=False)
+
+
+Ligand_information:
+    ligand:
+        description     : str(equals='Name (id) of the ligand (entity that is
+                                      immobilized, from the list of entities of
+                                      interest defined in the general
+                                      parameters)', required=False)
+        value           : link(target='entity', required=False)
+
+    ligand_immobilization_chemistry:
+        description     : str(equals='The type of chemistry on ligands and
+                                      surface that allows for immobilization of
+                                      the ligands on the surface of the senor',
+                                      required=False)
+        value           : str(required=False)
+
+    ligand_immobilization_protocol:
+        description     : str(equals='List of steps for immobilizing the ligand
+                                      on the surface of the sensor',
+                                      required=False)
+        value           : list(include('Step'), required=False)
+
+
+Plate:
+    id:
+        description     : str(equals='id to be used for internal links',
+                                      required=False)
+        value           : link_target(name='plate')
+
+    name:
+        description     : str(equals='Name (id) of the plate which must be
+                                      unique within a record', required=False)
+        value           : str()
+
+    wells:
+        description     : str(equals='Number of wells in the plate',
+                                      required=False)
+        value           : enum(96,384)
+
+    type:
+        description     : str(equals='The type of the plate', required=False)
+        value           : str()
+
+    supplier:
+        description     : str(equals='Information about the supplier of the
+                                      plate',required=False)
+        value           : include('Supplier')
+
+    sealing:
+        description     : str(equals='The type of sealing used to seal the top
+                                      of the plate', required=False)
+        value           : str(required=False)
+
+    surface_modification:
+        description     : str(equals='The type of sealing used to seal the top
+                                      of the plate', required=False)
+        value           : include('Plate_surface_modification', required=False)
+
+
+Plate_surface_modification:
+        type:
+            description : str(equals='The expected type of surface of the wells
+                                      after the modification (e.g. BSA coated)',
+                                      required=False)
+            value       : str(required=False)
+
+        protocol:
+            description : str(equals='List of protocol steps used to modify the
+                                      surface of the wells', required=False)
+            value       : list(include('Step'))
+
+Shaking_speed:
+    value:
+        description     : str(equals='The numerical value of the shaking speed
+                                      of the plate during the measurement step
+                                      in the units defined in the general
+                                      parameters', required=False)
+        value           : int(min=0)
+
+    value_error:
+        description     : str(equals='The reported error of the value of the
+                                      shaking speed (e.g. standard deviation,
+                                      % error)', required=False)
+        value           : include('Value_error', required=False)
+
+    unit:
+        description     : str(equals='The reported error of the value of the
+                                      shaking speed (e.g. standard deviation,
+                                      % error)', required=False)
+        value           : enum('RPM')
+
+BLI_data_analysis:
+    derived_parameter:
+        description     : str(equals='Link to a derived parameter that was
+                                      defined in the general parameters',
+                                      required=False)
+
+        value           : link(target='derived-parameter')
+
+    data_processing_steps:
+        description     : str(equals='Describe the steps in the data analysis
+                                      prior to fitting (removing outliers in the
+                                      raw data, applying data filter, placing
+                                      data at same start time etc. )',
+                                      required=False)
+
+        value           : list(include('Processing_step'), required=False)
+
+    data_fitting:
+        description     : str(equals='The details of how data fitting of the
+                                      data to obtain the derived parameter was
+                                      performed', required=False)
+        value           : include('Data_fitting')

@@ -1,0 +1,384 @@
+General_parameters:
+  record:
+    publisher: keyword(equals='MBDB')
+    resource_type_general: keyword(equals='dataset')
+    resource_type: keyword()
+    access_rights: enum('open access', 'embargoed access', 'restricted access')
+    metadata_access_rights: enum('open access', 'embargoed access', 'restricted access')
+    title: str()
+    id: keyword()
+    identifier: database_id()
+    measurement_group_id: keyword(required=False)
+    project: include('Project', required=False)
+    deposition_date: day()
+    date_available: day(required=False)
+    version: keyword()
+    subject_category: keyword(required=True)
+    keywords: list(keyword())
+  associated_publications: include('Associated_publications', required=False)
+  depositors:
+    depositor: include('Person')
+    principal_contact: include('Person')
+    contributors: list(nested_include('Person'), required=False)
+  funding_reference: list(include('Grant'), required=False)
+  technique: include('SUPPORTED_TECHNIQUES')
+  instrument:
+    manufacturer: include('COMPANIES')
+    name: str()
+    model: str(required=False)
+    performance_test: include('Performance_test', required=False)
+  raw_data_information:
+    collection_start_time: day()
+    file_information: list(include('File'))
+  physical_environment_at_sample_handling:
+    temperature: include('Temperature', required=False)
+    pressure: include('Pressure', required=False)
+    humidity: include('Humidity', required=False)
+    atmosphere: include('Atmosphere', required=False)
+  chemical_information:
+    chemical_environments: list(nested_include('Chemical_environment'), min=1)
+    entities_of_interest: list(nested_include('Entity'), min=1)
+  derived_parameters: list(nested_include('Derived_parameter'), required=False)
+---
+Entity_base:
+  id: link_target(name="entity")
+  name: str()
+  type: enum('Polymer', 'Chemical', 'Molecular assembly', 'Complex substance of biological
+    origin', 'Complex substance of environmental origin', 'Complex substance of chemical
+    origin', 'Complex substance of industrial production origin')
+Entity: choose(include('Entity_base'), Polymer=include('Polymer'), Chemical=include('Chemical'),
+  Molecular_assembly=include('Molecular_assembly'), Complex_substance_of_biological_origin=include('Complex_substance_of_biological_origin'),
+  Complex_substance_of_environmental_origin=include('Complex_substance_of_environmental_origin'),
+  Complex_substance_of_chemical_origin=include('Complex_substance_of_chemical_origin'),
+  Complex_substance_of_industrial_production_origin=include('Complex_substance_of_industrial_production_origin')
+  )
+Entity_constituent:
+  entity: link(target='entity')
+  concentration: include('Concentration')
+---
+Molecular_assembly:
+  external_databases: list(database_id(), required=False)
+  components: list(nested_include('Assembly_component'), min=1)
+  chemical_modifications: list(nested_include('Modification'), required=False)
+  supplier: include('Supplier', required=False)
+  quality_controls: list(nested_include('Quality_control'), required=False)
+  preparation_protocol: list(include('Step'),required=False)
+  additional_specifications: list(str(), required=False)
+Assembly_component_base:
+  name: str()
+  type: enum('Polymer', 'Chemical')
+  copy_number: num(min=-1)
+Assembly_component: choose(include('Assembly_component_base'), Polymer=include('Polymer'),
+  Chemical=include('Chemical'))
+---
+Polymer:
+  polymer_type: enum('cyclic-pseudo-peptide', 'peptide nucleic acid', 'polydeoxyribonucleotide',
+    'polydeoxyribonucleotide/polyribonucleotide hybrid', 'polypeptide(D)', 'polypeptide(L)',
+    'polyribonucleotide', 'Other')
+  organism: include('Organism')
+  variant: str()
+  modifications: include('Polymer_modifications', required=False)
+  sequence: str(required=False)
+  expression_source_type: enum('Isolated', 'Recombinantly', 'Synthetically')
+  expression_organism: include('Organism',required=False)
+  supplier: include('Supplier', required=False)
+  quality_controls: list(nested_include('Quality_control'), required=False)
+  external_databases: list(database_id(), required=False)
+  additional_specifications: list(str(), required=False)
+Polymer_modifications:
+  synthesis: list(nested_include('Modification'),required=False)
+  biological_postprocessing: list(nested_include('Modification'),required=False)
+  chemical: list(nested_include('Modification'), required=False)
+---
+Chemical:
+  inchikey: keyword()
+  additional_identifiers: list(chemical_id(), required=False)
+  isotopic_labeling: keyword(required=False)
+  supplier: include('Supplier', required=False)
+  quality_controls: list(nested_include('Quality_control'), required=False)
+  additional_specifications: list(str(), required=False)
+Chemical_environment:
+  id: link_target(name="chemical-environment")
+  name: str()
+  solvent: list(nested_include('Chemically_defined_constituent'))
+  dynamic_viscosity: include('Dynamic_viscosity', required=False)
+  pH: include('PH')
+  ionic_strength: include('Ionic_strength', required=False)
+  degassing_method: enum('Low pressure', 'Heating', 'Sonication bath', required=False)
+  ultrafiltration_method: include('Ultrafiltration',required=False)
+  constituents: list(nested_include('Constituent'), required=False)
+  additional_specifications: list(str(), required=False)
+Constituent_base:
+  name: str()
+  type: enum('Polymer', 'Chemical', 'Molecular assembly', 'Complex substance of biological
+    origin', 'Complex substance of environmental origin', 'Complex substance of chemical
+    origin', 'Complex substance of industrial production origin')
+  concentration: include('Concentration')
+Chemically_defined_constituent_base:
+  name: str()
+  type: enum('Polymer', 'Chemical', 'Molecular assembly')
+  concentration: include('Concentration')
+Chemically_defined_constituent: choose(include('Chemically_defined_constituent_base'),
+  Polymer=include('Polymer'), Chemical=include('Chemical'), Molecular_assembly=include('Molecular_assembly'))
+Constituent: choose(include('Constituent_base'), Polymer=include('Polymer'), Chemical=include('Chemical'),
+  Molecular_assembly=include('Molecular_assembly'), Complex_substance_of_biological_origin=include('Complex_substance_of_biological_origin'),
+  Complex_substance_of_environmental_origin=include('Complex_substance_of_environmental_origin'),
+  Complex_substance_of_chemical_origin=include('Complex_substance_of_chemical_origin'),
+  Complex_substance_of_industrial_production_origin=include('Complex_substance_of_industrial_production_origin'))
+Complex_substance_of_biological_origin: choose(include('Complex_substance_of_biological_origin_base'),
+  type_field='derived_from', Body_fluid=include('Body_fluid'), Cell_fraction=include('Cell_fraction'),
+  Virion=include('Virion'))
+Complex_substance_of_biological_origin_base:
+  preparation_protocol: list(include('Step'))
+  storage: include('Storage', required=False)
+  additional_specifications: list(str(), required=False)
+  derived_from: enum('Body fluid', 'Cell fraction', 'Virion', required=False)
+  organism: include('Organism')
+  description: str(required=False)
+Body_fluid:
+  fluid: enum('Blood', 'Fecal matter', 'Milk', 'Plasma', 'Saliva', 'Serum', 'Urine',
+    'Plant extract', 'Other')
+  health_status: keyword()
+Cell_fraction:
+  fraction: enum('Ribosome', 'Cell wall', 'Vesicle' 'Cell lysate/Cytoplasm', 'Cell
+    Membrane', 'Extracellular matrix', 'Lysosome', 'Golgi Apparatus', 'Mitochondrion',
+    'Nucleus', 'Rough Endoplasmic Reticulum', 'Smooth Endoplasmic Reticulum', 'Vacuole','Chloroplast',
+    'Other')
+  health_status: keyword()
+  organ: keyword(required=False)
+  tissue: str(required=False)
+  celltype: str(required=False)
+Virion:
+  Genetic_material: enum('No genetic material', 'Virus genome', 'Synthetic', 'Other')
+  host_organism: include('Organism')
+  host_cell_type: str(required=False)
+  capsid_type: enum('None', 'Native', 'Genetically Engineered', 'Synthetic', 'Other')
+  envelope_type: enum('None', 'Native', 'Genetically Engineered', 'Synthetic', 'Other')
+Complex_substance_of_environmental_origin:
+  preparation_protocol: list(include('Step'))
+  storage: include('Storage', required=False)
+  additional_specifications: list(str(), required=False)
+  source: enum('Fresh water', 'Marine', 'Ice core', 'Sediment', 'Sewage', 'Soil',
+    'Other')
+  location: include('Coordinates')
+  description: str()
+Complex_substance_of_chemical_origin:
+  preparation_protocol: list(include('Step'))
+  storage: include('Storage', required=False)
+  additional_specifications: list(str(), required=False)
+  class: enum('Lipid_assembly')
+  details: include('Lipid_assembly')
+  description: str()
+Lipid_assembly:
+  type: enum('Micelle', 'Liposome', 'Nanodisc', 'Sheet', 'Other')
+  number_of_mono_layers: int(min=-1)
+  size: include('Size')
+  components: list(nested_include('Assembly_component'))
+  additional_specifications: list(include('Step'),required=False)
+Complex_substance_of_industrial_production_origin:
+  preparation_protocol: list(include('Step'))
+  storage: include('Storage', required=False)
+  additional_specifications: list(str(), required=False)
+  product: enum('Beer', 'Cell medium', 'Whey', 'Other')
+  description: str()
+---
+Organism:
+  ncbi_taxid: database_id()
+  additional_taxonomic_information: list(nested_include('Taxa'),required=False)
+Taxa:
+  domain: keyword(required=False)
+  realm: keyword(required=False)
+  kingdom: keyword(required=False)
+  phylum: keyword(required=False)
+  class: keyword(required=False)
+  order: keyword(required=False)
+  genus: keyword(required=False)
+  species: keyword(required=False)
+  strain: keyword(required=False)
+---
+Person:
+  full_name: str()
+  identifiers: list(person_id(), required=False)
+  affiliations: list(str(), required=False)
+Publication:
+  pid: publication_id()
+  title: str(required=False)
+  publication_year: int(min=1800)
+  authors: list(nested_include('Person'), required=False)
+  resource_type: enum('Article', 'Book', 'Thesis')
+  publisher: str(required=False)
+Grant:
+  funder_name: str()
+  funding_program: str(required=False)
+  award_number: keyword(required=False)
+Project:
+  id: keyword(required=False)
+  title: str()
+  description: str()
+  owner: include('Person')
+Associated_publications:
+  main: include('Publication', required=False)
+  additional: list(nested_include('Publication'), required=False)
+---
+Derived_parameter:
+  id: link_target(name="derived-parameter")
+  name: str()
+  type: enum('Concentration', 'Stoichiometry', 'Constant of association (K_A)', 'Constant
+    of dissociation (K_D)', 'Association rate (k_on)', 'Dissociation rate (k_off)',
+    'Change in enthalpy (delta H)', 'Change in entropy (delta S)', 'Change in Gibbs
+    free energy (delta G)', 'Molecular weight (MW)')
+  entities_involved: list(nested_include('Entity_and_stoichiometry'), min=1)
+  value: num()
+  value_error: include('Value_error', required=False)
+  unit: keyword()
+Entity_and_stoichiometry:
+  entity: link(target='entity')
+  stoichiometry: num(min=-1)
+---
+Modification:
+  monomer_position: int(required=False)
+  modification: str()
+  protocol: list(include('Step'), required=False)
+Ultrafiltration:
+  pore_size: enum('0.2 µm', '0.22 µm', '0.45 µm', '0.5 µm', '1.2 µm','Other')
+  filter_material: enum('Polyethersulfone (PES)', 'Polyvinylidene flouride (PVDF)',
+    'Cellulose acetate (CA)', 'Composite regenerated cellulose (CRC)', 'Microporous
+    Glass Fiber (MGF)', 'Nylon', 'Polytetrafluoroethylene (PTFE)', 'Hydrophilic Polytetrafluoroethylene
+    (PTFE)', 'Mixed cellulose ester (MCE)', 'Polypropylene (PP)', required=False)
+Step:
+  name: str()
+  description: str()
+Quality_control:
+  parameter: enum('aggregation state','homogeneity', 'identity', 'purity', 'stability',
+    'Other')
+  technique: keyword()
+  storage_from_QC_to_measurement: include('Storage')
+  report: include('File')
+Data_fitting:
+  model: str()
+  software_name: str(required=False)
+  software_version: keyword(required=False)
+  quality: num(required=False)
+  quality_type: enum('R^2', 'SEM', 'red. Chi^2', '1sigma', '2sigma', '3sigma', '5sigma',
+    'Skewness', required=False)
+Processing_step:
+  name: str()
+  description: str()
+  software_name: str(required=False)
+  software_version: keyword(required=False)
+  software_tool: str(required=False)
+  link_to_source_code: keyword(required=False)
+---
+Value_error:
+  upper_error: num()
+  lower_error: num()
+  errors_are_relative: bool()
+  error_level: num(min=0, required=False)
+Dynamic_viscosity:
+  value: num(min=0)
+  value_error: include('Value_error', required=False)
+  unit: enum('Pa s')
+  obtained_by: include('OBTAINED_TYPES')
+PH:
+  value: num()
+  value_error: include('Value_error', required=False)
+  obtained_by: include('OBTAINED_TYPES')
+Temperature:
+  value: num()
+  value_error: include('Value_error', required=False)
+  operational_value: enum('Room temperature', 'On Ice', 'Other', required=False)
+  unit: include('TEMPERATURE_UNITS')
+  obtained_by: include('OBTAINED_TYPES')
+  controlled: bool()
+Pressure:
+  value: num()
+  value_error: include('Value_error', required=False)
+  unit: include('PRESSURE_UNITS')
+  obtained_by: include('OBTAINED_TYPES')
+  controlled: bool()
+Humidity:
+  value: num()
+  value_error: include('Value_error', required=False)
+  unit: include('HUMIDITY_UNITS')
+  obtained_by: include('OBTAINED_TYPES')
+  controlled: bool()
+Atmosphere:
+  composition: list(nested_include('Chemically_defined_constituent'), min=1)
+Time_duration:
+  value: num(min=0)
+  value_error: include('Value_error', required=False)
+  unit: include('TIME_UNITS')
+Concentration:
+  value: num(min=-1)
+  value_error: include('Value_error', required=False)
+  unit: include('CONCENTRATION_UNITS')
+  obtained_by: include('OBTAINED_TYPES', required=False)
+  obtained_protocol: list(include('Step'), required=False)
+Ionic_strength:
+  value: num(min=0)
+  unit: include('CONCENTRATION_UNITS')
+Size:
+  type: enum('radius', 'diameter', 'path length', 'Other')
+  mean: num(min=0)
+  unit: include('LENGTH_UNITS')
+  median: num(min=0, required=False)
+  upper: num(required=False)
+  lower: num(required=False)
+  distribution_type: keyword(required=False)
+---
+File:
+  name: keyword()
+  type: enum('text','binary', 'text and binary')
+  size: include('File_size')
+  source: enum('Instrument software', 'User annotated', 'MBDB')
+  description: str(required=False)
+  recommended_software: str(required=False)
+  processing_steps: list(include('Processing_step'))
+File_size:
+  value: num(min=0)
+  unit: include('FILE_SIZE_UNITS')
+Measured_data_series:
+  id: uuid()
+  name: str(required=False)
+  values: list(num())
+  unit: keyword()
+---
+Performance_test:
+  report: include('File')
+  published_test_protocol: include('Publication', required=False)
+  sample_composition: list(nested_include('Constituent'))
+  additional_information: str(required=False)
+Storage:
+  temperature: include('Temperature')
+  duration: include('Time_duration', required=False)
+  storage_preparation: list(include('Step'), required=False)
+Supplier:
+  name: str()
+  catalog_number: keyword(required=False)
+  further_information: list(str(), required=False)
+Coordinates:
+  S-N(latitude): num(min=-90, max=90)
+  W-E(longitude): num(min=-180, max=180)
+OBTAINED_TYPES: enum('Measurement', 'Calculation', 'Assumption', 'Other')
+---
+CONCENTRATION_UNITS: enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM', 'g/L', 'mg/mL',
+  'µg/mL', 'ng/mL', 'mol/kg', 'mmol/kg', 'v/v %','w/w %', 'v/w %', 'w/v %', 'U/ml','%
+  saturated')
+FLOWRATE_UNITS: enum('mL/min','µl/s')
+HUMIDITY_UNITS: enum('%','g/m^3','oz/y^3')
+PRESSURE_UNITS: enum('Pa', 'kPa', 'MPa', 'Bar','mBar', 'atm', 'Torr', 'PSI', 'mmHg','inchHg')
+TEMPERATURE_UNITS: enum('K', '°C', '°F')
+TIME_UNITS: enum('nanoseconds','microseconds', 'milliseconds', 'seconds','minutes',
+  'hours', 'days')
+ENERGY_UNITS: enum('kcal/mol','kJ/mol')
+POWER_UNITS: enum('µcal/s','µJ/s')
+LENGTH_UNITS: enum('Å', 'nm', 'μm', 'mm', 'cm', 'm')
+FILE_SIZE_UNITS: enum('bytes (B)', 'kilobytes (kB)', 'megabytes (MB)', 'gigabytes
+  (GB)', 'terabytes (TB)', 'kibibytes (KiB)','mebibytes (MiB)', 'gibibytes (GiB)',
+  'tebibytes (TiB)')
+---
+SUPPORTED_TECHNIQUES: enum('Bio-layer interferometry (BLI)', 'Surface plasmon resonance
+  (SPR)', 'Mass Photometry (MP)', 'Isothermal titration calorimetry (ITC)', 'Microscale
+  thermophoresis/Temperature related intensity change (MST/TRIC)')
+COMPANIES: enum('Bio-Rad', 'Bruker', 'Cytiva', 'Gatorbio', 'GE Healthcare', 'Nanotemper',
+  'Nicoya Life', 'Sartorius', 'Malvern Panalytical', 'Refeyn', 'TA Instruments' )

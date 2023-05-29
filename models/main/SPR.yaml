@@ -1,0 +1,271 @@
+# SPR_with_descriptions.yaml expects objects (includes) from
+# general_parameters_with_descriptions.yaml in the same namespace
+
+# Beginning of schema
+general_parameters:
+    description         : str(equals='The general information of the
+                                      measurements', required=False)
+    value               : include('General_parameters')
+
+method_specific_parameters:
+    experiment_type:
+        description     : str(equals='Which type of parameter is sought with
+                                      the measurements', required=False)
+        value           : enum('Affinity', 'Quantification', 'Other')
+
+    sensor:
+        description     : str(equals='Sensor used for the measurements',
+                                      required=False)
+        value           : include('Sensor')
+
+    measurement_positions:
+        description     : str(equals='Information about each of the positions
+                                      where data was collected including
+                                      reference positions', required=False)
+        value           : list(include('Measurement_position'), min=1)
+
+
+    measurement_protocol:
+        description     : str(equals='List of the steps in the measurement
+                                      protocol', required=False)
+        value           : list(include('Measurement_step'), min=1)
+
+    measurements:
+        description     : str(equals='List of measurements where the complete
+                                      output from a single sensor going through
+                                      the measurement protocol is considered a
+                                      separate measurement', required=False)
+        value           : list(include('Measurement'), min=1)
+
+    data_analysis:
+        description     : str(equals='Details of how the data was processed and
+                                      model in order to derive parameters
+                                      from it', required=False)
+        value           : list(include('SPR_data_analysis'), min=1)
+
+# End of schema
+
+---
+# Support objects (includes)
+SPR_data_analysis:
+    derived_parameter:
+        description     : str(equals='Link to a derived parameter that was
+                                      defined in the general parameters',
+                                      required=False)
+
+        value           : link(target='derived-parameter')
+
+    data_processing_steps:
+        description     : str(equals='Describe the steps in the data analysis
+                                      prior to fitting (removing outliers in the
+                                      raw data, applying data filter, placing
+                                      data at same start time etc. )',
+                                      required=False)
+
+        value           : list(include('Processing_step'), required=False)
+
+    data_fitting:
+        description     : str(equals='The details of how data fitting of the
+                                      data to obtain the derived parameter was
+                                      performed', required=False)
+        value           : include('Data_fitting')
+
+Measurement:
+    measurement_position:
+        description     : str(equals='Name (id) of the measurement position',
+                                      required=False)
+        value           : link(target='spr-measurement-position')
+
+    reference_measurement_position:
+        description     : str(equals='Name (id) of the measurement position',
+                                      required=False)
+        value           : link(target='spr-measurement-position',
+                                       required=False)
+
+    samples:
+        description     : str(equals='List of samples that went across a
+                                      measurement position during data
+                                      collection', required=False)
+        value           : list(include('Sample'))
+
+    reference_samples:
+        description     : str(equals='List of samples that went across the
+                                      reference measurement position during data
+                                      collection', required=False)
+        value           : list(include('Sample'), required=False)
+
+Sample:
+    measurement_step:
+        description     : str(equals='Name (id) of the measurement step in the
+                                      measurement protocol where the sample was
+                                      measured', required=False)
+        value           : link(target='spr-measurement-step')
+
+    position:
+        description     : str(equals='Position of the sample within the sample
+                                      holder', required=False)
+        value           : keyword(required=False)
+
+    chemical_environment:
+        description     : str(equals='Name (id) of the chemical environment of
+                                      the sample (from the chemical environments
+                                      defined in the general parameters)',
+                                      required=False)
+        value           : link(target='chemical-environment')
+
+    analytes:
+        description     : str(equals='List of names (ids) of entities (from the
+                                      entities of interest defined in the
+                                      general parameters) that was used to alter
+                                      the behavior of the target(s) or entities
+                                      present at varying concentrations for a
+                                      series of measurements', required=False)
+        value           : list(include('Entity_constituent'))
+
+    temperature:
+        description     : str(equals='Temperature of the sample while being
+                                      measured', required=False)
+        value           : include('Temperature', required=False)
+
+    preparation:
+        description     : str(equals='List of steps taken to prepare the
+                                      sample', required=False)
+        value           : list(include('Step'), required=False)
+
+Measurement_step:
+    id:
+        description     : str(equals='id to be used as a link target',
+                                      required=False)
+        value           : link_target(name="spr-measurement-step")
+
+
+    name:
+        description     : str(equals='Descriptive name (id) of the step in the
+                                      measurement protocol which must be unique
+                                      within a record', required=False)
+        value           : str()
+
+    type:
+        description     : str(equals='Which type of step in the measurement
+                                      protocol this refers to', required=False)
+        value           : enum('Association', 'Baseline', 'Dissociation',
+                               'Regeneration', 'Load', 'Wash', 'Activation',
+                               'Enhancement')
+
+    start_time:
+        description     : str(equals='The numerical value of the start point of
+                                      the measurement step relative to the
+                                      beginning of the measurement in the units
+                                      defined in the general parameters',
+                                      required=False)
+        value           : include('Time_duration')
+
+    time_length:
+        description     : str(equals='The numerical value of the total time of
+                                      the measurement step took in the units
+                                      defined in the general parameters',
+                                      required=False)
+        value           : include('Time_duration')
+
+    flow:
+        description     : str(equals='Information about the flow during the
+                                      measurement step', required=False)
+        value           : include('Flow')
+
+Measurement_position:
+    id:
+        description     : str(equals='id to be used as a link target',
+                                      required=False)
+        value           : link_target(name="spr-measurement-position")
+
+    name:
+        description     : str(equals='Name of measurement spot', required=False)
+        value           : str()
+
+    flow_cell:
+        description     : str(equals='The flow cell where the measurement spot
+                                      is located', required=False)
+        value           : str()
+
+    position:
+        description     : str(equals='Position of the measurement spot within
+                                      the flow cell', required=False)
+        value           : str(required=False)
+
+    ligand_information:
+        description     : str(equals='Information about the ligand and how it
+                                      was immobilized', required=False)
+        value           : include('Ligand_information', required=False)
+
+Ligand_information:
+    ligand:
+        description     : str(equals='Name (id) of the ligand (entity that is
+                                      immobilized, from the list of entities of
+                                      interest defined in the general
+                                      parameters)', required=False)
+        value           : link(target='entity', required=False)
+
+    ligand_immobilization_chemistry:
+        description     : str(equals='The type of chemistry on ligands and
+                                      surface that allows for immobilization of
+                                      the ligands on the surface of the senor',
+                                      required=False)
+        value           : str(required=False)
+
+    ligand_immobilization_protocol:
+        description     : str(equals='List of steps for immobilizing the ligand
+                                      on the surface of the sensor',
+                                      required=False)
+        value           : list(include('Step'), required=False)
+
+Sensor:
+    id:
+        description     : str(equals='The id of the sensor as given by the
+                                      supplier', required=False)
+        value           : str(required=False)
+
+    surface_properties:
+        description     : str(equals='The type surface properties the sensor
+                                      has. e.g. Protein A', required=False)
+        value           : str(required=False)
+
+    supplier:
+        description     : str(equals='Information about the supplier of the
+                                      senor',required=False)
+        value           : include('Supplier')
+
+    sensor_initialization:
+        description     : str(equals='How the initialization of the senor was
+                                      performed', required=False)
+        value           : enum('Air', 'Glycerol', required=False)
+
+    previously_used:
+        description     : str(equals='Whether or not the sensor was used in
+                                      previous measurements', required=False)
+        value           : bool(required=False)
+
+Flow:
+    rate:
+        description     : str(equals='Numerical value of the flow-rate',
+                                      required=False)
+        value           : num(min=0)
+
+    unit:
+        description     : str(equals='The unit of the flow-rate',
+                                      required=false)
+
+        value           : include('FLOWRATE_UNITS')
+
+    direction:
+        description     : str(equals='Direction of the flow', required=False)
+        value           : enum('Vertical','Horizontal', required=False)
+
+    path:
+        description     : str(equals='list of the flow-path, in terms of
+                                      measurement postitions. measurement
+                                      postitions that are connected by a flow
+                                      running serially  though them should be
+                                      mentioned within the inner list, while
+                                      parallel flows should be mentioned in the
+                                      outer list', required=False)
+        value           : list(list(link(target='spr-measurement-position')))

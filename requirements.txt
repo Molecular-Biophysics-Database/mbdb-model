@@ -1,0 +1,8 @@
+yamale
+click
+ruamel.yaml
+pandas
+numpy
+olefile
+xmltodict
+requests

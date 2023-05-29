@@ -1,0 +1,2260 @@
+record:
+  use: invenio
+  module:
+    qualified: mbdb_mst
+  properties:
+    metadata:
+      properties:
+        general_parameters:
+          use: '#/$defs/General_parameters'
+          required: true
+        method_specific_parameters:
+          properties:
+            experiment_type:
+              type: keyword
+              enum: [Affinity, Concentration, Other]
+              help.en: Type of physical parameter measured
+            signal_type:
+              type: keyword
+              enum: [Initial intensity, TRIC/MST, Spectral shift]
+              help.en: Which type of signal was measured
+            label_free:
+              type: boolean
+              help.en: Whether or not this was a label free type of experiment
+            excitation_led_color:
+              type: keyword
+              enum: ['RED (ex 605–645nm, em 660–730nm)', 'RED (ex 610–645nm, em 680–730nm)',
+                'GREEN (ex 555-585nm, em 605-690nm)', 'GREEN (ex 515-550nm, em 565-600nm)',
+                'BLUE (ex 480–500nm, em 515–550nm)', 'BLUE (ex 460–500nm, em 515–560nm)',
+                'UV (ex 260-300nm, em 330-380nm)']
+              help.en: The color of the excitation LED used for the experiment
+            excitation_led_power:
+              type: integer
+              minimum: 0
+              maximum: 100
+              help.en: The power, in percentage, of the excitation LED used in experiment
+            ir_mst_laser_power:
+              type: integer
+              minimum: 0
+              maximum: 100
+              help.en: The power, in percentage, of the infrared LASER used in experiment
+            measurements[]:
+              ^minItems: 0
+              ^help.en: List of the information about each measurement, including,
+                target(s), ligand(s), chemical environment, and position of the sample
+                within the instrument
+              use: '#/$defs/Measurement'
+            data_analysis[]:
+              ^minItems: 1
+              ^help.en: Details of how the data was processed and model in order to
+                derive parameters from it
+              use: '#/$defs/MST_data_analysis'
+  plugins:
+    builder:
+      disable: [script_sample_data]
+$defs:
+  MST_data_analysis:
+    properties:
+      derived_parameter:
+        type: relation
+        model: '#derived-parameter'
+        keys: [id, name]
+      f_cold_and_hot:
+        use: '#/$defs/F_cold_and_hot'
+      data_processing_steps[]:
+        ^help.en: Describe the steps in the data analysis prior to fitting (removing
+          outliers in the raw data, applying data filter, placing data at same start
+          time etc. )
+        use: '#/$defs/Processing_step'
+      data_fitting:
+        use: '#/$defs/Data_fitting'
+        required: true
+  F_cold_and_hot:
+    properties:
+      time_unit:
+        use: '#/$defs/TIME_UNITS'
+        required: true
+      f_cold_start:
+        type: double
+        minimum: -100.0
+        help.en: Numerical value of the start point of time interval used to establish
+          the initial fluorescence, F_cold
+      f_cold_end:
+        type: double
+        minimum: -100.0
+        help.en: Numerical value of the end point of time interval used to establish
+          the initial fluorescence, F_cold
+      f_hot_start:
+        type: double
+        minimum: 0.0
+        help.en: Numerical value of the start point of time interval used to establish
+          the fluorescence temperature induced change in fluorescence, F_hot
+      f_hot_end:
+        type: double
+        minimum: 0.0
+        help.en: Numerical value of the end point of time interval used to establish
+          the fluorescence temperature induced change in fluorescence, F_hot
+  Measurement:
+    properties:
+      name:
+        type: keyword
+        help.en: Name (id) of the measurement which must be unique within a record
+          (i.e. triplicates must be named individually in the raw data file). The
+          name must allow location of the measurement data within the raw data file
+          as well as processed data files if these are present
+      position:
+        type: keyword
+        help.en: Position of the measured sample within the instrument
+      sample:
+        use: '#/$defs/Sample'
+        required: true
+      measured_data:
+        properties:
+          x_data:
+            use: '#/$defs/Measured_data_series'
+            required: true
+          y_data:
+            use: '#/$defs/Measured_data_series'
+            required: true
+  Sample:
+    properties:
+      targets[]:
+        ^minItems: 1
+        ^help.en: List of names (ids), from the entities of interest defined in the
+          general parameters, of directly measured entities and entities at constant
+          concentration for a series of measurements and their concentration
+        use: '#/$defs/Entity_constituent'
+      ligands[]:
+        ^help.en: List of names (ids) of entities (from the entities of interest defined
+          in the general parameters) that were used to alter the behavior of the target(s)
+          or entities present at varying concentrations for a series of measurements
+          and their concentration
+        use: '#/$defs/Entity_constituent'
+      chemical_environment:
+        type: relation
+        model: '#chemical-environment'
+        keys: [id, name]
+      container:
+        type: keyword
+        enum: [Monolith Standard Capillary, Monolith Premium Capillary, Monolith LabelFree
+            Capillary, Monolith LabelFree Premium Capillary, Monolith NT.Automated
+            Capillary Chip, Monolith NT.Automated Premium Capillary Chip, Monolith
+            NT.Automated LabelFree Capillary Chip, Monolith NT.Automated LabelFree
+            Premium Capillary Chip, 384-well plate, other]
+        help.en: The container the sample was in
+      preparation[]:
+        ^help.en: List of steps taken to prepare the sample
+        use: '#/$defs/Step'
+  General_parameters:
+    properties:
+      record:
+        properties:
+          publisher:
+            type: keyword
+            enum: [MBDB]
+            help.en: When made available MBDB is to be considered the publisher, however,
+              the depositors are still the owners
+          resource_type_general:
+            type: keyword
+            enum: [dataset]
+            help.en: All records are considered to be datasets
+          resource_type:
+            type: keyword
+            help.en: More specific type than "dataset"
+          access_rights:
+            type: keyword
+            enum: [open access, embargoed access, restricted access]
+            help.en: Access rights to the files
+          metadata_access_rights:
+            type: keyword
+            enum: [open access, embargoed access, restricted access]
+            help.en: Access rights to the metadata
+          title:
+            type: keyword
+            help.en: Short descriptive title of the record
+          id:
+            type: keyword
+            help.en: Unique and persistent identifier of a record, which is automatically
+              generated upon deposition
+          identifier:
+            type: keyword
+            help.en: DOI
+          measurement_group_id:
+            type: keyword
+            help.en: Unique and persistent identifier which can be generated upon
+              deposition of the first if a group of data is deposited at the same
+              time
+          project:
+            use: '#/$defs/Project'
+          deposition_date:
+            type: date
+            help.en: The date when the data was deposited; automatically generated
+          date_available:
+            type: date
+            help.en: The date when the data was/will be made publicly available. Will
+              be automatically generated
+          version:
+            type: keyword
+            help.en: The version of the metadata+data
+          subject_category:
+            type: keyword
+            help.en: subject category, default is Biophysics
+          keywords[]:
+            ^help.en: List of keywords
+            type: keyword
+      associated_publications:
+        use: '#/$defs/Associated_publications'
+      depositors:
+        properties:
+          depositor:
+            use: '#/$defs/Person'
+            required: true
+          principal_contact:
+            use: '#/$defs/Person'
+            required: true
+          contributors[]:
+            ^help.en: List of people who contributed to generating the deposited data,
+              metadata, derived parameters, or the deposition itself
+            use: '#/$defs/Person'
+            type: nested
+      funding_reference[]:
+        ^help.en: List of information about the grants that supported depositors
+        use: '#/$defs/Grant'
+      technique:
+        use: '#/$defs/SUPPORTED_TECHNIQUES'
+        required: true
+      instrument:
+        properties:
+          manufacturer:
+            use: '#/$defs/COMPANIES'
+            required: true
+          name:
+            type: keyword
+            help.en: The name of the instrument as provided by the manufacturer
+          model:
+            type: keyword
+            help.en: Model number and/or setup details of instrument used for raw
+              data collection; include special instrument features (e.g. 10.1,RED/BLUE
+              LASER, backreflection optics)
+          performance_test:
+            use: '#/$defs/Performance_test'
+      raw_data_information:
+        properties:
+          collection_start_time:
+            type: date
+            help.en: The time when collection of the data began
+          file_information[]:
+            ^help.en: List of the files containing the raw data
+            use: '#/$defs/File'
+      physical_environment_at_sample_handling:
+        properties:
+          temperature:
+            use: '#/$defs/Temperature'
+          pressure:
+            use: '#/$defs/Pressure'
+          humidity:
+            use: '#/$defs/Humidity'
+          atmosphere:
+            use: '#/$defs/Atmosphere'
+      chemical_information:
+        properties:
+          chemical_environments[]:
+            ^minItems: 1
+            ^help.en: Composition of the chemical environment (colloquially known
+              as buffer) which are not being directly used to affect the behavior
+              of the directly measured entities during the measurement
+            use: '#/$defs/Chemical_environment'
+            type: nested
+          entities_of_interest[]:
+            ^minItems: 1
+            ^help.en: List of the entities that are being directly measured, as well
+              as the entities that are being used as a variable to influence the behavior
+              of the directly measured entities (e.g. lysozyme, NAG3, NaCl)
+            use: '#/$defs/Entity'
+            type: polymorphic
+            mapping:
+              type: nested
+      derived_parameters[]:
+        ^help.en: List of the parameters that were derived from analyzing the data,
+          and which steps were used to obtain them
+        use: '#/$defs/Derived_parameter'
+        type: nested
+  Entity_base:
+    properties:
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substance which cannot be exactly specified as for its chemical composition,
+          e.g. blood, serum, plant extract
+    id: entity
+  Entity:
+    help.en: Description of the entity which varies depending on the type of entity
+    schemas:
+      Polymer:
+        use: '#/$defs/PolymerEntityPolymerPolymorphic'
+        required: true
+      Chemical:
+        use: '#/$defs/ChemicalEntityChemicalPolymorphic'
+        required: true
+      Molecular assembly:
+        use: '#/$defs/Molecular_assemblyEntityMolecular_assemblyPolymorphic'
+        required: true
+      Complex substance of biological origin:
+        use: '#/$defs/Complex_substance_of_biological_originEntityComplex_substance_of_biological_originPolymorphic'
+        required: true
+      Complex substance of environmental origin:
+        use: '#/$defs/Complex_substance_of_environmental_originEntityComplex_substance_of_environmental_originPolymorphic'
+        required: true
+      Complex substance of chemical origin:
+        use: '#/$defs/Complex_substance_of_chemical_originEntityComplex_substance_of_chemical_originPolymorphic'
+        required: true
+      Complex substance of industrial production origin:
+        use: '#/$defs/Complex_substance_of_industrial_production_originEntityComplex_substance_of_industrial_production_originPolymorphic'
+        required: true
+    type: polymorphic
+    discriminator: type
+    id: entity
+  Entity_constituent:
+    properties:
+      entity:
+        type: relation
+        model: '#entity'
+        keys: [id, name]
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+  Molecular_assembly:
+    properties:
+      external_databases[]:
+        ^help.en: List of identifiers to records in external databases containing
+          information about the molecular assembly as a whole can be specified here
+          (e.g. 1YQ2; PDB); information about the individual components should be
+          specified in the details of the individual components
+        type: keyword
+      components[]:
+        ^minItems: 1
+        ^help.en: Description of the individual components (e.g. polypeptide, heme,
+          lipids, metal ions etc.) the molecular assembly is composed of (e.g. Hemoglobin
+          alpha) and how many copies of each component were present
+        use: '#/$defs/Assembly_component'
+        type: polymorphic
+        mapping:
+          type: nested
+      chemical_modifications[]:
+        ^help.en: List describing deliberate modifications made to the molecular assembly
+          through chemical, biochemical, or physical means
+        use: '#/$defs/Modification'
+        type: nested
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      preparation_protocol[]:
+        ^help.en: The protocol used for preparing the molecular assembly
+        use: '#/$defs/Step'
+      additional_specifications[]:
+        ^help.en: Additional information about the macromolecular assembly can be
+          specified here
+        type: keyword
+  Assembly_component_base:
+    properties:
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) given to the assembly component. The
+          name must be unique within a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical]
+        help.en: The type of component, options are (biological) Polymer and Chemical
+      copy_number:
+        type: double
+        minimum: -1.0
+        help.en: Number of molecules of the component within the assembly, -1 if unknown
+  Assembly_component:
+    help.en: Details about the assembly component
+    schemas:
+      Polymer:
+        use: '#/$defs/PolymerAssembly_componentPolymerPolymorphic'
+        required: true
+      Chemical:
+        use: '#/$defs/ChemicalAssembly_componentChemicalPolymorphic'
+        required: true
+    type: polymorphic
+    discriminator: type
+  Polymer:
+    properties:
+      polymer_type:
+        type: keyword
+        enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
+          polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
+          polyribonucleotide, Other]
+        help.en: The type of polymer (e.g. polypeptide(L))
+      organism:
+        use: '#/$defs/Organism'
+        required: true
+      variant:
+        type: keyword
+        help.en: Descriptive name indicating differences of primary sequence of the
+          polymer as compared to the most common form, or wildtype, including mutations,
+          purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
+      modifications:
+        use: '#/$defs/Polymer_modifications'
+      sequence:
+        type: keyword
+        help.en: Primary sequence of the polymer, using single letter codes, including
+          variant (e.g. SAGRELLE, AGTTA,). For non-natural see link for nomenclature
+      expression_source_type:
+        type: keyword
+        enum: [Isolated, Recombinantly, Synthetically]
+        help.en: How the polymer was produced
+      expression_organism:
+        use: '#/$defs/Organism'
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      external_databases[]:
+        ^help.en: List of identifiers to records in external databases containing
+          information about the polymer can be specified here (e.g Q8KRF6, UniProt)
+        type: keyword
+      additional_specifications[]:
+        ^help.en: Additional information about the polymer can be specified here
+        type: keyword
+  Polymer_modifications:
+    properties:
+      synthesis[]:
+        ^help.en: Modifications (e.g. non-natural amino acids) of the polymer made
+          during synthesis (e.g. translation) of the polymer
+        use: '#/$defs/Modification'
+        type: nested
+      biological_postprocessing[]:
+        ^help.en: Modifications of the polymer made after synthesis (e.g. posttranslational
+          modifications, DNA methylation) by the organism where synthesis occurred
+          (e.g. glycosylation)
+        use: '#/$defs/Modification'
+        type: nested
+      chemical[]:
+        ^help.en: Modifications of the polymer introduced by chemical, biochemical,
+          or physical means in vitro (e.g. lysine methylation, cysteine iodoacetamide
+          labeling, deglycosylation, covalent fluorescent labeling)
+        use: '#/$defs/Modification'
+        type: nested
+  Chemical:
+    properties:
+      inchikey:
+        type: keyword
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
+          \ please specify the InChIKey of the monomer and specify the specific type\
+          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
+          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
+          \ specified here)"
+      additional_identifiers[]:
+        ^help.en: Unique and persistent identifier from an external source; options
+          of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
+        type: keyword
+      isotopic_labeling:
+        type: keyword
+        help.en: If the isotopic composition of the chemical was altered from the
+          naturally occurring one, it can be specified here (e.g. 15N, 13C)
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      additional_specifications[]:
+        ^help.en: Additional information about the chemical can be specified here
+          (e.g. RNase free water, recrystallization, desalting)
+        type: keyword
+  Chemical_environment:
+    properties:
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Name (id) given to the chemical environment. Must be unique within
+          a record
+      solvent[]:
+        ^help.en: The main components of the chemical solvent (e.g. H2O, D2O, DMSO,
+          EtOH)
+        use: '#/$defs/Chemically_defined_constituent'
+        type: polymorphic
+        mapping:
+          type: nested
+      dynamic_viscosity:
+        use: '#/$defs/Dynamic_viscosity'
+      pH:
+        use: '#/$defs/PH'
+        required: true
+      ionic_strength:
+        use: '#/$defs/Ionic_strength'
+      degassing_method:
+        type: keyword
+        enum: [Low pressure, Heating, Sonication bath]
+        help.en: The method that was used for degasification of the chemical environment
+      ultrafiltration_method:
+        use: '#/$defs/Ultrafiltration'
+      constituents[]:
+        ^help.en: List of the constituents, excluding the solvent, that made up the
+          chemical environment (i.e. buffer components etc.)
+        use: '#/$defs/Constituent'
+        type: polymorphic
+        mapping:
+          type: nested
+      additional_specifications[]:
+        ^help.en: Additional information about the chemical can be specified here
+        type: keyword
+    id: chemical-environment
+  Constituent_base:
+    properties:
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+  Chemically_defined_constituent_base:
+    properties:
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+  Chemically_defined_constituent:
+    help.en: The details about the chemically defined constituent i.e. of type Polymer,
+      Chemical, and Molecular assembly
+    schemas:
+      Polymer:
+        use: '#/$defs/PolymerChemically_defined_constituentPolymerPolymorphic'
+        required: true
+      Chemical:
+        use: '#/$defs/ChemicalChemically_defined_constituentChemicalPolymorphic'
+        required: true
+      Molecular assembly:
+        use: '#/$defs/Molecular_assemblyChemically_defined_constituentMolecular_assemblyPolymorphic'
+        required: true
+    type: polymorphic
+    discriminator: type
+  Constituent:
+    help.en: The details about the constituent which can be of chemically well defined
+      species of type Polymer, Chemical, Molecular assembly. Alternatively, if the
+      constituent can only be defined in terms of a preparation protocol it should
+      be described as a Complex substance of biological, environmental, chemical,
+      or industrial production origin
+    schemas:
+      Polymer:
+        use: '#/$defs/PolymerConstituentPolymerPolymorphic'
+        required: true
+      Chemical:
+        use: '#/$defs/ChemicalConstituentChemicalPolymorphic'
+        required: true
+      Molecular assembly:
+        use: '#/$defs/Molecular_assemblyConstituentMolecular_assemblyPolymorphic'
+        required: true
+      Complex substance of biological origin:
+        use: '#/$defs/Complex_substance_of_biological_originConstituentComplex_substance_of_biological_originPolymorphic'
+        required: true
+      Complex substance of environmental origin:
+        use: '#/$defs/Complex_substance_of_environmental_originConstituentComplex_substance_of_environmental_originPolymorphic'
+        required: true
+      Complex substance of chemical origin:
+        use: '#/$defs/Complex_substance_of_chemical_originConstituentComplex_substance_of_chemical_originPolymorphic'
+        required: true
+      Complex substance of industrial production origin:
+        use: '#/$defs/Complex_substance_of_industrial_production_originConstituentComplex_substance_of_industrial_production_originPolymorphic'
+        required: true
+    type: polymorphic
+    discriminator: type
+  Complex_substance_of_biological_origin:
+    help.en: Information about the biological substance the complex substance is derived
+      from
+    schemas:
+      Body fluid:
+        use: '#/$defs/Body_fluidComplex_substance_of_biological_originBody_fluidPolymorphic'
+        required: true
+      Cell fraction:
+        use: '#/$defs/Cell_fractionComplex_substance_of_biological_originCell_fractionPolymorphic'
+        required: true
+      Virion:
+        use: '#/$defs/VirionComplex_substance_of_biological_originVirionPolymorphic'
+        required: true
+    type: polymorphic
+    discriminator: derived_from
+  Complex_substance_of_biological_origin_base:
+    properties:
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      derived_from:
+        type: keyword
+        enum: [Body fluid, Cell fraction, Virion]
+        help.en: The biological substance the complex substance is derived from
+      organism:
+        use: '#/$defs/Organism'
+        required: true
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+  Body_fluid:
+    properties:
+      fluid:
+        type: keyword
+        enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract,
+          Other]
+        help.en: The body fluid the complex substance is derived from
+      health_status:
+        type: keyword
+        help.en: Health status of the donor organism where the body fluid was derived
+          from (e.g. healthy, sick, patient with Parkinson's Disease)
+  Cell_fraction:
+    properties:
+      fraction:
+        type: keyword
+        enum: [Ribosome, Cell wall, VesicleCell lysate/Cytoplasm, Cell Membrane, Extracellular
+            matrix, Lysosome, Golgi Apparatus, Mitochondrion, Nucleus, Rough Endoplasmic
+            Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast, Other]
+        help.en: The subcelluar component e.g. (Ribosome)
+      health_status:
+        type: keyword
+        help.en: Health status of the donor organism where the cell fraction was derived
+          from (e.g. healthy, sick, patient with Parkinson's Disease)
+      organ:
+        type: keyword
+        help.en: The organ the cell fraction was derived from (e.g. heart)
+      tissue:
+        type: keyword
+        help.en: The tissue type the cell fraction was derived from
+      celltype:
+        type: keyword
+        help.en: The cell type the cell fraction was derived from
+  Virion:
+    properties:
+      Genetic_material:
+        type: keyword
+        enum: [No genetic material, Virus genome, Synthetic, Other]
+        help.en: The genetic material carried by the virions (None, virus genome,
+          synthetic)
+      host_organism:
+        use: '#/$defs/Organism'
+        required: true
+      host_cell_type:
+        type: keyword
+        help.en: The host cell type the virion was produced in
+      capsid_type:
+        type: keyword
+        enum: [None, Native, Genetically Engineered, Synthetic, Other]
+        help.en: The type of virion capsid (e.g. genetically engineered, None
+      envelope_type:
+        type: keyword
+        enum: [None, Native, Genetically Engineered, Synthetic, Other]
+        help.en: The type of virion envelope (e.g. genetically engineered, None
+  Complex_substance_of_environmental_origin:
+    properties:
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      source:
+        type: keyword
+        enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil, Other]
+        help.en: The environmental source where the complex substance was derived
+          from
+      location:
+        use: '#/$defs/Coordinates'
+        required: true
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+  Complex_substance_of_chemical_origin:
+    properties:
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      class:
+        type: keyword
+        enum: [Lipid_assembly]
+        help.en: The chemical origin where the complex substance was derived from
+      details:
+        use: '#/$defs/Lipid_assembly'
+        required: true
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+  Lipid_assembly:
+    properties:
+      type:
+        type: keyword
+        enum: [Micelle, Liposome, Nanodisc, Sheet, Other]
+        help.en: The type of lipid assembly
+      number_of_mono_layers:
+        type: integer
+        minimum: -1
+        help.en: The number of lipid mono layers in the lipid assembly, -1 if unknown
+      size:
+        use: '#/$defs/Size'
+        required: true
+      components[]:
+        ^help.en: The components of the lipid assembly
+        use: '#/$defs/Assembly_component'
+        type: polymorphic
+        mapping:
+          type: nested
+      additional_specifications[]:
+        ^help.en: Additional information about the lipid assembly, if applicable
+        use: '#/$defs/Step'
+  Complex_substance_of_industrial_production_origin:
+    properties:
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      product:
+        type: keyword
+        enum: [Beer, Cell medium, Whey, Other]
+        help.en: The type of product, byproduct, or waste product the complex substance
+          was derived from
+      description:
+        type: keyword
+        help.en: Further descriptions of the complex substance
+  Organism:
+    properties:
+      ncbi_taxid:
+        type: keyword
+        help.en: The [NCBI](taxid) of the organism to the lowest taxonomic rank available,
+          i.e. strain (e.g. 469008 which corresponds to Escherichia coli BL21(DE3))
+      additional_taxonomic_information[]:
+        ^help.en: List of taxonomic ranks the organism belongs to
+        use: '#/$defs/Taxa'
+        type: nested
+  Taxa:
+    properties:
+      domain:
+        type: keyword
+        help.en: Domain that the organism belongs to. Note that if the organism is
+          a virus it the highest level is realm rather than domain
+      realm:
+        type: keyword
+        help.en: Realm that the virus(!) belongs to. Note that realm only applies
+          if the organism is a virus
+      kingdom:
+        type: keyword
+        help.en: Kingdom that the organism belongs to
+      phylum:
+        type: keyword
+        help.en: Phylum that the organism belongs to
+      class:
+        type: keyword
+        help.en: Class that the organism belongs to
+      order:
+        type: keyword
+        help.en: Order that the organism belongs to
+      genus:
+        type: keyword
+        help.en: Genus that the organism belongs to
+      species:
+        type: keyword
+        help.en: Species that the organism belongs to
+      strain:
+        type: keyword
+        help.en: Strain that the organism belongs to
+  Person:
+    properties:
+      full_name:
+        type: keyword
+        help.en: The full name of the person
+      identifiers[]:
+        ^help.en: Persistent identifier associated with the publication
+        type: keyword
+      affiliations[]:
+        ^help.en: The affiliation of the person
+        type: keyword
+  Publication:
+    properties:
+      pid:
+        type: keyword
+        help.en: Persistent identifier associated with the publication
+      title:
+        type: keyword
+        help.en: The title of the publication
+      publication_year:
+        type: integer
+        minimum: 1800
+        help.en: The publication year
+      authors[]:
+        ^help.en: The authors of the publication
+        use: '#/$defs/Person'
+        type: nested
+      resource_type:
+        type: keyword
+        enum: [Article, Book, Thesis]
+        help.en: The type of publication
+      publisher:
+        type: keyword
+        help.en: The name of the publisher
+  Grant:
+    properties:
+      funder_name:
+        type: keyword
+        help.en: The agency that supplied the funding (e.g. European Research Council,
+          Wellcome Trust, Michael J. Fox Foundation etc.
+      funding_program:
+        type: keyword
+        help.en: The program at the funding agency the grant was a part of (e.g. ERC
+          Consolidator, Simons Collaboration on the Origins of Life,  etc.), if applicable
+      award_number:
+        type: keyword
+        help.en: The number or unique identifier of the grant, if applicable
+  Project:
+    properties:
+      id:
+        type: keyword
+        help.en: Unique and persistent identifier which can be generated upon deposition
+          of the first member of the project, which can be used to show a relation
+          to other data within the MBDB
+      title:
+        type: keyword
+        help.en: Short title of the project
+      description:
+        type: keyword
+        help.en: Description of the project
+      owner:
+        use: '#/$defs/Person'
+        required: true
+  Associated_publications:
+    properties:
+      main:
+        use: '#/$defs/Publication'
+      additional[]:
+        ^help.en: Additional publications can be specified here, if applicable
+        use: '#/$defs/Publication'
+        type: nested
+  Derived_parameter:
+    properties:
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Descriptive name (id) of the parameter (e.g. Kd between Lysozyme
+          and VHH). Must be unique with in a record
+      type:
+        type: keyword
+        enum: [Concentration, Stoichiometry, Constant of association (K_A), Constant
+            of dissociation (K_D), Association rate (k_on), Dissociation rate (k_off),
+          Change in enthalpy (delta H), Change in entropy (delta S), Change in Gibbs
+            free energy (delta G), Molecular weight (MW)]
+        help.en: The type of physical parameter the derived parameter represents
+      entities_involved[]:
+        ^minItems: 1
+        ^help.en: List of chemical or molecular assemblies the derived parameter describes
+          and how many copies of each are involved
+        use: '#/$defs/Entity_and_stoichiometry'
+        type: nested
+      value:
+        type: double
+        help.en: Numerical value of the derived parameter
+      value_error:
+        use: '#/$defs/Value_error'
+      unit:
+        type: keyword
+        help.en: Unit of the derived parameter
+    id: derived-parameter
+  Entity_and_stoichiometry:
+    properties:
+      entity:
+        type: relation
+        model: '#entity'
+        keys: [id, name]
+      stoichiometry:
+        type: double
+        minimum: -1.0
+        help.en: Number of copies of the entity that contribute to the derived parameter,
+          -1 if unknown
+  Modification:
+    properties:
+      monomer_position:
+        type: integer
+        help.en: The numeric position of the monomer where the modification occurs
+      modification:
+        type: keyword
+        help.en: The type of modification
+      protocol[]:
+        ^help.en: List of steps the that led to the modification taking place
+        use: '#/$defs/Step'
+  Ultrafiltration:
+    properties:
+      pore_size:
+        type: keyword
+        enum: [0.2 µm, 0.22 µm, 0.45 µm, 0.5 µm, 1.2 µm, Other]
+        help.en: The pore size of the filter
+      filter_material:
+        type: keyword
+        enum: [Polyethersulfone (PES), Polyvinylidene flouride (PVDF), Cellulose acetate
+            (CA), Composite regenerated cellulose (CRC), Microporous Glass Fiber (MGF),
+          Nylon, Polytetrafluoroethylene (PTFE), Hydrophilic Polytetrafluoroethylene
+            (PTFE), Mixed cellulose ester (MCE), Polypropylene (PP)]
+        help.en: The material the filter was composed of
+  Step:
+    properties:
+      name:
+        type: keyword
+        help.en: Descriptive name of the step
+      description:
+        type: keyword
+        help.en: Short description of the step
+  Quality_control:
+    properties:
+      parameter:
+        type: keyword
+        enum: [aggregation state, homogeneity, identity, purity, stability, Other]
+        help.en: Which aspect was targeted by the quality control (e.g. purity, stability,
+          homogeneity, identity, aggregation state)
+      technique:
+        type: keyword
+        help.en: Which technique was used (e.g. SDS-PAGE MALDI-TOF, DLS, etc.)
+      storage_from_QC_to_measurement:
+        use: '#/$defs/Storage'
+        required: true
+      report:
+        use: '#/$defs/File'
+        required: true
+  Data_fitting:
+    properties:
+      model:
+        type: keyword
+        help.en: Description of the model(e.g. 1:1 binding)
+      software_name:
+        type: keyword
+        help.en: The name of the software that was used for doing the fitting (e.g.
+          Excel)
+      software_version:
+        type: keyword
+        help.en: The version of the software that was used for the step
+      quality:
+        type: double
+        help.en: Numerical value representing the quality estimate of the derived
+          parameter
+      quality_type:
+        type: keyword
+        enum: [R^2, SEM, red. Chi^2, 1sigma, 2sigma, 3sigma, 5sigma, Skewness]
+        help.en: Type of the quality estimate
+  Processing_step:
+    properties:
+      name:
+        type: keyword
+        help.en: Descriptive name of the processing step
+      description:
+        type: keyword
+        help.en: Description of what the processing step was
+      software_name:
+        type: keyword
+        help.en: The name of the software that was used for the step (e.g. Excel)
+      software_version:
+        type: keyword
+        help.en: The version of the software that was used for the step
+      software_tool:
+        type: keyword
+        help.en: The name of the tool within the specified software, i.e. a particular
+          method called or "button pressed" (e.g. equation solver, buffer subtraction)
+      link_to_source_code:
+        type: keyword
+        help.en: If processing was performed with software where the source code is
+          legally available a link can be specified here (e.g. self-written python
+          script in a GitHub repository
+  Value_error:
+    properties:
+      upper_error:
+        type: double
+        help.en: The upper error, i.e. the number added to the parameter value
+      lower_error:
+        type: double
+        help.en: The lower error, i.e. the number subtracted from the parameter value
+      errors_are_relative:
+        type: boolean
+        help.en: Whether the errors should be interpreted as relative errors in percent
+      error_level:
+        type: double
+        minimum: 0.0
+        help.en: How many standard deviations the error corresponds to
+  Dynamic_viscosity:
+    properties:
+      value:
+        type: double
+        minimum: 0.0
+        help.en: Numerical value of the dynamic viscosity
+      value_error:
+        use: '#/$defs/Value_error'
+      unit:
+        type: keyword
+        enum: [Pa s]
+        help.en: The unit of the dynamic viscosity
+      obtained_by:
+        use: '#/$defs/OBTAINED_TYPES'
+        required: true
+  PH:
+    properties:
+      value:
+        type: double
+        help.en: The pH value of the solution
+      value_error:
+        use: '#/$defs/Value_error'
+      obtained_by:
+        use: '#/$defs/OBTAINED_TYPES'
+        required: true
+  Temperature:
+    properties:
+      value:
+        type: double
+        help.en: Numeric value of the temperature
+      value_error:
+        use: '#/$defs/Value_error'
+      operational_value:
+        type: keyword
+        enum: [Room temperature, On Ice, Other]
+        help.en: If the temperature was defined by the procedure rather than the numerical
+          value the value can be specified here (e.g. Room temperature, on ice, etc.)
+      unit:
+        use: '#/$defs/TEMPERATURE_UNITS'
+        required: true
+      obtained_by:
+        use: '#/$defs/OBTAINED_TYPES'
+        required: true
+      controlled:
+        type: boolean
+        help.en: Whether the temperature was actively controlled
+  Pressure:
+    properties:
+      value:
+        type: double
+        help.en: Numeric value of the pressure
+      value_error:
+        use: '#/$defs/Value_error'
+      unit:
+        use: '#/$defs/PRESSURE_UNITS'
+        required: true
+      obtained_by:
+        use: '#/$defs/OBTAINED_TYPES'
+        required: true
+      controlled:
+        type: boolean
+        help.en: Whether the pressure was actively controlled
+  Humidity:
+    properties:
+      value:
+        type: double
+        help.en: Numeric value of the humidity
+      value_error:
+        use: '#/$defs/Value_error'
+      unit:
+        use: '#/$defs/HUMIDITY_UNITS'
+        required: true
+      obtained_by:
+        use: '#/$defs/OBTAINED_TYPES'
+        required: true
+      controlled:
+        type: boolean
+        help.en: Whether the humidity was actively controlled
+  Atmosphere:
+    properties:
+      composition[]:
+        ^minItems: 1
+        ^help.en: List of gases and their concentrations the atmosphere was composed
+          of
+        use: '#/$defs/Chemically_defined_constituent'
+        type: polymorphic
+        mapping:
+          type: nested
+  Time_duration:
+    properties:
+      value:
+        type: double
+        minimum: 0.0
+        help.en: Numerical value of the time point or duration
+      value_error:
+        use: '#/$defs/Value_error'
+      unit:
+        use: '#/$defs/TIME_UNITS'
+        required: true
+  Concentration:
+    properties:
+      value:
+        type: double
+        minimum: -1.0
+        help.en: The numerical value of the concentration, -1 if unknown
+      value_error:
+        use: '#/$defs/Value_error'
+      unit:
+        use: '#/$defs/CONCENTRATION_UNITS'
+        required: true
+      obtained_by:
+        use: '#/$defs/OBTAINED_TYPES'
+      obtained_protocol[]:
+        ^help.en: Information of how the concentration was obtained (e.g, Absorbance
+          at 280 nm, buffer absorbance subtraction, extinction coefficient
+        use: '#/$defs/Step'
+  Ionic_strength:
+    properties:
+      value:
+        type: double
+        minimum: 0.0
+        help.en: The numerical value of the ionic strength
+      unit:
+        use: '#/$defs/CONCENTRATION_UNITS'
+        required: true
+  Size:
+    properties:
+      type:
+        type: keyword
+        enum: [radius, diameter, path length, Other]
+        help.en: The type of size (e.g. radius)
+      mean:
+        type: double
+        minimum: 0.0
+        help.en: The mean of the size
+      unit:
+        use: '#/$defs/LENGTH_UNITS'
+        required: true
+      median:
+        type: double
+        minimum: 0.0
+        help.en: The median of the size
+      upper:
+        type: double
+        help.en: The upper bound of the size
+      lower:
+        type: double
+        help.en: The lower bound of the size
+      distribution_type:
+        type: keyword
+        help.en: The distribution type of sizes (e.g. log-normal)
+  File:
+    properties:
+      name:
+        type: keyword
+        help.en: Name of the file
+      type:
+        type: keyword
+        enum: [text, binary, text and binary]
+        help.en: Type of the file in terms of how it can be read (text, binary, etc.)
+      size:
+        use: '#/$defs/File_size'
+        required: true
+      source:
+        type: keyword
+        enum: [Instrument software, User annotated, MBDB]
+        help.en: Which source generated the file
+      description:
+        type: keyword
+        help.en: Short description of what the file contains
+      recommended_software:
+        type: keyword
+        help.en: The name of the software recommended for working with the file
+      processing_steps[]:
+        ^help.en: List of the processing steps performed on the file before it was
+          deposited (e.g. exported to xlsx)
+        use: '#/$defs/Processing_step'
+  File_size:
+    properties:
+      value:
+        type: double
+        minimum: 0.0
+        help.en: the numerical value of the size of the file
+      unit:
+        use: '#/$defs/FILE_SIZE_UNITS'
+        required: true
+  Measured_data_series:
+    properties:
+      id:
+        type: uuid
+        help.en: Unique ID for the measured data to be used as a link
+      name:
+        type: keyword
+        help.en: Short descriptive name of the data series
+      values[]:
+        ^help.en: The numerical values of the data series
+        type: double
+      unit:
+        type: keyword
+        help.en: The numerical values of the data series
+  Performance_test:
+    properties:
+      report:
+        use: '#/$defs/File'
+        required: true
+      published_test_protocol:
+        use: '#/$defs/Publication'
+      sample_composition[]:
+        ^help.en: The composition of the sample the performance test was carried out
+          on
+        use: '#/$defs/Constituent'
+        type: polymorphic
+        mapping:
+          type: nested
+      additional_information:
+        type: keyword
+        help.en: Additional information about the performance test can be specified
+          here
+  Storage:
+    properties:
+      temperature:
+        use: '#/$defs/Temperature'
+        required: true
+      duration:
+        use: '#/$defs/Time_duration'
+      storage_preparation[]:
+        ^help.en: The specific steps that were taken to prepare the samples for storage
+          (e.g. flash freezing in liquid nitrogen), if applicable
+        use: '#/$defs/Step'
+  Supplier:
+    properties:
+      name:
+        type: keyword
+        help.en: Name of the supplier
+      catalog_number:
+        type: keyword
+        help.en: The catalog number or identifier of the item
+      further_information[]:
+        ^help.en: Further information e.g. batch number
+        type: keyword
+  Coordinates:
+    properties:
+      S-N(latitude):
+        type: double
+        minimum: -90.0
+        maximum: 90.0
+        help.en: The latitude in degrees (decimal notation)
+      W-E(longitude):
+        type: double
+        minimum: -180.0
+        maximum: 180.0
+        help.en: The longitude in degrees (decimal notation)
+  OBTAINED_TYPES:
+    type: keyword
+    enum: [Measurement, Calculation, Assumption, Other]
+  CONCENTRATION_UNITS:
+    type: keyword
+    enum: [M, mM, µM, nM, pM, fM, aM, g/L, mg/mL, µg/mL, ng/mL, mol/kg, mmol/kg, v/v
+        %, w/w %, v/w %, w/v %, U/ml, '% saturated']
+  HUMIDITY_UNITS:
+    type: keyword
+    enum: ['%', g/m^3, oz/y^3]
+  PRESSURE_UNITS:
+    type: keyword
+    enum: [Pa, kPa, MPa, Bar, mBar, atm, Torr, PSI, mmHg, inchHg]
+  TEMPERATURE_UNITS:
+    type: keyword
+    enum: [K, °C, °F]
+  TIME_UNITS:
+    type: keyword
+    enum: [nanoseconds, microseconds, milliseconds, seconds, minutes, hours, days]
+  LENGTH_UNITS:
+    type: keyword
+    enum: [Å, nm, μm, mm, cm, m]
+  FILE_SIZE_UNITS:
+    type: keyword
+    enum: [bytes (B), kilobytes (kB), megabytes (MB), gigabytes (GB), terabytes (TB),
+      kibibytes (KiB), mebibytes (MiB), gibibytes (GiB), tebibytes (TiB)]
+  SUPPORTED_TECHNIQUES:
+    type: keyword
+    enum: [Bio-layer interferometry (BLI), Surface plasmon resonance (SPR), Mass Photometry
+        (MP), Isothermal titration calorimetry (ITC), Microscale thermophoresis/Temperature
+        related intensity change (MST/TRIC)]
+  COMPANIES:
+    type: keyword
+    enum: [Bio-Rad, Bruker, Cytiva, Gatorbio, GE Healthcare, Nanotemper, Nicoya Life,
+      Sartorius, Malvern Panalytical, Refeyn, TA Instruments]
+  PolymerConstituentPolymerPolymorphic:
+    properties:
+      polymer_type:
+        type: keyword
+        enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
+          polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
+          polyribonucleotide, Other]
+        help.en: The type of polymer (e.g. polypeptide(L))
+      organism:
+        use: '#/$defs/Organism'
+        required: true
+      variant:
+        type: keyword
+        help.en: Descriptive name indicating differences of primary sequence of the
+          polymer as compared to the most common form, or wildtype, including mutations,
+          purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
+      modifications:
+        use: '#/$defs/Polymer_modifications'
+      sequence:
+        type: keyword
+        help.en: Primary sequence of the polymer, using single letter codes, including
+          variant (e.g. SAGRELLE, AGTTA,). For non-natural see link for nomenclature
+      expression_source_type:
+        type: keyword
+        enum: [Isolated, Recombinantly, Synthetically]
+        help.en: How the polymer was produced
+      expression_organism:
+        use: '#/$defs/Organism'
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      external_databases[]:
+        ^help.en: List of identifiers to records in external databases containing
+          information about the polymer can be specified here (e.g Q8KRF6, UniProt)
+        type: keyword
+      additional_specifications[]:
+        ^help.en: Additional information about the polymer can be specified here
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+  ChemicalConstituentChemicalPolymorphic:
+    properties:
+      inchikey:
+        type: keyword
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
+          \ please specify the InChIKey of the monomer and specify the specific type\
+          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
+          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
+          \ specified here)"
+      additional_identifiers[]:
+        ^help.en: Unique and persistent identifier from an external source; options
+          of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
+        type: keyword
+      isotopic_labeling:
+        type: keyword
+        help.en: If the isotopic composition of the chemical was altered from the
+          naturally occurring one, it can be specified here (e.g. 15N, 13C)
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      additional_specifications[]:
+        ^help.en: Additional information about the chemical can be specified here
+          (e.g. RNase free water, recrystallization, desalting)
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+  Molecular_assemblyConstituentMolecular_assemblyPolymorphic:
+    properties:
+      external_databases[]:
+        ^help.en: List of identifiers to records in external databases containing
+          information about the molecular assembly as a whole can be specified here
+          (e.g. 1YQ2; PDB); information about the individual components should be
+          specified in the details of the individual components
+        type: keyword
+      components[]:
+        ^minItems: 1
+        ^help.en: Description of the individual components (e.g. polypeptide, heme,
+          lipids, metal ions etc.) the molecular assembly is composed of (e.g. Hemoglobin
+          alpha) and how many copies of each component were present
+        use: '#/$defs/Assembly_component'
+        type: polymorphic
+        mapping:
+          type: nested
+      chemical_modifications[]:
+        ^help.en: List describing deliberate modifications made to the molecular assembly
+          through chemical, biochemical, or physical means
+        use: '#/$defs/Modification'
+        type: nested
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      preparation_protocol[]:
+        ^help.en: The protocol used for preparing the molecular assembly
+        use: '#/$defs/Step'
+      additional_specifications[]:
+        ^help.en: Additional information about the macromolecular assembly can be
+          specified here
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+  PolymerAssembly_componentPolymerPolymorphic:
+    properties:
+      polymer_type:
+        type: keyword
+        enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
+          polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
+          polyribonucleotide, Other]
+        help.en: The type of polymer (e.g. polypeptide(L))
+      organism:
+        use: '#/$defs/Organism'
+        required: true
+      variant:
+        type: keyword
+        help.en: Descriptive name indicating differences of primary sequence of the
+          polymer as compared to the most common form, or wildtype, including mutations,
+          purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
+      modifications:
+        use: '#/$defs/Polymer_modifications'
+      sequence:
+        type: keyword
+        help.en: Primary sequence of the polymer, using single letter codes, including
+          variant (e.g. SAGRELLE, AGTTA,). For non-natural see link for nomenclature
+      expression_source_type:
+        type: keyword
+        enum: [Isolated, Recombinantly, Synthetically]
+        help.en: How the polymer was produced
+      expression_organism:
+        use: '#/$defs/Organism'
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      external_databases[]:
+        ^help.en: List of identifiers to records in external databases containing
+          information about the polymer can be specified here (e.g Q8KRF6, UniProt)
+        type: keyword
+      additional_specifications[]:
+        ^help.en: Additional information about the polymer can be specified here
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) given to the assembly component. The
+          name must be unique within a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical]
+        help.en: The type of component, options are (biological) Polymer and Chemical
+      copy_number:
+        type: double
+        minimum: -1.0
+        help.en: Number of molecules of the component within the assembly, -1 if unknown
+  ChemicalAssembly_componentChemicalPolymorphic:
+    properties:
+      inchikey:
+        type: keyword
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
+          \ please specify the InChIKey of the monomer and specify the specific type\
+          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
+          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
+          \ specified here)"
+      additional_identifiers[]:
+        ^help.en: Unique and persistent identifier from an external source; options
+          of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
+        type: keyword
+      isotopic_labeling:
+        type: keyword
+        help.en: If the isotopic composition of the chemical was altered from the
+          naturally occurring one, it can be specified here (e.g. 15N, 13C)
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      additional_specifications[]:
+        ^help.en: Additional information about the chemical can be specified here
+          (e.g. RNase free water, recrystallization, desalting)
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) given to the assembly component. The
+          name must be unique within a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical]
+        help.en: The type of component, options are (biological) Polymer and Chemical
+      copy_number:
+        type: double
+        minimum: -1.0
+        help.en: Number of molecules of the component within the assembly, -1 if unknown
+  Complex_substance_of_biological_originConstituentComplex_substance_of_biological_originPolymorphic:
+    help.en: Information about the biological substance the complex substance is derived
+      from
+    schemas:
+      Body fluid:
+        use: '#/$defs/Body_fluidComplex_substance_of_biological_originBody_fluidPolymorphic'
+        required: true
+      Cell fraction:
+        use: '#/$defs/Cell_fractionComplex_substance_of_biological_originCell_fractionPolymorphic'
+        required: true
+      Virion:
+        use: '#/$defs/VirionComplex_substance_of_biological_originVirionPolymorphic'
+        required: true
+    type: polymorphic
+    discriminator: derived_from
+  Body_fluidComplex_substance_of_biological_originBody_fluidPolymorphic:
+    properties:
+      fluid:
+        type: keyword
+        enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract,
+          Other]
+        help.en: The body fluid the complex substance is derived from
+      health_status:
+        type: keyword
+        help.en: Health status of the donor organism where the body fluid was derived
+          from (e.g. healthy, sick, patient with Parkinson's Disease)
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      derived_from:
+        type: keyword
+        enum: [Body fluid, Cell fraction, Virion]
+        help.en: The biological substance the complex substance is derived from
+      organism:
+        use: '#/$defs/Organism'
+        required: true
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+      id:
+        type: keyword
+  Cell_fractionComplex_substance_of_biological_originCell_fractionPolymorphic:
+    properties:
+      fraction:
+        type: keyword
+        enum: [Ribosome, Cell wall, VesicleCell lysate/Cytoplasm, Cell Membrane, Extracellular
+            matrix, Lysosome, Golgi Apparatus, Mitochondrion, Nucleus, Rough Endoplasmic
+            Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast, Other]
+        help.en: The subcelluar component e.g. (Ribosome)
+      health_status:
+        type: keyword
+        help.en: Health status of the donor organism where the cell fraction was derived
+          from (e.g. healthy, sick, patient with Parkinson's Disease)
+      organ:
+        type: keyword
+        help.en: The organ the cell fraction was derived from (e.g. heart)
+      tissue:
+        type: keyword
+        help.en: The tissue type the cell fraction was derived from
+      celltype:
+        type: keyword
+        help.en: The cell type the cell fraction was derived from
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      derived_from:
+        type: keyword
+        enum: [Body fluid, Cell fraction, Virion]
+        help.en: The biological substance the complex substance is derived from
+      organism:
+        use: '#/$defs/Organism'
+        required: true
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+      id:
+        type: keyword
+  VirionComplex_substance_of_biological_originVirionPolymorphic:
+    properties:
+      Genetic_material:
+        type: keyword
+        enum: [No genetic material, Virus genome, Synthetic, Other]
+        help.en: The genetic material carried by the virions (None, virus genome,
+          synthetic)
+      host_organism:
+        use: '#/$defs/Organism'
+        required: true
+      host_cell_type:
+        type: keyword
+        help.en: The host cell type the virion was produced in
+      capsid_type:
+        type: keyword
+        enum: [None, Native, Genetically Engineered, Synthetic, Other]
+        help.en: The type of virion capsid (e.g. genetically engineered, None
+      envelope_type:
+        type: keyword
+        enum: [None, Native, Genetically Engineered, Synthetic, Other]
+        help.en: The type of virion envelope (e.g. genetically engineered, None
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      derived_from:
+        type: keyword
+        enum: [Body fluid, Cell fraction, Virion]
+        help.en: The biological substance the complex substance is derived from
+      organism:
+        use: '#/$defs/Organism'
+        required: true
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+      id:
+        type: keyword
+  Complex_substance_of_environmental_originConstituentComplex_substance_of_environmental_originPolymorphic:
+    properties:
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      source:
+        type: keyword
+        enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil, Other]
+        help.en: The environmental source where the complex substance was derived
+          from
+      location:
+        use: '#/$defs/Coordinates'
+        required: true
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+  Complex_substance_of_chemical_originConstituentComplex_substance_of_chemical_originPolymorphic:
+    properties:
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      class:
+        type: keyword
+        enum: [Lipid_assembly]
+        help.en: The chemical origin where the complex substance was derived from
+      details:
+        use: '#/$defs/Lipid_assembly'
+        required: true
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+  Complex_substance_of_industrial_production_originConstituentComplex_substance_of_industrial_production_originPolymorphic:
+    properties:
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      product:
+        type: keyword
+        enum: [Beer, Cell medium, Whey, Other]
+        help.en: The type of product, byproduct, or waste product the complex substance
+          was derived from
+      description:
+        type: keyword
+        help.en: Further descriptions of the complex substance
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+  PolymerChemically_defined_constituentPolymerPolymorphic:
+    properties:
+      polymer_type:
+        type: keyword
+        enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
+          polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
+          polyribonucleotide, Other]
+        help.en: The type of polymer (e.g. polypeptide(L))
+      organism:
+        use: '#/$defs/Organism'
+        required: true
+      variant:
+        type: keyword
+        help.en: Descriptive name indicating differences of primary sequence of the
+          polymer as compared to the most common form, or wildtype, including mutations,
+          purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
+      modifications:
+        use: '#/$defs/Polymer_modifications'
+      sequence:
+        type: keyword
+        help.en: Primary sequence of the polymer, using single letter codes, including
+          variant (e.g. SAGRELLE, AGTTA,). For non-natural see link for nomenclature
+      expression_source_type:
+        type: keyword
+        enum: [Isolated, Recombinantly, Synthetically]
+        help.en: How the polymer was produced
+      expression_organism:
+        use: '#/$defs/Organism'
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      external_databases[]:
+        ^help.en: List of identifiers to records in external databases containing
+          information about the polymer can be specified here (e.g Q8KRF6, UniProt)
+        type: keyword
+      additional_specifications[]:
+        ^help.en: Additional information about the polymer can be specified here
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+  ChemicalChemically_defined_constituentChemicalPolymorphic:
+    properties:
+      inchikey:
+        type: keyword
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
+          \ please specify the InChIKey of the monomer and specify the specific type\
+          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
+          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
+          \ specified here)"
+      additional_identifiers[]:
+        ^help.en: Unique and persistent identifier from an external source; options
+          of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
+        type: keyword
+      isotopic_labeling:
+        type: keyword
+        help.en: If the isotopic composition of the chemical was altered from the
+          naturally occurring one, it can be specified here (e.g. 15N, 13C)
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      additional_specifications[]:
+        ^help.en: Additional information about the chemical can be specified here
+          (e.g. RNase free water, recrystallization, desalting)
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+  Molecular_assemblyChemically_defined_constituentMolecular_assemblyPolymorphic:
+    properties:
+      external_databases[]:
+        ^help.en: List of identifiers to records in external databases containing
+          information about the molecular assembly as a whole can be specified here
+          (e.g. 1YQ2; PDB); information about the individual components should be
+          specified in the details of the individual components
+        type: keyword
+      components[]:
+        ^minItems: 1
+        ^help.en: Description of the individual components (e.g. polypeptide, heme,
+          lipids, metal ions etc.) the molecular assembly is composed of (e.g. Hemoglobin
+          alpha) and how many copies of each component were present
+        use: '#/$defs/Assembly_component'
+        type: polymorphic
+        mapping:
+          type: nested
+      chemical_modifications[]:
+        ^help.en: List describing deliberate modifications made to the molecular assembly
+          through chemical, biochemical, or physical means
+        use: '#/$defs/Modification'
+        type: nested
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      preparation_protocol[]:
+        ^help.en: The protocol used for preparing the molecular assembly
+        use: '#/$defs/Step'
+      additional_specifications[]:
+        ^help.en: Additional information about the macromolecular assembly can be
+          specified here
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly]
+        help.en: The type of the constituent, options are Polymer, Chemical, and defined
+          assembly
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+  PolymerEntityPolymerPolymorphic:
+    properties:
+      polymer_type:
+        type: keyword
+        enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
+          polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
+          polyribonucleotide, Other]
+        help.en: The type of polymer (e.g. polypeptide(L))
+      organism:
+        use: '#/$defs/Organism'
+        required: true
+      variant:
+        type: keyword
+        help.en: Descriptive name indicating differences of primary sequence of the
+          polymer as compared to the most common form, or wildtype, including mutations,
+          purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
+      modifications:
+        use: '#/$defs/Polymer_modifications'
+      sequence:
+        type: keyword
+        help.en: Primary sequence of the polymer, using single letter codes, including
+          variant (e.g. SAGRELLE, AGTTA,). For non-natural see link for nomenclature
+      expression_source_type:
+        type: keyword
+        enum: [Isolated, Recombinantly, Synthetically]
+        help.en: How the polymer was produced
+      expression_organism:
+        use: '#/$defs/Organism'
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      external_databases[]:
+        ^help.en: List of identifiers to records in external databases containing
+          information about the polymer can be specified here (e.g Q8KRF6, UniProt)
+        type: keyword
+      additional_specifications[]:
+        ^help.en: Additional information about the polymer can be specified here
+        type: keyword
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substance which cannot be exactly specified as for its chemical composition,
+          e.g. blood, serum, plant extract
+  ChemicalEntityChemicalPolymorphic:
+    properties:
+      inchikey:
+        type: keyword
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
+          \ please specify the InChIKey of the monomer and specify the specific type\
+          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
+          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
+          \ specified here)"
+      additional_identifiers[]:
+        ^help.en: Unique and persistent identifier from an external source; options
+          of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
+        type: keyword
+      isotopic_labeling:
+        type: keyword
+        help.en: If the isotopic composition of the chemical was altered from the
+          naturally occurring one, it can be specified here (e.g. 15N, 13C)
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      additional_specifications[]:
+        ^help.en: Additional information about the chemical can be specified here
+          (e.g. RNase free water, recrystallization, desalting)
+        type: keyword
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substance which cannot be exactly specified as for its chemical composition,
+          e.g. blood, serum, plant extract
+  Molecular_assemblyEntityMolecular_assemblyPolymorphic:
+    properties:
+      external_databases[]:
+        ^help.en: List of identifiers to records in external databases containing
+          information about the molecular assembly as a whole can be specified here
+          (e.g. 1YQ2; PDB); information about the individual components should be
+          specified in the details of the individual components
+        type: keyword
+      components[]:
+        ^minItems: 1
+        ^help.en: Description of the individual components (e.g. polypeptide, heme,
+          lipids, metal ions etc.) the molecular assembly is composed of (e.g. Hemoglobin
+          alpha) and how many copies of each component were present
+        use: '#/$defs/Assembly_component'
+        type: polymorphic
+        mapping:
+          type: nested
+      chemical_modifications[]:
+        ^help.en: List describing deliberate modifications made to the molecular assembly
+          through chemical, biochemical, or physical means
+        use: '#/$defs/Modification'
+        type: nested
+      supplier:
+        use: '#/$defs/Supplier'
+      quality_controls[]:
+        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
+        use: '#/$defs/Quality_control'
+        type: nested
+      preparation_protocol[]:
+        ^help.en: The protocol used for preparing the molecular assembly
+        use: '#/$defs/Step'
+      additional_specifications[]:
+        ^help.en: Additional information about the macromolecular assembly can be
+          specified here
+        type: keyword
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substance which cannot be exactly specified as for its chemical composition,
+          e.g. blood, serum, plant extract
+  Complex_substance_of_biological_originEntityComplex_substance_of_biological_originPolymorphic:
+    help.en: Information about the biological substance the complex substance is derived
+      from
+    schemas:
+      Body fluid:
+        use: '#/$defs/Body_fluidComplex_substance_of_biological_originBody_fluidPolymorphic'
+        required: true
+      Cell fraction:
+        use: '#/$defs/Cell_fractionComplex_substance_of_biological_originCell_fractionPolymorphic'
+        required: true
+      Virion:
+        use: '#/$defs/VirionComplex_substance_of_biological_originVirionPolymorphic'
+        required: true
+    type: polymorphic
+    discriminator: derived_from
+  Complex_substance_of_environmental_originEntityComplex_substance_of_environmental_originPolymorphic:
+    properties:
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      source:
+        type: keyword
+        enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil, Other]
+        help.en: The environmental source where the complex substance was derived
+          from
+      location:
+        use: '#/$defs/Coordinates'
+        required: true
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substance which cannot be exactly specified as for its chemical composition,
+          e.g. blood, serum, plant extract
+  Complex_substance_of_chemical_originEntityComplex_substance_of_chemical_originPolymorphic:
+    properties:
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      class:
+        type: keyword
+        enum: [Lipid_assembly]
+        help.en: The chemical origin where the complex substance was derived from
+      details:
+        use: '#/$defs/Lipid_assembly'
+        required: true
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substance which cannot be exactly specified as for its chemical composition,
+          e.g. blood, serum, plant extract
+  Complex_substance_of_industrial_production_originEntityComplex_substance_of_industrial_production_originPolymorphic:
+    properties:
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      product:
+        type: keyword
+        enum: [Beer, Cell medium, Whey, Other]
+        help.en: The type of product, byproduct, or waste product the complex substance
+          was derived from
+      description:
+        type: keyword
+        help.en: Further descriptions of the complex substance
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substance which cannot be exactly specified as for its chemical composition,
+          e.g. blood, serum, plant extract
+settings:
+  i18n-languages: [en]

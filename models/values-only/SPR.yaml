@@ -1,0 +1,54 @@
+general_parameters: include('General_parameters')
+method_specific_parameters:
+  experiment_type: enum('Affinity', 'Quantification', 'Other')
+  sensor: include('Sensor')
+  measurement_positions: list(include('Measurement_position'), min=1)
+  measurement_protocol: list(include('Measurement_step'), min=1)
+  measurements: list(include('Measurement'), min=1)
+  data_analysis: list(include('SPR_data_analysis'), min=1)
+---
+SPR_data_analysis:
+  derived_parameter: link(target='derived-parameter')
+  data_processing_steps: list(include('Processing_step'), required=False)
+  data_fitting: include('Data_fitting')
+Measurement:
+  measurement_position: link(target='spr-measurement-position')
+  reference_measurement_position: link(target='spr-measurement-position', required=False)
+  samples: list(include('Sample'))
+  reference_samples: list(include('Sample'), required=False)
+Sample:
+  measurement_step: link(target='spr-measurement-step')
+  position: keyword(required=False)
+  chemical_environment: link(target='chemical-environment')
+  analytes: list(include('Entity_constituent'))
+  temperature: include('Temperature', required=False)
+  preparation: list(include('Step'), required=False)
+Measurement_step:
+  id: link_target(name="spr-measurement-step")
+  name: str()
+  type: enum('Association', 'Baseline', 'Dissociation', 'Regeneration', 'Load', 'Wash',
+    'Activation', 'Enhancement')
+  start_time: include('Time_duration')
+  time_length: include('Time_duration')
+  flow: include('Flow')
+Measurement_position:
+  id: link_target(name="spr-measurement-position")
+  name: str()
+  flow_cell: str()
+  position: str(required=False)
+  ligand_information: include('Ligand_information', required=False)
+Ligand_information:
+  ligand: link(target='entity', required=False)
+  ligand_immobilization_chemistry: str(required=False)
+  ligand_immobilization_protocol: list(include('Step'), required=False)
+Sensor:
+  id: str(required=False)
+  surface_properties: str(required=False)
+  supplier: include('Supplier')
+  sensor_initialization: enum('Air', 'Glycerol', required=False)
+  previously_used: bool(required=False)
+Flow:
+  rate: num(min=0)
+  unit: include('FLOWRATE_UNITS')
+  direction: enum('Vertical','Horizontal', required=False)
+  path: list(list(link(target='spr-measurement-position')))
