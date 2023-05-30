@@ -27,7 +27,7 @@ the schemas, and validates the test data against the appropriate schema.
 It can be run (in *nix) using:
 
 ```bash
-python tools/validate_test_data.py
+python tools/validate_examples.py
 ```
 
 # Structure of schemas
