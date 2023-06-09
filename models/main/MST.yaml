@@ -12,7 +12,7 @@ method_specific_parameters:
         description     : str(equals='The schema version used to annotate the 
                                       MST method specific parameters', 
                                       required=False)       
-        value           : keyword(equals='0.9.0')
+        value           : keyword(equals='0.9.1')
 
     experiment_type:
         description     : str(equals='Type of physical parameter measured',
@@ -24,33 +24,40 @@ method_specific_parameters:
                                       required=False)
         value           : enum('Initial intensity','TRIC/MST', 'Spectral shift')
 
-    label_free:
-        description     : str(equals='Whether or not this was a label free type
-                                      of experiment', required=False)
-        value           : bool()
-
     excitation_led_color:
         description     : str(equals='The color of the excitation LED used for
-                                      the experiment', required=False)
+                                      the experiment. NOTE that colors are
+                                      specific to the combination in which it
+                                      occurs, e.g. the GREEN in a BLUE/GREEN
+                                      instrument, is not the same as the GREEN
+                                      in a GREEN/RED instrument',
+                                      required=False)
 
-        value           : enum('RED (ex 605–645nm, em 660–730nm)',
-                               'RED (ex 610–645nm, em 680–730nm)',
+        value           : enum('RED (ex 605–645nm, em 660–720nm)',
+                               'RED (ex 610–645nm, em 680–720nm)',
                                'GREEN (ex 555-585nm, em 605-690nm)',
                                'GREEN (ex 515-550nm, em 565-600nm)',
                                'BLUE (ex 480–500nm, em 515–550nm)',
                                'BLUE (ex 460–500nm, em 515–560nm)',
-                               'UV (ex 260-300nm, em 330-380nm)')
+                               'UV (ex 260-300nm, em 330-380nm)',
+                               'Spectral shift')
+
 
     excitation_led_power:
         description     : str(equals='The power, in percentage, of the
                                       excitation LED used in experiment',
                                       required=False)
-        value           : int(min=0, max=100)
+        value           : num(min=0, max=100)
 
     ir_mst_laser_power:
-        description     : str(equals='The power, in percentage, of the infrared
-                                      LASER used in experiment', required=False)
-        value           : int(min=0, max=100)
+        description     : str(equals="The power of the infrared LASER used in
+                                      the experiment in percentages. A change in
+                                      nomenclature occurred in Nanotemper's
+                                      software, however the underlying
+                                      data is still stored in percentages use
+                                      the following conversion; Low = 20,
+                                      Medium = 40, High = 60", required=False)
+        value           : num(min=0, max=100)
 
     measurements:
         description     : str(equals='List of the information about each
