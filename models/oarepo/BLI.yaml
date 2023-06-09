@@ -10,6 +10,11 @@ record:
           required: true
         method_specific_parameters:
           properties:
+            schema_version:
+              type: keyword
+              enum: [0.9.0]
+              help.en: The schema version used to annotate the BLI method specific
+                parameters
             experiment_type:
               type: keyword
               enum: [Affinity, Quantification, Other]
@@ -209,6 +214,10 @@ $defs:
         required: true
   General_parameters:
     properties:
+      schema_version:
+        type: keyword
+        enum: [0.9.0]
+        help.en: The schema version used to annotate the general parameters
       record:
         properties:
           publisher:

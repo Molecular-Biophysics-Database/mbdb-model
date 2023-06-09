@@ -1,4 +1,5 @@
  general_parameters                                                                         ('singular', 'required', ['dict'], {}) "
+"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.9.0'}) "
 "  |   record                                                                                ('singular', 'required', ['dict'], {}) "
 "  |    |   publisher                                                                        ('singular', 'required', ['Keyword'], {'equals': 'MBDB'}) "
 "  |    |   resource_type_general                                                            ('singular', 'required', ['Keyword'], {'equals': 'dataset'}) "
@@ -193,6 +194,7 @@
 "  |    |    |   error_level                                                                 ('singular', 'optional', ['Number'], {'min': 0}) "
 "  |    |   unit                                                                             ('singular', 'required', ['Keyword'], {}) "
 " method_specific_parameters                                                                 ('singular', 'required', ['dict'], {}) "
+"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.9.0'}) "
 "  |   experiment_type                                                                       ('singular', 'required', ['Enum'], {}) "
 "  |   signal_type                                                                           ('singular', 'required', ['Enum'], {}) "
 "  |   label_free                                                                            ('singular', 'required', ['Boolean'], {}) "

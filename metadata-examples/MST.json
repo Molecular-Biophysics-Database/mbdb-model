@@ -1,6 +1,7 @@
 {
   "metadata": {
     "general_parameters": {
+      "schema_version": "0.9.0",
       "record": {
         "publisher": "MBDB",
         "resource_type_general": "dataset",
@@ -321,6 +322,7 @@
       ]
     },
     "method_specific_parameters": {
+      "schema_version": "0.9.0",
       "experiment_type": "Affinity",
       "signal_type": "TRIC/MST",
       "label_free": false,

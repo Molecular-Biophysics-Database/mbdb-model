@@ -2,6 +2,11 @@
 # an independent schema
 
 General_parameters:
+    schema_version:
+        description     : str(equals='The schema version used to annotate the
+                                      general parameters', required=False)
+        value           : keyword(equals='0.9.0')
+
     record:
         publisher:
             description : str(equals='When made available MBDB is to be

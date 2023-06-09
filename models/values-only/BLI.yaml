@@ -1,5 +1,6 @@
 general_parameters: include('General_parameters')
 method_specific_parameters:
+  schema_version: keyword(equals='0.9.0')
   experiment_type: enum('Affinity','Quantification', 'Other')
   plates: list(include('Plate'), min=1)
   sensors: list(include('Sensor'), min=1)
