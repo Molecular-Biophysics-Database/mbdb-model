@@ -12,7 +12,7 @@ record:
           properties:
             schema_version:
               type: keyword
-              enum: [0.9.0]
+              enum: [0.9.1]
               help.en: The schema version used to annotate the MST method specific
                 parameters
             experiment_type:
@@ -23,26 +23,29 @@ record:
               type: keyword
               enum: [Initial intensity, TRIC/MST, Spectral shift]
               help.en: Which type of signal was measured
-            label_free:
-              type: boolean
-              help.en: Whether or not this was a label free type of experiment
             excitation_led_color:
               type: keyword
-              enum: ['RED (ex 605–645nm, em 660–730nm)', 'RED (ex 610–645nm, em 680–730nm)',
+              enum: ['RED (ex 605–645nm, em 660–720nm)', 'RED (ex 610–645nm, em 680–720nm)',
                 'GREEN (ex 555-585nm, em 605-690nm)', 'GREEN (ex 515-550nm, em 565-600nm)',
                 'BLUE (ex 480–500nm, em 515–550nm)', 'BLUE (ex 460–500nm, em 515–560nm)',
-                'UV (ex 260-300nm, em 330-380nm)']
-              help.en: The color of the excitation LED used for the experiment
+                'UV (ex 260-300nm, em 330-380nm)', Spectral shift]
+              help.en: The color of the excitation LED used for the experiment. NOTE
+                that colors are specific to the combination in which it occurs, e.g.
+                the GREEN in a BLUE/GREEN instrument, is not the same as the GREEN
+                in a GREEN/RED instrument
             excitation_led_power:
-              type: integer
-              minimum: 0
-              maximum: 100
+              type: double
+              minimum: 0.0
+              maximum: 100.0
               help.en: The power, in percentage, of the excitation LED used in experiment
             ir_mst_laser_power:
-              type: integer
-              minimum: 0
-              maximum: 100
-              help.en: The power, in percentage, of the infrared LASER used in experiment
+              type: double
+              minimum: 0.0
+              maximum: 100.0
+              help.en: The power of the infrared LASER used in the experiment in percentages.
+                A change in nomenclature occurred in Nanotemper's software, however
+                the underlying data is still stored in percentages use the following
+                conversion; Low = 20, Medium = 40, High = 60
             measurements[]:
               ^minItems: 0
               ^help.en: List of the information about each measurement, including,
