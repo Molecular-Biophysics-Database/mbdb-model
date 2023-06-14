@@ -84,3 +84,9 @@ that are compatible with being stored in Invenio.
 
 Table of unit conversion that will be needed to make searching possible as well
 as efficient.
+
+## random_generator.py
+
+Early attempt at creating random data based on the a Yamale schema. Simple data
+types are working but link, link_targets, and choose are not implemented fully
+yet.
