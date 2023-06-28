@@ -6,3 +6,4 @@ numpy
 olefile
 xmltodict
 requests
+ete3
