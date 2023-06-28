@@ -1,0 +1,19 @@
+Grant:
+    project_title:
+        description:    str(equals='Name of project the grant is given to (e.g
+                                    Development of bioeffect approaches for
+                                    assessing anthropogenic contamination
+                                    in northern marine environments)',
+                                    required=False)
+        value:          freetext(min=1)
+
+    funder_name:
+        decription:    str(equals='Name of the funding agency/institution (e.g
+                                   Academy of Finland)', required=False)
+        value:         freetext(min=1)
+
+
+    grant_number:
+        description:   str(equals='The number/ID associated with the grant (e.g
+                                   308726)', required=False)
+        value:         keyword(min=1)
