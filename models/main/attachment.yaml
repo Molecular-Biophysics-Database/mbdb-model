@@ -1,0 +1,80 @@
+File:
+    name:
+        description     : str(equals='Name of the file', required=False)
+        value           : keyword()
+
+    type:
+        description     : str(equals='Type of the file in terms of how it can be
+                                      read (text, binary, etc.)',
+                                      required=False)
+        value           : enum('text','binary', 'text and binary')
+
+    purpose:
+        description     : str(equals='',required=False)
+        value           : enum('raw measurement data',
+                               'derived measurement data',
+                               'QC report')
+
+    creator:
+        description     : str(equals='Who generated the file')
+        value           : enum('Instrument software', 'User',
+                               'MBDB')
+
+    size:
+        description     : str(equals='Size of the file',required=False)
+        value           : int(min=0)
+
+
+    description:
+        description     : str(equals='Short description of what the file
+                                      contains', required=False)
+        value           : str(required=False)
+
+    recommended_software:
+        description     : str(equals='The name of the software recommended for
+                                      working with the file', required=False)
+        value           : str(required=False)
+
+    processing_steps:
+        description     : str(equals='List of the processing steps performed on
+                                      the file before it was deposited (e.g.
+                                      exported to xlsx)', required=False)
+        value           : list(include('Processing_step'))
+
+---
+Processing_step:
+    name:
+        description     : str(equals='Descriptive name of the processing step',
+                                      required=False)
+        value           : str()
+
+    description:
+        description     : str(equals='Description of what the processing step
+                                      was', required=False)
+        value           : str()
+
+    software_name:
+        description     : str(equals='The name of the software that was
+                                      used for the step (e.g. Excel)',
+                                      required=False)
+        value           : str(required=False)
+
+    software_version:
+        description     : str(equals='The version of the software that was
+                                      used for the step', required=False)
+        value           : keyword(required=False)
+
+    software_tool:
+        description     : str(equals='The name of the tool within the specified
+                                      software, i.e. a particular method called
+                                      or "button pressed" (e.g. equation solver,
+                                      buffer subtraction)', required=False)
+        value           : str(required=False)
+
+    link_to_source_code:
+        description     : str(equals='If processing was performed with software
+                                      where the source code is legally available
+                                      a link can be specified here (e.g.
+                                      self-written python script in a GitHub
+                                      repository', required=False)
+        value           : keyword(required=False)
