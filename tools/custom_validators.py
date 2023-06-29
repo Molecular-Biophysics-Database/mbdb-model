@@ -72,23 +72,28 @@ class Link(Validator):
 class Keyword(String):
     tag = "keyword"
 
+
 class Fulltext(String):
     tag = "fulltext"
+
 
 class MacroMolecule_id(Keyword):
     tag = "macromolecule_id"
     # put into translation yamale2model
     # enum(pdb:, uniprot:)
 
+
 class Taxonomy_id(Keyword):
     tag = "taxonomy_id"
     # put into translation yamale2model
     # enum(taxid:)
 
+
 class Database_id(Keyword):
     tag = "database_id"
     # put into translation yamale2model
     # enum(doi:)
+
 
 class Chemical_id(Keyword):
     tag = "chemical_id"
@@ -104,7 +109,6 @@ class Person_id(Keyword):
 
 class Nested_include(Include):
     tag = "nested_include"
-    # put into translation yamale2model
 
 
 class Publication_id(Keyword):
@@ -174,6 +178,11 @@ class Uuid(Validator):
             return False
 
 
+class Vocabulary(Link):
+    """Vocabulary validator"""
+    tag="vocabulary"
+
+
 # include custom validators
 extend_validators = DefaultValidators.copy()
 for val in (
@@ -188,5 +197,6 @@ for val in (
     Publication_id,
     Choose,
     Nested_include,
+    Vocabulary,
 ):
     extend_validators[val.tag] = val

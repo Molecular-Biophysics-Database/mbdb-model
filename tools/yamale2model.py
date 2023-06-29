@@ -37,6 +37,7 @@ from custom_validators import (
     Chemical_id,
     Person_id,
     Publication_id,
+    Vocabulary,
 )
 
 import ruamel
@@ -88,7 +89,7 @@ validators[Person_id.tag] = Person_id
 validators[Publication_id.tag] = Publication_id
 validators[Nested_include.tag] = Nested_include
 validators[Choose.tag] = Choose
-
+validators[Vocabulary.tag] = Vocabulary
 
 class KeyModifier:
     def __init__(self, value) -> None:
@@ -464,6 +465,9 @@ class ModelLink(ModelBase):
     def propagate_polymorphic_base_schemas(self, defs):
         pass
 
+class ModelVocabulary(ModelLink):
+    pass
+
 
 @dataclasses.dataclass
 class Model:
@@ -570,6 +574,8 @@ def parse(d, path, includes):
     elif clz is LinkTarget:
         return ModelLinkTarget(d, path)
     elif clz is Link:
+        return ModelLink(d, path)
+    elif clz is Vocabulary:
         return ModelLink(d, path)
     elif clz is Choose:
         return ModelChoose(d, path)
