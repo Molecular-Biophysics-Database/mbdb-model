@@ -7,3 +7,8 @@ olefile
 xmltodict
 requests
 ete3
+
+# for development
+black
+isort
+autoflake

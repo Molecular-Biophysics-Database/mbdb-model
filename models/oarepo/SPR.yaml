@@ -45,6 +45,8 @@ record:
   plugins:
     builder:
       disable: [script_sample_data]
+    packages: [oarepo-model-builder-files==4.*, oarepo-model-builder-cf==4.*, oarepo-model-builder-vocabularies==4.*,
+      oarepo-model-builder-relations==4.*]
 $defs:
   SPR_data_analysis:
     properties:
@@ -512,11 +514,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
-          \ please specify the InChIKey of the monomer and specify the specific type\
-          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
-          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
-          \ specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -877,7 +879,9 @@ $defs:
         type: keyword
       affiliations[]:
         ^help.en: The affiliation of the person
-        type: keyword
+        keys: [id, name]
+        vocabulary: affiliations
+        type: vocabulary
   Publication:
     properties:
       pid:
@@ -1420,11 +1424,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
-          \ please specify the InChIKey of the monomer and specify the specific type\
-          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
-          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
-          \ specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -1563,11 +1567,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
-          \ please specify the InChIKey of the monomer and specify the specific type\
-          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
-          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
-          \ specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -1938,11 +1942,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
-          \ please specify the InChIKey of the monomer and specify the specific type\
-          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
-          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
-          \ specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -2081,11 +2085,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
-          \ please specify the InChIKey of the monomer and specify the specific type\
-          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
-          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
-          \ specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID

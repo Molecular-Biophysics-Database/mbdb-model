@@ -1,18 +1,28 @@
 #!/usr/bin/env python3
 
 from argparse import ArgumentParser
-from yamale import make_schema
 from pathlib import Path
 from typing import List
+
 import yaml
 
 
 def _mk_arg_parser() -> ArgumentParser:
     """Command line interface"""
-    parser = ArgumentParser(description='Removing description elements in mbdb main yamale schemas')
-    parser.add_argument('schema_files', nargs='+', type=Path, help='Input Yamale schema files with descriptions')
-    parser.add_argument('--output-folder', type=Path,
-                        help='Output folder where the schemas without structures will be stored')
+    parser = ArgumentParser(
+        description="Removing description elements in mbdb main yamale schemas"
+    )
+    parser.add_argument(
+        "schema_files",
+        nargs="+",
+        type=Path,
+        help="Input Yamale schema files with descriptions",
+    )
+    parser.add_argument(
+        "--output-folder",
+        type=Path,
+        help="Output folder where the schemas without structures will be stored",
+    )
     return parser
 
 
@@ -21,16 +31,21 @@ class SimplifiedSchema:
         self.yaml_docs: List[dict] = []
 
     def read(self, path: Path) -> List[dict]:
-            """Reads a YAML file"""
-            with open(path, 'r') as f_in:
-                self.yaml_docs = list(yaml.load_all(f_in, Loader=yaml.CSafeLoader))
+        """Reads a YAML file"""
+        with open(path, "r") as f_in:
+            self.yaml_docs = list(yaml.load_all(f_in, Loader=yaml.CSafeLoader))
 
     def write(self, path: Path) -> None:
         """Writes a YAML file"""
-        with open(path, 'w') as f_out:
-            yaml.dump_all(self.yaml_docs, stream=f_out,
-                          default_flow_style=False, sort_keys=False,
-                          encoding='utf-8', allow_unicode=True)
+        with open(path, "w") as f_out:
+            yaml.dump_all(
+                self.yaml_docs,
+                stream=f_out,
+                default_flow_style=False,
+                sort_keys=False,
+                encoding="utf-8",
+                allow_unicode=True,
+            )
 
     def strip_description(self) -> None:
         """Go through all yaml documents and remove descriptions inplace"""
@@ -47,16 +62,18 @@ class SimplifiedSchema:
             return
 
         for key, value in doc.items():
-            if ('value' in value) and ('description' in value):
-                doc.update({key: value['value']})
+            if ("value" in value) and ("description" in value):
+                doc.update({key: value["value"]})
 
             else:
                 self._remove_description((doc[key]))
+
 
 def new_filename(file):
     parent_folder = file.parent
     file_name = file.name
     return parent_folder, file_name
+
 
 def main() -> None:
     args = _mk_arg_parser().parse_args()
@@ -70,5 +87,5 @@ def main() -> None:
         simple_schema.write(parent.joinpath(name))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

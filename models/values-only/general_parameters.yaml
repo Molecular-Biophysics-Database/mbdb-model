@@ -200,7 +200,7 @@ Taxa:
 Person:
   full_name: str()
   identifiers: list(person_id(), required=False)
-  affiliations: list(str(), required=False)
+  affiliations: list(vocabulary(vocabulary='affiliations'), required=False)
 Publication:
   pid: publication_id()
   title: str(required=False)

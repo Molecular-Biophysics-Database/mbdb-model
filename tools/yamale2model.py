@@ -1,49 +1,45 @@
+import copy
 import dataclasses
-from io import StringIO
-from typing import Dict, Any
-import yamale
-from pathlib import Path
-from yamale.validators import (
-    DefaultValidators,
-    Validator,
-    String,
-    Include,
-    List,
-    Day,
-    Boolean,
-    Enum,
-    Any,
-    Number,
-    Integer,
-    Regex,
-)
-from yamale.schema import Schema
-from yamale.validators.constraints import StringEquals
-import yaml
-import click
-from pathlib import Path
-import re
-
 import logging
+import re
+from io import StringIO
+from pathlib import Path
+from typing import Any, Dict
+
+import click
+import ruamel
+import yamale
+from ruamel.yaml import YAML as ruamel_YAML
+from yamale.schema import Schema
+from yamale.validators import (
+    Any,
+    Boolean,
+    Day,
+    DefaultValidators,
+    Enum,
+    Include,
+    Integer,
+    List,
+    Number,
+    Regex,
+    String,
+    Validator,
+)
+
 from custom_validators import (
-    LinkTarget,
-    Link,
+    Chemical_id,
+    Choose,
+    Database_id,
     Fulltext,
     Keyword,
-    Uuid,
-    Database_id,
+    Link,
+    LinkTarget,
     Nested_include,
-    Choose,
-    Chemical_id,
     Person_id,
     Publication_id,
+    Uuid,
     Vocabulary,
 )
-
-import ruamel
-from ruamel.yaml import YAML as ruamel_YAML
-import copy
-
 
 log = logging.getLogger("yamale2model")
 
@@ -90,6 +86,7 @@ validators[Publication_id.tag] = Publication_id
 validators[Nested_include.tag] = Nested_include
 validators[Choose.tag] = Choose
 validators[Vocabulary.tag] = Vocabulary
+
 
 class KeyModifier:
     def __init__(self, value) -> None:
@@ -465,8 +462,21 @@ class ModelLink(ModelBase):
     def propagate_polymorphic_base_schemas(self, defs):
         pass
 
+
 class ModelVocabulary(ModelLink):
-    pass
+    def __init__(self, data, path: str) -> None:
+        super().__init__(data, path)
+        self.vocabulary = data.vocabulary
+
+    def to_json(self):
+        return {
+            "keys": self.fields,
+            "vocabulary": self.vocabulary,
+            "type": "vocabulary",
+        }
+
+    def set_links(self, links, defs):
+        pass
 
 
 @dataclasses.dataclass
@@ -482,7 +492,15 @@ class Model:
                 "use": "invenio",
                 "module": {"qualified": f"mbdb_{self.package}"},
                 "properties": {"metadata": self.model.to_json()},
-                "plugins": {"builder": {"disable": ["script_sample_data"]}},
+                "plugins": {
+                    "builder": {"disable": ["script_sample_data"]},
+                    "packages": [
+                        "oarepo-model-builder-files==4.*",
+                        "oarepo-model-builder-cf==4.*",
+                        "oarepo-model-builder-vocabularies==4.*",
+                        "oarepo-model-builder-relations==4.*",
+                    ],
+                },
             },
             "$defs": includes,
             "settings": {"i18n-languages": ["en"]},
@@ -573,9 +591,9 @@ def parse(d, path, includes):
         return parse_schema(d, path, includes)
     elif clz is LinkTarget:
         return ModelLinkTarget(d, path)
-    elif clz is Link:
-        return ModelLink(d, path)
     elif clz is Vocabulary:
+        return ModelVocabulary(d, path)
+    elif clz is Link:
         return ModelLink(d, path)
     elif clz is Choose:
         return ModelChoose(d, path)

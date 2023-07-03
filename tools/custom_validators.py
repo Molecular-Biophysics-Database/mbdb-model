@@ -1,7 +1,8 @@
-from yamale.validators import Validator, String, DefaultValidators, Include
-from yamale.schema.datapath import DataPath
 from threading import local
 from uuid import UUID
+
+from yamale.schema.datapath import DataPath
+from yamale.validators import DefaultValidators, Include, String, Validator
 
 current_schema = local()
 
@@ -180,7 +181,12 @@ class Uuid(Validator):
 
 class Vocabulary(Link):
     """Vocabulary validator"""
-    tag="vocabulary"
+
+    tag = "vocabulary"
+
+    def __init__(self, *args, target=None, fields=None, vocabulary=None, **kwargs):
+        super().__init__(*args, target=target, fields=fields, **kwargs)
+        self.vocabulary = vocabulary
 
 
 # include custom validators
