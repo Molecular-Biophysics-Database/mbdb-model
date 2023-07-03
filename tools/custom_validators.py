@@ -1,4 +1,5 @@
 from io import StringIO
+import re
 from threading import local
 from uuid import UUID
 
@@ -182,6 +183,25 @@ class Uuid(Validator):
         except ValueError:
             return False
 
+class Url(Validator):
+    """URL validator"""
+    tag = "url"
+
+    # modified from Django 1.7 https://github.com/django/django/blob/stable/1.7.x/django/core/validators.py
+    # can likely be simplified ( user:pass, ipv4, and ipv6 likely not needed)
+    url_regex = re.compile(
+            r'^(?:http|ftp)s?://' # scheme ...
+            r'(?:\S+(?::\S*)?@)?' # user:pass ...
+            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}(?<!-)\.?)|'  # domain...
+            r'localhost|'  # localhost...
+            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|'  # ...or ipv4
+            r'\[?[A-F0-9]*:[A-F0-9:]+\]?)'  # ...or ipv6
+            r'(?::\d+)?'  # optional port
+            r'(?:/?|[/?]\S+)\Z', re.IGNORECASE)
+
+    def _is_valid(self, value):
+        return re.match(self.url_regex, value) is not None
+
 
 class Vocabulary(Validator):
     """Vocabulary validator"""
@@ -211,6 +231,7 @@ for val in (
     Keyword,
     Fulltext,
     Uuid,
+    Url,
     Database_id,
     Chemical_id,
     Person_id,

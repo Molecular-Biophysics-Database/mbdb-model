@@ -40,6 +40,7 @@ from custom_validators import (
     Publication_id,
     Uuid,
     Vocabulary,
+    Url,
 )
 
 log = logging.getLogger("yamale2model")
@@ -87,7 +88,7 @@ validators[Publication_id.tag] = Publication_id
 validators[Nested_include.tag] = Nested_include
 validators[Choose.tag] = Choose
 validators[Vocabulary.tag] = Vocabulary
-
+validators[Url.tag] = Url
 
 class KeyModifier:
     def __init__(self, value) -> None:
@@ -635,6 +636,8 @@ def parse(d, path, includes):
         return ModelEnum(d, path)
     elif clz is Uuid:
         return ModelPrimitive(d, "uuid", path)
+    elif clz is Url:
+        return ModelPrimitive(d, "url", path)
     elif clz is Day:
         return ModelPrimitive(d, "date", path)
     elif clz is Boolean:
