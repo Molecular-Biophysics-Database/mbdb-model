@@ -1089,7 +1089,7 @@ Person:
         description     : str(equals='The affiliation of the person',
                                       required=False)
         searchable      : True
-        value           : list(vocabulary(vocabulary='affiliations'), required=False)
+        value           : list(vocabulary(vocabulary='affiliations', fields='[id,title]'), required=False)
 
 
 Publication:

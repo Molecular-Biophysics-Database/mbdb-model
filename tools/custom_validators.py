@@ -1,6 +1,8 @@
+from io import StringIO
 from threading import local
 from uuid import UUID
 
+import ruamel.yaml
 from yamale.schema.datapath import DataPath
 from yamale.validators import DefaultValidators, Include, String, Validator
 
@@ -58,7 +60,9 @@ class Link(Validator):
     def __init__(self, *args, target=None, fields=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.target = target
-        self.fields = fields or ["id", "name"]
+        self.fields = ruamel.yaml.safe_load(
+            StringIO("blah: " + (fields or "[id,name]"))
+        )["blah"]
 
     def _is_valid(self, value):
         if value is None:

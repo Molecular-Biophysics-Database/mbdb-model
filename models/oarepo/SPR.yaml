@@ -1,5 +1,5 @@
 record:
-  use: invenio
+  use: [invenio]
   module:
     qualified: mbdb_spr
   properties:
@@ -42,11 +42,11 @@ record:
               ^help.en: Details of how the data was processed and model in order to
                 derive parameters from it
               use: '#/$defs/SPR_data_analysis'
-  plugins:
-    builder:
-      disable: [script_sample_data]
-    packages: [oarepo-model-builder-files==4.*, oarepo-model-builder-cf==4.*, oarepo-model-builder-vocabularies==4.*,
-      oarepo-model-builder-relations==4.*]
+plugins:
+  builder:
+    disable: [script_sample_data]
+  packages: [oarepo-model-builder-files==4.*, oarepo-model-builder-cf==4.*, oarepo-model-builder-vocabularies==4.*,
+    oarepo-model-builder-relations==4.*, oarepo-model-builder-polymorphic==1.*]
 $defs:
   SPR_data_analysis:
     properties:
@@ -879,8 +879,8 @@ $defs:
         type: keyword
       affiliations[]:
         ^help.en: The affiliation of the person
-        keys: [id, name]
-        vocabulary: affiliations
+        keys: [id, title]
+        vocabulary-type: affiliations
         type: vocabulary
   Publication:
     properties:

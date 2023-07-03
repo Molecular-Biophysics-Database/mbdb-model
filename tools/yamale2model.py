@@ -471,7 +471,7 @@ class ModelVocabulary(ModelLink):
     def to_json(self):
         return {
             "keys": self.fields,
-            "vocabulary": self.vocabulary,
+            "vocabulary-type": self.vocabulary,
             "type": "vocabulary",
         }
 
@@ -492,15 +492,16 @@ class Model:
                 "use": ["invenio"],
                 "module": {"qualified": f"mbdb_{self.package}"},
                 "properties": {"metadata": self.model.to_json()},
-                "plugins": {
-                    "builder": {"disable": ["script_sample_data"]},
-                    "packages": [
-                        "oarepo-model-builder-files==4.*",
-                        "oarepo-model-builder-cf==4.*",
-                        "oarepo-model-builder-vocabularies==4.*",
-                        "oarepo-model-builder-relations==4.*",
-                    ],
-                },
+            },
+            "plugins": {
+                "builder": {"disable": ["script_sample_data"]},
+                "packages": [
+                    "oarepo-model-builder-files==4.*",
+                    "oarepo-model-builder-cf==4.*",
+                    "oarepo-model-builder-vocabularies==4.*",
+                    "oarepo-model-builder-relations==4.*",
+                    "oarepo-model-builder-polymorphic==1.*",
+                ],
             },
             "$defs": includes,
             "settings": {"i18n-languages": ["en"]},
