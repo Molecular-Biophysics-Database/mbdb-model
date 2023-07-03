@@ -286,6 +286,9 @@ $defs:
       technique:
         use: '#/$defs/SUPPORTED_TECHNIQUES'
         required: true
+      collection_start_time:
+        type: date
+        help.en: The time when collection of the data began
       instrument:
         properties:
           manufacturer:
@@ -301,14 +304,6 @@ $defs:
               LASER, backreflection optics)
           performance_test:
             use: '#/$defs/Performance_test'
-      raw_data_information:
-        properties:
-          collection_start_time:
-            type: date
-            help.en: The time when collection of the data began
-          file_information[]:
-            ^help.en: List of the files containing the raw data
-            use: '#/$defs/File'
       physical_environment_at_sample_handling:
         properties:
           temperature:
@@ -987,8 +982,8 @@ $defs:
         use: '#/$defs/Storage'
         required: true
       report:
-        use: '#/$defs/File'
-        required: true
+        type: url
+        help.en: Report with the results of the quality control, as a pdf file
   Data_fitting:
     properties:
       model:
@@ -1198,46 +1193,12 @@ $defs:
       distribution_type:
         type: keyword
         help.en: The distribution type of sizes (e.g. log-normal)
-  File:
-    properties:
-      name:
-        type: keyword
-        help.en: Name of the file
-      type:
-        type: keyword
-        enum: [text, binary, text and binary]
-        help.en: Type of the file in terms of how it can be read (text, binary, etc.)
-      size:
-        use: '#/$defs/File_size'
-        required: true
-      source:
-        type: keyword
-        enum: [Instrument software, User annotated, MBDB]
-        help.en: Which source generated the file
-      description:
-        type: keyword
-        help.en: Short description of what the file contains
-      recommended_software:
-        type: keyword
-        help.en: The name of the software recommended for working with the file
-      processing_steps[]:
-        ^help.en: List of the processing steps performed on the file before it was
-          deposited (e.g. exported to xlsx)
-        use: '#/$defs/Processing_step'
-  File_size:
-    properties:
-      value:
-        type: double
-        minimum: 0.0
-        help.en: the numerical value of the size of the file
-      unit:
-        use: '#/$defs/FILE_SIZE_UNITS'
-        required: true
   Performance_test:
     properties:
       report:
-        use: '#/$defs/File'
-        required: true
+        type: url
+        help.en: The file containing the report of the performance test, preferably
+          in pdf
       published_test_protocol:
         use: '#/$defs/Publication'
       sample_composition[]:
@@ -1310,10 +1271,6 @@ $defs:
   LENGTH_UNITS:
     type: keyword
     enum: [Å, nm, μm, mm, cm, m]
-  FILE_SIZE_UNITS:
-    type: keyword
-    enum: [bytes (B), kilobytes (kB), megabytes (MB), gigabytes (GB), terabytes (TB),
-      kibibytes (KiB), mebibytes (MiB), gibibytes (GiB), tebibytes (TiB)]
   SUPPORTED_TECHNIQUES:
     type: keyword
     enum: [Bio-layer interferometry (BLI), Surface plasmon resonance (SPR), Mass Photometry
