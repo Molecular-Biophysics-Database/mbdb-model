@@ -489,7 +489,7 @@ class Model:
         includes = {k: v.to_json() for k, v in self.includes.items()}
         return {
             "record": {
-                "use": "invenio",
+                "use": ["invenio"],
                 "module": {"qualified": f"mbdb_{self.package}"},
                 "properties": {"metadata": self.model.to_json()},
                 "plugins": {
