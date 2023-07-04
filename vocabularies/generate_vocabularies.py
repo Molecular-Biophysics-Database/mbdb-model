@@ -77,7 +77,7 @@ class Vocabulary(ABC):
                 if i == limit:
                     break
                 # final output should be a yaml sequence so record is converted to a list item
-                yaml_data = yaml.dump([record], sort_keys=False, allow_unicode=True)
+                yaml_data = yaml.dump(record, sort_keys=False, allow_unicode=True, explicit_start=True)
                 f_out.write(yaml_data)
 
             logging.info(f"Finished writing {i} items to {self.msg}")
@@ -100,8 +100,8 @@ class Organism(Vocabulary):
         choose_data_source(self)
         self.organism_db = self.local_data_source
         self.converted_name = {
-            "taxid": "ncbi_taxid",
-            "spname": "name",
+            "taxid": "id",
+            "spname": "title",
             "rank": "rank",
         }
 
@@ -145,10 +145,12 @@ class Organism(Vocabulary):
         return f"""SELECT {fields} FROM {table}"""
 
     def dict_item_factory(self, cursor, row):
-        """returns dict element with keys corresponding to the names of the fields in the cursor"""
-        fields = [column[0] for column in cursor.description]
-        converted_names = [self.converted_name[field] for field in fields]
-        return {key: value for key, value in zip(converted_names, row)}
+        """returns with converted """
+        row_dict = {key: value for key, value in zip(self.converted_name.values(), row)}
+        return {"id": str(row_dict["id"]),
+                "title": {"en": row_dict["title"]},
+                "props": {"rank": row_dict["rank"]},
+                }
 
     def iter_of_records(self) -> Iterator[dict]:
         """Converts an ete3 NCBI taxonomy sqlite DB to a list of vocabulary dicts"""
@@ -186,11 +188,13 @@ class Affiliation(Vocabulary):
     def extract_affiliation(ror_dict):
         """Converts a ror json record dict to a vocabulary dict"""
         return {
-            "name": ror_dict["name"],
-            "city": ror_dict["addresses"][0]["city"],
-            "state": ror_dict["addresses"][0]["state"],
-            "country": ror_dict["country"]["country_name"],
-            "ror_id": ror_dict["id"].split("/")[-1],
+            "id": ror_dict["id"].split("/")[-1],
+            "title": {"en": ror_dict["name"]},
+            "props":{
+                "city": ror_dict["addresses"][0]["city"],
+                "state": ror_dict["addresses"][0]["state"],
+                "country": ror_dict["country"]["country_name"],
+            }
         }
 
     @staticmethod
@@ -243,11 +247,9 @@ class Grant(Vocabulary):
     @staticmethod
     def extract_grant(openaire_dict):
         return {
-            "project_title": openaire_dict["title"],
-            "funder_name": " and ".join(
-                [funding["name"] for funding in openaire_dict["funding"]]
-            ),
-            "grant_number": openaire_dict["code"],
+            "id": openaire_dict["code"],
+            "title": {"en": openaire_dict["title"]},
+            "props": {"funder_name": openaire_dict["funding"][0]["name"]}
         }
 
     def iter_of_records(self) -> Iterator[dict]:
@@ -310,9 +312,9 @@ def main():
 
     logging.info("Started")
 
-    vocab_params = [("organism.yaml", Organism, 10_000),
-                    ("affiliation.yaml", Affiliation, 10_000),
-                    ("grant.yaml", Grant, 10_000),
+    vocab_params = [("organisms.yaml", Organism, 10),
+                    ("affiliations.yaml", Affiliation, 10),
+                    ("grants.yaml", Grant, 10),
                     ]
 
     for fn, generator, limit in vocab_params:

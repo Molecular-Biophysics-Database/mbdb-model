@@ -1,12 +1,21 @@
-Grant:
-    project_title:
+id:
+    description:    str(equals='Name of project the grant is given to (e.g
+                                Development of bioeffect approaches for
+                                assessing anthropogenic contamination
+                                in northern marine environments)',
+                                required=False)
+    value:          freetext(min=1)
+
+title:
+    en:
         description:    str(equals='Name of project the grant is given to (e.g
-                                    Development of bioeffect approaches for
-                                    assessing anthropogenic contamination
-                                    in northern marine environments)',
-                                    required=False)
+                                Development of bioeffect approaches for
+                                assessing anthropogenic contamination
+                                in northern marine environments)',
+                                required=False)
         value:          freetext(min=1)
 
+props:
     funder_name:
         decription:    str(equals='Name of the funding agency/institution (e.g
                                    Academy of Finland)', required=False)
@@ -16,4 +25,4 @@ Grant:
     grant_number:
         description:   str(equals='The number/ID associated with the grant (e.g
                                    308726)', required=False)
-        value:         keyword(min=1)
+        value:         freetext(min=1)
