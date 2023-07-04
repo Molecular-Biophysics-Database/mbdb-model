@@ -492,6 +492,12 @@ class Model:
                 "use": ["invenio"],
                 "module": {"qualified": f"mbdb_{self.package}"},
                 "properties": {"metadata": self.model.to_json()},
+                "mapping": {
+                    "settings": {
+                        "index.mapping.total_fields.limit": 3000,
+                        "index.mapping.nested_fields.limit": 200
+                    },
+                }
             },
             "plugins": {
                 "builder": {"disable": ["script_sample_data"]},
