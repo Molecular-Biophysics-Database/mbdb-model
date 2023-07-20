@@ -3,7 +3,7 @@ id:
                              lowest possible taxonomic rank (e.g. species),
                              -1 if no information is present in the NCBI
                              taxonomy at all', required=False)
-    value:              freetext(min=1)
+    value:              fulltext(min=1)
 
 
 title:
@@ -11,10 +11,10 @@ title:
         description:    str(equals='Name of organism associated with the taxid
                                 (e.g. Mycobacterium phage PurpleHaze_DEM1)',
                                 required=False)
-        value:          freetext(min=1)
+        value:          fulltext(min=1)
 
 props:
     rank:
         description:    str(equals='The taxonomic level the taxid is associated
                                     with', required=False)
-        value:          keyword(min=1)
+        value:          fulltext(min=1)

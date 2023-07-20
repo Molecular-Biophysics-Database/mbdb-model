@@ -246,10 +246,17 @@ class Grant(Vocabulary):
 
     @staticmethod
     def extract_grant(openaire_dict):
+        logging.debug(f'Extracting grantID: {openaire_dict["code"]}')
+
+        try:
+           funder_name = openaire_dict["funding"][0]["name"]
+        except IndexError:
+           funder_name = None
+
         return {
             "id": openaire_dict["code"],
             "title": {"en": openaire_dict["title"]},
-            "props": {"funder_name": openaire_dict["funding"][0]["name"]}
+            "props": {"funder_name": funder_name}
         }
 
     def iter_of_records(self) -> Iterator[dict]:
@@ -312,9 +319,9 @@ def main():
 
     logging.info("Started")
 
-    vocab_params = [("organisms.yaml", Organism, 10),
-                    ("affiliations.yaml", Affiliation, 10),
-                    ("grants.yaml", Grant, 10),
+    vocab_params = [("organisms.yaml", Organism, 1000),
+                    ("affiliations.yaml", Affiliation, 1000),
+                    ("grants.yaml", Grant, 1000),
                     ]
 
     for fn, generator, limit in vocab_params:
