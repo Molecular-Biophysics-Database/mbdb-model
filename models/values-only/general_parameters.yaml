@@ -21,7 +21,8 @@ General_parameters:
     depositor: include('Person')
     principal_contact: include('Person')
     contributors: list(nested_include('Person'), required=False)
-  funding_reference: list(include('Grant'), required=False)
+  funding_reference: list(vocabulary(vocabulary='grants', fields='[id,title,props.funder_name]'),
+    required=False)
   technique: include('SUPPORTED_TECHNIQUES')
   instrument:
     manufacturer: include('COMPANIES')
@@ -76,12 +77,13 @@ Polymer:
   polymer_type: enum('cyclic-pseudo-peptide', 'peptide nucleic acid', 'polydeoxyribonucleotide',
     'polydeoxyribonucleotide/polyribonucleotide hybrid', 'polypeptide(D)', 'polypeptide(L)',
     'polyribonucleotide', 'Other')
-  organism: include('Organism')
+  organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]', required=False)
   variant: str()
   modifications: include('Polymer_modifications', required=False)
   sequence: str(required=False)
   expression_source_type: enum('Isolated', 'Recombinantly', 'Synthetically')
-  expression_organism: include('Organism',required=False)
+  expression_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
+    required=False)
   supplier: include('Supplier', required=False)
   quality_controls: list(nested_include('Quality_control'), required=False)
   external_databases: list(database_id(), required=False)
@@ -134,7 +136,7 @@ Complex_substance_of_biological_origin_base:
   storage: include('Storage', required=False)
   additional_specifications: list(str(), required=False)
   derived_from: enum('Body fluid', 'Cell fraction', 'Virion', required=False)
-  organism: include('Organism')
+  organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]', required=False)
   description: str(required=False)
 Body_fluid:
   fluid: enum('Blood', 'Fecal matter', 'Milk', 'Plasma', 'Saliva', 'Serum', 'Urine',
@@ -151,7 +153,8 @@ Cell_fraction:
   celltype: str(required=False)
 Virion:
   Genetic_material: enum('No genetic material', 'Virus genome', 'Synthetic', 'Other')
-  host_organism: include('Organism')
+  host_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
+    required=False)
   host_cell_type: str(required=False)
   capsid_type: enum('None', 'Native', 'Genetically Engineered', 'Synthetic', 'Other')
   envelope_type: enum('None', 'Native', 'Genetically Engineered', 'Synthetic', 'Other')
@@ -183,24 +186,11 @@ Complex_substance_of_industrial_production_origin:
   product: enum('Beer', 'Cell medium', 'Whey', 'Other')
   description: str()
 ---
-Organism:
-  ncbi_taxid: database_id()
-  additional_taxonomic_information: list(nested_include('Taxa'),required=False)
-Taxa:
-  domain: keyword(required=False)
-  realm: keyword(required=False)
-  kingdom: keyword(required=False)
-  phylum: keyword(required=False)
-  class: keyword(required=False)
-  order: keyword(required=False)
-  genus: keyword(required=False)
-  species: keyword(required=False)
-  strain: keyword(required=False)
----
 Person:
   full_name: str()
   identifiers: list(person_id(), required=False)
-  affiliations: list(vocabulary(vocabulary='affiliations', fields='[id,title]'), required=False)
+  affiliations: list(vocabulary(vocabulary='affiliations', fields='[id, title, props.city,
+    props.state, props.country]'), required=False)
 Publication:
   pid: publication_id()
   title: str(required=False)
@@ -208,10 +198,6 @@ Publication:
   authors: list(nested_include('Person'), required=False)
   resource_type: enum('Article', 'Book', 'Thesis')
   publisher: str(required=False)
-Grant:
-  funder_name: str()
-  funding_program: str(required=False)
-  award_number: keyword(required=False)
 Project:
   id: keyword(required=False)
   title: str()

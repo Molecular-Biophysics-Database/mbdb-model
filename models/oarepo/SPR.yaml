@@ -42,6 +42,10 @@ record:
               ^help.en: Details of how the data was processed and model in order to
                 derive parameters from it
               use: '#/$defs/SPR_data_analysis'
+  mapping:
+    settings:
+      index.mapping.total_fields.limit: 3000
+      index.mapping.nested_fields.limit: 200
 plugins:
   builder:
     disable: [script_sample_data]
@@ -275,7 +279,9 @@ $defs:
             type: nested
       funding_reference[]:
         ^help.en: List of information about the grants that supported depositors
-        use: '#/$defs/Grant'
+        keys: [id, title, props.funder_name]
+        vocabulary-type: grants
+        type: vocabulary
       technique:
         use: '#/$defs/SUPPORTED_TECHNIQUES'
         required: true
@@ -459,8 +465,9 @@ $defs:
           polyribonucleotide, Other]
         help.en: The type of polymer (e.g. polypeptide(L))
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       variant:
         type: keyword
         help.en: Descriptive name indicating differences of primary sequence of the
@@ -477,7 +484,9 @@ $defs:
         enum: [Isolated, Recombinantly, Synthetically]
         help.en: How the polymer was produced
       expression_organism:
-        use: '#/$defs/Organism'
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
@@ -514,11 +523,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
-          please specify the InChIKey of the monomer and specify the specific type
-          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
-          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
+          \ please specify the InChIKey of the monomer and specify the specific type\
+          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
+          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
+          \ specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -683,8 +692,9 @@ $defs:
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       description:
         type: keyword
         help.en: Further description of the complex substance
@@ -728,8 +738,9 @@ $defs:
         help.en: The genetic material carried by the virions (None, virus genome,
           synthetic)
       host_organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       host_cell_type:
         type: keyword
         help.en: The host cell type the virion was produced in
@@ -828,47 +839,6 @@ $defs:
       description:
         type: keyword
         help.en: Further descriptions of the complex substance
-  Organism:
-    properties:
-      ncbi_taxid:
-        type: keyword
-        help.en: The [NCBI](taxid) of the organism to the lowest taxonomic rank available,
-          i.e. strain (e.g. 469008 which corresponds to Escherichia coli BL21(DE3))
-      additional_taxonomic_information[]:
-        ^help.en: List of taxonomic ranks the organism belongs to
-        use: '#/$defs/Taxa'
-        type: nested
-  Taxa:
-    properties:
-      domain:
-        type: keyword
-        help.en: Domain that the organism belongs to. Note that if the organism is
-          a virus it the highest level is realm rather than domain
-      realm:
-        type: keyword
-        help.en: Realm that the virus(!) belongs to. Note that realm only applies
-          if the organism is a virus
-      kingdom:
-        type: keyword
-        help.en: Kingdom that the organism belongs to
-      phylum:
-        type: keyword
-        help.en: Phylum that the organism belongs to
-      class:
-        type: keyword
-        help.en: Class that the organism belongs to
-      order:
-        type: keyword
-        help.en: Order that the organism belongs to
-      genus:
-        type: keyword
-        help.en: Genus that the organism belongs to
-      species:
-        type: keyword
-        help.en: Species that the organism belongs to
-      strain:
-        type: keyword
-        help.en: Strain that the organism belongs to
   Person:
     properties:
       full_name:
@@ -879,7 +849,7 @@ $defs:
         type: keyword
       affiliations[]:
         ^help.en: The affiliation of the person
-        keys: [id, title]
+        keys: [id, title, props.city, props.state, props.country]
         vocabulary-type: affiliations
         type: vocabulary
   Publication:
@@ -905,19 +875,6 @@ $defs:
       publisher:
         type: keyword
         help.en: The name of the publisher
-  Grant:
-    properties:
-      funder_name:
-        type: keyword
-        help.en: The agency that supplied the funding (e.g. European Research Council,
-          Wellcome Trust, Michael J. Fox Foundation etc.
-      funding_program:
-        type: keyword
-        help.en: The program at the funding agency the grant was a part of (e.g. ERC
-          Consolidator, Simons Collaboration on the Origins of Life,  etc.), if applicable
-      award_number:
-        type: keyword
-        help.en: The number or unique identifier of the grant, if applicable
   Project:
     properties:
       id:
@@ -1374,8 +1331,9 @@ $defs:
           polyribonucleotide, Other]
         help.en: The type of polymer (e.g. polypeptide(L))
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       variant:
         type: keyword
         help.en: Descriptive name indicating differences of primary sequence of the
@@ -1392,7 +1350,9 @@ $defs:
         enum: [Isolated, Recombinantly, Synthetically]
         help.en: How the polymer was produced
       expression_organism:
-        use: '#/$defs/Organism'
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
@@ -1424,11 +1384,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
-          please specify the InChIKey of the monomer and specify the specific type
-          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
-          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
+          \ please specify the InChIKey of the monomer and specify the specific type\
+          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
+          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
+          \ specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -1519,8 +1479,9 @@ $defs:
           polyribonucleotide, Other]
         help.en: The type of polymer (e.g. polypeptide(L))
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       variant:
         type: keyword
         help.en: Descriptive name indicating differences of primary sequence of the
@@ -1537,7 +1498,9 @@ $defs:
         enum: [Isolated, Recombinantly, Synthetically]
         help.en: How the polymer was produced
       expression_organism:
-        use: '#/$defs/Organism'
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
@@ -1567,11 +1530,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
-          please specify the InChIKey of the monomer and specify the specific type
-          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
-          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
+          \ please specify the InChIKey of the monomer and specify the specific type\
+          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
+          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
+          \ specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -1643,8 +1606,9 @@ $defs:
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       description:
         type: keyword
         help.en: Further description of the complex substance
@@ -1700,8 +1664,9 @@ $defs:
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       description:
         type: keyword
         help.en: Further description of the complex substance
@@ -1729,8 +1694,9 @@ $defs:
         help.en: The genetic material carried by the virions (None, virus genome,
           synthetic)
       host_organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       host_cell_type:
         type: keyword
         help.en: The host cell type the virion was produced in
@@ -1757,8 +1723,9 @@ $defs:
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       description:
         type: keyword
         help.en: Further description of the complex substance
@@ -1894,8 +1861,9 @@ $defs:
           polyribonucleotide, Other]
         help.en: The type of polymer (e.g. polypeptide(L))
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       variant:
         type: keyword
         help.en: Descriptive name indicating differences of primary sequence of the
@@ -1912,7 +1880,9 @@ $defs:
         enum: [Isolated, Recombinantly, Synthetically]
         help.en: How the polymer was produced
       expression_organism:
-        use: '#/$defs/Organism'
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
@@ -1942,11 +1912,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
-          please specify the InChIKey of the monomer and specify the specific type
-          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
-          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
+          \ please specify the InChIKey of the monomer and specify the specific type\
+          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
+          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
+          \ specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -2033,8 +2003,9 @@ $defs:
           polyribonucleotide, Other]
         help.en: The type of polymer (e.g. polypeptide(L))
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       variant:
         type: keyword
         help.en: Descriptive name indicating differences of primary sequence of the
@@ -2051,7 +2022,9 @@ $defs:
         enum: [Isolated, Recombinantly, Synthetically]
         help.en: How the polymer was produced
       expression_organism:
-        use: '#/$defs/Organism'
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
@@ -2085,11 +2058,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
-          please specify the InChIKey of the monomer and specify the specific type
-          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
-          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
+          \ please specify the InChIKey of the monomer and specify the specific type\
+          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
+          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
+          \ specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
