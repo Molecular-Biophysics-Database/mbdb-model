@@ -183,7 +183,7 @@ class Uuid(Validator):
             return False
 
 
-class Vocabulary(Link):
+class Vocabulary(Validator):
     """Vocabulary validator"""
 
     tag = "vocabulary"
@@ -191,6 +191,16 @@ class Vocabulary(Link):
     def __init__(self, *args, target=None, fields=None, vocabulary=None, **kwargs):
         super().__init__(*args, target=target, fields=fields, **kwargs)
         self.vocabulary = vocabulary
+
+
+    def _is_valid(self, value):
+        if value is None:
+            return True
+        if not isinstance(value, dict):
+            return False
+        if "id" not in value:
+            return False
+        return True
 
 
 # include custom validators
