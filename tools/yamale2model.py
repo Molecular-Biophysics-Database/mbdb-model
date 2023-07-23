@@ -446,6 +446,8 @@ class ModelLink(ModelBase):
         super().__init__(path, data.is_required)
         self.target = data.target
         self.fields = data.fields
+        if isinstance(self.fields, str):
+            self.fields = ruamel.yaml.safe_load(StringIO(self.fields))
 
     def to_json(self):
         return {"type": "relation", "model": "#" + self.target, "keys": self.fields}
@@ -465,6 +467,7 @@ class ModelLink(ModelBase):
 
 class ModelVocabulary(ModelLink):
     def __init__(self, data, path: str) -> None:
+        data.target = None
         super().__init__(data, path)
         self.vocabulary = data.vocabulary
 
@@ -493,10 +496,12 @@ class Model:
                 "module": {"qualified": f"mbdb_{self.package}"},
                 "properties": {"metadata": self.model.to_json()},
                 "mapping": {
-                    "settings": {
-                        "index.mapping.total_fields.limit": 3000,
-                        "index.mapping.nested_fields.limit": 200
-                    },
+                    "template": {
+                        "settings": {
+                            "index.mapping.total_fields.limit": 3000,
+                            "index.mapping.nested_fields.limit": 200
+                        }
+                    }
                 }
             },
             "plugins": {
