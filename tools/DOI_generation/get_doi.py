@@ -1,5 +1,6 @@
 import requests
 import json
+import jsonschema
 import yaml
 from copy import deepcopy
 
@@ -40,7 +41,9 @@ class DOI:
         data = self._make_data(data_dict)
         self.draft_response = self._make_request("POST", data, url=self.dois_url)
 
-    def get_draft(self, doi):
+    def get_draft(self, doi=None):
+        if doi is None:
+            doi = self._get_doi(self.draft_response)
         return self._make_request(method="GET",
                                   data='',
                                   url=self.doi_endpoint(doi)).json()
@@ -100,7 +103,10 @@ def extract_publisher(full_record):
     return full_record['metadata']['general_parameters']['record']['publisher']
 
 def extract_types(full_record):
-    return {"resourceTypeGeneral": full_record['metadata']['general_parameters']['record']['resource_type_general']}
+    record = full_record['metadata']['general_parameters']['record']
+    return {"resourceTypeGeneral": record['resource_type_general'],
+            "resourceType": record['resource_type']
+            }
 
 def extract_url(full_record):
     url = 'https://mbdb.org'
@@ -142,7 +148,7 @@ def single_creator(dict_entry: dict):
 
     return creator
 
-def to_creator(json_file):
+def to_datacite(json_file):
     doi_attributes = {
         "creators": extract_creator,
         "titles": extract_title,
@@ -160,26 +166,18 @@ def to_creator(json_file):
 
     return doi_attributes
 
+def validate_json(record, schema_file):
+    with open(schema_file) as f_in:
+        schema = json.load(f_in)
 
-#d = to_creator('/home/emil/bin/mbdb-orga/mbdb-model/metadata-examples/MST.json')
+    return jsonschema.validate(instance=record, schema=schema)
+
 
 test_doi = DOI()
-#test_doi.delete_draft(doi='10.82657/9xky-4650')
-#test_doi.make_draft(data_dict=to_creator('/home/emil/bin/mbdb-orga/mbdb-model/metadata-examples/MST.json'))
+
+test_json = to_datacite('/home/emil/bin/mbdb-orga/mbdb-model/metadata-examples/MST.json')
+validate_json(test_json, "pre_draft_schema.json")
+test_doi.make_draft(data_dict=test_json)
+test_draft = test_doi.get_draft()
+test_doi.delete_draft()
 #test_doi.publish_draft(doi='10.82657/876h-3d76')
-#test_doi.delete_draft(doi='10.82657/7tmv-e369')
-#print(test_doi.publish_response.json())
-#test_doi.update_draft(doi='10.82657/fd3j-1s36', data_dict=to_creator('/home/emil/bin/mbdb-orga/mbdb-model/metadata-examples/MST.json'))
-
-#print(test_doi.draft_response.json())
-
-#print(test_doi.get_draft(doi='10.82657/9xky-4650'))
-
-
-
-
-
-
-
-
-
