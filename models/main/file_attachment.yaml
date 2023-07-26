@@ -1,0 +1,42 @@
+name:
+    description     : str(equals='Name of the file', required=False)
+    value           : keyword()
+
+content_type:
+    description     : str(equals='Type of the file content in terms of how
+                                  it can be read (text, binary, etc.)',
+                                  required=False)
+    value           : enum('text','binary','text and binary')
+
+context:
+    description     : str(equals='The context file should be understood
+                                  within (e.g. raw measurement data)',
+                                  required=False)
+    value           : enum('raw measurement data',
+                           'derived measurement data',
+                           'QC report')
+
+originates_from:
+    description     : str(equals='Whatwho generated the file')
+    value           : enum('Instrument software', 'User', 'MBDB')
+
+size:
+    description     : str(equals='Size of the file', required=False)
+    value           : int(min=0)
+
+
+description:
+    description     : str(equals='Short description of what the file
+                                  contains', required=False)
+    value           : str(required=False)
+
+recommended_software:
+    description     : str(equals='The name of the software recommended for
+                                  working with the file', required=False)
+    value           : str(required=False)
+
+processing_steps:
+    description     : str(equals='List of the processing steps performed on
+                                  the file before it was deposited (e.g.
+                                  exported to xlsx)', required=False)
+    value           : list(include('Processing_step'))
