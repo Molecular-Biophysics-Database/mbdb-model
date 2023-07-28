@@ -2,6 +2,7 @@ import copy
 import dataclasses
 import logging
 import re
+from collections import namedtuple
 from io import StringIO
 from pathlib import Path
 from typing import Any, Dict
@@ -144,8 +145,11 @@ class ModelBase:
     def get_referenced_includes(self, referenced_includes, defs):
         raise NotImplementedError(f"Not implemented for {type(self)}")
 
-    def propagate_polymorphic_base_schemas(self, defs):
+    def propagate_polymorphic_base_schemas(self, defs, path):
         raise NotImplementedError(f"Not implemented for {type(self)}")
+
+    def copy(self):
+        return copy.copy(self)
 
 
 class ModelObject(ModelBase):
@@ -187,13 +191,15 @@ class ModelObject(ModelBase):
         for v in self.children.values():
             v.get_referenced_includes(referenced_includes, defs)
 
-    def propagate_polymorphic_base_schemas(self, defs):
+    def propagate_polymorphic_base_schemas(self, defs, path):
         for v in self.children.values():
-            v.propagate_polymorphic_base_schemas(defs)
+            v.propagate_polymorphic_base_schemas(defs, path + [self.path])
 
     def copy(self):
         ret = copy.copy(self)
-        ret.children = {**ret.children}
+        ret.children = {
+            k: v.copy() for k, v in ret.children.items()
+        }
         return ret
 
     def update_children(self, children, defs):
@@ -201,7 +207,7 @@ class ModelObject(ModelBase):
             if k == "id" and isinstance(v, ModelLinkTarget):
                 v = ModelPrimitive(None, "keyword", v.path)
             if k not in self.children:
-                self.children[k] = v
+                self.children[k] = v.copy()
             else:
                 print(f"Warning: Can not override child '{k}' on {self.to_json()}")
 
@@ -252,8 +258,8 @@ class ModelArray(ModelBase):
     def get_referenced_includes(self, referenced_includes, defs):
         self.item.get_referenced_includes(referenced_includes, defs)
 
-    def propagate_polymorphic_base_schemas(self, defs):
-        self.item.propagate_polymorphic_base_schemas(defs)
+    def propagate_polymorphic_base_schemas(self, defs, path):
+        self.item.propagate_polymorphic_base_schemas(defs, path + [self.path])
 
 
 class ModelPrimitive(ModelBase):
@@ -282,7 +288,7 @@ class ModelPrimitive(ModelBase):
     def get_referenced_includes(self, referenced_includes, defs):
         pass
 
-    def propagate_polymorphic_base_schemas(self, defs):
+    def propagate_polymorphic_base_schemas(self, defs, path):
         pass
 
 
@@ -327,9 +333,9 @@ class ModelInclude(ModelBase):
         target = defs[self.include]
         target.get_referenced_includes(referenced_includes, defs)
 
-    def propagate_polymorphic_base_schemas(self, defs):
+    def propagate_polymorphic_base_schemas(self, defs, path):
         target = defs[self.include]
-        target.propagate_polymorphic_base_schemas(defs)
+        target.propagate_polymorphic_base_schemas(defs, path + [self.path])
 
 
 class ModelNestedInclude(ModelInclude):
@@ -389,25 +395,75 @@ class ModelChoose(ModelBase):
         for v in self.subschemas.values():
             v.get_referenced_includes(referenced_includes, defs)
 
-    def propagate_polymorphic_base_schemas(self, defs):
-        v: ModelInclude  # must be ModelInclude
+    def propagate_polymorphic_base_schemas(self, defs, path):
+        subschema_include: ModelInclude  # must be ModelInclude
+        if hasattr(self, '_polymorphic_schema_propagated'):
+            return
+        self._polymorphic_schema_propagated = True
+
         base_schema = defs[self.base_schema.include]
-        for v in self.subschemas.values():
-            previous_include = v.include
+        new_subschemas = {}
+        for subschema_name, subschema_include in self.subschemas.items():
+            previous_include = subschema_include.include
             if not previous_include.endswith("Polymorphic"):
                 parent = [x for x in self.path.split("/") if x and x != "value"]
                 new_include = f"{parent[-1]}{previous_include}Polymorphic"
                 if new_include in defs:
-                    raise Exception("Include {new_include} has already been generated")
-
-                v.include += new_include
+                    new_include = self.get_unique_include_name(new_include, path, defs)
                 original_schema = defs[previous_include]
                 new_schema = original_schema.copy()
-                defs[v.include] = new_schema
+                defs[new_include] = new_schema
+                new_include_params: Any = namedtuple("IncludeParams", "include_name, is_required")(
+                        new_include,
+                        subschema_include.required
+                    )
+                new_subschema_include = ModelInclude(
+                    new_include_params,
+                    subschema_include.path
+                )
+                new_subschemas[subschema_name] = new_subschema_include
+                new_subschema_include.propagate_polymorphic_base_schemas(defs, path + [self.path])
+                new_schema.update_children(base_schema.children, defs)
             else:
-                new_schema = defs[v.include]
-            v.propagate_polymorphic_base_schemas(defs)
-            new_schema.update_children(base_schema.children, defs)
+                raise Exception(f"Schema {subschema_include.include} has already been generated, can not override")
+        self.subschemas = new_subschemas
+
+    def get_unique_include_name(self, include_name, path, defs):
+        paths = []
+        for pth in path:
+            new_path = []
+            for pth_part in pth.split('/'):
+                if not pth_part or pth_part == 'value':
+                    continue
+                new_path.append(pth_part.lower())
+            if new_path:
+                paths.append(tuple(new_path))
+
+        filtered_paths = []
+        previous_path = None
+        for pth in paths:
+            if not previous_path:
+                filtered_paths.append(pth)
+                previous_path = pth
+                continue
+            without_prefix = []
+            handling_prefix = True
+            for pth_idx, pth_part in enumerate(pth):
+                if handling_prefix and pth_idx < len(previous_path) and previous_path[pth_idx] == pth_part:
+                    continue
+                else:
+                    handling_prefix = False
+                without_prefix.append(pth_part)
+            if not without_prefix:
+                continue
+            filtered_paths.append(without_prefix)
+            previous_path = pth
+        filtered_paths = [x for y in filtered_paths for x in y]
+        for pth in reversed(filtered_paths):
+            include_name = f"{pth}_{include_name}"
+            if include_name not in defs:
+                return include_name
+        raise Exception(f"Could not generate include name for {include_name}")
 
     def copy(self):
         return copy.copy(self)
@@ -437,7 +493,7 @@ class ModelLinkTarget(ModelBase):
     def get_referenced_includes(self, referenced_includes, defs):
         pass
 
-    def propagate_polymorphic_base_schemas(self, defs):
+    def propagate_polymorphic_base_schemas(self, defs, path):
         pass
 
 
@@ -461,7 +517,7 @@ class ModelLink(ModelBase):
     def get_referenced_includes(self, referenced_includes, defs):
         pass
 
-    def propagate_polymorphic_base_schemas(self, defs):
+    def propagate_polymorphic_base_schemas(self, defs, path):
         pass
 
 
@@ -537,7 +593,7 @@ class Model:
         self.includes.update(included_model.includes)
 
     def propagate_polymorphic_base_schemas(self):
-        self.model.propagate_polymorphic_base_schemas(self.includes)
+        self.model.propagate_polymorphic_base_schemas(self.includes, [])
 
 
 def parse_described_value(d, path, includes):
