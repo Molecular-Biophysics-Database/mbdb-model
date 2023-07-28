@@ -1,7 +1,10 @@
-from yamale.validators import Validator, String, DefaultValidators, Include
-from yamale.schema.datapath import DataPath
+from io import StringIO
 from threading import local
 from uuid import UUID
+
+import ruamel.yaml
+from yamale.schema.datapath import DataPath
+from yamale.validators import DefaultValidators, Include, String, Validator
 
 current_schema = local()
 
@@ -57,7 +60,9 @@ class Link(Validator):
     def __init__(self, *args, target=None, fields=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.target = target
-        self.fields = fields or ["id", "name"]
+        self.fields = ruamel.yaml.safe_load(
+            StringIO("blah: " + (fields or "[id,name]"))
+        )["blah"]
 
     def _is_valid(self, value):
         if value is None:
@@ -72,23 +77,28 @@ class Link(Validator):
 class Keyword(String):
     tag = "keyword"
 
+
 class Fulltext(String):
     tag = "fulltext"
+
 
 class MacroMolecule_id(Keyword):
     tag = "macromolecule_id"
     # put into translation yamale2model
     # enum(pdb:, uniprot:)
 
+
 class Taxonomy_id(Keyword):
     tag = "taxonomy_id"
     # put into translation yamale2model
     # enum(taxid:)
 
+
 class Database_id(Keyword):
     tag = "database_id"
     # put into translation yamale2model
     # enum(doi:)
+
 
 class Chemical_id(Keyword):
     tag = "chemical_id"
@@ -104,7 +114,6 @@ class Person_id(Keyword):
 
 class Nested_include(Include):
     tag = "nested_include"
-    # put into translation yamale2model
 
 
 class Publication_id(Keyword):
@@ -174,6 +183,26 @@ class Uuid(Validator):
             return False
 
 
+class Vocabulary(Validator):
+    """Vocabulary validator"""
+
+    tag = "vocabulary"
+
+    def __init__(self, *args, fields=None, vocabulary=None, **kwargs):
+        super().__init__(*args, fields=fields, **kwargs)
+        self.vocabulary = vocabulary
+        self.fields = fields
+
+    def _is_valid(self, value):
+        if value is None:
+            return True
+        if not isinstance(value, dict):
+            return False
+        if "id" not in value:
+            return False
+        return True
+
+
 # include custom validators
 extend_validators = DefaultValidators.copy()
 for val in (
@@ -188,5 +217,6 @@ for val in (
     Publication_id,
     Choose,
     Nested_include,
+    Vocabulary,
 ):
     extend_validators[val.tag] = val

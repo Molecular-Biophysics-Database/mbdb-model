@@ -1,5 +1,5 @@
 record:
-  use: invenio
+  use: [invenio]
   module:
     qualified: mbdb_bli
   properties:
@@ -42,9 +42,16 @@ record:
               ^help.en: Details of how the data was processed and model in order to
                 derive parameters from it
               use: '#/$defs/BLI_data_analysis'
-  plugins:
-    builder:
-      disable: [script_sample_data]
+  mapping:
+    template:
+      settings:
+        index.mapping.total_fields.limit: 3000
+        index.mapping.nested_fields.limit: 200
+plugins:
+  builder:
+    disable: [script_sample_data]
+  packages: [oarepo-model-builder-files==4.*, oarepo-model-builder-cf==4.*, oarepo-model-builder-vocabularies==4.*,
+    oarepo-model-builder-relations==4.*, oarepo-model-builder-polymorphic==1.*]
 $defs:
   BLI_Measurement:
     properties:
@@ -290,7 +297,9 @@ $defs:
             type: nested
       funding_reference[]:
         ^help.en: List of information about the grants that supported depositors
-        use: '#/$defs/Grant'
+        keys: [id, title, props.funder_name]
+        vocabulary-type: grants
+        type: vocabulary
       technique:
         use: '#/$defs/SUPPORTED_TECHNIQUES'
         required: true
@@ -373,25 +382,25 @@ $defs:
     help.en: Description of the entity which varies depending on the type of entity
     schemas:
       Polymer:
-        use: '#/$defs/PolymerEntityPolymerPolymorphic'
+        use: '#/$defs/EntityPolymerPolymorphic'
         required: true
       Chemical:
-        use: '#/$defs/ChemicalEntityChemicalPolymorphic'
+        use: '#/$defs/EntityChemicalPolymorphic'
         required: true
       Molecular assembly:
-        use: '#/$defs/Molecular_assemblyEntityMolecular_assemblyPolymorphic'
+        use: '#/$defs/EntityMolecular_assemblyPolymorphic'
         required: true
       Complex substance of biological origin:
-        use: '#/$defs/Complex_substance_of_biological_originEntityComplex_substance_of_biological_originPolymorphic'
+        use: '#/$defs/EntityComplex_substance_of_biological_originPolymorphic'
         required: true
       Complex substance of environmental origin:
-        use: '#/$defs/Complex_substance_of_environmental_originEntityComplex_substance_of_environmental_originPolymorphic'
+        use: '#/$defs/EntityComplex_substance_of_environmental_originPolymorphic'
         required: true
       Complex substance of chemical origin:
-        use: '#/$defs/Complex_substance_of_chemical_originEntityComplex_substance_of_chemical_originPolymorphic'
+        use: '#/$defs/EntityComplex_substance_of_chemical_originPolymorphic'
         required: true
       Complex substance of industrial production origin:
-        use: '#/$defs/Complex_substance_of_industrial_production_originEntityComplex_substance_of_industrial_production_originPolymorphic'
+        use: '#/$defs/EntityComplex_substance_of_industrial_production_originPolymorphic'
         required: true
     type: polymorphic
     discriminator: type
@@ -458,10 +467,10 @@ $defs:
     help.en: Details about the assembly component
     schemas:
       Polymer:
-        use: '#/$defs/PolymerAssembly_componentPolymerPolymorphic'
+        use: '#/$defs/Assembly_componentPolymerPolymorphic'
         required: true
       Chemical:
-        use: '#/$defs/ChemicalAssembly_componentChemicalPolymorphic'
+        use: '#/$defs/Assembly_componentChemicalPolymorphic'
         required: true
     type: polymorphic
     discriminator: type
@@ -474,8 +483,9 @@ $defs:
           polyribonucleotide, Other]
         help.en: The type of polymer (e.g. polypeptide(L))
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       variant:
         type: keyword
         help.en: Descriptive name indicating differences of primary sequence of the
@@ -492,7 +502,9 @@ $defs:
         enum: [Isolated, Recombinantly, Synthetically]
         help.en: How the polymer was produced
       expression_organism:
-        use: '#/$defs/Organism'
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
@@ -529,11 +541,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
-          \ please specify the InChIKey of the monomer and specify the specific type\
-          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
-          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
-          \ specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -626,13 +638,13 @@ $defs:
       Chemical, and Molecular assembly
     schemas:
       Polymer:
-        use: '#/$defs/PolymerChemically_defined_constituentPolymerPolymorphic'
+        use: '#/$defs/Chemically_defined_constituentPolymerPolymorphic'
         required: true
       Chemical:
-        use: '#/$defs/ChemicalChemically_defined_constituentChemicalPolymorphic'
+        use: '#/$defs/Chemically_defined_constituentChemicalPolymorphic'
         required: true
       Molecular assembly:
-        use: '#/$defs/Molecular_assemblyChemically_defined_constituentMolecular_assemblyPolymorphic'
+        use: '#/$defs/Chemically_defined_constituentMolecular_assemblyPolymorphic'
         required: true
     type: polymorphic
     discriminator: type
@@ -644,25 +656,25 @@ $defs:
       or industrial production origin
     schemas:
       Polymer:
-        use: '#/$defs/PolymerConstituentPolymerPolymorphic'
+        use: '#/$defs/ConstituentPolymerPolymorphic'
         required: true
       Chemical:
-        use: '#/$defs/ChemicalConstituentChemicalPolymorphic'
+        use: '#/$defs/ConstituentChemicalPolymorphic'
         required: true
       Molecular assembly:
-        use: '#/$defs/Molecular_assemblyConstituentMolecular_assemblyPolymorphic'
+        use: '#/$defs/ConstituentMolecular_assemblyPolymorphic'
         required: true
       Complex substance of biological origin:
-        use: '#/$defs/Complex_substance_of_biological_originConstituentComplex_substance_of_biological_originPolymorphic'
+        use: '#/$defs/ConstituentComplex_substance_of_biological_originPolymorphic'
         required: true
       Complex substance of environmental origin:
-        use: '#/$defs/Complex_substance_of_environmental_originConstituentComplex_substance_of_environmental_originPolymorphic'
+        use: '#/$defs/ConstituentComplex_substance_of_environmental_originPolymorphic'
         required: true
       Complex substance of chemical origin:
-        use: '#/$defs/Complex_substance_of_chemical_originConstituentComplex_substance_of_chemical_originPolymorphic'
+        use: '#/$defs/ConstituentComplex_substance_of_chemical_originPolymorphic'
         required: true
       Complex substance of industrial production origin:
-        use: '#/$defs/Complex_substance_of_industrial_production_originConstituentComplex_substance_of_industrial_production_originPolymorphic'
+        use: '#/$defs/ConstituentComplex_substance_of_industrial_production_originPolymorphic'
         required: true
     type: polymorphic
     discriminator: type
@@ -671,13 +683,13 @@ $defs:
       from
     schemas:
       Body fluid:
-        use: '#/$defs/Body_fluidComplex_substance_of_biological_originBody_fluidPolymorphic'
+        use: '#/$defs/Body_fluid'
         required: true
       Cell fraction:
-        use: '#/$defs/Cell_fractionComplex_substance_of_biological_originCell_fractionPolymorphic'
+        use: '#/$defs/Cell_fraction'
         required: true
       Virion:
-        use: '#/$defs/VirionComplex_substance_of_biological_originVirionPolymorphic'
+        use: '#/$defs/Virion'
         required: true
     type: polymorphic
     discriminator: derived_from
@@ -698,8 +710,9 @@ $defs:
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       description:
         type: keyword
         help.en: Further description of the complex substance
@@ -743,8 +756,9 @@ $defs:
         help.en: The genetic material carried by the virions (None, virus genome,
           synthetic)
       host_organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       host_cell_type:
         type: keyword
         help.en: The host cell type the virion was produced in
@@ -843,47 +857,6 @@ $defs:
       description:
         type: keyword
         help.en: Further descriptions of the complex substance
-  Organism:
-    properties:
-      ncbi_taxid:
-        type: keyword
-        help.en: The [NCBI](taxid) of the organism to the lowest taxonomic rank available,
-          i.e. strain (e.g. 469008 which corresponds to Escherichia coli BL21(DE3))
-      additional_taxonomic_information[]:
-        ^help.en: List of taxonomic ranks the organism belongs to
-        use: '#/$defs/Taxa'
-        type: nested
-  Taxa:
-    properties:
-      domain:
-        type: keyword
-        help.en: Domain that the organism belongs to. Note that if the organism is
-          a virus it the highest level is realm rather than domain
-      realm:
-        type: keyword
-        help.en: Realm that the virus(!) belongs to. Note that realm only applies
-          if the organism is a virus
-      kingdom:
-        type: keyword
-        help.en: Kingdom that the organism belongs to
-      phylum:
-        type: keyword
-        help.en: Phylum that the organism belongs to
-      class:
-        type: keyword
-        help.en: Class that the organism belongs to
-      order:
-        type: keyword
-        help.en: Order that the organism belongs to
-      genus:
-        type: keyword
-        help.en: Genus that the organism belongs to
-      species:
-        type: keyword
-        help.en: Species that the organism belongs to
-      strain:
-        type: keyword
-        help.en: Strain that the organism belongs to
   Person:
     properties:
       full_name:
@@ -894,7 +867,9 @@ $defs:
         type: keyword
       affiliations[]:
         ^help.en: The affiliation of the person
-        type: keyword
+        keys: [id, title, props.city, props.state, props.country]
+        vocabulary-type: affiliations
+        type: vocabulary
   Publication:
     properties:
       pid:
@@ -918,19 +893,6 @@ $defs:
       publisher:
         type: keyword
         help.en: The name of the publisher
-  Grant:
-    properties:
-      funder_name:
-        type: keyword
-        help.en: The agency that supplied the funding (e.g. European Research Council,
-          Wellcome Trust, Michael J. Fox Foundation etc.
-      funding_program:
-        type: keyword
-        help.en: The program at the funding agency the grant was a part of (e.g. ERC
-          Consolidator, Simons Collaboration on the Origins of Life,  etc.), if applicable
-      award_number:
-        type: keyword
-        help.en: The number or unique identifier of the grant, if applicable
   Project:
     properties:
       id:
@@ -1389,7 +1351,7 @@ $defs:
     type: keyword
     enum: [Bio-Rad, Bruker, Cytiva, Gatorbio, GE Healthcare, Nanotemper, Nicoya Life,
       Sartorius, Malvern Panalytical, Refeyn, TA Instruments]
-  PolymerConstituentPolymerPolymorphic:
+  ConstituentPolymerPolymorphic:
     properties:
       polymer_type:
         type: keyword
@@ -1398,8 +1360,9 @@ $defs:
           polyribonucleotide, Other]
         help.en: The type of polymer (e.g. polypeptide(L))
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       variant:
         type: keyword
         help.en: Descriptive name indicating differences of primary sequence of the
@@ -1416,7 +1379,9 @@ $defs:
         enum: [Isolated, Recombinantly, Synthetically]
         help.en: How the polymer was produced
       expression_organism:
-        use: '#/$defs/Organism'
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
@@ -1444,15 +1409,15 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
-  ChemicalConstituentChemicalPolymorphic:
+  ConstituentChemicalPolymorphic:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
-          \ please specify the InChIKey of the monomer and specify the specific type\
-          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
-          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
-          \ specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -1485,7 +1450,7 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
-  Molecular_assemblyConstituentMolecular_assemblyPolymorphic:
+  ConstituentMolecular_assemblyPolymorphic:
     properties:
       external_databases[]:
         ^help.en: List of identifiers to records in external databases containing
@@ -1534,7 +1499,7 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
-  PolymerAssembly_componentPolymerPolymorphic:
+  Assembly_componentPolymerPolymorphic:
     properties:
       polymer_type:
         type: keyword
@@ -1543,8 +1508,9 @@ $defs:
           polyribonucleotide, Other]
         help.en: The type of polymer (e.g. polypeptide(L))
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       variant:
         type: keyword
         help.en: Descriptive name indicating differences of primary sequence of the
@@ -1561,7 +1527,9 @@ $defs:
         enum: [Isolated, Recombinantly, Synthetically]
         help.en: How the polymer was produced
       expression_organism:
-        use: '#/$defs/Organism'
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
@@ -1587,15 +1555,15 @@ $defs:
         type: double
         minimum: -1.0
         help.en: Number of molecules of the component within the assembly, -1 if unknown
-  ChemicalAssembly_componentChemicalPolymorphic:
+  Assembly_componentChemicalPolymorphic:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
-          \ please specify the InChIKey of the monomer and specify the specific type\
-          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
-          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
-          \ specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -1626,22 +1594,22 @@ $defs:
         type: double
         minimum: -1.0
         help.en: Number of molecules of the component within the assembly, -1 if unknown
-  Complex_substance_of_biological_originConstituentComplex_substance_of_biological_originPolymorphic:
+  ConstituentComplex_substance_of_biological_originPolymorphic:
     help.en: Information about the biological substance the complex substance is derived
       from
     schemas:
       Body fluid:
-        use: '#/$defs/Body_fluidComplex_substance_of_biological_originBody_fluidPolymorphic'
+        use: '#/$defs/Complex_substance_of_biological_originBody_fluidPolymorphic'
         required: true
       Cell fraction:
-        use: '#/$defs/Cell_fractionComplex_substance_of_biological_originCell_fractionPolymorphic'
+        use: '#/$defs/Complex_substance_of_biological_originCell_fractionPolymorphic'
         required: true
       Virion:
-        use: '#/$defs/VirionComplex_substance_of_biological_originVirionPolymorphic'
+        use: '#/$defs/Complex_substance_of_biological_originVirionPolymorphic'
         required: true
     type: polymorphic
     discriminator: derived_from
-  Body_fluidComplex_substance_of_biological_originBody_fluidPolymorphic:
+  Complex_substance_of_biological_originBody_fluidPolymorphic:
     properties:
       fluid:
         type: keyword
@@ -1667,8 +1635,9 @@ $defs:
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       description:
         type: keyword
         help.en: Further description of the complex substance
@@ -1686,9 +1655,7 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
-      id:
-        type: keyword
-  Cell_fractionComplex_substance_of_biological_originCell_fractionPolymorphic:
+  Complex_substance_of_biological_originCell_fractionPolymorphic:
     properties:
       fraction:
         type: keyword
@@ -1724,8 +1691,9 @@ $defs:
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       description:
         type: keyword
         help.en: Further description of the complex substance
@@ -1743,9 +1711,7 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
-      id:
-        type: keyword
-  VirionComplex_substance_of_biological_originVirionPolymorphic:
+  Complex_substance_of_biological_originVirionPolymorphic:
     properties:
       Genetic_material:
         type: keyword
@@ -1753,8 +1719,9 @@ $defs:
         help.en: The genetic material carried by the virions (None, virus genome,
           synthetic)
       host_organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       host_cell_type:
         type: keyword
         help.en: The host cell type the virion was produced in
@@ -1781,8 +1748,9 @@ $defs:
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       description:
         type: keyword
         help.en: Further description of the complex substance
@@ -1800,9 +1768,7 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
-      id:
-        type: keyword
-  Complex_substance_of_environmental_originConstituentComplex_substance_of_environmental_originPolymorphic:
+  ConstituentComplex_substance_of_environmental_originPolymorphic:
     properties:
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
@@ -1839,7 +1805,7 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
-  Complex_substance_of_chemical_originConstituentComplex_substance_of_chemical_originPolymorphic:
+  ConstituentComplex_substance_of_chemical_originPolymorphic:
     properties:
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
@@ -1875,7 +1841,7 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
-  Complex_substance_of_industrial_production_originConstituentComplex_substance_of_industrial_production_originPolymorphic:
+  ConstituentComplex_substance_of_industrial_production_originPolymorphic:
     properties:
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
@@ -1909,7 +1875,7 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
-  PolymerChemically_defined_constituentPolymerPolymorphic:
+  Chemically_defined_constituentPolymerPolymorphic:
     properties:
       polymer_type:
         type: keyword
@@ -1918,8 +1884,9 @@ $defs:
           polyribonucleotide, Other]
         help.en: The type of polymer (e.g. polypeptide(L))
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       variant:
         type: keyword
         help.en: Descriptive name indicating differences of primary sequence of the
@@ -1936,7 +1903,9 @@ $defs:
         enum: [Isolated, Recombinantly, Synthetically]
         help.en: How the polymer was produced
       expression_organism:
-        use: '#/$defs/Organism'
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
@@ -1962,15 +1931,15 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
-  ChemicalChemically_defined_constituentChemicalPolymorphic:
+  Chemically_defined_constituentChemicalPolymorphic:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
-          \ please specify the InChIKey of the monomer and specify the specific type\
-          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
-          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
-          \ specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -2001,7 +1970,7 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
-  Molecular_assemblyChemically_defined_constituentMolecular_assemblyPolymorphic:
+  Chemically_defined_constituentMolecular_assemblyPolymorphic:
     properties:
       external_databases[]:
         ^help.en: List of identifiers to records in external databases containing
@@ -2048,7 +2017,7 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
-  PolymerEntityPolymerPolymorphic:
+  EntityPolymerPolymorphic:
     properties:
       polymer_type:
         type: keyword
@@ -2057,8 +2026,9 @@ $defs:
           polyribonucleotide, Other]
         help.en: The type of polymer (e.g. polypeptide(L))
       organism:
-        use: '#/$defs/Organism'
-        required: true
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       variant:
         type: keyword
         help.en: Descriptive name indicating differences of primary sequence of the
@@ -2075,7 +2045,9 @@ $defs:
         enum: [Isolated, Recombinantly, Synthetically]
         help.en: How the polymer was produced
       expression_organism:
-        use: '#/$defs/Organism'
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
@@ -2105,15 +2077,15 @@ $defs:
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substance which cannot be exactly specified as for its chemical composition,
           e.g. blood, serum, plant extract
-  ChemicalEntityChemicalPolymorphic:
+  EntityChemicalPolymorphic:
     properties:
       inchikey:
         type: keyword
-        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers\
-          \ please specify the InChIKey of the monomer and specify the specific type\
-          \ in the additional identifiers' field (e.g. if PEG 3350 was employed, the\
-          \ InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be\
-          \ specified here)"
+        help.en: "[InChIKey]() identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers' field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)"
       additional_identifiers[]:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
@@ -2148,7 +2120,7 @@ $defs:
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substance which cannot be exactly specified as for its chemical composition,
           e.g. blood, serum, plant extract
-  Molecular_assemblyEntityMolecular_assemblyPolymorphic:
+  EntityMolecular_assemblyPolymorphic:
     properties:
       external_databases[]:
         ^help.en: List of identifiers to records in external databases containing
@@ -2199,22 +2171,187 @@ $defs:
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substance which cannot be exactly specified as for its chemical composition,
           e.g. blood, serum, plant extract
-  Complex_substance_of_biological_originEntityComplex_substance_of_biological_originPolymorphic:
+  EntityComplex_substance_of_biological_originPolymorphic:
     help.en: Information about the biological substance the complex substance is derived
       from
     schemas:
       Body fluid:
-        use: '#/$defs/Body_fluidComplex_substance_of_biological_originBody_fluidPolymorphic'
+        use: '#/$defs/entity_Complex_substance_of_biological_originBody_fluidPolymorphic'
         required: true
       Cell fraction:
-        use: '#/$defs/Cell_fractionComplex_substance_of_biological_originCell_fractionPolymorphic'
+        use: '#/$defs/entity_Complex_substance_of_biological_originCell_fractionPolymorphic'
         required: true
       Virion:
-        use: '#/$defs/VirionComplex_substance_of_biological_originVirionPolymorphic'
+        use: '#/$defs/entity_Complex_substance_of_biological_originVirionPolymorphic'
         required: true
     type: polymorphic
     discriminator: derived_from
-  Complex_substance_of_environmental_originEntityComplex_substance_of_environmental_originPolymorphic:
+  entity_Complex_substance_of_biological_originBody_fluidPolymorphic:
+    properties:
+      fluid:
+        type: keyword
+        enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract,
+          Other]
+        help.en: The body fluid the complex substance is derived from
+      health_status:
+        type: keyword
+        help.en: Health status of the donor organism where the body fluid was derived
+          from (e.g. healthy, sick, patient with Parkinson's Disease)
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      derived_from:
+        type: keyword
+        enum: [Body fluid, Cell fraction, Virion]
+        help.en: The biological substance the complex substance is derived from
+      organism:
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substance which cannot be exactly specified as for its chemical composition,
+          e.g. blood, serum, plant extract
+  entity_Complex_substance_of_biological_originCell_fractionPolymorphic:
+    properties:
+      fraction:
+        type: keyword
+        enum: [Ribosome, Cell wall, VesicleCell lysate/Cytoplasm, Cell Membrane, Extracellular
+            matrix, Lysosome, Golgi Apparatus, Mitochondrion, Nucleus, Rough Endoplasmic
+            Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast, Other]
+        help.en: The subcelluar component e.g. (Ribosome)
+      health_status:
+        type: keyword
+        help.en: Health status of the donor organism where the cell fraction was derived
+          from (e.g. healthy, sick, patient with Parkinson's Disease)
+      organ:
+        type: keyword
+        help.en: The organ the cell fraction was derived from (e.g. heart)
+      tissue:
+        type: keyword
+        help.en: The tissue type the cell fraction was derived from
+      celltype:
+        type: keyword
+        help.en: The cell type the cell fraction was derived from
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      derived_from:
+        type: keyword
+        enum: [Body fluid, Cell fraction, Virion]
+        help.en: The biological substance the complex substance is derived from
+      organism:
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substance which cannot be exactly specified as for its chemical composition,
+          e.g. blood, serum, plant extract
+  entity_Complex_substance_of_biological_originVirionPolymorphic:
+    properties:
+      Genetic_material:
+        type: keyword
+        enum: [No genetic material, Virus genome, Synthetic, Other]
+        help.en: The genetic material carried by the virions (None, virus genome,
+          synthetic)
+      host_organism:
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
+      host_cell_type:
+        type: keyword
+        help.en: The host cell type the virion was produced in
+      capsid_type:
+        type: keyword
+        enum: [None, Native, Genetically Engineered, Synthetic, Other]
+        help.en: The type of virion capsid (e.g. genetically engineered, None
+      envelope_type:
+        type: keyword
+        enum: [None, Native, Genetically Engineered, Synthetic, Other]
+        help.en: The type of virion envelope (e.g. genetically engineered, None
+      preparation_protocol[]:
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+      additional_specifications[]:
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      derived_from:
+        type: keyword
+        enum: [Body fluid, Cell fraction, Virion]
+        help.en: The biological substance the complex substance is derived from
+      organism:
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
+      description:
+        type: keyword
+        help.en: Further description of the complex substance
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substance which cannot be exactly specified as for its chemical composition,
+          e.g. blood, serum, plant extract
+  EntityComplex_substance_of_environmental_originPolymorphic:
     properties:
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2253,7 +2390,7 @@ $defs:
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substance which cannot be exactly specified as for its chemical composition,
           e.g. blood, serum, plant extract
-  Complex_substance_of_chemical_originEntityComplex_substance_of_chemical_originPolymorphic:
+  EntityComplex_substance_of_chemical_originPolymorphic:
     properties:
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2291,7 +2428,7 @@ $defs:
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substance which cannot be exactly specified as for its chemical composition,
           e.g. blood, serum, plant extract
-  Complex_substance_of_industrial_production_originEntityComplex_substance_of_industrial_production_originPolymorphic:
+  EntityComplex_substance_of_industrial_production_originPolymorphic:
     properties:
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex

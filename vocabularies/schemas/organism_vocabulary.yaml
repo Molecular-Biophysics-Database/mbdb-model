@@ -1,18 +1,20 @@
-Organism:
-    name:
+id:
+    description:        str(equals='NCBI taxid of the organism (e.g. 9606) to the
+                             lowest possible taxonomic rank (e.g. species),
+                             -1 if no information is present in the NCBI
+                             taxonomy at all', required=False)
+    value:              fulltext(min=1)
+
+
+title:
+    en:
         description:    str(equals='Name of organism associated with the taxid
-                                    (e.g. Mycobacterium phage PurpleHaze_DEM1)',
-                                    required=False)
-        value:          freetext(min=1)
+                                (e.g. Mycobacterium phage PurpleHaze_DEM1)',
+                                required=False)
+        value:          fulltext(min=1)
 
-    taxid:
-        description: str(equals='NCBI taxid of the organism (e.g. 9606) to the
-                                 lowest possible taxonomic rank (e.g. species),
-                                 -1 if no information is present in the NCBI
-                                 taxonomy at all', required=False)
-        value:          int(min=-1)
-
+props:
     rank:
         description:    str(equals='The taxonomic level the taxid is associated
                                     with', required=False)
-        value:          keyword(min=1)
+        value:          fulltext(min=1)

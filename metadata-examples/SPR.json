@@ -13,16 +13,18 @@
         "identifier": "doi:10.1234/foobar",
         "measurement_group_id": "G333-22-1111",
         "project": {
-          "id": "Pxyz-fe-dcba",
+          "id": "Pxyz-ab-cdef",
           "title": "Hemoglobin",
-          "description": "Everything else related to hemoglobin",
+          "description": "Everything related to hemoglobin",
           "owner": {
             "full_name": "Josiah Carberry",
             "identifiers": [
               "orcid:0000-0002-1825-0097"
             ],
             "affiliations": [
-              "Brown University, Providence, RI, US"
+              {
+                "id": "05gq02987"
+              }
             ]
           }
         },
@@ -41,7 +43,9 @@
         "depositor": {
           "full_name": "Max Mustermann",
           "affiliations": [
-            "Bielefeld University"
+            {
+              "id": "02hpadn98"
+            }
           ]
         },
         "principal_contact": {
@@ -50,35 +54,39 @@
             "orcid:0000-0002-1825-0097"
           ],
           "affiliations": [
-            "Brown University, Providence, RI, US"
+            {
+              "id": "05gq02987"
+            }
           ]
         },
         "contributors": [
           {
             "full_name": "Jane Doe",
             "affiliations": [
-              "Bielefeld University"
+              {
+                "id": "02hpadn98"
+              }
             ]
           },
           {
             "full_name": "John Doe",
             "affiliations": [
-              "Neverland University"
+              {
+                "id": "02hpadn98"
+              }
             ]
           }
         ]
       },
       "funding_reference": [
         {
-          "funder_name": "European Research Council",
-          "funding_program": "ERC advanced Grant",
-          "award_number": "695614"
+          "id": "308726"
         },
         {
-          "funder_name": "Wellcome Trust"
+          "id": "5T32NS007444-10"
         }
       ],
-      "technique": "Bio-layer interferometry (BLI)",
+      "technique": "Surface plasmon resonance (SPR)",
       "instrument": {
         "manufacturer": "Cytiva",
         "name": "Biacore T200"
@@ -211,7 +219,7 @@
             "fluid": "Serum",
             "health_status": "Healthy",
             "organism": {
-              "ncbi_taxid": "taxid:9606"
+              "id": "12374"
             },
             "description": "Blood was drawn after 12 hours of fasting",
             "preparation_protocol": [
@@ -253,7 +261,7 @@
                 "copy_number": 2,
                 "polymer_type": "polypeptide(L)",
                 "organism": {
-                  "ncbi_taxid": "taxid:9606"
+                  "id": "12374"
                 },
                 "variant": "WT",
                 "expression_source_type": "Isolated",
@@ -267,7 +275,7 @@
                 "copy_number": 2,
                 "polymer_type": "polypeptide(L)",
                 "organism": {
-                  "ncbi_taxid": "taxid:9606"
+                  "id": "12374"
                 },
                 "variant": "V2A",
                 "sequence": "MAHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVANALAHKYH",
@@ -293,7 +301,7 @@
                 "copy_number": 2,
                 "polymer_type": "polypeptide(L)",
                 "organism": {
-                  "ncbi_taxid": "taxid:10092"
+                  "id": "12374"
                 },
                 "variant": "HB11-201.11",
                 "expression_source_type": "Recombinantly"
@@ -304,7 +312,7 @@
                 "copy_number": 2,
                 "polymer_type": "polypeptide(L)",
                 "organism": {
-                  "ncbi_taxid": "taxid:10092"
+                  "id": "12374"
                 },
                 "variant": "HB11-201.11",
                 "expression_source_type": "Recombinantly"

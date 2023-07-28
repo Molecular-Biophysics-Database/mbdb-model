@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
-import yamale
-import yamale.validators as validators
-import custom_validators
-import typing
-from dataclasses import dataclass
 import random
 import string
+import typing
 from copy import deepcopy
+from dataclasses import dataclass
+
+import yamale
+import yamale.validators as validators
+
+import custom_validators
 
 
 @dataclass
@@ -17,11 +19,16 @@ class AnnotatedValidator:
     constraints: dict
     args: tuple
     is_required: bool
-    nested_elements: typing.List['AnnotatedValidator']
+    nested_elements: typing.List["AnnotatedValidator"]
 
 
 def is_nested(validator: validators.Validator | dict):
-    nested_validators = (validators.List, validators.Include, dict, custom_validators.Choose)
+    nested_validators = (
+        validators.List,
+        validators.Include,
+        dict,
+        custom_validators.Choose,
+    )
     return isinstance(validator, nested_validators)
 
 
@@ -67,11 +74,12 @@ def from_include(key, value: validators.Include, includes: dict, **kwargs):
 
 
 def get_nested_func(validator_type):
-    nested_func = {dict: from_dict,
-                   validators.List: from_list,
-                   validators.Include: from_include,
-                   custom_validators.Choose: from_choose
-                   }
+    nested_func = {
+        dict: from_dict,
+        validators.List: from_list,
+        validators.Include: from_include,
+        custom_validators.Choose: from_choose,
+    }
 
     return nested_func[validator_type]
 
@@ -87,24 +95,26 @@ def to_av(tree, includes):
             elements = func(value=value, includes=includes, key=name)
             nested_elements = [to_av(element, includes) for element in elements]
 
-        av_list.append(AnnotatedValidator(
-                                  name=name,
-                                  validator_type=validator_type,
-                                  is_required=get_required_status(value),
-                                  constraints=get_constraints(value),
-                                  args=get_args(value),
-                                  nested_elements=nested_elements
-                                 ))
+        av_list.append(
+            AnnotatedValidator(
+                name=name,
+                validator_type=validator_type,
+                is_required=get_required_status(value),
+                constraints=get_constraints(value),
+                args=get_args(value),
+                nested_elements=nested_elements,
+            )
+        )
     if len(av_list) == 1:
         return av_list[0]
     else:
         return AnnotatedValidator(
-            name='',
+            name="",
             validator_type=dict,
             is_required=True,
             constraints={},
             args=(),
-            nested_elements=av_list
+            nested_elements=av_list,
         )
 
 
@@ -121,12 +131,12 @@ def random_string(*args, min=10, max=100, equals=None, char_set=None):
         return equals
 
     if char_set is None:
-        char_set = string.printable + 'ěšščřžýýáíéí'
+        char_set = string.printable + "ěšščřžýýáíéí"
 
     n_chars = random.randint(min, max)
     random_indexes = random.choices(range(0, len(char_set)), k=n_chars)
 
-    return ''.join([char_set[pos] for pos in random_indexes])
+    return "".join([char_set[pos] for pos in random_indexes])
 
 
 def random_dict_like(av):
@@ -143,39 +153,42 @@ def random_enum(av, **kwargs):
 
 
 def random_choose(av):
-
     pass
 
 
 def choose_state(optional_probability=0.5):
-    return random.choices([True, False], weights=[optional_probability, 1 - optional_probability])[0]
+    return random.choices(
+        [True, False], weights=[optional_probability, 1 - optional_probability]
+    )[0]
 
 
 def type_mapping(av: AnnotatedValidator):
-
     if not av.is_required:
         if not choose_state():
             return
 
-    picker = {validators.Number: random_int,
-              validators.Integer: random_float,
-              validators.Include: random_dict_like,
-              custom_validators.Nested_include: random_dict_like,
-              dict: random_dict_like,
-              validators.String: random_string,
-              custom_validators.Keyword: random_string,
-              custom_validators.Fulltext: random_string,
-              validators.Enum: random_enum,
-              validators.List: random_list,
-              custom_validators.Choose: random_choose
-              }
+    picker = {
+        validators.Number: random_int,
+        validators.Integer: random_float,
+        validators.Include: random_dict_like,
+        custom_validators.Nested_include: random_dict_like,
+        dict: random_dict_like,
+        validators.String: random_string,
+        custom_validators.Keyword: random_string,
+        custom_validators.Fulltext: random_string,
+        validators.Enum: random_enum,
+        validators.List: random_list,
+        custom_validators.Choose: random_choose,
+    }
 
     if av.validator_type in picker.keys():
         random_value = picker[av.validator_type](av, **av.constraints)
         return random_value
 
     else:
-        raise NotImplementedError(f'a random value for fields of type {av.validator_type} has not been implemented')
+        raise NotImplementedError(
+            f"a random value for fields of type {av.validator_type} has not been implemented"
+        )
 
 
 def main():
@@ -215,17 +228,15 @@ def main():
                      
         """
 
-    test_num_schema = yamale.make_schema(content=test_num, validators=custom_validators.extend_validators)
-    #print(test_num_schema.dict)
+    test_num_schema = yamale.make_schema(
+        content=test_num, validators=custom_validators.extend_validators
+    )
+    # print(test_num_schema.dict)
     b = to_av(test_num_schema.dict, test_num_schema.includes)
     print(b)
     l = type_mapping(b)
     print(l)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
-
-
-
-

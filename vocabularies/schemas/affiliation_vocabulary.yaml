@@ -1,22 +1,26 @@
-Affiliations:
-    name:
+
+id:
+    description:    str(equals='ROR ID associated with the institution
+                                    (e.g. 03ad39j10)', required=False)
+    value:          fulltext(min=1)
+
+title:
+    en:
         description:    str(equals='Name of the institution (e.g. University of
-                                    Pisa)', required=False)
-        value:          freetext(min=1)
+                                Pisa)', required=False)
+        value:          fulltext(min=1)
+
+props:
     city:
         description:    str(equals='City the institution is located in (e.g.
                                     Pisa)', required=False)
-        value:          freetext(min=1)
+        value:          fulltext(min=1)
 
     state:
         description:    str(equals='State the institution is located in (e.g.
                                     Toscana)', required=False)
-        value:          freetext(min=1)
+        value:          fulltext(min=1)
     country:
         description:    str(equals='Country the institution is located in (e.g.
                                     Italy)', required=False)
-        value:          freetext(min=1)
-    ror_id:
-        description:    str(equals='ROR ID associated with the institution
-                                    (e.g. 03ad39j10)', required=False)
-        value:          freetext(min=1)
+        value:          fulltext(min=1)

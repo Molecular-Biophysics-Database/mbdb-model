@@ -129,7 +129,9 @@ General_parameters:
         description     : str(equals='List of information about the grants that
                                       supported depositors', required=False)
         searchable      : True
-        value           : list(include('Grant'), required=False)
+        value           : list(vocabulary(vocabulary='grants',
+                                          fields='[id,title,props.funder_name]'),
+                                          required=False)
 
     technique:
         description     : str(equals='The type of experimental technique
@@ -418,8 +420,9 @@ Polymer:
                                       species where the polymer
                                       naturally occurs',required=False)
         searchable      : True
-        value           : include('Organism')
-
+        value           : vocabulary(vocabulary='organisms',
+                                     fields='[id,title,props.rank]',
+                                     required=False)
 
     variant:
         description     : str(equals='Descriptive name indicating differences of
@@ -460,7 +463,9 @@ Polymer:
                                       where the polymer was produced',
                                       required=False)
         searchable      : True
-        value           : include('Organism',required=False)
+        value           : vocabulary(vocabulary='organisms',
+                                     fields='[id,title,props.rank]',
+                                     required=False)
 
     supplier:
         description     : str(equals='If the polymer was purchased from a
@@ -770,7 +775,9 @@ Complex_substance_of_biological_origin_base:
                                       lowest taxonomic rank possible e.g.
                                       strain', required=False)
         searchable      : True
-        value           : include('Organism')
+        value           : vocabulary(vocabulary='organisms',
+                                     fields='[id,title,props.rank]',
+                                     required=False)
 
     description:
         description     : str(equals='Further description of the complex
@@ -843,7 +850,9 @@ Virion:
         description     : str(equals='The host organism the virion was
                                       produced in', required=False)
         searchable      : True
-        value           : include('Organism')
+        value           : vocabulary(vocabulary='organisms',
+                                     fields='[id,title,props.rank]',
+                                     required=False)
 
     host_cell_type:
         description     : str(equals='The host cell type the virion was
@@ -1002,74 +1011,6 @@ Complex_substance_of_industrial_production_origin:
         value           : str()
 
 ---
-# Organism description
-
-Organism:
-    ncbi_taxid:
-        description     : str(equals='The [NCBI](taxid) of the organism to the
-                                      lowest taxonomic rank available, i.e.
-                                      strain (e.g. 469008 which corresponds to
-                                      Escherichia coli BL21(DE3))',
-                                      required=False)
-        searchable      : True
-        value           : database_id() #convert to vocabulary
-
-    additional_taxonomic_information:
-        description     : str(equals='List of taxonomic ranks the organism
-                                      belongs to', required=False)
-        value           : list(nested_include('Taxa'),required=False)
-
-Taxa:
-#
-    domain:
-        description     : str(equals='Domain that the organism belongs to. Note
-                                      that if the organism is a virus it the
-                                      highest level is realm rather than
-                                      domain', required=False)
-        value           : keyword(required=False)
-
-    realm:
-        description     : str(equals='Realm that the virus(!) belongs to. Note
-                                      that realm only applies if the organism is
-                                      a virus', required=False)
-        value           : keyword(required=False)
-
-    kingdom:
-        description     : str(equals='Kingdom that the organism belongs to',
-                                      required=False)
-        value           : keyword(required=False)
-
-    phylum:
-        description     : str(equals='Phylum that the organism belongs to',
-                                      required=False)
-        value           : keyword(required=False)
-
-    class:
-        description     : str(equals='Class that the organism belongs to',
-                                      required=False)
-        value           : keyword(required=False)
-
-    order:
-        description     : str(equals='Order that the organism belongs to',
-                                      required=False)
-        value           : keyword(required=False)
-
-    genus:
-        description     : str(equals='Genus that the organism belongs to',
-                                      required=False)
-        value           : keyword(required=False)
-
-    species:
-        description     : str(equals='Species that the organism belongs to',
-                                      required=False)
-        value           : keyword(required=False)
-
-    strain:
-        description     : str(equals='Strain that the organism belongs to',
-                              required=False)
-        value           : keyword(required=False)
-
----
 # People, publications, and funding objects
 
 Person:
@@ -1089,7 +1030,9 @@ Person:
         description     : str(equals='The affiliation of the person',
                                       required=False)
         searchable      : True
-        value           : list(str(), required=False)
+        value           : list(vocabulary(vocabulary='affiliations',
+                               fields='[id, title, props.city, props.state, props.country]'),
+                               required=False)
 
 
 Publication:
@@ -1105,7 +1048,7 @@ Publication:
         value           : str(required=False)
 
     publication_year:
-        description     : str(equals='The publication year',required=False)
+        description     : str(equals='The publication year', required=False)
         value           : int(min=1800)
 
     authors:
@@ -1121,29 +1064,6 @@ Publication:
         description     : str(equals='The name of the publisher',
                                       required=False)
         value           : str(required=False)
-
-
-Grant:
-    funder_name:
-        description     : str(equals='The agency that supplied the funding (e.g.
-                                      European Research Council, Wellcome Trust,
-                                      Michael J. Fox Foundation etc.',
-                                      required=False)
-        value           : str()
-
-    funding_program:
-        description     : str(equals='The program at the funding agency the
-                                      grant was a part of (e.g. ERC Consolidator,
-                                      Simons Collaboration on the Origins of
-                                      Life,  etc.), if applicable',
-                                      required=False)
-        value           : str(required=False)
-
-    award_number:
-        description     : str(equals='The number or unique identifier of the
-                                      grant, if applicable', required=False)
-        value           : keyword(required=False)
-
 
 Project:
     id:

@@ -22,7 +22,9 @@
               "orcid:0000-0002-1825-0097"
             ],
             "affiliations": [
-              "Brown University, Providence, RI, US"
+              {
+                "id": "05gq02987"
+              }
             ]
           }
         },
@@ -41,7 +43,9 @@
         "depositor": {
           "full_name": "Max Mustermann",
           "affiliations": [
-            "Bielefeld University"
+            {
+              "id": "02hpadn98"
+            }
           ]
         },
         "principal_contact": {
@@ -50,23 +54,36 @@
             "orcid:0000-0002-1825-0097"
           ],
           "affiliations": [
-            "Brown University, Providence, RI, US"
+            {
+              "id": "05gq02987"
+            }
           ]
         },
         "contributors": [
           {
             "full_name": "Jane Doe",
             "affiliations": [
-              "Bielefeld University"
+              {
+                "id": "02hpadn98"
+              }
+            ]
+          },
+          {
+            "full_name": "John Doe",
+            "affiliations": [
+              {
+                "id": "02hpadn98"
+              }
             ]
           }
         ]
       },
       "funding_reference": [
         {
-          "funder_name": "European Research Council",
-          "funding_program": "ERC advanced Grant",
-          "award_number": "695614"
+          "id": "308726"
+        },
+        {
+          "id": "5T32NS007444-10"
         }
       ],
       "technique": "Microscale thermophoresis/Temperature related intensity change (MST/TRIC)",
@@ -193,7 +210,7 @@
             "fluid": "Serum",
             "health_status": "Healthy",
             "organism": {
-              "ncbi_taxid": "taxid:9606"
+              "id": "12374"
             },
             "description": "Blood was drawn after 12 hours of fasting",
             "preparation_protocol": [
@@ -235,7 +252,7 @@
                 "copy_number": 2,
                 "polymer_type": "polypeptide(L)",
                 "organism": {
-                  "ncbi_taxid": "taxid:9606"
+                  "id": "12374"
                 },
                 "variant": "WT",
                 "expression_source_type": "Isolated",
@@ -249,7 +266,7 @@
                 "copy_number": 2,
                 "polymer_type": "polypeptide(L)",
                 "organism": {
-                  "ncbi_taxid": "taxid:9606"
+                  "id": "12374"
                 },
                 "variant": "V2A",
                 "modifications": {
