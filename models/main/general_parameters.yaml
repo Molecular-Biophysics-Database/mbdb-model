@@ -5,7 +5,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.0')
+        value           : keyword(equals='0.9.2')
 
     record:
         publisher:
@@ -18,7 +18,7 @@ General_parameters:
         resource_type_general:
             description : str(equals='All records are considered to be
                                       datasets', required=False)
-            value       : keyword(equals='dataset')
+            value       : keyword(equals='Dataset')
 
         resource_type:
             description : str(equals='More specific type than "dataset"',
@@ -1008,15 +1008,23 @@ Complex_substance_of_industrial_production_origin:
 # People, publications, and funding objects
 
 Person:
-    full_name:
-        description     : str(equals='The full name of the person',
+    given_name:
+        description     : str(equals='The given name(s), including
+                                      middlename(s), of the person',
+                                      required=False)
+        searchable      : True
+        value           : str()
+
+    family_name:
+        description     : str(equals='The family name(s) the person',
                                       required=False)
         searchable      : True
         value           : str()
 
     identifiers:
         description     : str(equals='Persistent identifier associated with the
-                                      publication', required=False)
+                                      publication, currently only ORCIDs are
+                                      allowed', required=False)
         searchable      : True
         value           : list(person_id(), required=False)
 

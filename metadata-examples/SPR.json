@@ -1,10 +1,10 @@
 {
   "metadata": {
     "general_parameters": {
-      "schema_version": "0.9.0",
+      "schema_version": "0.9.2",
       "record": {
         "publisher": "MBDB",
-        "resource_type_general": "dataset",
+        "resource_type_general": "Dataset",
         "resource_type": "SPR",
         "access_rights": "open access",
         "metadata_access_rights": "open access",
@@ -17,7 +17,8 @@
           "title": "Hemoglobin",
           "description": "Everything related to hemoglobin",
           "owner": {
-            "full_name": "Josiah Carberry",
+            "given_name": "Josiah",
+            "family_name": "Carberry",
             "identifiers": [
               "orcid:0000-0002-1825-0097"
             ],
@@ -41,7 +42,8 @@
       },
       "depositors": {
         "depositor": {
-          "full_name": "Max Mustermann",
+          "given_name": "Max",
+          "family_name": "Mustermann",
           "affiliations": [
             {
               "id": "02hpadn98"
@@ -49,7 +51,8 @@
           ]
         },
         "principal_contact": {
-          "full_name": "Josiah Carberry",
+          "given_name": "Josiah",
+          "family_name": "Carberry",
           "identifiers": [
             "orcid:0000-0002-1825-0097"
           ],
@@ -61,7 +64,8 @@
         },
         "contributors": [
           {
-            "full_name": "Jane Doe",
+            "given_name": "Jane",
+            "family_name": "Doe",
             "affiliations": [
               {
                 "id": "02hpadn98"
@@ -69,7 +73,8 @@
             ]
           },
           {
-            "full_name": "John Doe",
+            "given_name": "John",
+            "family_name": "Doe",
             "affiliations": [
               {
                 "id": "02hpadn98"
