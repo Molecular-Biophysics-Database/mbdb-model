@@ -5,7 +5,7 @@ import re
 from collections import namedtuple
 from io import StringIO
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 import click
 import ruamel
@@ -38,6 +38,7 @@ from custom_validators import (
     Nested_include,
     Person_id,
     Publication_id,
+    Url,
     Uuid,
     Vocabulary,
 )
@@ -87,6 +88,7 @@ validators[Publication_id.tag] = Publication_id
 validators[Nested_include.tag] = Nested_include
 validators[Choose.tag] = Choose
 validators[Vocabulary.tag] = Vocabulary
+validators[Url.tag] = Url
 
 
 class KeyModifier:
@@ -197,9 +199,7 @@ class ModelObject(ModelBase):
 
     def copy(self):
         ret = copy.copy(self)
-        ret.children = {
-            k: v.copy() for k, v in ret.children.items()
-        }
+        ret.children = {k: v.copy() for k, v in ret.children.items()}
         return ret
 
     def update_children(self, children, defs):
@@ -397,7 +397,7 @@ class ModelChoose(ModelBase):
 
     def propagate_polymorphic_base_schemas(self, defs, path):
         subschema_include: ModelInclude  # must be ModelInclude
-        if hasattr(self, '_polymorphic_schema_propagated'):
+        if hasattr(self, "_polymorphic_schema_propagated"):
             return
         self._polymorphic_schema_propagated = True
 
@@ -413,27 +413,29 @@ class ModelChoose(ModelBase):
                 original_schema = defs[previous_include]
                 new_schema = original_schema.copy()
                 defs[new_include] = new_schema
-                new_include_params: Any = namedtuple("IncludeParams", "include_name, is_required")(
-                        new_include,
-                        subschema_include.required
-                    )
+                new_include_params: Any = namedtuple(
+                    "IncludeParams", "include_name, is_required"
+                )(new_include, subschema_include.required)
                 new_subschema_include = ModelInclude(
-                    new_include_params,
-                    subschema_include.path
+                    new_include_params, subschema_include.path
                 )
                 new_subschemas[subschema_name] = new_subschema_include
-                new_subschema_include.propagate_polymorphic_base_schemas(defs, path + [self.path])
+                new_subschema_include.propagate_polymorphic_base_schemas(
+                    defs, path + [self.path]
+                )
                 new_schema.update_children(base_schema.children, defs)
             else:
-                raise Exception(f"Schema {subschema_include.include} has already been generated, can not override")
+                raise Exception(
+                    f"Schema {subschema_include.include} has already been generated, can not override"
+                )
         self.subschemas = new_subschemas
 
     def get_unique_include_name(self, include_name, path, defs):
         paths = []
         for pth in path:
             new_path = []
-            for pth_part in pth.split('/'):
-                if not pth_part or pth_part == 'value':
+            for pth_part in pth.split("/"):
+                if not pth_part or pth_part == "value":
                     continue
                 new_path.append(pth_part.lower())
             if new_path:
@@ -449,7 +451,11 @@ class ModelChoose(ModelBase):
             without_prefix = []
             handling_prefix = True
             for pth_idx, pth_part in enumerate(pth):
-                if handling_prefix and pth_idx < len(previous_path) and previous_path[pth_idx] == pth_part:
+                if (
+                    handling_prefix
+                    and pth_idx < len(previous_path)
+                    and previous_path[pth_idx] == pth_part
+                ):
                     continue
                 else:
                     handling_prefix = False
@@ -542,6 +548,7 @@ class ModelVocabulary(ModelLink):
 class Model:
     includes: Dict[str, ModelBase]
     model: ModelBase
+    files_meta: Dict = None
     package: str = None
 
     def to_json(self):
@@ -555,10 +562,10 @@ class Model:
                     "template": {
                         "settings": {
                             "index.mapping.total_fields.limit": 3000,
-                            "index.mapping.nested_fields.limit": 200
+                            "index.mapping.nested_fields.limit": 200,
                         }
                     }
-                }
+                },
             },
             "plugins": {
                 "builder": {"disable": ["script_sample_data"]},
@@ -569,6 +576,7 @@ class Model:
                     "oarepo-model-builder-relations==4.*",
                     "oarepo-model-builder-polymorphic==1.*",
                 ],
+                "files": self.files_meta,
             },
             "$defs": includes,
             "settings": {"i18n-languages": ["en"]},
@@ -594,6 +602,9 @@ class Model:
 
     def propagate_polymorphic_base_schemas(self):
         self.model.propagate_polymorphic_base_schemas(self.includes, [])
+
+    def add_files_meta(self, files_meta: Dict):
+        self.files_meta = files_meta
 
 
 def parse_described_value(d, path, includes):
@@ -635,6 +646,8 @@ def parse(d, path, includes):
         return ModelEnum(d, path)
     elif clz is Uuid:
         return ModelPrimitive(d, "uuid", path)
+    elif clz is Url:
+        return ModelPrimitive(d, "url", path)
     elif clz is Day:
         return ModelPrimitive(d, "date", path)
     elif clz is Boolean:
@@ -725,7 +738,7 @@ def parse_schema(schema, path, includes, skip_top=False):
         return parse(schema.dict, path, includes)
 
 
-def parse_file(ym_file):
+def parse_file(ym_file, modelbase_only=False) -> Union[Model, ModelBase]:
     schema_data = Path(ym_file).read_text()
     schema_data = re.sub(r"searchable(\s*:\s*)True", r"searchable\1true()", schema_data)
     schema = yamale.make_schema(content=schema_data, validators=validators)
@@ -740,6 +753,9 @@ def parse_file(ym_file):
         for k, v in new_includes.items():
             if k not in parsed_includes:
                 includes[k] = v
+
+    if modelbase_only:
+        return model
 
     return Model(
         model=model,
@@ -759,24 +775,33 @@ def set_flow_style(d):
 @click.command()
 @click.argument(
     "input_file",
-    default=Path(__file__).parent.parent
-    / "With_descriptions"
-    / "general_parameters_with_description.yaml",
+    default=Path(__file__).parent.parent / "models" / "main" / "MST.yaml",
     required=True,
 )
 @click.argument("output_file", required=False)
 @click.option("--debug", type=bool)
-@click.option("--include", required=False)
+@click.option(
+    "--include",
+    default=Path(__file__).parent.parent
+    / "models"
+    / "main"
+    / "general_parameters.yaml",
+    required=False,
+)
 def run(input_file, output_file, debug, include):
     if debug:
         logging.basicConfig(level=logging.DEBUG)
     ym_file = input_file
+    attachment = (
+        Path(__file__).parent.parent / "models" / "main" / "file_attachment.yaml"
+    )
     model = parse_file(ym_file)
     if include:
         model.add_includes_from(include)
     model.remove_unused_includes()
     model.set_links()
     model.propagate_polymorphic_base_schemas()
+    model.add_files_meta(parse_file(attachment, modelbase_only=True).to_json())
     yaml = ruamel_YAML()
     yaml.default_flow_style = False
     yaml.allow_unicode = True

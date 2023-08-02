@@ -187,15 +187,21 @@ class Affiliation(Vocabulary):
     @staticmethod
     def extract_affiliation(ror_dict):
         """Converts a ror json record dict to a vocabulary dict"""
-        return {
+        affiliation = {
             "id": ror_dict["id"].split("/")[-1],
             "title": {"en": ror_dict["name"]},
             "props":{
                 "city": ror_dict["addresses"][0]["city"],
-                "state": ror_dict["addresses"][0]["state"],
                 "country": ror_dict["country"]["country_name"],
+                "state": ror_dict["addresses"][0]["state"]
             }
         }
+        # null values are not allowed in Invenio vocabularies so remove state if it is not there
+        props = affiliation["props"]
+        if props['state'] is None:
+            del props['state']
+
+        return affiliation
 
     @staticmethod
     def get_json(file_names):

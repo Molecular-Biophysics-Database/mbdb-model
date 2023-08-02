@@ -140,6 +140,12 @@ General_parameters:
         searchable      : True
         value           : include('SUPPORTED_TECHNIQUES')
 
+    collection_start_time:
+        description     : str(equals='The time when collection of the
+                                      data began', required=False)
+        searchable      : True
+        value           : day()
+
     instrument:
         manufacturer:
             description : str(equals='Name of the manufacturer of the instrument
@@ -165,18 +171,6 @@ General_parameters:
                                       was carried out as part of measurement, it
                                       can be specified here', required=False)
             value       : include('Performance_test', required=False)
-
-    raw_data_information:
-        collection_start_time:
-            description : str(equals='The time when collection of the
-                                      data began', required=False)
-            searchable  : True
-            value       : day()
-
-        file_information:
-            description : str(equals='List of the files containing the raw
-                                      data', required=False)
-            value       : list(include('File'))
 
 
     physical_environment_at_sample_handling:
@@ -529,15 +523,15 @@ Polymer_modifications:
 
 Chemical:
     inchikey:
-        description     : str(equals="[InChIKey]() identifier of the chemical.
+        description     : str(equals='[InChIKey]() identifier of the chemical.
                                       In case of chemical polymers please
                                       specify the InChIKey of the monomer and
                                       specify the specific type in the
-                                      additional identifiers' field (e.g. if
+                                      additional identifiers field (e.g. if
                                       PEG 3350 was employed, the InChiKey of
                                       ethylene glycol, i.e.
                                       LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-                                      specified here)", required=False)
+                                      specified here)', required=False)
         searchable      : True
         value           : keyword()
 
@@ -1262,7 +1256,7 @@ Quality_control:
         description     : str(equals='Report with the results of the quality
                                       control, as a pdf file',
                                       required=False)
-        value           : include('File')
+        value           : url()
 
 
 Data_fitting:
@@ -1601,52 +1595,6 @@ Size:
 ---
 # Computer related objects
 
-File:
-    name:
-        description     : str(equals='Name of the file', required=False)
-        value           : keyword()
-
-    type:
-        description     : str(equals='Type of the file in terms of how it can be
-                                      read (text, binary, etc.)',
-                                      required=False)
-        value           : enum('text','binary', 'text and binary')
-
-    size:
-        description     : str(equals='Size of the file',required=False)
-        value           : include('File_size')
-
-    source:
-        description     : str(equals='Which source generated the file')
-        value           : enum('Instrument software', 'User annotated',
-                               'MBDB')
-
-    description:
-        description     : str(equals='Short description of what the file
-                                      contains', required=False)
-        value           : str(required=False)
-
-    recommended_software:
-        description     : str(equals='The name of the software recommended for
-                                      working with the file', required=False)
-        value           : str(required=False)
-
-    processing_steps:
-        description     : str(equals='List of the processing steps performed on
-                                      the file before it was deposited (e.g.
-                                      exported to xlsx)', required=False)
-        value           : list(include('Processing_step'))
-
-File_size:
-    value:
-        description     : str(equals='the numerical value of the size of the
-                                      file', required=False)
-        value           : num(min=0)
-
-    unit:
-        description     : str(equals='The unit of the numerical file size',
-                                      required=False)
-        value           : include('FILE_SIZE_UNITS')
 
 
 Measured_data_series:
@@ -1678,7 +1626,7 @@ Performance_test:
         description     : str(equals='The file containing the report of the
                                       performance test, preferably in pdf',
                                       required=False)
-        value           : include('File')
+        value           : url()
 
     published_test_protocol:
         description     : str(equals='If the protocol used for the performance
@@ -1765,10 +1713,7 @@ TIME_UNITS              : enum('nanoseconds','microseconds', 'milliseconds',
 ENERGY_UNITS            : enum('kcal/mol','kJ/mol')
 POWER_UNITS             : enum('µcal/s','µJ/s')
 LENGTH_UNITS            : enum('Å', 'nm', 'μm', 'mm', 'cm', 'm')
-FILE_SIZE_UNITS         : enum('bytes (B)', 'kilobytes (kB)', 'megabytes (MB)',
-                               'gigabytes (GB)', 'terabytes (TB)',
-                               'kibibytes (KiB)','mebibytes (MiB)',
-                               'gibibytes (GiB)', 'tebibytes (TiB)')
+
 
 ---
 # Techniques and company definitions
