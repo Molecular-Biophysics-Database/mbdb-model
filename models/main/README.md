@@ -225,7 +225,6 @@ General_parameters:
   funding
   technique
   instrument
-  raw_data_information
   physical_environment_at_sample_handling
   chemical_information
   derived_parameters
@@ -265,11 +264,6 @@ shift)
 
 Information about the instrument used to perform the measurement, including
 test of instrument performance.
-
-### `raw_data_information`
-
-Information about the files containing the raw data, as well about the files
-containing processed data.
 
 ### `physical_environment_at_sample_handling`
 

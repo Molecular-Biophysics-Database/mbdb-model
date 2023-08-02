@@ -523,15 +523,15 @@ Polymer_modifications:
 
 Chemical:
     inchikey:
-        description     : str(equals="[InChIKey]() identifier of the chemical.
+        description     : str(equals='[InChIKey]() identifier of the chemical.
                                       In case of chemical polymers please
                                       specify the InChIKey of the monomer and
                                       specify the specific type in the
-                                      additional identifiers' field (e.g. if
+                                      additional identifiers field (e.g. if
                                       PEG 3350 was employed, the InChiKey of
                                       ethylene glycol, i.e.
                                       LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-                                      specified here)", required=False)
+                                      specified here)', required=False)
         searchable      : True
         value           : keyword()
 
