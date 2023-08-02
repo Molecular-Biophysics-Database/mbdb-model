@@ -13,9 +13,9 @@
         "identifier": "doi:10.1234/foobar",
         "measurement_group_id": "G333-22-1111",
         "project": {
-          "id": "Pxyz-ab-cdef",
+          "id": "Pxyz-fe-dcba",
           "title": "Hemoglobin",
-          "description": "Everything related to hemoglobin",
+          "description": "Everything else related to hemoglobin",
           "owner": {
             "given_name": "Josiah",
             "family_name": "Carberry",

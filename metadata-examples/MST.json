@@ -73,7 +73,8 @@
             ]
           },
           {
-            "full_name": "John Doe",
+            "given_name": "John",
+            "family_name": "Doe",
             "affiliations": [
               {
                 "id": "02hpadn98"

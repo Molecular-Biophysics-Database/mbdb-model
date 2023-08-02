@@ -36,7 +36,7 @@ general_parameters:
             given_name: 'Max'
             family_name: 'Mustermann'
             affiliations:
-                - 'Bielefeld University'
+                - id: '02hpadn98'
 
         principal_contact:
             given_name: 'Josiah'
@@ -52,7 +52,8 @@ general_parameters:
               affiliations:
                 - id: '02hpadn98'
 
-            - full_name: 'John Doe'
+            - given_name: 'John'
+              family_name: 'Doe'
               affiliations:
                 - id: '02hpadn98'
 
