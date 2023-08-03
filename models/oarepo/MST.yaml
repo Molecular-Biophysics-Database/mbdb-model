@@ -57,16 +57,6 @@ record:
               ^help.en: Details of how the data was processed and model in order to
                 derive parameters from it
               use: '#/$defs/MST_data_analysis'
-  mapping:
-    template:
-      settings:
-        index.mapping.total_fields.limit: 3000
-        index.mapping.nested_fields.limit: 200
-plugins:
-  builder:
-    disable: [script_sample_data]
-  packages: [oarepo-model-builder-files==4.*, oarepo-model-builder-cf==4.*, oarepo-model-builder-vocabularies==4.*,
-    oarepo-model-builder-relations==4.*, oarepo-model-builder-polymorphic==1.*]
   files:
     properties:
       name:
@@ -100,6 +90,16 @@ plugins:
         ^help.en: List of the processing steps performed on the file before it was
           deposited (e.g. exported to xlsx)
         use: '#/$defs/Processing_step'
+  mapping:
+    template:
+      settings:
+        index.mapping.total_fields.limit: 3000
+        index.mapping.nested_fields.limit: 200
+plugins:
+  builder:
+    disable: [script_sample_data]
+  packages: [oarepo-model-builder-files==4.*, oarepo-model-builder-cf==4.*, oarepo-model-builder-vocabularies==4.*,
+    oarepo-model-builder-relations==4.*, oarepo-model-builder-polymorphic==1.*]
 $defs:
   MST_data_analysis:
     properties:
