@@ -1,22 +1,57 @@
-{
-  "metadata": {
-    "general_parameters": {
-      "schema_version": "0.9.2",
-      "record": {
-        "publisher": "MBDB",
-        "resource_type_general": "Dataset",
-        "resource_type": "SPR",
-        "access_rights": "open access",
-        "metadata_access_rights": "open access",
-        "title": "SPR measurement of hemoglobin serum elements",
-        "id": "abc-de-efgh",
-        "identifier": "doi:10.1234/foobar",
-        "measurement_group_id": "G333-22-1111",
-        "project": {
-          "id": "Pxyz-fe-dcba",
-          "title": "Hemoglobin",
-          "description": "Everything else related to hemoglobin",
-          "owner": {
+[
+  {
+    "metadata": {
+      "general_parameters": {
+        "schema_version": "0.9.2",
+        "record": {
+          "publisher": "MBDB",
+          "resource_type_general": "Dataset",
+          "resource_type": "SPR",
+          "access_rights": "open access",
+          "metadata_access_rights": "open access",
+          "title": "SPR measurement of hemoglobin serum elements",
+          "id": "abc-de-efgh",
+          "identifier": "doi:10.1234/foobar",
+          "measurement_group_id": "G333-22-1111",
+          "project": {
+            "id": "Pxyz-fe-dcba",
+            "title": "Hemoglobin",
+            "description": "Everything else related to hemoglobin",
+            "owner": {
+              "given_name": "Josiah",
+              "family_name": "Carberry",
+              "identifiers": [
+                "orcid:0000-0002-1825-0097"
+              ],
+              "affiliations": [
+                {
+                  "id": "05gq02987"
+                }
+              ]
+            }
+          },
+          "deposition_date": "2022-01-23",
+          "date_available": "2023-01-23",
+          "version": "0.01",
+          "subject_category": "Biophysics",
+          "keywords": [
+            "serum",
+            "blood",
+            "human",
+            "hemoglobin"
+          ]
+        },
+        "depositors": {
+          "depositor": {
+            "given_name": "Max",
+            "family_name": "Mustermann",
+            "affiliations": [
+              {
+                "id": "02hpadn98"
+              }
+            ]
+          },
+          "principal_contact": {
             "given_name": "Josiah",
             "family_name": "Carberry",
             "identifiers": [
@@ -27,474 +62,441 @@
                 "id": "05gq02987"
               }
             ]
-          }
-        },
-        "deposition_date": "2022-01-23",
-        "date_available": "2023-01-23",
-        "version": "0.01",
-        "subject_category": "Biophysics",
-        "keywords": [
-          "serum",
-          "blood",
-          "human",
-          "hemoglobin"
-        ]
-      },
-      "depositors": {
-        "depositor": {
-          "given_name": "Max",
-          "family_name": "Mustermann",
-          "affiliations": [
+          },
+          "contributors": [
             {
-              "id": "02hpadn98"
+              "given_name": "Jane",
+              "family_name": "Doe",
+              "affiliations": [
+                {
+                  "id": "02hpadn98"
+                }
+              ]
+            },
+            {
+              "given_name": "John",
+              "family_name": "Doe",
+              "affiliations": [
+                {
+                  "id": "02hpadn98"
+                }
+              ]
             }
           ]
         },
-        "principal_contact": {
-          "given_name": "Josiah",
-          "family_name": "Carberry",
-          "identifiers": [
-            "orcid:0000-0002-1825-0097"
-          ],
-          "affiliations": [
-            {
-              "id": "05gq02987"
-            }
-          ]
-        },
-        "contributors": [
+        "funding_reference": [
           {
-            "given_name": "Jane",
-            "family_name": "Doe",
-            "affiliations": [
-              {
-                "id": "02hpadn98"
-              }
-            ]
+            "id": "308726"
           },
           {
-            "given_name": "John",
-            "family_name": "Doe",
-            "affiliations": [
-              {
-                "id": "02hpadn98"
-              }
-            ]
-          }
-        ]
-      },
-      "funding_reference": [
-        {
-          "id": "308726"
-        },
-        {
-          "id": "5T32NS007444-10"
-        }
-      ],
-      "technique": "Surface plasmon resonance (SPR)",
-      "instrument": {
-        "manufacturer": "Cytiva",
-        "name": "Biacore T200"
-      },
-      "collection_start_time": "2020-06-05",
-      "physical_environment_at_sample_handling": {
-        "temperature": {
-          "controlled": true,
-          "value": 298.15,
-          "unit": "K",
-          "obtained_by": "Measurement"
-        }
-      },
-      "chemical_information": {
-        "chemical_environments": [
-          {
-            "id": "chem-env-measurement-buffer",
-            "name": "Measurement buffer",
-            "solvent": [
-              {
-                "name": "Water",
-                "type": "Chemical",
-                "concentration": {
-                  "value": 100,
-                  "unit": "w/w %"
-                },
-                "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
-              }
-            ],
-            "pH": {
-              "value": 7.4,
-              "obtained_by": "Assumption"
-            },
-            "ultrafiltration_method": {
-              "pore_size": "0.2 µm",
-              "filter_material": "Cellulose acetate (CA)"
-            },
-            "constituents": [
-              {
-                "name": "Tris:HCl",
-                "type": "Chemical",
-                "concentration": {
-                  "value": 50,
-                  "unit": "mM"
-                },
-                "inchikey": "QKNYBSVHEMOAJP-UHFFFAOYSA-N"
-              },
-              {
-                "name": "Sodium chhhhride",
-                "type": "Chemical",
-                "concentration": {
-                  "value": 150,
-                  "unit": "mM"
-                },
-                "inchikey": "FAPWRFPIFSIZLT-UHFFFAOYSA-M"
-              }
-            ]
-          },
-          {
-            "id": "chem-env-regeneration-buffer",
-            "name": "Regeneration buffer",
-            "solvent": [
-              {
-                "name": "Water",
-                "type": "Chemical",
-                "concentration": {
-                  "value": 100,
-                  "unit": "w/w %"
-                },
-                "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
-              }
-            ],
-            "pH": {
-              "value": 1,
-              "obtained_by": "Measurement"
-            },
-            "constituents": [
-              {
-                "name": "HCl",
-                "type": "Chemical",
-                "concentration": {
-                  "value": 100,
-                  "unit": "mM"
-                },
-                "inchikey": "VEXZGXHMUGYJMC-UHFFFAOYSA-N"
-              }
-            ]
+            "id": "5T32NS007444-10"
           }
         ],
-        "entities_of_interest": [
-          {
-            "id": "eoi-human-serum",
-            "name": "Human serum",
-            "type": "Complex substance of biological origin",
-            "derived_from": "Body fluid",
-            "fluid": "Serum",
-            "health_status": "Healthy",
-            "organism": {
-              "id": "12374"
-            },
-            "description": "Blood was drawn after 12 hours of fasting",
-            "preparation_protocol": [
-              {
-                "name": "Centrifugation",
-                "description": "Tubes were centrifuged for 10 min at 1,300g at 4°C within 2 hours of collection"
-              },
-              {
-                "name": "Aliquotation",
-                "description": "The supernatant was distributed among 0.5mL cryostorage tubes that were maintained at 4°C"
-              }
-            ],
-            "storage": {
-              "temperature": {
-                "value": -80,
-                "unit": "°C",
-                "obtained_by": "Measurement",
-                "controlled": true
-              },
-              "storage_preparation": [
+        "technique": "Surface plasmon resonance (SPR)",
+        "instrument": {
+          "manufacturer": "Cytiva",
+          "name": "Biacore T200"
+        },
+        "collection_start_time": "2020-06-05",
+        "physical_environment_at_sample_handling": {
+          "temperature": {
+            "controlled": true,
+            "value": 298.15,
+            "unit": "K",
+            "obtained_by": "Measurement"
+          }
+        },
+        "chemical_information": {
+          "chemical_environments": [
+            {
+              "id": "chem-env-measurement-buffer",
+              "name": "Measurement buffer",
+              "solvent": [
                 {
-                  "name": "Flash freezing in liquid nitrogen",
-                  "description": "Aliquotes were placed in liquid nitrogen for 5 min"
+                  "name": "Water",
+                  "type": "Chemical",
+                  "concentration": {
+                    "value": 100,
+                    "unit": "w/w %"
+                  },
+                  "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
+                }
+              ],
+              "pH": {
+                "value": 7.4,
+                "obtained_by": "Assumption"
+              },
+              "ultrafiltration_method": {
+                "pore_size": "0.2 µm",
+                "filter_material": "Cellulose acetate (CA)"
+              },
+              "constituents": [
+                {
+                  "name": "Tris:HCl",
+                  "type": "Chemical",
+                  "concentration": {
+                    "value": 50,
+                    "unit": "mM"
+                  },
+                  "inchikey": "QKNYBSVHEMOAJP-UHFFFAOYSA-N"
+                },
+                {
+                  "name": "Sodium chhhhride",
+                  "type": "Chemical",
+                  "concentration": {
+                    "value": 150,
+                    "unit": "mM"
+                  },
+                  "inchikey": "FAPWRFPIFSIZLT-UHFFFAOYSA-M"
+                }
+              ]
+            },
+            {
+              "id": "chem-env-regeneration-buffer",
+              "name": "Regeneration buffer",
+              "solvent": [
+                {
+                  "name": "Water",
+                  "type": "Chemical",
+                  "concentration": {
+                    "value": 100,
+                    "unit": "w/w %"
+                  },
+                  "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
+                }
+              ],
+              "pH": {
+                "value": 1,
+                "obtained_by": "Measurement"
+              },
+              "constituents": [
+                {
+                  "name": "HCl",
+                  "type": "Chemical",
+                  "concentration": {
+                    "value": 100,
+                    "unit": "mM"
+                  },
+                  "inchikey": "VEXZGXHMUGYJMC-UHFFFAOYSA-N"
                 }
               ]
             }
-          },
-          {
-            "id": "eoi-human-hemoglobin",
-            "name": "human Hemoglobin",
-            "type": "Molecular assembly",
-            "external_databases": [
-              "pdb:2HCO"
-            ],
-            "components": [
-              {
-                "name": "Hemoglobin subunit alpha",
-                "type": "Polymer",
-                "copy_number": 2,
-                "polymer_type": "polypeptide(L)",
-                "organism": {
-                  "id": "12374"
-                },
-                "variant": "WT",
-                "expression_source_type": "Isolated",
-                "external_databases": [
-                  "uniprot:P69905"
-                ]
+          ],
+          "entities_of_interest": [
+            {
+              "id": "eoi-human-serum",
+              "name": "Human serum",
+              "type": "Complex substance of biological origin",
+              "derived_from": "Body fluid",
+              "fluid": "Serum",
+              "health_status": "Healthy",
+              "organism": {
+                "id": "12374"
               },
-              {
-                "name": "Hemoglobin subunit beta",
-                "type": "Polymer",
-                "copy_number": 2,
-                "polymer_type": "polypeptide(L)",
-                "organism": {
-                  "id": "12374"
+              "description": "Blood was drawn after 12 hours of fasting",
+              "preparation_protocol": [
+                {
+                  "name": "Centrifugation",
+                  "description": "Tubes were centrifuged for 10 min at 1,300g at 4°C within 2 hours of collection"
                 },
-                "variant": "V2A",
-                "sequence": "MAHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVANALAHKYH",
-                "expression_source_type": "Recombinantly",
-                "supplier": {
-                  "name": "Sigma aldrich",
-                  "catalog_number": "1002032030"
+                {
+                  "name": "Aliquotation",
+                  "description": "The supernatant was distributed among 0.5mL cryostorage tubes that were maintained at 4°C"
+                }
+              ],
+              "storage": {
+                "temperature": {
+                  "value": -80,
+                  "unit": "°C",
+                  "obtained_by": "Measurement",
+                  "controlled": true
                 },
-                "external_databases": [
-                  "uniprot:P68871"
+                "storage_preparation": [
+                  {
+                    "name": "Flash freezing in liquid nitrogen",
+                    "description": "Aliquotes were placed in liquid nitrogen for 5 min"
+                  }
                 ]
               }
-            ]
-          },
-          {
-            "id": "eoi-hemoglobin-antibody",
-            "name": "human Hemoglobin antibody ",
-            "type": "Molecular assembly",
-            "components": [
-              {
-                "name": "IgG1 heavy chain",
-                "type": "Polymer",
-                "copy_number": 2,
-                "polymer_type": "polypeptide(L)",
-                "organism": {
-                  "id": "12374"
+            },
+            {
+              "id": "eoi-human-hemoglobin",
+              "name": "human Hemoglobin",
+              "type": "Molecular assembly",
+              "external_databases": [
+                "pdb:2HCO"
+              ],
+              "components": [
+                {
+                  "name": "Hemoglobin subunit alpha",
+                  "type": "Polymer",
+                  "copy_number": 2,
+                  "polymer_type": "polypeptide(L)",
+                  "organism": {
+                    "id": "12374"
+                  },
+                  "variant": "WT",
+                  "expression_source_type": "Isolated",
+                  "external_databases": [
+                    "uniprot:P69905"
+                  ]
                 },
-                "variant": "HB11-201.11",
-                "expression_source_type": "Recombinantly"
-              },
-              {
-                "name": "Light chain",
-                "type": "Polymer",
-                "copy_number": 2,
-                "polymer_type": "polypeptide(L)",
-                "organism": {
-                  "id": "12374"
+                {
+                  "name": "Hemoglobin subunit beta",
+                  "type": "Polymer",
+                  "copy_number": 2,
+                  "polymer_type": "polypeptide(L)",
+                  "organism": {
+                    "id": "12374"
+                  },
+                  "variant": "V2A",
+                  "sequence": "MAHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVANALAHKYH",
+                  "expression_source_type": "Recombinantly",
+                  "supplier": {
+                    "name": "Sigma aldrich",
+                    "catalog_number": "1002032030"
+                  },
+                  "external_databases": [
+                    "uniprot:P68871"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "eoi-hemoglobin-antibody",
+              "name": "human Hemoglobin antibody ",
+              "type": "Molecular assembly",
+              "components": [
+                {
+                  "name": "IgG1 heavy chain",
+                  "type": "Polymer",
+                  "copy_number": 2,
+                  "polymer_type": "polypeptide(L)",
+                  "organism": {
+                    "id": "12374"
+                  },
+                  "variant": "HB11-201.11",
+                  "expression_source_type": "Recombinantly"
                 },
-                "variant": "HB11-201.11",
-                "expression_source_type": "Recombinantly"
+                {
+                  "name": "Light chain",
+                  "type": "Polymer",
+                  "copy_number": 2,
+                  "polymer_type": "polypeptide(L)",
+                  "organism": {
+                    "id": "12374"
+                  },
+                  "variant": "HB11-201.11",
+                  "expression_source_type": "Recombinantly"
+                }
+              ],
+              "supplier": {
+                "name": "Thermo fisher scientific",
+                "catalog_number": "MA1-10806"
               }
-            ],
-            "supplier": {
-              "name": "Thermo fisher scientific",
-              "catalog_number": "MA1-10806"
             }
+          ]
+        },
+        "derived_parameters": [
+          {
+            "id": "de-par-kd-hemo",
+            "name": "KD of hemoglobin to unknown component in serum",
+            "type": "Constant of dissociation (K_D)",
+            "entities_involved": [
+              {
+                "entity": {
+                  "id": "eoi-human-hemoglobin"
+                },
+                "stoichiometry": -1
+              },
+              {
+                "entity": {
+                  "id": "eoi-human-serum"
+                },
+                "stoichiometry": -1
+              }
+            ],
+            "value": 10.3,
+            "unit": "nM"
           }
         ]
       },
-      "derived_parameters": [
-        {
-          "id": "de-par-kd-hemo",
-          "name": "KD of hemoglobin to unknown component in serum",
-          "type": "Constant of dissociation (K_D)",
-          "entities_involved": [
-            {
-              "entity": {
-                "id": "eoi-human-hemoglobin"
-              },
-              "stoichiometry": -1
-            },
-            {
-              "entity": {
-                "id": "eoi-human-serum"
-              },
-              "stoichiometry": -1
-            }
-          ],
-          "value": 10.3,
-          "unit": "nM"
-        }
-      ]
-    },
-    "method_specific_parameters": {
-      "schema_version": "0.9.0",
-      "experiment_type": "Affinity",
-      "sensor": {
-        "surface_properties": "protein G",
-        "supplier": {
-          "name": "Cytiva",
-          "catalog_number": "29179315"
-        }
-      },
-      "measurement_positions": [
-        {
-          "id": "postion-1-measure",
-          "name": "Measurement",
-          "flow_cell": "Flow cell 1",
-          "ligand_information": {
-            "ligand": {
-              "id": "eoi-human-hemoglobin"
-            }
+      "method_specific_parameters": {
+        "schema_version": "0.9.0",
+        "experiment_type": "Affinity",
+        "sensor": {
+          "surface_properties": "protein G",
+          "supplier": {
+            "name": "Cytiva",
+            "catalog_number": "29179315"
           }
         },
-        {
-          "id": "postion-2-reference",
-          "name": "Reference",
-          "flow_cell": "Flow cell 2"
-        }
-      ],
-      "measurement_protocol": [
-        {
-          "id": "protocol-step-activate",
-          "name": "Binding the ligand to the sensor",
-          "type": "Activation",
-          "start_time": {
-            "value": 0,
-            "unit": "seconds"
+        "measurement_positions": [
+          {
+            "id": "postion-1-measure",
+            "name": "Measurement",
+            "flow_cell": "Flow cell 1",
+            "ligand_information": {
+              "ligand": {
+                "id": "eoi-human-hemoglobin"
+              }
+            }
           },
-          "time_length": {
-            "value": 60,
-            "unit": "seconds"
-          },
-          "flow": {
-            "rate": 0.1,
-            "unit": "µl/s",
-            "path": [
-              [
-                {
-                  "id": "postion-1-measure"
-                },
-                {
-                  "id": "postion-2-reference"
-                }
+          {
+            "id": "postion-2-reference",
+            "name": "Reference",
+            "flow_cell": "Flow cell 2"
+          }
+        ],
+        "measurement_protocol": [
+          {
+            "id": "protocol-step-activate",
+            "name": "Binding the ligand to the sensor",
+            "type": "Activation",
+            "start_time": {
+              "value": 0,
+              "unit": "seconds"
+            },
+            "time_length": {
+              "value": 60,
+              "unit": "seconds"
+            },
+            "flow": {
+              "rate": 0.1,
+              "unit": "µl/s",
+              "path": [
+                [
+                  {
+                    "id": "postion-1-measure"
+                  },
+                  {
+                    "id": "postion-2-reference"
+                  }
+                ]
               ]
+            }
+          }
+        ],
+        "data_analysis": [
+          {
+            "derived_parameter": {
+              "id": "de-par-kd-hemo"
+            },
+            "data_fitting": {
+              "model": "1:1",
+              "software_name": "Biacore analysis software"
+            }
+          }
+        ],
+        "measurements": [
+          {
+            "measurement_position": {
+              "id": "position-1-measure"
+            },
+            "reference_measurement_position": {
+              "id": "postion-2-reference"
+            },
+            "samples": [
+              {
+                "measurement_step": {
+                  "id": "protocol-step-activate"
+                },
+                "position": "A01",
+                "chemical_environment": {
+                  "id": "chem-env-measurement-buffer"
+                },
+                "analytes": [
+                  {
+                    "entity": {
+                      "id": "eoi-human-hemoglobin"
+                    },
+                    "concentration": {
+                      "value": 40,
+                      "unit": "nM"
+                    }
+                  },
+                  {
+                    "entity": {
+                      "id": "eoi-hemoglobin-antibody"
+                    },
+                    "concentration": {
+                      "value": 20,
+                      "unit": "nM"
+                    }
+                  }
+                ]
+              }
+            ],
+            "reference_samples": [
+              {
+                "measurement_step": {
+                  "id": "protocol-step-activate"
+                },
+                "position": "A01",
+                "chemical_environment": {
+                  "id": "chem-env-measurement-buffer"
+                },
+                "analytes": [
+                  {
+                    "entity": {
+                      "id": "eoi-human-hemoglobin"
+                    },
+                    "concentration": {
+                      "value": 40,
+                      "unit": "nM"
+                    }
+                  },
+                  {
+                    "entity": {
+                      "id": "eoi-hemoglobin-antibody"
+                    },
+                    "concentration": {
+                      "value": 20,
+                      "unit": "nM"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "measurement_position": {
+              "id": "position-2-reference"
+            },
+            "samples": [
+              {
+                "measurement_step": {
+                  "id": "protocol-step-activate"
+                },
+                "position": "A01",
+                "chemical_environment": {
+                  "id": "chem-env-measurement-buffer"
+                },
+                "analytes": [
+                  {
+                    "entity": {
+                      "id": "eoi-human-hemoglobin"
+                    },
+                    "concentration": {
+                      "value": 40,
+                      "unit": "nM"
+                    }
+                  },
+                  {
+                    "entity": {
+                      "id": "eoi-hemoglobin-antibody"
+                    },
+                    "concentration": {
+                      "value": 20,
+                      "unit": "nM"
+                    }
+                  }
+                ]
+              }
             ]
           }
-        }
-      ],
-      "data_analysis": [
-        {
-          "derived_parameter": {
-            "id": "de-par-kd-hemo"
-          },
-          "data_fitting": {
-            "model": "1:1",
-            "software_name": "Biacore analysis software"
-          }
-        }
-      ],
-      "measurements": [
-        {
-          "measurement_position": {
-            "id": "position-1-measure"
-          },
-          "reference_measurement_position": {
-            "id": "postion-2-reference"
-          },
-          "samples": [
-            {
-              "measurement_step": {
-                "id": "protocol-step-activate"
-              },
-              "position": "A01",
-              "chemical_environment": {
-                "id": "chem-env-measurement-buffer"
-              },
-              "analytes": [
-                {
-                  "entity": {
-                    "id": "eoi-human-hemoglobin"
-                  },
-                  "concentration": {
-                    "value": 40,
-                    "unit": "nM"
-                  }
-                },
-                {
-                  "entity": {
-                    "id": "eoi-hemoglobin-antibody"
-                  },
-                  "concentration": {
-                    "value": 20,
-                    "unit": "nM"
-                  }
-                }
-              ]
-            }
-          ],
-          "reference_samples": [
-            {
-              "measurement_step": {
-                "id": "protocol-step-activate"
-              },
-              "position": "A01",
-              "chemical_environment": {
-                "id": "chem-env-measurement-buffer"
-              },
-              "analytes": [
-                {
-                  "entity": {
-                    "id": "eoi-human-hemoglobin"
-                  },
-                  "concentration": {
-                    "value": 40,
-                    "unit": "nM"
-                  }
-                },
-                {
-                  "entity": {
-                    "id": "eoi-hemoglobin-antibody"
-                  },
-                  "concentration": {
-                    "value": 20,
-                    "unit": "nM"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "measurement_position": {
-            "id": "position-2-reference"
-          },
-          "samples": [
-            {
-              "measurement_step": {
-                "id": "protocol-step-activate"
-              },
-              "position": "A01",
-              "chemical_environment": {
-                "id": "chem-env-measurement-buffer"
-              },
-              "analytes": [
-                {
-                  "entity": {
-                    "id": "eoi-human-hemoglobin"
-                  },
-                  "concentration": {
-                    "value": 40,
-                    "unit": "nM"
-                  }
-                },
-                {
-                  "entity": {
-                    "id": "eoi-hemoglobin-antibody"
-                  },
-                  "concentration": {
-                    "value": 20,
-                    "unit": "nM"
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
+        ]
+      }
     }
   }
-}
+]

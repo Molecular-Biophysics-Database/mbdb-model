@@ -33,6 +33,7 @@ def main():
     file_names = ("MST.yaml", "BLI.yaml", "SPR.yaml")
 
     for file_name in file_names:
+        # Validate file
         schema = merged_schema(
             PATH_TO_SCHEMAS.joinpath(file_name), general_param_file_name
         )
@@ -40,7 +41,9 @@ def main():
         full_test_path = PATH_TO_TEST_DATA.joinpath(file_name)
         test_data = yamale.make_data(full_test_path)
         yamale.validate(schema, test_data)
-        metadata_with_header = {"metadata": test_data[0][0]}
+
+        # Convert to JSON record, note that an array is needed to load it as an Invenio fixture.
+        metadata_with_header = [{"metadata": test_data[0][0]}]
         json_metadata = json.dumps(
             metadata_with_header, indent=2, ensure_ascii=False, default=str
         )
