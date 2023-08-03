@@ -554,10 +554,12 @@ class Model:
     def to_json(self):
         includes = {k: v.to_json() for k, v in self.includes.items()}
         return {
+            "profiles": ["record", "files"],
             "record": {
                 "use": ["invenio"],
                 "module": {"qualified": f"mbdb_{self.package}"},
                 "properties": {"metadata": self.model.to_json()},
+                "files": self.files_meta,
                 "mapping": {
                     "template": {
                         "settings": {
@@ -576,7 +578,6 @@ class Model:
                     "oarepo-model-builder-relations==4.*",
                     "oarepo-model-builder-polymorphic==1.*",
                 ],
-                "files": self.files_meta,
             },
             "$defs": includes,
             "settings": {"i18n-languages": ["en"]},
