@@ -1,6 +1,6 @@
 # Metadata definitions
 
-The metadata is defined in YAML schmeas due to ease of readability, validation
+The metadata is defined in YAML schemas due to ease of readability, validation
 as well as commenting the schema. However, the final storage format of the data
 and metadata is JSON, not YAML.
 
@@ -49,7 +49,7 @@ stoichiometry:
 ### Item names
 
   * Should be descriptive and written in long form:
-     * Short hand forms are discouraged (*e.g.* use "description" rather than
+     * Shorthand forms are discouraged (*e.g.* use "description" rather than
        "desc")
      * Acronyms should only be used if they're part of everyday English (*e.g.*
        pH, LASER, LED)
@@ -62,13 +62,13 @@ stoichiometry:
 ### Item structure
 
 Each item is composed of three mandatory elements:
-  1. A name (see above for restrictions) that is will be used as the label in
+  1. A name (see above for restrictions) that will be used as the label in
      the front-end (after stripping away underscores).
   2. A short `description` that of what the item is meant to contain.
   3. A `value` where the data type and constrains is specified.
 
 Each item also have an optional element:
-  1. `searchable` which describes whether or not a item is searchable.
+  1. `searchable` which describes whether an item is searchable.
       Unless it's explicitly set to `True`, the item is currently not
       searchable.
 
@@ -118,18 +118,18 @@ and introduces data structures that are more difficult to validate and test.
 **Use `choose` as little as possible!**
 
 ```yaml
-# Descriptions and searchablity has been ommited for clarity
+# Descriptions and searchability are omitted for clarity
 
 Type_1:
     item_from_1           : str()
     another_item_from_1   : int()
 
-Type_2
+Type_2:
     item_from_1           : int()
     another_item_from_1   : str()
 
 Example_base:
-    # items present independent of which types is chosen
+    # These items are present independent of which types is chosen
     shared_item           : int()
     discriminator         : enum('Type 1', 'Type 2')
 
@@ -141,7 +141,6 @@ Example                   : choose(include('Example_base'),
 
 # include Example, not Example_base in cases where an Example is needed
 Use_case: include('Example')
-
 ```
 
 Reference item
@@ -152,6 +151,16 @@ Reference item
   * `link`: string with name of the `link_target` that should be linked to
      (analogous to a foreign key constrains in a relational data model).
 
+Vocabulary item
+ * `vocabulary`: string with name of the vocabulary the to use as well as a list of which fields from that should be 
+    included in the record 
+
+```yaml
+# Description and searchablity are omitted for clarity
+expression_organism: vocabulary(vocabulary='organisms',
+                                fields='[id,title,props.rank]',
+                                required=False)
+```
 ### Special item values
 
 #### `'other'` in `enum`:
@@ -194,9 +203,9 @@ The `general_parameters` contains the items that needs to be specified for all
 types of depositions, regardless of which experimental technique they were
 derived from, *i.e.* the required items are available in all records.
 
-The `method_specific_parameters` contains the items needed to annotate a the
+The `method_specific_parameters` contains the items needed to annotate the
 data derived for a **single** experiment  specific class of biophysical methods.
-These items varies greatly between different techniques
+These items vary greatly between different techniques
 
 ## `general_parameters`
 
@@ -232,8 +241,7 @@ General_parameters:
 ### `record`
 
 Namespace item containing the metadata of the record itself *i.e.* the unique
-identifier of the records and which version of the schema the record was
-was recorded in.
+identifier of the records and which version of the schema the record was recorded in.
 
 ### `associated_publications`
 
@@ -289,11 +297,11 @@ investigated during the course of the experiment. This is not to imply
 that these components aren't important, merely that these were not the focus
 of the measurement, and hence that these components behaviour during the
 measurement was not accounted for. Common examples of such components
-include water, pH buffering components, BSA, salts who's concentration was not
+include water, pH buffering components, BSA, salts whose concentration was not
 were not varied as part of the measurement (including control measurements). A
 chemical environments is the sum of such components within a given measurement.
 
-As these components were not the main focus of the conducted of the measurement
+As these components were not the main focus of the conducted measurement
 they have fewer search options than the entities of interest.
 
 #### `entities_of_interest`
@@ -323,12 +331,12 @@ in how measurements and data analysis is performed.
 
 If several measurements series closely related (*e.g.* identical samples
 measured with different techniques, all measurement from a single publication
-*etc*) this can be annotated by placing the records in the same group.
+*etc.*) this can be annotated by placing the records in the same group.
 
 ## Projects
 
 If measurements that are part of more loosely connected (*e.g.* part of the
-long running research from a research group or long running collaborations) this
+long-running research from a research group or long-running collaborations) this
 can be annotated by placing the records in within the same project.
 
 
