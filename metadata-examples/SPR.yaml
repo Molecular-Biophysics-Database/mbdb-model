@@ -1,13 +1,13 @@
 general_parameters:
-    schema_version: '0.9.2'
-    record:
+    schema_version: '0.9.3'
+    record_information:
         publisher: 'MBDB'
         resource_type_general: 'Dataset'
         resource_type: 'SPR'
         access_rights: 'open access'
         metadata_access_rights: 'open access'
         title: 'SPR measurement of hemoglobin serum elements'
-        id: "abc-de-efgh"
+        internal_id: "abc-de-efgh"
         identifier: 'doi:10.1234/foobar'
         measurement_group_id: "G333-22-1111"
         project:
@@ -24,7 +24,6 @@ general_parameters:
 
         deposition_date: 2022-01-23
         date_available: 2023-01-23
-        version: '0.01'
         subject_category: 'Biophysics'
         keywords:
             - 'serum'
@@ -84,8 +83,11 @@ general_parameters:
               solvent:
                   -  name: 'Water'
                      type: 'Chemical'
+                     molecular_weight:
+                        value: 18.02
+                        unit: 'g/mol'
                      concentration:
-                        value: 100
+                        value: 50
                         unit: 'w/w %'
                      inchikey: 'XLYOFNOQVPJJNP-UHFFFAOYSA-N'
 
@@ -100,16 +102,24 @@ general_parameters:
               constituents:
                   - name: 'Tris:HCl'
                     type: 'Chemical'
+                    molecular_weight:
+                        value: 121.136
+                        unit: 'Da'
                     concentration:
                         value: 50
                         unit: 'mM'
+
                     inchikey: 'QKNYBSVHEMOAJP-UHFFFAOYSA-N'
 
                   - name: 'Sodium chhhhride'
                     type: 'Chemical'
+                    molecular_weight:
+                        value: 58.44
+                        unit: 'Da'
                     concentration:
                         value: 150
                         unit: 'mM'
+
                     inchikey: 'FAPWRFPIFSIZLT-UHFFFAOYSA-M'
 
             - id: 'chem-env-regeneration-buffer'
@@ -117,8 +127,11 @@ general_parameters:
               solvent:
                   -  name: 'Water'
                      type: 'Chemical'
+                     molecular_weight:
+                        value: 18.02
+                        unit: 'g/mol'
                      concentration:
-                        value: 100
+                        value: 50
                         unit: 'w/w %'
                      inchikey: 'XLYOFNOQVPJJNP-UHFFFAOYSA-N'
 
@@ -128,6 +141,9 @@ general_parameters:
 
               constituents:
                   - name: 'HCl'
+                    molecular_weight:
+                        value: 36.46
+                        unit: 'g/mol'
                     type: 'Chemical'
                     concentration:
                         value: 100
@@ -143,12 +159,12 @@ general_parameters:
               health_status: 'Healthy'
               organism:
                   id: '12374'
-              description: "Blood was drawn after 12 hours of fasting"
+              additional_specifications:
+                - "Blood was drawn after 12 hours of fasting"
               preparation_protocol:
                   - name: 'Centrifugation'
                     description: 'Tubes were centrifuged for 10 min at
-                                  1,300g at 4°C within 2 hours of
-                                  collection'
+                                  1,300g at 4°C within 2 hours of collection'
 
                   - name: 'Aliquotation'
                     description: 'The supernatant was distributed among
@@ -170,26 +186,63 @@ general_parameters:
               type: 'Molecular assembly'
               external_databases:
                   - 'pdb:2HCO'
+
+              molecular_weight:
+                  value: 64.5
+                  unit: 'kDa'
               components:
                   - name: 'Hemoglobin subunit alpha'
                     type: 'Polymer'
+                    molecular_weight:
+                        value: 16
+                        unit: 'kDa'
                     copy_number: 2
                     polymer_type: 'polypeptide(L)'
                     organism:
                         id: '12374'
                     variant: 'WT'
-                    expression_source_type: 'Isolated'
+                    expression_source_type: 'Natively'
                     external_databases:
-                        - 'uniprot:P69905'
+                        - 'Uniprot:P69905'
 
 
                   - name: 'Hemoglobin subunit beta'
                     type: 'Polymer'
+                    molecular_weight:
+                        value: 16
+                        unit: 'kDa'
                     copy_number: 2
                     polymer_type: 'polypeptide(L)'
                     organism:
                         id: '12374'
                     variant:  'V2A'
+                    modifications:
+                        biological_postprocessing:
+                            - position: 'S10'
+                              modification: 'Phosphorylation'
+                        chemical:
+                            - modification: 'FITC labelling'
+                              protocol:
+                                  - name: 'Make the solution more alkaline'
+                                    description : 'Addition of 10 ul 1 M
+                                                   bicarbonate to 90 ul
+                                                   protein solution'
+
+                                  - name: 'Solubilise NHS-FITC'
+                                    description: '100 % DMSO was added to
+                                              make a 2 mM concentrated
+                                              stock of NHS-FITC'
+
+                                  - name: 'Labelling reaction'
+                                    description: 'Added NHS-FITC stock to
+                                                  protein in a 5:1 molar
+                                                  ratio and incubated sample
+                                                  for 15 min.'
+
+                                  - name: 'Removal of unconjugated dye'
+                                    description: 'Using a 2 ml PD10 column,
+                                                  the unconjugated dye was removed'
+
                     sequence: "MAHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQR\
                                FFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNL\
                                KGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEF\
@@ -200,33 +253,7 @@ general_parameters:
                         catalog_number: '1002032030'
 
                     external_databases:
-                        - 'uniprot:P68871'
-
-
-            - id: 'eoi-hemoglobin-antibody'
-              name: 'human Hemoglobin antibody '
-              type: 'Molecular assembly'
-              components:
-                  - name: 'IgG1 heavy chain'
-                    type: 'Polymer'
-                    copy_number: 2
-                    polymer_type: 'polypeptide(L)'
-                    organism:
-                        id: '12374'
-                    variant: 'HB11-201.11'
-                    expression_source_type: 'Recombinantly'
-
-                  - name: 'Light chain'
-                    type: 'Polymer'
-                    copy_number: 2
-                    polymer_type: 'polypeptide(L)'
-                    organism:
-                        id: '12374'
-                    variant:  'HB11-201.11'
-                    expression_source_type: 'Recombinantly'
-              supplier:
-                  name: 'Thermo fisher scientific'
-                  catalog_number: 'MA1-10806'
+                        - 'Uniprot:P68871'
 
     derived_parameters:
         - id: 'de-par-kd-hemo'
@@ -235,10 +262,10 @@ general_parameters:
           entities_involved:
               - entity:
                     $ref: 'eoi-human-hemoglobin'
-                stoichiometry: -1
+                copy_number: -1
               - entity:
                     $ref: 'eoi-human-serum'
-                stoichiometry: -1
+                copy_number: -1
           value: 10.3
           unit: 'nM'
 

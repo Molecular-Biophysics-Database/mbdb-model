@@ -1,26 +1,25 @@
 General_parameters:
-  schema_version: keyword(equals='0.9.2')
-  record:
+  schema_version: keyword(equals='0.9.3')
+  record_information:
+    title: str()
+    keywords: list(keyword())
+    measurement_group_id: keyword(required=False)
+    project: include('Project', required=False)
+    access_rights: enum('open access', 'embargoed access', 'restricted access')
+    metadata_access_rights: enum('open access', 'embargoed access', 'restricted access')
     publisher: keyword(equals='MBDB')
     resource_type_general: keyword(equals='Dataset')
     resource_type: keyword()
-    access_rights: enum('open access', 'embargoed access', 'restricted access')
-    metadata_access_rights: enum('open access', 'embargoed access', 'restricted access')
-    title: str()
-    id: keyword()
+    internal_id: keyword()
     identifier: database_id()
-    measurement_group_id: keyword(required=False)
-    project: include('Project', required=False)
+    subject_category: keyword(equals='Biophysics')
     deposition_date: day()
     date_available: day(required=False)
-    version: keyword()
-    subject_category: keyword(required=True)
-    keywords: list(keyword())
-  associated_publications: include('Associated_publications', required=False)
   depositors:
     depositor: include('Person')
     principal_contact: include('Person')
     contributors: list(nested_include('Person'), required=False)
+  associated_publications: include('Associated_publications', required=False)
   funding_reference: list(vocabulary(vocabulary='grants', fields='[id,title,props.funder_name]'),
     required=False)
   technique: include('SUPPORTED_TECHNIQUES')
@@ -59,6 +58,7 @@ Entity_constituent:
 Molecular_assembly:
   external_databases: list(database_id(), required=False)
   components: list(nested_include('Assembly_component'), min=1)
+  molecular_weight: include('Molecular_weight')
   chemical_modifications: list(nested_include('Modification'), required=False)
   supplier: include('Supplier', required=False)
   quality_controls: list(nested_include('Quality_control'), required=False)
@@ -75,16 +75,17 @@ Polymer:
   polymer_type: enum('cyclic-pseudo-peptide', 'peptide nucleic acid', 'polydeoxyribonucleotide',
     'polydeoxyribonucleotide/polyribonucleotide hybrid', 'polypeptide(D)', 'polypeptide(L)',
     'polyribonucleotide', 'Other')
-  organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]', required=False)
-  variant: str()
-  modifications: include('Polymer_modifications', required=False)
   sequence: str(required=False)
-  expression_source_type: enum('Isolated', 'Recombinantly', 'Synthetically')
+  molecular_weight: include('Molecular_weight')
+  external_databases: list(database_id(), required=False)
+  variant: str(required=False)
+  organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]', required=False)
+  modifications: include('Polymer_modifications', required=False)
+  expression_source_type: enum('Natively', 'Recombinantly', 'Synthetically')
   expression_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
     required=False)
   supplier: include('Supplier', required=False)
   quality_controls: list(nested_include('Quality_control'), required=False)
-  external_databases: list(database_id(), required=False)
   additional_specifications: list(str(), required=False)
 Polymer_modifications:
   synthesis: list(nested_include('Modification'),required=False)
@@ -95,19 +96,20 @@ Chemical:
   inchikey: keyword()
   additional_identifiers: list(chemical_id(), required=False)
   isotopic_labeling: keyword(required=False)
+  molecular_weight: include('Molecular_weight')
   supplier: include('Supplier', required=False)
   quality_controls: list(nested_include('Quality_control'), required=False)
   additional_specifications: list(str(), required=False)
 Chemical_environment:
   id: link_target(name="chemical-environment")
   name: str()
-  solvent: list(nested_include('Chemically_defined_constituent'))
-  dynamic_viscosity: include('Dynamic_viscosity', required=False)
+  solvent: list(nested_include('Chemical_constituent'))
+  constituents: list(nested_include('Constituent'), required=False)
   pH: include('PH')
   ionic_strength: include('Ionic_strength', required=False)
+  dynamic_viscosity: include('Dynamic_viscosity', required=False)
   degassing_method: enum('Low pressure', 'Heating', 'Sonication bath', required=False)
   ultrafiltration_method: include('Ultrafiltration',required=False)
-  constituents: list(nested_include('Constituent'), required=False)
   additional_specifications: list(str(), required=False)
 Constituent_base:
   name: str()
@@ -115,6 +117,11 @@ Constituent_base:
     origin', 'Complex substance of environmental origin', 'Complex substance of chemical
     origin', 'Complex substance of industrial production origin')
   concentration: include('Concentration')
+Chemical_constituent_base:
+  name: str()
+  type: enum('Chemical')
+  concentration: include('Concentration')
+Chemical_constituent: choose(include('Chemical_constituent_base'), Chemical=include('Chemical'))
 Chemically_defined_constituent_base:
   name: str()
   type: enum('Polymer', 'Chemical', 'Molecular assembly')
@@ -130,12 +137,11 @@ Complex_substance_of_biological_origin: choose(include('Complex_substance_of_bio
   type_field='derived_from', Body_fluid=include('Body_fluid'), Cell_fraction=include('Cell_fraction'),
   Virion=include('Virion'))
 Complex_substance_of_biological_origin_base:
+  derived_from: enum('Body fluid', 'Cell fraction', 'Virion', required=False)
+  organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]', required=False)
   preparation_protocol: list(include('Step'))
   storage: include('Storage', required=False)
   additional_specifications: list(str(), required=False)
-  derived_from: enum('Body fluid', 'Cell fraction', 'Virion', required=False)
-  organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]', required=False)
-  description: str(required=False)
 Body_fluid:
   fluid: enum('Blood', 'Fecal matter', 'Milk', 'Plasma', 'Saliva', 'Serum', 'Urine',
     'Plant extract', 'Other')
@@ -145,32 +151,30 @@ Cell_fraction:
     Membrane', 'Extracellular matrix', 'Lysosome', 'Golgi Apparatus', 'Mitochondrion',
     'Nucleus', 'Rough Endoplasmic Reticulum', 'Smooth Endoplasmic Reticulum', 'Vacuole','Chloroplast',
     'Other')
-  health_status: keyword()
   organ: keyword(required=False)
   tissue: str(required=False)
-  celltype: str(required=False)
+  cell_type: str(required=False)
+  health_status: keyword()
 Virion:
   Genetic_material: enum('No genetic material', 'Virus genome', 'Synthetic', 'Other')
+  capsid_type: enum('None', 'Native', 'Genetically Engineered', 'Synthetic', 'Other')
+  envelope_type: enum('None', 'Native', 'Genetically Engineered', 'Synthetic', 'Other')
   host_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
     required=False)
   host_cell_type: str(required=False)
-  capsid_type: enum('None', 'Native', 'Genetically Engineered', 'Synthetic', 'Other')
-  envelope_type: enum('None', 'Native', 'Genetically Engineered', 'Synthetic', 'Other')
 Complex_substance_of_environmental_origin:
-  preparation_protocol: list(include('Step'))
-  storage: include('Storage', required=False)
-  additional_specifications: list(str(), required=False)
   source: enum('Fresh water', 'Marine', 'Ice core', 'Sediment', 'Sewage', 'Soil',
     'Other')
+  preparation_protocol: list(include('Step'))
   location: include('Coordinates')
-  description: str()
+  storage: include('Storage', required=False)
+  additional_specifications: list(str(), required=False)
 Complex_substance_of_chemical_origin:
+  class: enum('Lipid_assembly')
+  details: include('Lipid_assembly')
   preparation_protocol: list(include('Step'))
   storage: include('Storage', required=False)
   additional_specifications: list(str(), required=False)
-  class: enum('Lipid_assembly')
-  details: include('Lipid_assembly')
-  description: str()
 Lipid_assembly:
   type: enum('Micelle', 'Liposome', 'Nanodisc', 'Sheet', 'Other')
   number_of_mono_layers: int(min=-1)
@@ -178,11 +182,10 @@ Lipid_assembly:
   components: list(nested_include('Assembly_component'))
   additional_specifications: list(include('Step'),required=False)
 Complex_substance_of_industrial_production_origin:
+  product: enum('Beer', 'Cell medium', 'Whey', 'Other')
   preparation_protocol: list(include('Step'))
   storage: include('Storage', required=False)
   additional_specifications: list(str(), required=False)
-  product: enum('Beer', 'Cell medium', 'Whey', 'Other')
-  description: str()
 ---
 Person:
   given_name: str()
@@ -219,10 +222,10 @@ Derived_parameter:
   unit: keyword()
 Entity_and_stoichiometry:
   entity: link(target='entity')
-  stoichiometry: num(min=-1)
+  copy_number: num(min=-1)
 ---
 Modification:
-  monomer_position: int(required=False)
+  position: str(required=False)
   modification: str()
   protocol: list(include('Step'), required=False)
 Ultrafiltration:
@@ -289,7 +292,7 @@ Humidity:
   obtained_by: include('OBTAINED_TYPES')
   controlled: bool()
 Atmosphere:
-  composition: list(nested_include('Chemically_defined_constituent'), min=1)
+  composition: list(nested_include('Chemical_constituent'), min=1)
 Time_duration:
   value: num(min=0)
   value_error: include('Value_error', required=False)
@@ -303,6 +306,10 @@ Concentration:
 Ionic_strength:
   value: num(min=0)
   unit: include('CONCENTRATION_UNITS')
+Molecular_weight:
+  value: num()
+  value_error: include('Value_error', required=False)
+  unit: include('MOLECULAR_WEIGHT_UNITS')
 Size:
   type: enum('radius', 'diameter', 'path length', 'Other')
   mean: num(min=0)
@@ -348,9 +355,9 @@ TIME_UNITS: enum('nanoseconds','microseconds', 'milliseconds', 'seconds','minute
 ENERGY_UNITS: enum('kcal/mol','kJ/mol')
 POWER_UNITS: enum('µcal/s','µJ/s')
 LENGTH_UNITS: enum('Å', 'nm', 'μm', 'mm', 'cm', 'm')
+MOLECULAR_WEIGHT_UNITS: enum('g/mol', 'Da', 'kDa', 'MDa')
 ---
-SUPPORTED_TECHNIQUES: enum('Bio-layer interferometry (BLI)', 'Surface plasmon resonance
-  (SPR)', 'Mass Photometry (MP)', 'Isothermal titration calorimetry (ITC)', 'Microscale
-  thermophoresis/Temperature related intensity change (MST/TRIC)')
+SUPPORTED_TECHNIQUES: enum('Bio-layer interferometry (BLI)', 'Microscale thermophoresis/Temperature
+  related intensity change (MST/TRIC)', 'Surface plasmon resonance (SPR)')
 COMPANIES: enum('Bio-Rad', 'Bruker', 'Cytiva', 'Gatorbio', 'GE Healthcare', 'Nanotemper',
   'Nicoya Life', 'Sartorius', 'Malvern Panalytical', 'Refeyn', 'TA Instruments' )
