@@ -1,13 +1,13 @@
 general_parameters:
-    schema_version: '0.9.2'
-    record:
+    schema_version: '0.9.3'
+    record_information:
         publisher: 'MBDB'
         resource_type_general: 'Dataset'
         resource_type: 'MST'
         access_rights: 'open access'
         metadata_access_rights: 'open access'
         title: 'MST measurement of hemoglobin serum elements'
-        id: "123-45-6789"
+        internal_id: "123-45-6789"
         identifier: 'doi:10.1234/foo'
         measurement_group_id: "G987-65-4321"
         project:
@@ -24,7 +24,6 @@ general_parameters:
 
         deposition_date: 2022-01-23
         date_available: 2023-01-23
-        version: '0.01'
         subject_category: 'Biophysics'
         keywords:
             - 'serum'
@@ -86,14 +85,19 @@ general_parameters:
               solvent:
                   -  name: 'Water'
                      type: 'Chemical'
+                     molecular_weight:
+                        value: 18.02
+                        unit: 'g/mol'
                      concentration:
                         value: 50
                         unit: 'w/w %'
-
                      inchikey: 'XLYOFNOQVPJJNP-UHFFFAOYSA-N'
 
                   -  name: 'Ethanol'
                      type: 'Chemical'
+                     molecular_weight:
+                        value: 46.069
+                        unit: 'Da'
                      concentration:
                         value: 50
                         unit: 'v/v %'
@@ -111,6 +115,9 @@ general_parameters:
               constituents:
                   - name: 'Tris:HCl'
                     type: 'Chemical'
+                    molecular_weight:
+                        value: 121.136
+                        unit: 'Da'
                     concentration:
                         value: 50
                         unit: 'mM'
@@ -119,6 +126,9 @@ general_parameters:
 
                   - name: 'Sodium chhhhride'
                     type: 'Chemical'
+                    molecular_weight:
+                        value: 58.44
+                        unit: 'Da'
                     concentration:
                         value: 150
                         unit: 'mM'
@@ -127,6 +137,9 @@ general_parameters:
 
                   - name: 'SDS'
                     type: 'Chemical'
+                    molecular_weight:
+                        value: 288.372
+                        unit: 'Da'
                     concentration:
                         value: 1
                         unit: 'w/v %'
@@ -142,7 +155,8 @@ general_parameters:
               health_status: 'Healthy'
               organism:
                   id: '12374'
-              description: "Blood was drawn after 12 hours of fasting"
+              additional_specifications:
+                - "Blood was drawn after 12 hours of fasting"
               preparation_protocol:
                   - name: 'Centrifugation'
                     description: 'Tubes were centrifuged for 10 min at
@@ -168,21 +182,31 @@ general_parameters:
               type: 'Molecular assembly'
               external_databases:
                   - 'pdb:2HCO'
+
+              molecular_weight:
+                  value: 64.5
+                  unit: 'kDa'
               components:
                   - name: 'Hemoglobin subunit alpha'
                     type: 'Polymer'
+                    molecular_weight:
+                        value: 16
+                        unit: 'kDa'
                     copy_number: 2
                     polymer_type: 'polypeptide(L)'
                     organism:
                         id: '12374'
                     variant: 'WT'
-                    expression_source_type: 'Isolated'
+                    expression_source_type: 'Natively'
                     external_databases:
                         - 'Uniprot:P69905'
 
 
                   - name: 'Hemoglobin subunit beta'
                     type: 'Polymer'
+                    molecular_weight:
+                        value: 16
+                        unit: 'kDa'
                     copy_number: 2
                     polymer_type: 'polypeptide(L)'
                     organism:
@@ -190,7 +214,7 @@ general_parameters:
                     variant:  'V2A'
                     modifications:
                         biological_postprocessing:
-                            - monomer_position: 10
+                            - position: 'S10'
                               modification: 'Phosphorylation'
                         chemical:
                             - modification: 'FITC labelling'
@@ -235,10 +259,10 @@ general_parameters:
           entities_involved:
               - entity:
                     $ref: 'eoi-human-hemoglobin'
-                stoichiometry: -1
+                copy_number: -1
               - entity:
                     $ref: 'eoi-human-serum'
-                stoichiometry: -1
+                copy_number: -1
           value: 10.3
           unit: 'nM'
 
