@@ -266,13 +266,17 @@ $defs:
             type: keyword
             help.en: Short descriptive title of the record
           keywords[]:
-            ^help.en: List of keywords that should be associated with the record
+            ^help.en: List of keywords describing this particular record content,
+              e.g. antibody, epitope, ligand optimization, SARS-CoV-2, agonist, antagonist,
+              HIV, etc.
             type: keyword
           measurement_group_id:
             type: keyword
             help.en: Unique and persistent identifier which can be generated upon
               deposition of the first if a group of data is deposited at the same
-              time
+              time. These can be used to specified records are closely connected e.g.
+              one sample measured with multiple techniques. For more loosely connected
+              results the project field should be used as sole link
           project:
             use: '#/$defs/Project'
           access_rights:
@@ -334,8 +338,8 @@ $defs:
             use: '#/$defs/Person'
             required: true
           contributors[]:
-            ^help.en: List of people who contributed to generating the deposited data,
-              metadata, derived parameters, or the deposition itself
+            ^help.en: List of other people who contributed to generating the deposited
+              data, metadata, derived parameters, or the deposition itself
             use: '#/$defs/Person'
             type: nested
       associated_publications:
@@ -406,7 +410,9 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
-          a record
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
       type:
         type: keyword
         enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -481,6 +487,8 @@ $defs:
         type: nested
       supplier:
         use: '#/$defs/Supplier'
+      storage:
+        use: '#/$defs/Storage'
       quality_controls[]:
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
@@ -557,6 +565,8 @@ $defs:
         type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
+      storage:
+        use: '#/$defs/Storage'
       quality_controls[]:
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
@@ -619,8 +629,10 @@ $defs:
         type: keyword
       name:
         type: keyword
-        help.en: Name (id) given to the chemical environment. Must be unique within
-          a record
+        help.en: Name of the chemical environment (e.g. Measurement Buffer). The name
+          must be unique within a record as it will be referred to the in method specific
+          section in when describing the composition of the individual samples or
+          measurement steps
       solvent[]:
         ^help.en: Information about the solvent component(s) of the chemical environment
           (e.g. water, D2O, DMSO, EtOH) can be specified here
@@ -899,8 +911,8 @@ $defs:
         type: keyword
         help.en: The family name(s) the person
       identifiers[]:
-        ^help.en: Persistent identifier associated with the publication, currently
-          only ORCIDs are allowed
+        ^help.en: Persistent identifier associated with the person, currently only
+          ORCIDs are allowed
         type: keyword
       affiliations[]:
         ^help.en: The affiliation of the person
@@ -911,7 +923,8 @@ $defs:
     properties:
       pid:
         type: keyword
-        help.en: Persistent identifier associated with the publication (DOI, ISBN)
+        help.en: Persistent identifier associated with the publication (e.g. DOI,
+          ISBN)
       title:
         type: keyword
         help.en: The title of the publication
@@ -929,7 +942,7 @@ $defs:
         help.en: The type of publication
       publisher:
         type: keyword
-        help.en: The name of the publisher
+        help.en: The name of the publisher or journal name in case of article
   Project:
     properties:
       id:
@@ -939,10 +952,10 @@ $defs:
           to other data within the MBDB
       title:
         type: keyword
-        help.en: Short title of the project
+        help.en: Short title of the MBDB project
       description:
         type: keyword
-        help.en: Description of the project
+        help.en: Short description of what the MBDB project is about
       owner:
         use: '#/$defs/Person'
         required: true
@@ -1005,7 +1018,7 @@ $defs:
         type: keyword
         help.en: The type of modification
       protocol[]:
-        ^help.en: List of steps the that led to the modification taking place
+        ^help.en: List of steps that led to the modification taking place
         use: '#/$defs/Step'
   Ultrafiltration:
     properties:
@@ -1038,7 +1051,7 @@ $defs:
       technique:
         type: keyword
         help.en: Which technique was used (e.g. SDS-PAGE MALDI-TOF, DLS, etc.)
-      storage_from_QC_to_measurement:
+      storage_until_measurement:
         use: '#/$defs/Storage'
         required: true
       report:
@@ -1403,6 +1416,8 @@ $defs:
         type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
+      storage:
+        use: '#/$defs/Storage'
       quality_controls[]:
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
@@ -1495,6 +1510,8 @@ $defs:
         type: nested
       supplier:
         use: '#/$defs/Supplier'
+      storage:
+        use: '#/$defs/Storage'
       quality_controls[]:
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
@@ -1560,6 +1577,8 @@ $defs:
         type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
+      storage:
+        use: '#/$defs/Storage'
       quality_controls[]:
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
@@ -1965,6 +1984,8 @@ $defs:
         type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
+      storage:
+        use: '#/$defs/Storage'
       quality_controls[]:
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
@@ -1977,7 +1998,9 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
-          a record
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
       type:
         type: keyword
         enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2023,7 +2046,9 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
-          a record
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
       type:
         type: keyword
         enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2061,6 +2086,8 @@ $defs:
         type: nested
       supplier:
         use: '#/$defs/Supplier'
+      storage:
+        use: '#/$defs/Storage'
       quality_controls[]:
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
@@ -2077,7 +2104,9 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
-          a record
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
       type:
         type: keyword
         enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2137,7 +2166,9 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
-          a record
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
       type:
         type: keyword
         enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2192,7 +2223,9 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
-          a record
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
       type:
         type: keyword
         enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2248,7 +2281,9 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
-          a record
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
       type:
         type: keyword
         enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2284,7 +2319,9 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
-          a record
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
       type:
         type: keyword
         enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2319,7 +2356,9 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
-          a record
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
       type:
         type: keyword
         enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2352,7 +2391,9 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
-          a record
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
       type:
         type: keyword
         enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological

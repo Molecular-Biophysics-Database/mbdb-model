@@ -61,6 +61,7 @@ Molecular_assembly:
   molecular_weight: include('Molecular_weight')
   chemical_modifications: list(nested_include('Modification'), required=False)
   supplier: include('Supplier', required=False)
+  storage: include('Storage', required=False)
   quality_controls: list(nested_include('Quality_control'), required=False)
   preparation_protocol: list(include('Step'),required=False)
   additional_specifications: list(str(), required=False)
@@ -85,6 +86,7 @@ Polymer:
   expression_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
     required=False)
   supplier: include('Supplier', required=False)
+  storage: include('Storage', required=False)
   quality_controls: list(nested_include('Quality_control'), required=False)
   additional_specifications: list(str(), required=False)
 Polymer_modifications:
@@ -241,7 +243,7 @@ Quality_control:
   parameter: enum('aggregation state','homogeneity', 'identity', 'purity', 'stability',
     'Other')
   technique: keyword()
-  storage_from_QC_to_measurement: include('Storage')
+  storage_until_measurement: include('Storage')
   report: url()
 Data_fitting:
   model: str()
