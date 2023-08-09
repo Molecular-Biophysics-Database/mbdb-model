@@ -14,21 +14,34 @@ General_parameters:
             value       : str()
 
         keywords:
-            description : str(equals='List of keywords that should be associated
-                                      with the record', required=False)
+            description : str(equals='List of keywords describing this
+                                      particular record content, e.g. antibody,
+                                      epitope, ligand optimization, SARS-CoV-2,
+                                      agonist, antagonist, HIV, etc.',
+                              required=False)
             value       : list(keyword())
 
         measurement_group_id:
             description : str(equals='Unique and persistent identifier which can
                                       be generated upon deposition of the first
                                       if a group of data is deposited at the
-                                      same time', required=False)
+                                      same time. These can be used to specified
+                                      records are closely connected e.g. one
+                                      sample measured with multiple techniques.
+                                      For more loosely connected results the
+                                      project field should be used as sole
+                                      link',
+                              required=False)
             value       : keyword(required=False)
 
 
         project:
             description : str(equals='The MBDB project the records belongs to
-                                      can be specified here', required=False)
+                                      can be specified here. Projects are
+                                      typically  longer running research
+                                      projects that would be expected to
+                                      get many MBDB records associated with it
+                                      over time', required=False)
             searchable  : True
             value       : include('Project', required=False)
 
@@ -120,19 +133,22 @@ General_parameters:
 
     depositors:
         depositor:
-            description : str(equals='The person who made the deposition',
-                              required=False)
+            description : str(equals='The person who made the deposition to
+                                      MBDB', required=False)
             searchable  : True
             value       : include('Person')
 
         principal_contact:
-            description : str(equals='Principle investigator, or person to
-                                      contact for inquiries', required=False)
+            description : str(equals='The person responsible for the record and
+                                      the one to contact for inquiries, would
+                                      typically be the principle investigator
+                                      group leader, or laboratory head',
+                              required=False)
             searchable  : True
             value       : include('Person')
 
         contributors:
-            description : str(equals='List of people who contributed to
+            description : str(equals='List of other people who contributed to
                                       generating the deposited data, metadata,
                                       derived parameters, or the deposition
                                       itself', required=False)
@@ -274,7 +290,11 @@ Entity_base:
 
     name:
         description     : str(equals='Short descriptive name (id) of the entity;
-                                      must be unique within a record',
+                                      must be unique within a record (e.g.
+                                      Lysozyme, Serum from Patient 1). This name
+                                      is referenced in the measurement
+                                      description to identify the entities
+                                      present in measured sample',
                               required=False)
         searchable      : True
         value           : str()
@@ -370,9 +390,16 @@ Molecular_assembly:
     supplier:
         description     : str(equals='If the molecular assembly was
                                       purchased from a supplier, the name and
-                                      catalog number can be specified here',
+                                      catlog number can be specified here',
                               required=False)
         value           : include('Supplier', required=False)
+
+    storage:
+        description     : str(equals='Information about how the molecular
+                                      assembly was stored between being acquired
+                                      and measured, including temperature and
+                                      duration', required=False)
+        value           : include('Storage', required=False)
 
     quality_controls:
         description     : str(equals='Quality controls performed e.g. purity,
@@ -513,10 +540,17 @@ Polymer:
                                       SKU 10837059001)', required=False)
         value           : include('Supplier', required=False)
 
+    storage:
+        description     : str(equals='Information about how the polymer assembly
+                                      between being acquired and measured,
+                                      including temperature and
+                                      duration', required=False)
+        value           : include('Storage', required=False)
     quality_controls:
         description     : str(equals='Quality controls performed e.g. purity,
                                       aggregation state etc. ', required=False)
-        value           : list(nested_include('Quality_control'), required=False)
+        value           : list(nested_include('Quality_control'),
+                               required=False)
 
 
     additional_specifications:
@@ -617,9 +651,13 @@ Chemical_environment:
         value           : link_target(name="chemical-environment")
 
     name:
-        description     : str(equals='Name (id) given to the chemical
-                                      environment. Must be unique within a
-                                      record', required=False)
+        description     : str(equals='Name of the chemical environment (e.g.
+                                      Measurement Buffer). The name must be
+                                      unique within a record as it will be
+                                      referred to the in method specific section
+                                      in when describing the composition of the
+                                      individual samples or measurement steps',
+                                      required=False)
         value           : str()
 
     solvent:
@@ -846,7 +884,8 @@ Complex_substance_of_biological_origin_base:
 
     storage:
         description     : str(equals='Information about how the complex
-                                      substance was stored, including
+                                      substance was stored between being
+                                      acquired and measured, including
                                       temperature and duration', required=False)
         value           : include('Storage', required=False)
 
@@ -972,7 +1011,8 @@ Complex_substance_of_environmental_origin:
 
     storage:
         description     : str(equals='Information about how the complex
-                                      substance was stored, including
+                                      substance was stored between being
+                                      acquired and measured, including
                                       temperature and duration', required=False)
         value           : include('Storage', required=False)
 
@@ -1007,7 +1047,8 @@ Complex_substance_of_chemical_origin:
 
     storage:
         description     : str(equals='Information about how the complex
-                                      substance was stored, including
+                                      substance was stored between being
+                                      acquired and measured, including
                                       temperature and duration', required=False)
         value           : include('Storage', required=False)
 
@@ -1063,7 +1104,8 @@ Complex_substance_of_industrial_production_origin:
 
     storage:
         description     : str(equals='Information about how the complex
-                                      substance was stored, including
+                                      substance was stored between being
+                                      acquired and measured, including
                                       temperature and duration', required=False)
         value           : include('Storage', required=False)
 
@@ -1092,7 +1134,7 @@ Person:
 
     identifiers:
         description     : str(equals='Persistent identifier associated with the
-                                      publication, currently only ORCIDs are
+                                      person, currently only ORCIDs are
                                       allowed', required=False)
         searchable      : True
         value           : list(person_id(), required=False)
@@ -1109,7 +1151,8 @@ Person:
 Publication:
     pid:
         description     : str(equals='Persistent identifier associated with the
-                                      publication (DOI, ISBN)', required=False)
+                                      publication (e.g. DOI, ISBN)',
+                              required=False)
         searchable      : True
         value           : publication_id()
 
@@ -1132,7 +1175,8 @@ Publication:
         value           : enum('Article', 'Book', 'Thesis')
 
     publisher:
-        description     : str(equals='The name of the publisher',
+        description     : str(equals='The name of the publisher or journal name
+                                      in case of article',
                               required=False)
         value           : str(required=False)
 
@@ -1146,19 +1190,21 @@ Project:
         value           : keyword(required=False)
 
     title:
-        description     : str(equals='Short title of the project',
+        description     : str(equals='Short title of the MBDB project',
                               required=False)
         searchable      : True
         value           : str()
 
     description:
-        description     : str(equals='Description of the project',
-                              required=False)
+        description     : str(equals='Short description of what the MBDB project
+                                      is about', required=False)
         searchable      : True
         value           : str()
 
     owner:
-        description     : str(equals='Short title of the project',
+        description     : str(equals='The person responsible for the research
+                                      MBDB project, typically a project leader,
+                                      principle investigator of group leader',
                               required=False)
         value           : include('Person')
 
@@ -1271,9 +1317,8 @@ Modification:
         value           : str()
 
     protocol:
-        description     : str(equals='List of steps the that led to the
-                                      modification taking place',
-                              required=False)
+        description     : str(equals='List of steps that led to the modification
+                                      taking place', required=False)
         value           : list(include('Step'), required=False)
 
 Ultrafiltration:
@@ -1326,11 +1371,11 @@ Quality_control:
                                       MALDI-TOF, DLS, etc.)')
         value           : keyword()
 
-    storage_from_QC_to_measurement:
-        description     : str(equals='How the sample was stored from when the
+    storage_until_measurement:
+        description     : str(equals='How the sample was stored between the
                                       quality control was performed until it was
-                                      used, including temperature and duration',
-                              required=False)
+                                      measured, including temperature and
+                                      duration', required=False)
         value           : include('Storage')
 
     report:
