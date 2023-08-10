@@ -13,7 +13,7 @@ record:
           properties:
             schema_version:
               type: keyword
-              enum: [0.9.0]
+              enum: [0.9.1]
               help.en: The schema version used to annotate the BLI method specific
                 parameters
             experiment_type:
@@ -203,7 +203,7 @@ $defs:
         help.en: Name (id) of the plate which must be unique within a record
       wells:
         type: keyword
-        enum: [96, 384]
+        enum: ['96', '384']
         help.en: Number of wells in the plate
       type:
         type: keyword

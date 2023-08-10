@@ -271,12 +271,12 @@ general_parameters:
 
 
 method_specific_parameters:
-    schema_version: '0.9.0'
+    schema_version: '0.9.1'
     experiment_type: 'Affinity'
     plates:
         - id: 'plate-1'
           name: 'Sample plate'
-          wells: 96
+          wells: "96"
           type: 'Solid Black Flat Bottom Polystyrene TC-treated Microplates'
           supplier:
             name: 'Corning'
