@@ -196,11 +196,8 @@ class Affiliation(Vocabulary):
                 "state": ror_dict["addresses"][0]["state"]
             }
         }
-        # null values are not allowed in Invenio vocabularies so remove state if it is not there
-        props = affiliation["props"]
-        if props['state'] is None:
-            del props['state']
-
+        # null values are not allowed in Invenio vocabulary props, so we remove items with None values
+        remove_none_props(affiliation)
         return affiliation
 
     @staticmethod
@@ -257,7 +254,7 @@ class Grant(Vocabulary):
         try:
            funder_name = openaire_dict["funding"][0]["name"]
         except IndexError:
-           funder_name = None
+           funder_name = "Unknown Funder"
 
         return {
             "id": openaire_dict["code"],
@@ -311,6 +308,13 @@ def compare_md5_checksums(filename, checksum):
     else:
         raise CheckSumError("Checksums doesn't match")
 
+def remove_none_props(vocabulary_item: dict) -> None:
+    """removes key: value pairs from the props item"""
+    props = vocabulary_item["props"]
+    for key, value in tuple(props.items()):
+        if value is None:
+            del props[key]
+
 def main():
     for folder in (SOURCES_DIR, VOCAB_DIR):
         makedirs(BASE_DIR / folder, exist_ok=True)
@@ -325,7 +329,8 @@ def main():
 
     logging.info("Started")
 
-    vocab_params = [("organisms.yaml", Organism, 1000),
+    vocab_params = [
+                    ("organisms.yaml", Organism, 1000),
                     ("affiliations.yaml", Affiliation, 1000),
                     ("grants.yaml", Grant, 1000),
                     ]
