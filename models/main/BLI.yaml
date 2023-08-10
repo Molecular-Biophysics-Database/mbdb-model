@@ -13,7 +13,7 @@ method_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       BLI method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.9.0')
+        value           : keyword(equals='0.9.1')
 
     experiment_type:
         description     : str(equals='Which type of parameter is sought with the
@@ -228,7 +228,7 @@ Ligand_information:
 Plate:
     id:
         description     : str(equals='id to be used for internal links',
-                                      required=False)
+                              required=False)
         value           : link_target(name='plate')
 
     name:
@@ -238,8 +238,8 @@ Plate:
 
     wells:
         description     : str(equals='Number of wells in the plate',
-                                      required=False)
-        value           : enum(96,384)
+                              required=False)
+        value           : enum("96","384")
 
     type:
         description     : str(equals='The type of the plate', required=False)
