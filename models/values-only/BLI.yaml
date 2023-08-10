@@ -1,6 +1,6 @@
 general_parameters: include('General_parameters')
 method_specific_parameters:
-  schema_version: keyword(equals='0.9.0')
+  schema_version: keyword(equals='0.9.1')
   experiment_type: enum('Affinity','Quantification', 'Other')
   plates: list(include('Plate'), min=1)
   sensors: list(include('Sensor'), min=1)
@@ -46,7 +46,7 @@ Ligand_information:
 Plate:
   id: link_target(name='plate')
   name: str()
-  wells: enum(96,384)
+  wells: enum("96","384")
   type: str()
   supplier: include('Supplier')
   sealing: str(required=False)
