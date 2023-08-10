@@ -450,7 +450,7 @@
         },
         "measurement_positions": [
           {
-            "id": "postion-1-measure",
+            "id": "position-1-measure",
             "name": "Measurement",
             "flow_cell": "Flow cell 1",
             "ligand_information": {
@@ -460,7 +460,7 @@
             }
           },
           {
-            "id": "postion-2-reference",
+            "id": "position-2-reference",
             "name": "Reference",
             "flow_cell": "Flow cell 2"
           }
@@ -484,10 +484,10 @@
               "path": [
                 [
                   {
-                    "id": "postion-1-measure"
+                    "id": "position-1-measure"
                   },
                   {
-                    "id": "postion-2-reference"
+                    "id": "position-2-reference"
                   }
                 ]
               ]
@@ -511,7 +511,7 @@
               "id": "position-1-measure"
             },
             "reference_measurement_position": {
-              "id": "postion-2-reference"
+              "id": "position-2-reference"
             },
             "samples": [
               {

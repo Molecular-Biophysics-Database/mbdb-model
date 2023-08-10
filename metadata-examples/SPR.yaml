@@ -355,14 +355,14 @@ method_specific_parameters:
             catalog_number: '29179315'
 
     measurement_positions:
-        - id: 'postion-1-measure'
+        - id: 'position-1-measure'
           name: 'Measurement'
           flow_cell: "Flow cell 1"
           ligand_information:
               ligand:
                   $ref: 'eoi-human-hemoglobin'
 
-        - id: 'postion-2-reference'
+        - id: 'position-2-reference'
           name: 'Reference'
           flow_cell: "Flow cell 2"
 
@@ -381,8 +381,8 @@ method_specific_parameters:
               unit: 'µl/s'
               path:
                   -
-                      - $ref: 'postion-1-measure'
-                      - $ref: 'postion-2-reference'
+                      - $ref: 'position-1-measure'
+                      - $ref: 'position-2-reference'
 
     data_analysis:
         - derived_parameter:
@@ -395,7 +395,7 @@ method_specific_parameters:
         - measurement_position:
               $ref: 'position-1-measure'
           reference_measurement_position:
-              $ref: 'postion-2-reference'
+              $ref: 'position-2-reference'
           samples:
               - measurement_step:
                     $ref: 'protocol-step-activate'
