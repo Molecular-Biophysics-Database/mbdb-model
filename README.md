@@ -31,7 +31,8 @@ their structure, syntax, and usage can be found.
 mbdb-model
 ├── models              <--
 ├── metadata-examples
-└── tools
+├── tools
+└── vocabularies
 ```
 
 
@@ -44,7 +45,8 @@ compatible for being loaded into the Invenio instance of MBDB.
 mbdb-model
 ├── models
 ├── metadata-examples   <--
-└── tools
+├── tools
+└── vocabularies
 ```
 
 
@@ -57,9 +59,22 @@ final conversion to the Invenio compatible models).
 mbdb-model
 ├── models
 ├── metadata-examples
-└── tools               <--
+├── tools               <--
+└── vocabularies
 ```
 
+### vocabularies
+
+The schemas for vocabularies as well as the tools for extracting them from
+their sources can be found here.
+
+```
+mbdb-model
+├── models
+├── metadata-examples
+├── tools              
+└── vocabularies         <--
+```
 
 ## How to contribute?
 
