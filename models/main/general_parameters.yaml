@@ -5,7 +5,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.3')
+        value           : keyword(equals='0.9.4')
 
     record_information:
         title:
@@ -212,43 +212,17 @@ General_parameters:
             value       : include('Performance_test', required=False)
 
 
-    physical_environment_at_sample_handling:
-        temperature:
-            description : str(equals='The storage temperature of the samples
-                                      immediately prior to being measured and
-                                      whether the temperature was actively being
-                                      controlled (e.g. autosampler held at 15
-                                      degrees, stored on ice, room
-                                      temperature)', required=False)
-            searchable  : True
-            value       : include('Temperature', required=False)
+    physical_conditions_at_sample_handling:
+        description     : str(equals='Information about the physical conditions
+                                      immediately before sample handling.
+                                      Especially relevant when the conditions
+                                      differ from measurement conditions or
+                                      where special precautions were taken (e.g.
+                                      keeping samples on ice until measured, or
+                                      stored under Argon atmosphere until it was
+                                      measured)', required=False)
+        value           : include('Physical_conditions', required=False)
 
-        pressure:
-            description : str(equals='The storage pressure of the samples
-                                      immediately prior to being measured and
-                                      whether the pressure was actively being
-                                      controlled, if applicable',
-                              required=False)
-            searchable  : True
-            value       : include('Pressure', required=False)
-
-        humidity:
-            description : str(equals='The storage humidity of the samples
-                                      immediately prior to being measured and
-                                      whether the humidity was actively being
-                                      controlled, if applicable',
-                              required=False)
-            searchable  : True
-            value       : include('Humidity', required=False)
-
-        atmosphere:
-            description : str(equals='The storage atmosphere of the samples
-                                      immediately prior to being measured and
-                                      whether the atmosphere was actively being
-                                      controlled, if applicable',
-                              required=False)
-            searchable  : True
-            value       : include('Atmosphere', required=False)
 
     chemical_information:
         chemical_environments:
@@ -1455,6 +1429,45 @@ Processing_step:
 
 ---
 # Physical and chemical parameter objects
+
+Physical_conditions:
+    temperature:
+        description     : str(equals='The storage temperature of the samples
+                                      immediately prior to being measured and
+                                      whether the temperature was actively being
+                                      controlled (e.g. autosampler held at 15
+                                      degrees, stored on ice, room
+                                      temperature)', required=False)
+        searchable      : True
+        value           : include('Temperature', required=False)
+
+    pressure:
+        description     : str(equals='The storage pressure of the samples
+                                      immediately prior to being measured and
+                                      whether the pressure was actively being
+                                      controlled, if applicable',
+                              required=False)
+        searchable      : True
+        value           : include('Pressure', required=False)
+
+    humidity:
+        description     : str(equals='The storage humidity of the samples
+                                      immediately prior to being measured and
+                                      whether the humidity was actively being
+                                      controlled, if applicable',
+                             required=False)
+        searchable      : True
+        value           : include('Humidity', required=False)
+
+    atmosphere:
+        description     : str(equals='The storage atmosphere of the samples
+                                      immediately prior to being measured and
+                                      whether the atmosphere was actively being
+                                      controlled, if applicable',
+                              required=False)
+        searchable      : True
+        value           : include('Atmosphere', required=False)
+
 
 Value_error:
     upper_error:

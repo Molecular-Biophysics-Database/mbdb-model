@@ -16,7 +16,6 @@ raising issues.
 
 * python 3.9+
 * git (only for development)
-* pipenv (recommendation for development)
 
 Install python dependencies using the requirements.txt:
 ```bash
