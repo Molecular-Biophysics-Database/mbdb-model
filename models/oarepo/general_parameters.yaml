@@ -10,7 +10,7 @@ record:
           properties:
             schema_version:
               type: keyword
-              enum: [0.9.3]
+              enum: [0.9.4]
               help.en: The schema version used to annotate the general parameters
             record_information:
               properties:
@@ -127,16 +127,8 @@ record:
                     10.1,RED/BLUE LASER, backreflection optics)
                 performance_test:
                   use: '#/$defs/Performance_test'
-            physical_environment_at_sample_handling:
-              properties:
-                temperature:
-                  use: '#/$defs/Temperature'
-                pressure:
-                  use: '#/$defs/Pressure'
-                humidity:
-                  use: '#/$defs/Humidity'
-                atmosphere:
-                  use: '#/$defs/Atmosphere'
+            physical_conditions_at_sample_handling:
+              use: '#/$defs/Physical_conditions'
             chemical_information:
               properties:
                 chemical_environments[]:
@@ -851,6 +843,16 @@ $defs:
       report:
         type: url
         help.en: Report with the results of the quality control, as a pdf file
+  Physical_conditions:
+    properties:
+      temperature:
+        use: '#/$defs/Temperature'
+      pressure:
+        use: '#/$defs/Pressure'
+      humidity:
+        use: '#/$defs/Humidity'
+      atmosphere:
+        use: '#/$defs/Atmosphere'
   Value_error:
     properties:
       upper_error:

@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.3",
+        "schema_version": "0.9.4",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -97,7 +97,7 @@
           "name": "Biacore T200"
         },
         "collection_start_time": "2020-06-05",
-        "physical_environment_at_sample_handling": {
+        "physical_conditions_at_sample_handling": {
           "temperature": {
             "controlled": true,
             "value": 298.15,

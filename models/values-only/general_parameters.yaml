@@ -1,5 +1,5 @@
 General_parameters:
-  schema_version: keyword(equals='0.9.3')
+  schema_version: keyword(equals='0.9.4')
   record_information:
     title: str()
     keywords: list(keyword())
@@ -29,11 +29,7 @@ General_parameters:
     name: str()
     model: str(required=False)
     performance_test: include('Performance_test', required=False)
-  physical_environment_at_sample_handling:
-    temperature: include('Temperature', required=False)
-    pressure: include('Pressure', required=False)
-    humidity: include('Humidity', required=False)
-    atmosphere: include('Atmosphere', required=False)
+  physical_conditions_at_sample_handling: include('Physical_conditions', required=False)
   chemical_information:
     chemical_environments: list(nested_include('Chemical_environment'), min=1)
     entities_of_interest: list(nested_include('Entity'), min=1)
@@ -260,6 +256,11 @@ Processing_step:
   software_tool: str(required=False)
   link_to_source_code: keyword(required=False)
 ---
+Physical_conditions:
+  temperature: include('Temperature', required=False)
+  pressure: include('Pressure', required=False)
+  humidity: include('Humidity', required=False)
+  atmosphere: include('Atmosphere', required=False)
 Value_error:
   upper_error: num()
   lower_error: num()
