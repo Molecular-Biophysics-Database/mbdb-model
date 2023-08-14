@@ -15,10 +15,12 @@ raising issues.
 ## Prerequisites
 
 * python 3.9+
-* pyyaml (avaliable through pypi)
-* yamale (avaliable through pypi)
-* numpy (avaliable through pypi)
+* git (only for development)
 
+Install python dependencies:
+```bash
+pip install -r requirements.txt
+```
 
 ## Repository organisation
 
@@ -38,7 +40,7 @@ mbdb-model
 
 ### Example data
 
-Examples of how validated records in YAML and JSON, the later is directly
+Examples of how validated records in YAML and JSON, the latter is directly
 compatible for being loaded into the Invenio instance of MBDB.
 
 ```
@@ -80,11 +82,23 @@ mbdb-model
 
 ### I would like to make a pull-request:
 
-Great! Go ahead and make it. I'll try to make sure it doesn't cause any
+Great! The development is a persistent branch where all contributions should be merged into,
+so let's start by making a new branch from the development branch and check it out:
+
+```bash
+git checkout -b <your-branch-name> development
+```
+
+When you have made the changes, push you branch to the repo:
+```bash
+git push origin <your-branch-name>
+```
+And then you can go ahead and make a pull request. We'll try to make sure it doesn't cause any
 harm before merging it, but please try to:
 
-- Make small commits so it's easier to see which effect they will have
-- Propagate changes upstream and downstream before submitting the
+- Only address one feature/bug/update per branch 
+- Make small commits, that way it's easier to see which effect they will have
+- Propagate changes upstream and downstream to other models before submitting the
   pull-request
 
 
