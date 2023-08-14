@@ -17,7 +17,7 @@ raising issues.
 * python 3.9+
 * git (only for development)
 
-Install python dependencies:
+Install python dependencies using the requirements.txt:
 ```bash
 pip install -r requirements.txt
 ```
@@ -74,7 +74,7 @@ their sources can be found here.
 mbdb-model
 ├── models
 ├── metadata-examples
-├── tools              
+├── tools
 └── vocabularies         <--
 ```
 
@@ -96,7 +96,7 @@ git push origin <your-branch-name>
 And then you can go ahead and make a pull request. We'll try to make sure it doesn't cause any
 harm before merging it, but please try to:
 
-- Only address one feature/bug/update per branch 
+- Only address one feature/bug/update per branch
 - Make small commits, that way it's easier to see which effect they will have
 - Propagate changes upstream and downstream to other models before submitting the
   pull-request
