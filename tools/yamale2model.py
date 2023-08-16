@@ -2,18 +2,16 @@ import copy
 import dataclasses
 import logging
 import re
+import click
+import ruamel
+import yamale
 from collections import namedtuple
 from io import StringIO
 from pathlib import Path
 from typing import Any, Dict, Union
-
-import click
-import ruamel
-import yamale
 from ruamel.yaml import YAML as ruamel_YAML
 from yamale.schema import Schema
 from yamale.validators import (
-    Any,
     Boolean,
     Day,
     DefaultValidators,
@@ -73,7 +71,6 @@ class FalseValidator(Validator):
 
 
 validators = DefaultValidators.copy()
-# validators[Description.tag] = Description
 validators[Keyword.tag] = Keyword
 validators[Fulltext.tag] = Fulltext
 validators[Link.tag] = Link
@@ -693,9 +690,6 @@ def parse(d, path, includes):
             path,
             includes,
         )
-    elif clz is Any:
-        # TODO: how to correctly represent this?
-        return ModelObject({x.include_name: x for x in d.args}, path, includes)
     else:
         raise NotImplementedError(
             f"Element of type {type(d)} not implemented on path {path}"
