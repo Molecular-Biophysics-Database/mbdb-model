@@ -483,7 +483,10 @@ class ModelLinkTarget(ModelBase):
         self.name = data.name
 
     def to_json(self):
-        return {"type": "keyword"}
+        ret = {"type": "keyword"}
+        if self.required:
+            ret["required"] = True
+        return ret
 
     def get_links(self, links, path, defs):
         if self.name in links:
@@ -509,7 +512,10 @@ class ModelLink(ModelBase):
             self.fields = ruamel.yaml.safe_load(StringIO(self.fields))
 
     def to_json(self):
-        return {"type": "relation", "model": "#" + self.target, "keys": self.fields}
+        ret = {"type": "relation", "model": "#" + self.target, "keys": self.fields}
+        if self.required:
+            ret["required"] = True
+        return ret
 
     def get_links(self, links, path, defs):
         pass
