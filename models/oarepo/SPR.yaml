@@ -247,7 +247,7 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.4]
+        enum: [0.9.5]
         help.en: The schema version used to annotate the general parameters
       record_information:
         properties:
@@ -744,6 +744,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
@@ -1659,6 +1660,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
@@ -1712,6 +1714,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
@@ -1766,6 +1769,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
@@ -2136,6 +2140,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
@@ -2193,6 +2198,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
@@ -2251,6 +2257,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance

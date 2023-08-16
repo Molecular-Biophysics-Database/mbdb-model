@@ -537,11 +537,14 @@ class ModelVocabulary(ModelLink):
         self.vocabulary = data.vocabulary
 
     def to_json(self):
-        return {
+        ret = {
             "keys": self.fields,
             "vocabulary-type": self.vocabulary,
             "type": "vocabulary",
         }
+        if self.required:
+            ret["required"] = True
+        return ret
 
     def set_links(self, links, defs):
         pass
