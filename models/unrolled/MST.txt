@@ -165,7 +165,7 @@
 "  |    |    |   error_level                                                                 ('singular', 'optional', ['Number'], {'min': 0}) "
 "  |    |   unit                                                                             ('singular', 'required', ['Keyword'], {}) "
 " method_specific_parameters                                                                 ('singular', 'required', ['dict'], {}) "
-"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.9.1'}) "
+"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.9.2'}) "
 "  |   experiment_type                                                                       ('singular', 'required', ['Enum'], {}) "
 "  |   signal_type                                                                           ('singular', 'required', ['Enum'], {}) "
 "  |   excitation_led_color                                                                  ('singular', 'required', ['Enum'], {}) "
