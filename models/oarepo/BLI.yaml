@@ -94,10 +94,12 @@ $defs:
         type: relation
         model: '#bli-sensor'
         keys: [id, name]
+        required: true
       measurement_protocol_step:
         type: relation
         model: '#bli-protocol-step'
         keys: [id, name]
+        required: true
       sample:
         use: '#/$defs/Sample'
         required: true
@@ -115,6 +117,7 @@ $defs:
         type: relation
         model: '#plate'
         keys: [id, name]
+        required: true
       well_position:
         type: keyword
         help.en: The position the well (in the plate) where the sample was during
@@ -123,6 +126,7 @@ $defs:
         type: relation
         model: '#chemical-environment'
         keys: [id, name]
+        required: true
       analytes[]:
         ^help.en: List of names (ids) of entities (from the entities of interest defined
           in the general parameters) that was used to alter the behavior of the target(s)
@@ -138,6 +142,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Descriptive name (id) of the a step in the measurement protocol which
@@ -160,6 +165,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Descriptive name of the sensor
@@ -198,6 +204,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Name (id) of the plate which must be unique within a record
@@ -246,6 +253,7 @@ $defs:
         type: relation
         model: '#derived-parameter'
         keys: [id, name]
+        required: true
       data_processing_steps[]:
         ^help.en: Describe the steps in the data analysis prior to fitting (removing
           outliers in the raw data, applying data filter, placing data at same start
@@ -399,6 +407,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
@@ -449,6 +458,7 @@ $defs:
         type: relation
         model: '#entity'
         keys: [id, name]
+        required: true
       concentration:
         use: '#/$defs/Concentration'
         required: true
@@ -619,6 +629,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Name of the chemical environment (e.g. Measurement Buffer). The name
@@ -963,6 +974,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Descriptive name (id) of the parameter (e.g. Kd between Lysozyme
@@ -995,6 +1007,7 @@ $defs:
         type: relation
         model: '#entity'
         keys: [id, name]
+        required: true
       copy_number:
         type: double
         minimum: -1.0

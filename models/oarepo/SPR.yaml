@@ -94,6 +94,7 @@ $defs:
         type: relation
         model: '#derived-parameter'
         keys: [id, name]
+        required: true
       data_processing_steps[]:
         ^help.en: Describe the steps in the data analysis prior to fitting (removing
           outliers in the raw data, applying data filter, placing data at same start
@@ -108,6 +109,7 @@ $defs:
         type: relation
         model: '#spr-measurement-position'
         keys: [id, name]
+        required: true
       reference_measurement_position:
         type: relation
         model: '#spr-measurement-position'
@@ -126,6 +128,7 @@ $defs:
         type: relation
         model: '#spr-measurement-step'
         keys: [id, name]
+        required: true
       position:
         type: keyword
         help.en: Position of the sample within the sample holder
@@ -133,6 +136,7 @@ $defs:
         type: relation
         model: '#chemical-environment'
         keys: [id, name]
+        required: true
       analytes[]:
         ^help.en: List of names (ids) of entities (from the entities of interest defined
           in the general parameters) that was used to alter the behavior of the target(s)
@@ -147,6 +151,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Descriptive name (id) of the step in the measurement protocol which
@@ -170,6 +175,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Name of measurement spot
@@ -382,6 +388,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
@@ -432,6 +439,7 @@ $defs:
         type: relation
         model: '#entity'
         keys: [id, name]
+        required: true
       concentration:
         use: '#/$defs/Concentration'
         required: true
@@ -602,6 +610,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Name of the chemical environment (e.g. Measurement Buffer). The name
@@ -946,6 +955,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Descriptive name (id) of the parameter (e.g. Kd between Lysozyme
@@ -978,6 +988,7 @@ $defs:
         type: relation
         model: '#entity'
         keys: [id, name]
+        required: true
       copy_number:
         type: double
         minimum: -1.0
