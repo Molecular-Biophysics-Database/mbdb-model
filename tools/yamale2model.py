@@ -130,9 +130,7 @@ class ModelBase:
         if self.description:
             ret["help.en"] = self.description.strip()
         if self.required:
-            # TODO: we do not have drafts yet, so removed required
-            # ret["required"] = True
-            pass
+            ret["required"] = True
         return ret
 
     def get_links(self, links, path, defs):
@@ -261,7 +259,11 @@ class ModelArray(ModelBase):
 
 class ModelPrimitive(ModelBase):
     def __init__(self, data: Any, type: str, path: str) -> None:
-        super().__init__(path, data.is_required if data else False)
+        is_required = False
+        if data is not None:
+            is_required = data.is_required
+            
+        super().__init__(path, is_required)
         self.type = type
         self.path = path
         if data:
