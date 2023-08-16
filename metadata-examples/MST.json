@@ -342,10 +342,10 @@
         ]
       },
       "method_specific_parameters": {
-        "schema_version": "0.9.1",
+        "schema_version": "0.9.2",
         "experiment_type": "Affinity",
         "signal_type": "TRIC/MST",
-        "excitation_led_color": "RED (ex 605–645nm, em 660–720nm)",
+        "excitation_led_color": "RED (ex 605-645nm, em 660-720nm)",
         "excitation_led_power": 40,
         "ir_mst_laser_power": 20,
         "data_analysis": [
