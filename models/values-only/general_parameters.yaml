@@ -1,5 +1,5 @@
 General_parameters:
-  schema_version: keyword(equals='0.9.5')
+  schema_version: keyword(equals='0.9.6')
   record_information:
     title: str()
     keywords: list(keyword())
@@ -344,23 +344,24 @@ Supplier:
 Coordinates:
   S-N(latitude): num(min=-90, max=90)
   W-E(longitude): num(min=-180, max=180)
-OBTAINED_TYPES: enum('Measurement', 'Calculation', 'Assumption', 'Other')
+OBTAINED_TYPES: enum('Measurement', 'Calculation', 'Assumption', 'Other', required=False)
 ---
 CONCENTRATION_UNITS: enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM', 'g/L', 'mg/mL',
   'µg/mL', 'ng/mL', 'mol/kg', 'mmol/kg', 'v/v %','w/w %', 'v/w %', 'w/v %', 'U/ml','%
-  saturated')
-FLOWRATE_UNITS: enum('mL/min','µl/s')
-HUMIDITY_UNITS: enum('%','g/m^3','oz/y^3')
-PRESSURE_UNITS: enum('Pa', 'kPa', 'MPa', 'Bar','mBar', 'atm', 'Torr', 'PSI', 'mmHg','inchHg')
+  saturated', required=False)
+FLOWRATE_UNITS: enum('mL/min','µl/s', required=False)
+HUMIDITY_UNITS: enum('%','g/m^3','oz/y^3', required=False)
+PRESSURE_UNITS: enum('Pa', 'kPa', 'MPa', 'Bar','mBar', 'atm', 'Torr', 'PSI', 'mmHg','inchHg',
+  required=False)
 TEMPERATURE_UNITS: enum('K', '°C', '°F')
 TIME_UNITS: enum('nanoseconds','microseconds', 'milliseconds', 'seconds','minutes',
-  'hours', 'days')
-ENERGY_UNITS: enum('kcal/mol','kJ/mol')
-POWER_UNITS: enum('µcal/s','µJ/s')
-LENGTH_UNITS: enum('Å', 'nm', 'μm', 'mm', 'cm', 'm')
-MOLECULAR_WEIGHT_UNITS: enum('g/mol', 'Da', 'kDa', 'MDa')
+  'hours', 'days', required=False)
+ENERGY_UNITS: enum('kcal/mol','kJ/mol', required=False)
+POWER_UNITS: enum('µcal/s','µJ/s', required=False)
+LENGTH_UNITS: enum('Å', 'nm', 'μm', 'mm', 'cm', 'm', required=False)
+MOLECULAR_WEIGHT_UNITS: enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
 ---
 SUPPORTED_TECHNIQUES: enum('Bio-layer interferometry (BLI)', 'Microscale thermophoresis/Temperature
-  related intensity change (MST/TRIC)', 'Surface plasmon resonance (SPR)')
+  related intensity change (MST/TRIC)', 'Surface plasmon resonance (SPR)', required=False)
 COMPANIES: enum('Bio-Rad', 'Bruker', 'Cytiva', 'Gatorbio', 'GE Healthcare', 'Nanotemper',
-  'Nicoya Life', 'Sartorius', 'Malvern Panalytical', 'Refeyn', 'TA Instruments' )
+  'Nicoya Life', 'Sartorius', 'Malvern Panalytical', 'Refeyn', 'TA Instruments', required=False)
