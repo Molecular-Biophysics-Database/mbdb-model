@@ -152,8 +152,8 @@ Reference item
      (analogous to a foreign key constrains in a relational data model).
 
 Vocabulary item
- * `vocabulary`: string with name of the vocabulary the to use as well as a list of which fields from that should be 
-    included in the record 
+ * `vocabulary`: string with name of the vocabulary the to use as well as a list of which fields from that should be
+    included in the record
 
 ```yaml
 # Description and searchablity are omitted for clarity
@@ -182,6 +182,11 @@ should contain the `required=False` flag.
 If a map (object) only contains optional items it should be made into a separate
 map (object) and included (see below) with and marked by the `required=False`
 flag.
+
+**Note! For enums** that are being used as includes, they always have to be set
+to `required=False`! This is do to a quirk in how the oarepo schema is turned
+into the (records) json schema that results in otherwise the overwrites the
+include's `required=False`.
 
 
 ### Namespace items
