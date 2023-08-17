@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+yamale = "*"
+click = "*"
+"ruamel.yaml" = "*"
+requests = "*"
+ete3 = "*"
+
+[dev-packages]
+black = "*"
+isort = "*"
+autoflake = "*"
+
+[requires]
+python_version = "3.10"

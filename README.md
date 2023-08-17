@@ -16,8 +16,28 @@ raising issues.
 
 * python 3.9+
 * git (only for development)
+* pipenv (recommended for development)
 
-Install python dependencies using the requirements.txt:
+### Install python dependencies
+
+#### Using virtual environment (recommended for development)
+
+Set up the virtual environment up inside the repository:
+
+```bash
+python -m virtualenv -p 3.10 .venv
+pipenv install --dev
+```
+Remember to activate the virtual environment:
+
+```bash
+pyenv shell
+```
+
+#### Using requirements.txt
+
+Alternatively it can be installed using the requirements.txt
+
 ```bash
 pip install -r requirements.txt
 ```
