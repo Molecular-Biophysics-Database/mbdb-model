@@ -5,7 +5,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.4')
+        value           : keyword(equals='0.9.6')
 
     record_information:
         title:
@@ -1849,29 +1849,29 @@ Coordinates:
         value           : num(min=-180, max=180)
 
 OBTAINED_TYPES          : enum('Measurement', 'Calculation', 'Assumption',
-                               'Other')
+                               'Other', required=False)
 ---
 # Unit definitions
 CONCENTRATION_UNITS     : enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM',
                                'g/L', 'mg/mL', 'µg/mL', 'ng/mL',
                                'mol/kg', 'mmol/kg',
                                'v/v %','w/w %', 'v/w %', 'w/v %',
-                               'U/ml','% saturated')
-FLOWRATE_UNITS          : enum('mL/min','µl/s')
-HUMIDITY_UNITS          : enum('%','g/m^3','oz/y^3')
+                               'U/ml','% saturated', required=False)
+FLOWRATE_UNITS          : enum('mL/min','µl/s', required=False)
+HUMIDITY_UNITS          : enum('%','g/m^3','oz/y^3', required=False)
 PRESSURE_UNITS          : enum('Pa', 'kPa', 'MPa',
                                'Bar','mBar',
                                'atm',
                                'Torr',
                                'PSI',
-                               'mmHg','inchHg')
+                               'mmHg','inchHg', required=False)
 TEMPERATURE_UNITS       : enum('K', '°C', '°F')
 TIME_UNITS              : enum('nanoseconds','microseconds', 'milliseconds',
-                               'seconds','minutes', 'hours', 'days')
-ENERGY_UNITS            : enum('kcal/mol','kJ/mol')
-POWER_UNITS             : enum('µcal/s','µJ/s')
-LENGTH_UNITS            : enum('Å', 'nm', 'μm', 'mm', 'cm', 'm')
-MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa')
+                               'seconds','minutes', 'hours', 'days', required=False)
+ENERGY_UNITS            : enum('kcal/mol','kJ/mol', required=False)
+POWER_UNITS             : enum('µcal/s','µJ/s', required=False)
+LENGTH_UNITS            : enum('Å', 'nm', 'μm', 'mm', 'cm', 'm', required=False)
+MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
 
 
 ---
@@ -1879,7 +1879,7 @@ MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa')
 SUPPORTED_TECHNIQUES    : enum('Bio-layer interferometry (BLI)',
                                'Microscale thermophoresis/Temperature related
                                 intensity change (MST/TRIC)',
-                               'Surface plasmon resonance (SPR)')
+                               'Surface plasmon resonance (SPR)', required=False)
 
 # Likely very incomplete, more research is needed
 COMPANIES               : enum('Bio-Rad',
@@ -1892,5 +1892,5 @@ COMPANIES               : enum('Bio-Rad',
                                'Sartorius',
                                'Malvern Panalytical',
                                'Refeyn',
-                               'TA Instruments'
-                              )
+                               'TA Instruments',
+                               required=False)
