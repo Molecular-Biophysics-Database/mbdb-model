@@ -847,8 +847,7 @@ Complex_substance_of_biological_origin_base:
                                       strain', required=False)
         searchable      : True
         value           : vocabulary(vocabulary='organisms',
-                                     fields='[id,title,props.rank]',
-                                     required=False)
+                                     fields='[id,title,props.rank]')
 
     preparation_protocol:
         description     : str(equals='List of the steps performed during the

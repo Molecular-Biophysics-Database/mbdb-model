@@ -136,7 +136,7 @@ Complex_substance_of_biological_origin: choose(include('Complex_substance_of_bio
   Virion=include('Virion'))
 Complex_substance_of_biological_origin_base:
   derived_from: enum('Body fluid', 'Cell fraction', 'Virion', required=False)
-  organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]', required=False)
+  organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]')
   preparation_protocol: list(include('Step'))
   storage: include('Storage', required=False)
   additional_specifications: list(str(), required=False)

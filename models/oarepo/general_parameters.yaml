@@ -11,7 +11,6 @@ record:
             schema_version:
               type: keyword
               enum: [0.9.6]
-              help.en: The schema version used to annotate the general parameters
               required: true
             record_information:
               properties:
@@ -224,6 +223,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
@@ -446,6 +446,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Name of the chemical environment (e.g. Measurement Buffer). The name
@@ -588,6 +589,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
@@ -823,6 +825,7 @@ $defs:
     properties:
       id:
         type: keyword
+        required: true
       name:
         type: keyword
         help.en: Descriptive name (id) of the parameter (e.g. Kd between Lysozyme
@@ -860,6 +863,7 @@ $defs:
         type: relation
         model: '#entity'
         keys: [id, name]
+        required: true
       copy_number:
         type: double
         minimum: -1.0
@@ -1539,6 +1543,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
@@ -1597,6 +1602,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
@@ -1657,6 +1663,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
@@ -2058,6 +2065,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
@@ -2120,6 +2128,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
@@ -2184,6 +2193,7 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        required: true
       preparation_protocol[]:
         ^help.en: List of the steps performed during the preparation of the complex
           substance
