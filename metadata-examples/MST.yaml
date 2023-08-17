@@ -259,9 +259,11 @@ general_parameters:
           entities_involved:
               - entity:
                     $ref: 'eoi-human-hemoglobin'
+                    name: 'human Hemoglobin'
                 copy_number: -1
               - entity:
                     $ref: 'eoi-human-serum'
+                    name: 'Human serum'
                 copy_number: -1
           value: 10.3
           unit: 'nM'
@@ -277,6 +279,7 @@ method_specific_parameters:
     data_analysis:
         - derived_parameter:
               $ref: 'de-par-kd-hemo'
+              name: 'KD of hemoglobin to unknown component in serum'
           data_fitting:
             model: '1:1'
             software_name: 'MO.Affinity Analysis Software'
@@ -288,17 +291,20 @@ method_specific_parameters:
               targets:
                   - entity:
                       $ref: 'eoi-human-hemoglobin'
+                      name: 'human Hemoglobin'
                     concentration:
                         value: 1
                         unit: 'nM'
               ligands:
                   - entity:
                       $ref: 'eoi-human-serum'
+                      name: 'Human serum'
                     concentration:
                        value: 10
                        unit: 'mg/mL'
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
+                  name: 'Measurement buffer'
               container: 'Monolith Standard Capillary'
           measured_data:
               x_data:
@@ -1401,17 +1407,20 @@ method_specific_parameters:
               targets:
                   - entity:
                       $ref: 'eoi-human-hemoglobin'
+                      name: 'human Hemoglobin'
                     concentration:
                         value: 1
                         unit: 'nM'
               ligands:
                   - entity:
                       $ref: 'eoi-human-serum'
+                      name: 'Human serum'
                     concentration:
                        value: 20
                        unit: 'mg/mL'
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
+                  name: 'Measurement buffer'
               container: 'Monolith Standard Capillary'
           measured_data:
               x_data:
@@ -2514,17 +2523,20 @@ method_specific_parameters:
               targets:
                   - entity:
                       $ref: 'eoi-human-hemoglobin'
+                      name: 'human Hemoglobin'
                     concentration:
                         value: 1
                         unit: 'nM'
               ligands:
                   - entity:
                       $ref: 'eoi-human-serum'
+                      name: 'Human serum'
                     concentration:
                        value: 40
                        unit: 'mg/mL'
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
+                  name: 'Measurement buffer'
               container: 'Monolith Standard Capillary'
           measured_data:
               x_data:

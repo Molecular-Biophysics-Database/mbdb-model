@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.6
+        "schema_version": "0.9.6",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -423,13 +423,15 @@
             "entities_involved": [
               {
                 "entity": {
-                  "id": "eoi-human-hemoglobin"
+                  "id": "eoi-human-hemoglobin",
+                  "name": "human Hemoglobin"
                 },
                 "copy_number": -1
               },
               {
                 "entity": {
-                  "id": "eoi-human-serum"
+                  "id": "eoi-human-serum",
+                  "name": "Human serum"
                 },
                 "copy_number": -1
               }
@@ -465,7 +467,8 @@
             },
             "ligand_information": {
               "ligand": {
-                "id": "eoi-human-hemoglobin"
+                "id": "eoi-human-hemoglobin",
+                "name": "human Hemoglobin"
               }
             }
           },
@@ -479,7 +482,8 @@
             },
             "ligand_information": {
               "ligand": {
-                "id": "eoi-human-hemoglobin"
+                "id": "eoi-human-hemoglobin",
+                "name": "human Hemoglobin"
               }
             }
           }
@@ -568,23 +572,28 @@
         "measurements": [
           {
             "sensor": {
-              "id": "sensor-1-measure"
+              "id": "sensor-1-measure",
+              "name": "A1"
             },
             "measurement_protocol_step": {
-              "id": "protocol-step-baseline"
+              "id": "protocol-step-baseline",
+              "name": "Bringing the measurement to baseline"
             },
             "sample": {
               "plate": {
-                "id": "plate-1"
+                "id": "plate-1",
+                "name": "Sample plate"
               },
               "well_position": "A01",
               "chemical_environment": {
-                "id": "chem-env-measurement-buffer"
+                "id": "chem-env-measurement-buffer",
+                "name": "Measurement buffer"
               },
               "analytes": [
                 {
                   "entity": {
-                    "id": "eoi-human-hemoglobin"
+                    "id": "eoi-human-hemoglobin",
+                    "name": "human Hemoglobin"
                   },
                   "concentration": {
                     "value": 40,
@@ -593,7 +602,8 @@
                 },
                 {
                   "entity": {
-                    "id": "eoi-hemoglobin-antibody"
+                    "id": "eoi-hemoglobin-antibody",
+                    "name": "Hemoglobin antibody"
                   },
                   "concentration": {
                     "value": 20,
@@ -1219,23 +1229,28 @@
           },
           {
             "sensor": {
-              "id": "sensor-1-measure"
+              "id": "sensor-1-measure",
+              "name": "A1"
             },
             "measurement_protocol_step": {
-              "id": "protocol-step-association"
+              "id": "protocol-step-association",
+              "name": "Association of ligand and target"
             },
             "sample": {
               "plate": {
-                "id": "plate-1"
+                "id": "plate-1",
+                "name": "Sample plate"
               },
               "well_position": "A03",
               "chemical_environment": {
-                "id": "chem-env-measurement-buffer"
+                "id": "chem-env-measurement-buffer",
+                "name": "Measurement buffer"
               },
               "analytes": [
                 {
                   "entity": {
-                    "id": "eoi-human-serum"
+                    "id": "eoi-human-serum",
+                    "name": "Human serum"
                   },
                   "concentration": {
                     "value": 100,
@@ -3061,18 +3076,22 @@
           },
           {
             "sensor": {
-              "id": "sensor-1-measure"
+              "id": "sensor-1-measure",
+              "name": "A1"
             },
             "measurement_protocol_step": {
-              "id": "protocol-step-dissociation"
+              "id": "protocol-step-dissociation",
+              "name": "Dissociation of ligand and target"
             },
             "sample": {
               "plate": {
-                "id": "plate-1"
+                "id": "plate-1",
+                "name": "Sample plate"
               },
               "well_position": "A04",
               "chemical_environment": {
-                "id": "chem-env-measurement-buffer"
+                "id": "chem-env-measurement-buffer",
+                "name": "Measurement buffer"
               }
             },
             "measured_data": {
@@ -6092,18 +6111,22 @@
           },
           {
             "sensor": {
-              "id": "sensor-1-measure"
+              "id": "sensor-1-measure",
+              "name": "A1"
             },
             "measurement_protocol_step": {
-              "id": "protocol-step-regeneration"
+              "id": "protocol-step-regeneration",
+              "name": "Regeneration of the sensor"
             },
             "sample": {
               "plate": {
-                "id": "plate-1"
+                "id": "plate-1",
+                "name": "Sample plate"
               },
               "well_position": "A05",
               "chemical_environment": {
-                "id": "chem-env-regeneration-buffer"
+                "id": "chem-env-regeneration-buffer",
+                "name": "Regeneration buffer"
               }
             },
             "measured_data": {
@@ -6273,14 +6296,17 @@
           },
           {
             "sensor": {
-              "id": "sensor-2-measure"
+              "id": "sensor-2-measure",
+              "name": "A2"
             },
             "measurement_protocol_step": {
-              "id": "protocol-step-baseline"
+              "id": "protocol-step-baseline",
+              "name": "Bringing the measurement to baseline"
             },
             "sample": {
               "plate": {
-                "id": "plate-1"
+                "id": "plate-1",
+                "name": "Sample plate"
               },
               "well_position": "A01",
               "chemical_environment": {
@@ -6289,7 +6315,8 @@
               "analytes": [
                 {
                   "entity": {
-                    "id": "eoi-human-hemoglobin"
+                    "id": "eoi-human-hemoglobin",
+                    "name": "human Hemoglobin"
                   },
                   "concentration": {
                     "value": 40,
@@ -6298,7 +6325,8 @@
                 },
                 {
                   "entity": {
-                    "id": "eoi-hemoglobin-antibody"
+                    "id": "eoi-hemoglobin-antibody",
+                    "name": "Hemoglobin antibody"
                   },
                   "concentration": {
                     "value": 20,
@@ -6924,14 +6952,17 @@
           },
           {
             "sensor": {
-              "id": "sensor-2-measure"
+              "id": "sensor-2-measure",
+              "name": "A2"
             },
             "measurement_protocol_step": {
-              "id": "protocol-step-association"
+              "id": "protocol-step-association",
+              "name": "Association of ligand and target"
             },
             "sample": {
               "plate": {
-                "id": "plate-1"
+                "id": "plate-1",
+                "name": "Sample plate"
               },
               "well_position": "C03",
               "chemical_environment": {
@@ -6940,7 +6971,8 @@
               "analytes": [
                 {
                   "entity": {
-                    "id": "eoi-human-serum"
+                    "id": "eoi-human-serum",
+                    "name": "Human serum"
                   },
                   "concentration": {
                     "value": 50,
@@ -8766,14 +8798,17 @@
           },
           {
             "sensor": {
-              "id": "sensor-2-measure"
+              "id": "sensor-2-measure",
+              "name": "A2"
             },
             "measurement_protocol_step": {
-              "id": "protocol-step-dissociation"
+              "id": "protocol-step-dissociation",
+              "name": "Dissociation of ligand and target"
             },
             "sample": {
               "plate": {
-                "id": "plate-1"
+                "id": "plate-1",
+                "name": "Sample plate"
               },
               "well_position": "C04",
               "chemical_environment": {
@@ -11800,15 +11835,18 @@
               "id": "sensor-2-measure"
             },
             "measurement_protocol_step": {
-              "id": "protocol-step-regeneration"
+              "id": "protocol-step-regeneration",
+              "name": "Regeneration of the sensor"
             },
             "sample": {
               "plate": {
-                "id": "plate-1"
+                "id": "plate-1",
+                "name": "Sample plate"
               },
               "well_position": "C05",
               "chemical_environment": {
-                "id": "chem-env-regeneration-buffer"
+                "id": "chem-env-regeneration-buffer",
+                "name": "Regeneration buffer"
               }
             },
             "measured_data": {

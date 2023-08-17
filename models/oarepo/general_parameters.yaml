@@ -11,6 +11,7 @@ record:
             schema_version:
               type: keyword
               enum: [0.9.6]
+              help.en: The schema version used to annotate the general parameters
               required: true
             record_information:
               properties:

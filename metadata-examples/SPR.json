@@ -422,13 +422,15 @@
             "entities_involved": [
               {
                 "entity": {
-                  "id": "eoi-human-hemoglobin"
+                  "id": "eoi-human-hemoglobin",
+                  "name": "human Hemoglobin"
                 },
                 "copy_number": -1
               },
               {
                 "entity": {
-                  "id": "eoi-human-serum"
+                  "id": "eoi-human-serum",
+                  "name": "Human serum"
                 },
                 "copy_number": -1
               }
@@ -455,7 +457,8 @@
             "flow_cell": "Flow cell 1",
             "ligand_information": {
               "ligand": {
-                "id": "eoi-human-hemoglobin"
+                "id": "eoi-human-hemoglobin",
+                "name": "human Hemoglobin"
               }
             }
           },
@@ -484,10 +487,12 @@
               "path": [
                 [
                   {
-                    "id": "position-1-measure"
+                    "id": "position-1-measure",
+                    "name": "Measurement"
                   },
                   {
-                    "id": "position-2-reference"
+                    "id": "position-2-reference",
+                    "name": "Reference"
                   }
                 ]
               ]
@@ -497,7 +502,8 @@
         "data_analysis": [
           {
             "derived_parameter": {
-              "id": "de-par-kd-hemo"
+              "id": "de-par-kd-hemo",
+              "name": "KD of hemoglobin to unknown component in serum"
             },
             "data_fitting": {
               "model": "1:1",
@@ -508,24 +514,29 @@
         "measurements": [
           {
             "measurement_position": {
-              "id": "position-1-measure"
+              "id": "position-1-measure",
+              "name": "Measurement"
             },
             "reference_measurement_position": {
-              "id": "position-2-reference"
+              "id": "position-2-reference",
+              "name": "Reference"
             },
             "samples": [
               {
                 "measurement_step": {
-                  "id": "protocol-step-activate"
+                  "id": "protocol-step-activate",
+                  "name": "Binding the ligand to the sensor"
                 },
                 "position": "A01",
                 "chemical_environment": {
-                  "id": "chem-env-measurement-buffer"
+                  "id": "chem-env-measurement-buffer",
+                  "name": "Measurement buffer"
                 },
                 "analytes": [
                   {
                     "entity": {
-                      "id": "eoi-human-hemoglobin"
+                      "id": "eoi-human-hemoglobin",
+                      "name": "human Hemoglobin"
                     },
                     "concentration": {
                       "value": 40,
@@ -534,7 +545,8 @@
                   },
                   {
                     "entity": {
-                      "id": "eoi-hemoglobin-antibody"
+                      "id": "eoi-hemoglobin-antibody",
+                      "name": "Hemoglobin antibody"
                     },
                     "concentration": {
                       "value": 20,
@@ -547,16 +559,19 @@
             "reference_samples": [
               {
                 "measurement_step": {
-                  "id": "protocol-step-activate"
+                  "id": "protocol-step-activate",
+                  "name": "Binding the ligand to the sensor"
                 },
                 "position": "A01",
                 "chemical_environment": {
-                  "id": "chem-env-measurement-buffer"
+                  "id": "chem-env-measurement-buffer",
+                  "name": "Measurement buffer"
                 },
                 "analytes": [
                   {
                     "entity": {
-                      "id": "eoi-human-hemoglobin"
+                      "id": "eoi-human-hemoglobin",
+                      "name": "human Hemoglobin"
                     },
                     "concentration": {
                       "value": 40,
@@ -565,7 +580,8 @@
                   },
                   {
                     "entity": {
-                      "id": "eoi-hemoglobin-antibody"
+                      "id": "eoi-hemoglobin-antibody",
+                      "name": "Hemoglobin antibody"
                     },
                     "concentration": {
                       "value": 20,
@@ -578,21 +594,25 @@
           },
           {
             "measurement_position": {
-              "id": "position-2-reference"
+              "id": "position-2-reference",
+              "name": "Reference"
             },
             "samples": [
               {
                 "measurement_step": {
-                  "id": "protocol-step-activate"
+                  "id": "protocol-step-activate",
+                  "name": "Binding the ligand to the sensor"
                 },
                 "position": "A01",
                 "chemical_environment": {
-                  "id": "chem-env-measurement-buffer"
+                  "id": "chem-env-measurement-buffer",
+                  "name": "Measurement buffer"
                 },
                 "analytes": [
                   {
                     "entity": {
-                      "id": "eoi-human-hemoglobin"
+                      "id": "eoi-human-hemoglobin",
+                      "name": "human Hemoglobin"
                     },
                     "concentration": {
                       "value": 40,
@@ -601,7 +621,8 @@
                   },
                   {
                     "entity": {
-                      "id": "eoi-hemoglobin-antibody"
+                      "id": "eoi-hemoglobin-antibody",
+                      "name": "Hemoglobin antibody"
                     },
                     "concentration": {
                       "value": 20,

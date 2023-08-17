@@ -325,13 +325,15 @@
             "entities_involved": [
               {
                 "entity": {
-                  "id": "eoi-human-hemoglobin"
+                  "id": "eoi-human-hemoglobin",
+                  "name": "human Hemoglobin"
                 },
                 "copy_number": -1
               },
               {
                 "entity": {
-                  "id": "eoi-human-serum"
+                  "id": "eoi-human-serum",
+                  "name": "Human serum"
                 },
                 "copy_number": -1
               }
@@ -351,7 +353,8 @@
         "data_analysis": [
           {
             "derived_parameter": {
-              "id": "de-par-kd-hemo"
+              "id": "de-par-kd-hemo",
+              "name": "KD of hemoglobin to unknown component in serum"
             },
             "data_fitting": {
               "model": "1:1",
@@ -367,7 +370,8 @@
               "targets": [
                 {
                   "entity": {
-                    "id": "eoi-human-hemoglobin"
+                    "id": "eoi-human-hemoglobin",
+                    "name": "human Hemoglobin"
                   },
                   "concentration": {
                     "value": 1,
@@ -378,7 +382,8 @@
               "ligands": [
                 {
                   "entity": {
-                    "id": "eoi-human-serum"
+                    "id": "eoi-human-serum",
+                    "name": "Human serum"
                   },
                   "concentration": {
                     "value": 10,
@@ -387,7 +392,8 @@
                 }
               ],
               "chemical_environment": {
-                "id": "chem-env-measurement-buffer"
+                "id": "chem-env-measurement-buffer",
+                "name": "Measurement buffer"
               },
               "container": "Monolith Standard Capillary"
             },
@@ -1499,7 +1505,8 @@
               "targets": [
                 {
                   "entity": {
-                    "id": "eoi-human-hemoglobin"
+                    "id": "eoi-human-hemoglobin",
+                    "name": "human Hemoglobin"
                   },
                   "concentration": {
                     "value": 1,
@@ -1510,7 +1517,8 @@
               "ligands": [
                 {
                   "entity": {
-                    "id": "eoi-human-serum"
+                    "id": "eoi-human-serum",
+                    "name": "Human serum"
                   },
                   "concentration": {
                     "value": 20,
@@ -1519,7 +1527,8 @@
                 }
               ],
               "chemical_environment": {
-                "id": "chem-env-measurement-buffer"
+                "id": "chem-env-measurement-buffer",
+                "name": "Measurement buffer"
               },
               "container": "Monolith Standard Capillary"
             },
@@ -2631,7 +2640,8 @@
               "targets": [
                 {
                   "entity": {
-                    "id": "eoi-human-hemoglobin"
+                    "id": "eoi-human-hemoglobin",
+                    "name": "human Hemoglobin"
                   },
                   "concentration": {
                     "value": 1,
@@ -2642,7 +2652,8 @@
               "ligands": [
                 {
                   "entity": {
-                    "id": "eoi-human-serum"
+                    "id": "eoi-human-serum",
+                    "name": "Human serum"
                   },
                   "concentration": {
                     "value": 40,
@@ -2651,7 +2662,8 @@
                 }
               ],
               "chemical_environment": {
-                "id": "chem-env-measurement-buffer"
+                "id": "chem-env-measurement-buffer",
+                "name": "Measurement buffer"
               },
               "container": "Monolith Standard Capillary"
             },

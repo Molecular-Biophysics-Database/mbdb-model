@@ -336,9 +336,11 @@ general_parameters:
           entities_involved:
               - entity:
                     $ref: 'eoi-human-hemoglobin'
+                    name: 'human Hemoglobin'
                 copy_number: -1
               - entity:
                     $ref: 'eoi-human-serum'
+                    name: 'Human serum'
                 copy_number: -1
           value: 10.3
           unit: 'nM'
@@ -365,6 +367,7 @@ method_specific_parameters:
           ligand_information:
               ligand:
                   $ref: 'eoi-human-hemoglobin'
+                  name: 'human Hemoglobin'
 
         - id: 'sensor-2-measure'
           name: 'A2'
@@ -375,6 +378,7 @@ method_specific_parameters:
           ligand_information:
               ligand:
                   $ref: 'eoi-human-hemoglobin'
+                  name: 'human Hemoglobin'
 
     measurement_protocol:
         - id: 'protocol-step-baseline'
@@ -441,22 +445,28 @@ method_specific_parameters:
     measurements:
         - sensor:
               $ref: 'sensor-1-measure'
+              name: 'A1'
           measurement_protocol_step:
               $ref: 'protocol-step-baseline'
+              name: 'Bringing the measurement to baseline'
           sample:
               plate:
                   $ref: 'plate-1'
+                  name: 'Sample plate'
               well_position: 'A01'
               chemical_environment:
                 $ref: 'chem-env-measurement-buffer'
+                name: 'Measurement buffer'
               analytes:
                   - entity:
                         $ref: 'eoi-human-hemoglobin'
+                        name: 'human Hemoglobin'
                     concentration:
                         value: 40
                         unit: 'nM'
                   - entity:
                         $ref: 'eoi-hemoglobin-antibody'
+                        name: 'Hemoglobin antibody'
                     concentration:
                         value: 20
                         unit: 'nM'
@@ -1073,17 +1083,22 @@ method_specific_parameters:
 
         - sensor:
               $ref: 'sensor-1-measure'
+              name: 'A1'
           measurement_protocol_step:
               $ref: 'protocol-step-association'
+              name: 'Association of ligand and target'
           sample:
               plate:
                   $ref: 'plate-1'
+                  name: 'Sample plate'
               well_position: 'A03'
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
+                  name: 'Measurement buffer'
               analytes:
                   - entity:
                         $ref: 'eoi-human-serum'
+                        name: 'Human serum'
                     concentration:
                         value: 100
                         unit: 'v/v %'
@@ -2900,14 +2915,18 @@ method_specific_parameters:
 
         - sensor:
               $ref: 'sensor-1-measure'
+              name: 'A1'
           measurement_protocol_step:
               $ref: 'protocol-step-dissociation'
+              name: 'Dissociation of ligand and target'
           sample:
               plate:
                   $ref: 'plate-1'
+                  name: 'Sample plate'
               well_position: 'A04'
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
+                  name: 'Measurement buffer'
           measured_data:
               time:
                   id: '5bae5c13-5d64-4c64-a7ec-b0c56283fca0'
@@ -5921,14 +5940,18 @@ method_specific_parameters:
 
         - sensor:
               $ref: 'sensor-1-measure'
+              name: 'A1'
           measurement_protocol_step:
               $ref: 'protocol-step-regeneration'
+              name: 'Regeneration of the sensor'
           sample:
               plate:
                   $ref: 'plate-1'
+                  name: 'Sample plate'
               well_position: 'A05'
               chemical_environment:
                   $ref: 'chem-env-regeneration-buffer'
+                  name: 'Regeneration buffer'
           measured_data:
               time:
                   id: 'a6480ded-26c5-4ce2-83b2-a261d12d0622'
@@ -6092,22 +6115,27 @@ method_specific_parameters:
 
         - sensor:
               $ref: 'sensor-2-measure'
+              name: 'A2'
           measurement_protocol_step:
               $ref: 'protocol-step-baseline'
+              name: 'Bringing the measurement to baseline'
           sample:
               plate:
                   $ref: 'plate-1'
+                  name: 'Sample plate'
               well_position: 'A01'
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
               analytes:
                   - entity:
                         $ref: 'eoi-human-hemoglobin'
+                        name: 'human Hemoglobin'
                     concentration:
                         value: 40
                         unit: 'nM'
                   - entity:
                         $ref: 'eoi-hemoglobin-antibody'
+                        name: 'Hemoglobin antibody'
                     concentration:
                         value: 20
                         unit: 'nM'
@@ -6723,17 +6751,21 @@ method_specific_parameters:
 
         - sensor:
               $ref: 'sensor-2-measure'
+              name: 'A2'
           measurement_protocol_step:
               $ref: 'protocol-step-association'
+              name: 'Association of ligand and target'
           sample:
               plate:
                   $ref: 'plate-1'
+                  name: 'Sample plate'
               well_position: 'C03'
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
               analytes:
                   - entity:
                         $ref: 'eoi-human-serum'
+                        name: 'Human serum'
                     concentration:
                         value: 50
                         unit: 'v/v %'
@@ -8550,11 +8582,14 @@ method_specific_parameters:
 
         - sensor:
               $ref: 'sensor-2-measure'
+              name: 'A2'
           measurement_protocol_step:
               $ref: 'protocol-step-dissociation'
+              name: 'Dissociation of ligand and target'
           sample:
               plate:
                   $ref: 'plate-1'
+                  name: 'Sample plate'
               well_position: 'C04'
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
@@ -11572,12 +11607,15 @@ method_specific_parameters:
               $ref: 'sensor-2-measure'
           measurement_protocol_step:
               $ref: 'protocol-step-regeneration'
+              name: 'Regeneration of the sensor'
           sample:
               plate:
                   $ref: 'plate-1'
+                  name: 'Sample plate'
               well_position: 'C05'
               chemical_environment:
                   $ref: 'chem-env-regeneration-buffer'
+                  name: 'Regeneration buffer'
           measured_data:
               time:
                   id: '126fab98-77bd-4ba6-9fbe-5ba43cd5bdbc'
