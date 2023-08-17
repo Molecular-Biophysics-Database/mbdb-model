@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.4",
+        "schema_version": "0.9.6",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
