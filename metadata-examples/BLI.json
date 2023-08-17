@@ -561,7 +561,8 @@
         "data_analysis": [
           {
             "derived_parameter": {
-              "id": "de-par-kd-hemo"
+              "id": "de-par-kd-hemo",
+              "name": "KD of hemoglobin to unknown component in serum"
             },
             "data_fitting": {
               "model": "1:1",
@@ -6310,7 +6311,8 @@
               },
               "well_position": "A01",
               "chemical_environment": {
-                "id": "chem-env-measurement-buffer"
+                "id": "chem-env-measurement-buffer",
+                "name": "Measurement buffer"
               },
               "analytes": [
                 {
@@ -6966,7 +6968,8 @@
               },
               "well_position": "C03",
               "chemical_environment": {
-                "id": "chem-env-measurement-buffer"
+                "id": "chem-env-measurement-buffer",
+                "name": "Measurement buffer"
               },
               "analytes": [
                 {
@@ -8812,7 +8815,8 @@
               },
               "well_position": "C04",
               "chemical_environment": {
-                "id": "chem-env-measurement-buffer"
+                "id": "chem-env-measurement-buffer",
+                "name": "Measurement buffer"
               }
             },
             "measured_data": {
@@ -11832,7 +11836,8 @@
           },
           {
             "sensor": {
-              "id": "sensor-2-measure"
+              "id": "sensor-2-measure",
+              "name": "A2"
             },
             "measurement_protocol_step": {
               "id": "protocol-step-regeneration",

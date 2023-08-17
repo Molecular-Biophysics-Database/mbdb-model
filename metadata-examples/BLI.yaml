@@ -437,6 +437,7 @@ method_specific_parameters:
     data_analysis:
         - derived_parameter:
               $ref: 'de-par-kd-hemo'
+              name: 'KD of hemoglobin to unknown component in serum'
           data_fitting:
             model: '1:1'
             software_name: 'Octet analysis software'
@@ -6126,6 +6127,7 @@ method_specific_parameters:
               well_position: 'A01'
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
+                  name: 'Measurement buffer'
               analytes:
                   - entity:
                         $ref: 'eoi-human-hemoglobin'
@@ -6762,6 +6764,7 @@ method_specific_parameters:
               well_position: 'C03'
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
+                  name: 'Measurement buffer'
               analytes:
                   - entity:
                         $ref: 'eoi-human-serum'
@@ -8593,6 +8596,7 @@ method_specific_parameters:
               well_position: 'C04'
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
+                  name: 'Measurement buffer'
           measured_data:
               time:
                   id: 'c67eea33-5189-44e1-9e9b-02d95c7c9ab6'
@@ -11605,6 +11609,7 @@ method_specific_parameters:
                   unit: "nm"
         - sensor:
               $ref: 'sensor-2-measure'
+              name: 'A2'
           measurement_protocol_step:
               $ref: 'protocol-step-regeneration'
               name: 'Regeneration of the sensor'
