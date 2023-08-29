@@ -251,8 +251,7 @@ General_parameters:
                                       and which steps were taken to obtain
                                       them', required=False)
         searchable      : True
-        value           : list(nested_include('Derived_parameter'),
-                               required=False)
+        value           : list(nested_include('Derived_parameter'))
 ---
 # Entities and references to them
 
@@ -840,7 +839,7 @@ Complex_substance_of_biological_origin_base:
         searchable      : True
         value           : enum('Body fluid',
                                'Cell fraction',
-                               'Virion', required=False)
+                               'Virion')
     organism:
         description     : str(equals='Identification of the organism to the
                                       lowest taxonomic rank possible e.g.
@@ -1855,22 +1854,22 @@ CONCENTRATION_UNITS     : enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM',
                                'g/L', 'mg/mL', 'µg/mL', 'ng/mL',
                                'mol/kg', 'mmol/kg',
                                'v/v %','w/w %', 'v/w %', 'w/v %',
-                               'U/ml','% saturated', required=False)
-FLOWRATE_UNITS          : enum('mL/min','µl/s', required=False)
-HUMIDITY_UNITS          : enum('%','g/m^3','oz/y^3', required=False)
+                               'U/ml','% saturated')
+FLOWRATE_UNITS          : enum('mL/min','µl/s')
+HUMIDITY_UNITS          : enum('%','g/m^3','oz/y^3')
 PRESSURE_UNITS          : enum('Pa', 'kPa', 'MPa',
                                'Bar','mBar',
                                'atm',
                                'Torr',
                                'PSI',
-                               'mmHg','inchHg', required=False)
+                               'mmHg','inchHg')
 TEMPERATURE_UNITS       : enum('K', '°C', '°F')
 TIME_UNITS              : enum('nanoseconds','microseconds', 'milliseconds',
-                               'seconds','minutes', 'hours', 'days', required=False)
-ENERGY_UNITS            : enum('kcal/mol','kJ/mol', required=False)
+                               'seconds','minutes', 'hours', 'days')
+ENERGY_UNITS            : enum('kcal/mol','kJ/mol')
 POWER_UNITS             : enum('µcal/s','µJ/s', required=False)
-LENGTH_UNITS            : enum('Å', 'nm', 'μm', 'mm', 'cm', 'm', required=False)
-MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
+LENGTH_UNITS            : enum('Å', 'nm', 'μm', 'mm', 'cm', 'm')
+MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa')
 
 
 ---
@@ -1878,7 +1877,7 @@ MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
 SUPPORTED_TECHNIQUES    : enum('Bio-layer interferometry (BLI)',
                                'Microscale thermophoresis/Temperature related
                                 intensity change (MST/TRIC)',
-                               'Surface plasmon resonance (SPR)', required=False)
+                               'Surface plasmon resonance (SPR)')
 
 # Likely very incomplete, more research is needed
 COMPANIES               : enum('Bio-Rad',
@@ -1892,4 +1891,4 @@ COMPANIES               : enum('Bio-Rad',
                                'Malvern Panalytical',
                                'Refeyn',
                                'TA Instruments',
-                               required=False)
+                                )

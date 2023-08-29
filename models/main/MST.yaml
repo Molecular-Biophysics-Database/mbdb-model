@@ -65,7 +65,7 @@ method_specific_parameters:
                                       ligand(s), chemical environment, and
                                       position of the sample within the
                                       instrument', required=False)
-        value           : list(include('Measurement'), min=0)
+        value           : list(include('Measurement'), min=1)
 
     data_analysis:
         description     : str(equals='Details of how the data was processed and
