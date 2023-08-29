@@ -33,7 +33,7 @@ General_parameters:
   chemical_information:
     chemical_environments: list(nested_include('Chemical_environment'), min=1)
     entities_of_interest: list(nested_include('Entity'), min=1)
-  derived_parameters: list(nested_include('Derived_parameter'), required=False)
+  derived_parameters: list(nested_include('Derived_parameter'))
 ---
 Entity_base:
   id: link_target(name="entity")
@@ -135,7 +135,7 @@ Complex_substance_of_biological_origin: choose(include('Complex_substance_of_bio
   type_field='derived_from', Body_fluid=include('Body_fluid'), Cell_fraction=include('Cell_fraction'),
   Virion=include('Virion'))
 Complex_substance_of_biological_origin_base:
-  derived_from: enum('Body fluid', 'Cell fraction', 'Virion', required=False)
+  derived_from: enum('Body fluid', 'Cell fraction', 'Virion')
   organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]')
   preparation_protocol: list(include('Step'))
   storage: include('Storage', required=False)
@@ -348,20 +348,19 @@ OBTAINED_TYPES: enum('Measurement', 'Calculation', 'Assumption', 'Other', requir
 ---
 CONCENTRATION_UNITS: enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM', 'g/L', 'mg/mL',
   'µg/mL', 'ng/mL', 'mol/kg', 'mmol/kg', 'v/v %','w/w %', 'v/w %', 'w/v %', 'U/ml','%
-  saturated', required=False)
-FLOWRATE_UNITS: enum('mL/min','µl/s', required=False)
-HUMIDITY_UNITS: enum('%','g/m^3','oz/y^3', required=False)
-PRESSURE_UNITS: enum('Pa', 'kPa', 'MPa', 'Bar','mBar', 'atm', 'Torr', 'PSI', 'mmHg','inchHg',
-  required=False)
+  saturated')
+FLOWRATE_UNITS: enum('mL/min','µl/s')
+HUMIDITY_UNITS: enum('%','g/m^3','oz/y^3')
+PRESSURE_UNITS: enum('Pa', 'kPa', 'MPa', 'Bar','mBar', 'atm', 'Torr', 'PSI', 'mmHg','inchHg')
 TEMPERATURE_UNITS: enum('K', '°C', '°F')
 TIME_UNITS: enum('nanoseconds','microseconds', 'milliseconds', 'seconds','minutes',
-  'hours', 'days', required=False)
-ENERGY_UNITS: enum('kcal/mol','kJ/mol', required=False)
+  'hours', 'days')
+ENERGY_UNITS: enum('kcal/mol','kJ/mol')
 POWER_UNITS: enum('µcal/s','µJ/s', required=False)
-LENGTH_UNITS: enum('Å', 'nm', 'μm', 'mm', 'cm', 'm', required=False)
-MOLECULAR_WEIGHT_UNITS: enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
+LENGTH_UNITS: enum('Å', 'nm', 'μm', 'mm', 'cm', 'm')
+MOLECULAR_WEIGHT_UNITS: enum('g/mol', 'Da', 'kDa', 'MDa')
 ---
 SUPPORTED_TECHNIQUES: enum('Bio-layer interferometry (BLI)', 'Microscale thermophoresis/Temperature
-  related intensity change (MST/TRIC)', 'Surface plasmon resonance (SPR)', required=False)
+  related intensity change (MST/TRIC)', 'Surface plasmon resonance (SPR)')
 COMPANIES: enum('Bio-Rad', 'Bruker', 'Cytiva', 'Gatorbio', 'GE Healthcare', 'Nanotemper',
-  'Nicoya Life', 'Sartorius', 'Malvern Panalytical', 'Refeyn', 'TA Instruments', required=False)
+  'Nicoya Life', 'Sartorius', 'Malvern Panalytical', 'Refeyn', 'TA Instruments', )

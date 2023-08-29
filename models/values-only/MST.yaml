@@ -9,7 +9,7 @@ method_specific_parameters:
     'UV (ex 260-300nm, em 330-380nm)', 'Spectral shift')
   excitation_led_power: num(min=0, max=100)
   ir_mst_laser_power: num(min=0, max=100)
-  measurements: list(include('Measurement'), min=0)
+  measurements: list(include('Measurement'), min=1)
   data_analysis: list(include('MST_data_analysis'), min=1)
 ---
 MST_data_analysis:
