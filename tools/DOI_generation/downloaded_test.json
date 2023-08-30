@@ -1,0 +1,274 @@
+{
+  "data":{
+    "id":"10.17596/qf5s-pc52",
+    "type":"dois",
+    "attributes":{
+      "doi":"10.17596/qf5s-pc52",
+      "prefix":"10.17596",
+      "suffix":"qf5s-pc52",
+      "identifiers":[
+        {
+          "identifier":"https://schema.datacite.org/meta/kernel-4.4/example/datacite-example-full-v4.4.xml",
+          "identifierType":"URL"
+        }
+      ],
+      "alternateIdentifiers":[
+        {
+          "alternateIdentifierType":"URL",
+          "alternateIdentifier":"https://schema.datacite.org/meta/kernel-4.4/example/datacite-example-full-v4.4.xml"
+        }
+      ],
+      "creators":[
+        {
+          "name":"Miller, Elizabeth",
+          "nameType":"Personal",
+          "givenName":"Elizabeth",
+          "familyName":"Miller",
+          "affiliation":[
+            "DataCite",
+            "California Institute of Technology"
+          ],
+          "nameIdentifiers":[
+            {
+              "schemeUri":"https://orcid.org",
+              "nameIdentifier":"https://orcid.org/0000-0001-5000-0007",
+              "nameIdentifierScheme":"ORCID"
+            }
+          ]
+        }
+      ],
+      "titles":[
+        {
+          "lang":"en-US",
+          "title":"Full DataCite XML Example",
+          "titleType":null
+        },
+        {
+          "lang":"en-US",
+          "title":"Demonstration of DataCite Properties.",
+          "titleType":"Subtitle"
+        }
+      ],
+      "publisher":"DataCite",
+      "container":{
+        
+      },
+      "publicationYear":2014,
+      "subjects":[
+        {
+          "subject":"computer science",
+          "schemeUri":"http://dewey.info/",
+          "subjectScheme":"dewey",
+          "classificationCode":"000"
+        }
+      ],
+      "contributors":[
+        {
+          "name":"Starr, Joan",
+          "nameType":null,
+          "givenName":"Joan",
+          "familyName":"Starr",
+          "affiliation":[
+            "California Digital Library"
+          ],
+          "contributorType":"ProjectLeader",
+          "nameIdentifiers":[
+            {
+              "schemeUri":"https://orcid.org",
+              "nameIdentifier":"https://orcid.org/0000-0002-7285-027X",
+              "nameIdentifierScheme":"ORCID"
+            }
+          ]
+        }
+      ],
+      "dates":[
+        {
+          "date":"2021-01-26",
+          "dateType":"Updated",
+          "dateInformation":"Updated with 4.4 properties"
+        },
+        {
+          "date":"2014",
+          "dateType":"Issued",
+          "dateInformation":null
+        }
+      ],
+      "language":"en",
+      "types":{
+        "ris":"COMP",
+        "bibtex":"misc",
+        "citeproc":"article",
+        "schemaOrg":"SoftwareSourceCode",
+        "resourceType":"XML",
+        "resourceTypeGeneral":"Software"
+      },
+      "relatedIdentifiers":[
+        {
+          "schemeUri":"https://github.com/citation-style-language/schema/raw/master/csl-data.json",
+          "schemeType":null,
+          "relationType":"HasMetadata",
+          "relatedIdentifier":"https://data.datacite.org/application/citeproc+json/10.5072/example-full",
+          "resourceTypeGeneral":null,
+          "relatedIdentifierType":"URL",
+          "relatedMetadataScheme":"citeproc+json"
+        },
+        {
+          "schemeUri":null,
+          "schemeType":null,
+          "relationType":"IsReviewedBy",
+          "relatedIdentifier":"arXiv:0706.0001",
+          "resourceTypeGeneral":"Text",
+          "relatedIdentifierType":"arXiv",
+          "relatedMetadataScheme":null
+        }
+      ],
+      "relatedItems":[
+        {
+          "titles":[
+            {
+              "title":"Physics letters B"
+            }
+          ],
+          "volume":"776",
+          "lastPage":"264",
+          "firstPage":"249",
+          "relationType":"IsPublishedIn",
+          "publicationYear":"2018",
+          "relatedItemType":"Journal",
+          "relatedItemIdentifier":{
+            "relatedItemIdentifier":"0370-2693",
+            "relatedItemIdentifierType":"ISSN"
+          }
+        }
+      ],
+      "sizes":[
+        "4 kB"
+      ],
+      "formats":[
+        "application/xml"
+      ],
+      "version":"4.2",
+      "rightsList":[
+        {
+          "rights":"Creative Commons Zero v1.0 Universal",
+          "rightsUri":"https://creativecommons.org/publicdomain/zero/1.0/legalcode",
+          "schemeUri":"https://spdx.org/licenses/",
+          "rightsIdentifier":"cc0-1.0",
+          "rightsIdentifierScheme":"SPDX"
+        }
+      ],
+      "descriptions":[
+        {
+          "lang":"en-US",
+          "description":"XML example of all DataCite Metadata Schema v4.4 properties.",
+          "descriptionType":"Abstract"
+        }
+      ],
+      "geoLocations":[
+        {
+          "geoLocationBox":{
+            "eastBoundLongitude":-68.211,
+            "northBoundLatitude":42.893,
+            "southBoundLatitude":41.09,
+            "westBoundLongitude":-71.032
+          },
+          "geoLocationPlace":"Atlantic Ocean",
+          "geoLocationPoint":{
+            "pointLatitude":31.233,
+            "pointLongitude":-67.302
+          }
+        }
+      ],
+      "fundingReferences":[
+        {
+          "awardUri":"https://www.moore.org/grants/list/GBMF3859.01",
+          "awardTitle":"Full DataCite XML Example",
+          "funderName":"National Science Foundation",
+          "awardNumber":"CBET-106",
+          "funderIdentifier":"05dxps055",
+          "funderIdentifierType":"ROR"
+        }
+      ],
+      "xml":"PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHJlc291cmNlIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhtbG5zPSJodHRwOi8vZGF0YWNpdGUub3JnL3NjaGVtYS9rZXJuZWwtNCIgeHNpOnNjaGVtYUxvY2F0aW9uPSJodHRwOi8vZGF0YWNpdGUub3JnL3NjaGVtYS9rZXJuZWwtNCBodHRwOi8vc2NoZW1hLmRhdGFjaXRlLm9yZy9tZXRhL2tlcm5lbC00L21ldGFkYXRhLnhzZCI+CiAgPGlkZW50aWZpZXIgaWRlbnRpZmllclR5cGU9IkRPSSI+MTAuMTc1OTYvUUY1Uy1QQzUyPC9pZGVudGlmaWVyPgogIDxjcmVhdG9ycz4KICAgIDxjcmVhdG9yPgogICAgICA8Y3JlYXRvck5hbWUgbmFtZVR5cGU9IlBlcnNvbmFsIj5NaWxsZXIsIEVsaXphYmV0aDwvY3JlYXRvck5hbWU+CiAgICAgIDxnaXZlbk5hbWU+RWxpemFiZXRoPC9naXZlbk5hbWU+CiAgICAgIDxmYW1pbHlOYW1lPk1pbGxlcjwvZmFtaWx5TmFtZT4KICAgICAgPG5hbWVJZGVudGlmaWVyIG5hbWVJZGVudGlmaWVyU2NoZW1lPSJPUkNJRCIgc2NoZW1lVVJJPSJodHRwczovL29yY2lkLm9yZyI+aHR0cHM6Ly9vcmNpZC5vcmcvMDAwMC0wMDAxLTUwMDAtMDAwNzwvbmFtZUlkZW50aWZpZXI+CiAgICAgIDxhZmZpbGlhdGlvbj5EYXRhQ2l0ZTwvYWZmaWxpYXRpb24+CiAgICAgIDxhZmZpbGlhdGlvbiBhZmZpbGlhdGlvbklkZW50aWZpZXI9Imh0dHBzOi8vcm9yLm9yZy8wNWR4cHMwNTUiIGFmZmlsaWF0aW9uSWRlbnRpZmllclNjaGVtZT0iUk9SIiBzY2hlbWVVUkk9Imh0dHBzOi8vcm9yLm9yZyI+Q2FsaWZvcm5pYSBJbnN0aXR1dGUgb2YgVGVjaG5vbG9neTwvYWZmaWxpYXRpb24+CiAgICA8L2NyZWF0b3I+CiAgPC9jcmVhdG9ycz4KICA8dGl0bGVzPgogICAgPHRpdGxlIHhtbDpsYW5nPSJlbi1VUyI+RnVsbCBEYXRhQ2l0ZSBYTUwgRXhhbXBsZTwvdGl0bGU+CiAgICA8dGl0bGUgdGl0bGVUeXBlPSJTdWJ0aXRsZSIgeG1sOmxhbmc9ImVuLVVTIj5EZW1vbnN0cmF0aW9uIG9mIERhdGFDaXRlIFByb3BlcnRpZXMuPC90aXRsZT4KICA8L3RpdGxlcz4KICA8cHVibGlzaGVyPkRhdGFDaXRlPC9wdWJsaXNoZXI+CiAgPHB1YmxpY2F0aW9uWWVhcj4yMDE0PC9wdWJsaWNhdGlvblllYXI+CiAgPHJlc291cmNlVHlwZSByZXNvdXJjZVR5cGVHZW5lcmFsPSJTb2Z0d2FyZSI+WE1MPC9yZXNvdXJjZVR5cGU+CiAgPHN1YmplY3RzPgogICAgPHN1YmplY3Qgc3ViamVjdFNjaGVtZT0iZGV3ZXkiIHNjaGVtZVVSST0iaHR0cDovL2Rld2V5LmluZm8vIj5jb21wdXRlciBzY2llbmNlPC9zdWJqZWN0PgogIDwvc3ViamVjdHM+CiAgPGNvbnRyaWJ1dG9ycz4KICAgIDxjb250cmlidXRvciBjb250cmlidXRvclR5cGU9IlByb2plY3RMZWFkZXIiPgogICAgICA8Y29udHJpYnV0b3JOYW1lPlN0YXJyLCBKb2FuPC9jb250cmlidXRvck5hbWU+CiAgICAgIDxnaXZlbk5hbWU+Sm9hbjwvZ2l2ZW5OYW1lPgogICAgICA8ZmFtaWx5TmFtZT5TdGFycjwvZmFtaWx5TmFtZT4KICAgICAgPG5hbWVJZGVudGlmaWVyIG5hbWVJZGVudGlmaWVyU2NoZW1lPSJPUkNJRCIgc2NoZW1lVVJJPSJodHRwczovL29yY2lkLm9yZyI+aHR0cHM6Ly9vcmNpZC5vcmcvMDAwMC0wMDAyLTcyODUtMDI3WDwvbmFtZUlkZW50aWZpZXI+CiAgICAgIDxhZmZpbGlhdGlvbj5DYWxpZm9ybmlhIERpZ2l0YWwgTGlicmFyeTwvYWZmaWxpYXRpb24+CiAgICA8L2NvbnRyaWJ1dG9yPgogIDwvY29udHJpYnV0b3JzPgogIDxkYXRlcz4KICAgIDxkYXRlIGRhdGVUeXBlPSJVcGRhdGVkIiBkYXRlSW5mb3JtYXRpb249IlVwZGF0ZWQgd2l0aCA0LjQgcHJvcGVydGllcyI+MjAyMS0wMS0yNjwvZGF0ZT4KICAgIDxkYXRlIGRhdGVUeXBlPSJJc3N1ZWQiPjIwMTQ8L2RhdGU+CiAgPC9kYXRlcz4KICA8bGFuZ3VhZ2U+ZW48L2xhbmd1YWdlPgogIDxhbHRlcm5hdGVJZGVudGlmaWVycz4KICAgIDxhbHRlcm5hdGVJZGVudGlmaWVyIGFsdGVybmF0ZUlkZW50aWZpZXJUeXBlPSJVUkwiPmh0dHBzOi8vc2NoZW1hLmRhdGFjaXRlLm9yZy9tZXRhL2tlcm5lbC00LjQvZXhhbXBsZS9kYXRhY2l0ZS1leGFtcGxlLWZ1bGwtdjQuNC54bWw8L2FsdGVybmF0ZUlkZW50aWZpZXI+CiAgPC9hbHRlcm5hdGVJZGVudGlmaWVycz4KICA8cmVsYXRlZElkZW50aWZpZXJzPgogICAgPHJlbGF0ZWRJZGVudGlmaWVyIHJlbGF0ZWRJZGVudGlmaWVyVHlwZT0iVVJMIiByZWxhdGlvblR5cGU9Ikhhc01ldGFkYXRhIj5odHRwczovL2RhdGEuZGF0YWNpdGUub3JnL2FwcGxpY2F0aW9uL2NpdGVwcm9jK2pzb24vMTAuNTA3Mi9leGFtcGxlLWZ1bGw8L3JlbGF0ZWRJZGVudGlmaWVyPgogICAgPHJlbGF0ZWRJZGVudGlmaWVyIHJlbGF0ZWRJZGVudGlmaWVyVHlwZT0iYXJYaXYiIHJlbGF0aW9uVHlwZT0iSXNSZXZpZXdlZEJ5IiByZXNvdXJjZVR5cGVHZW5lcmFsPSJUZXh0Ij5hclhpdjowNzA2LjAwMDE8L3JlbGF0ZWRJZGVudGlmaWVyPgogIDwvcmVsYXRlZElkZW50aWZpZXJzPgogIDxyZWxhdGVkSXRlbXM+CiAgICA8cmVsYXRlZEl0ZW0gcmVsYXRlZEl0ZW1UeXBlPSJKb3VybmFsIiByZWxhdGlvblR5cGU9IklzUHVibGlzaGVkSW4iPgogICAgICA8cmVsYXRlZEl0ZW1JZGVudGlmaWVyIHJlbGF0ZWRJdGVtSWRlbnRpZmllclR5cGU9IklTU04iPjAzNzAtMjY5MzwvcmVsYXRlZEl0ZW1JZGVudGlmaWVyPgogICAgICA8dGl0bGVzPgogICAgICAgIDx0aXRsZT5QaHlzaWNzIGxldHRlcnMgQjwvdGl0bGU+CiAgICAgIDwvdGl0bGVzPgogICAgICA8cHVibGljYXRpb25ZZWFyPjIwMTg8L3B1YmxpY2F0aW9uWWVhcj4KICAgICAgPHZvbHVtZT43NzY8L3ZvbHVtZT4KICAgICAgPGZpcnN0UGFnZT4yNDk8L2ZpcnN0UGFnZT4KICAgICAgPGxhc3RQYWdlPjI2NDwvbGFzdFBhZ2U+CiAgICA8L3JlbGF0ZWRJdGVtPgogIDwvcmVsYXRlZEl0ZW1zPgogIDxzaXplcz4KICAgIDxzaXplPjQga0I8L3NpemU+CiAgPC9zaXplcz4KICA8Zm9ybWF0cz4KICAgIDxmb3JtYXQ+YXBwbGljYXRpb24veG1sPC9mb3JtYXQ+CiAgPC9mb3JtYXRzPgogIDx2ZXJzaW9uPjQuMjwvdmVyc2lvbj4KICA8cmlnaHRzTGlzdD4KICAgIDxyaWdodHMgcmlnaHRzVVJJPSJodHRwczovL2NyZWF0aXZlY29tbW9ucy5vcmcvcHVibGljZG9tYWluL3plcm8vMS4wL2xlZ2FsY29kZSI+Q3JlYXRpdmUgQ29tbW9ucyBaZXJvIHYxLjAgVW5pdmVyc2FsPC9yaWdodHM+CiAgPC9yaWdodHNMaXN0PgogIDxkZXNjcmlwdGlvbnM+CiAgICA8ZGVzY3JpcHRpb24geG1sOmxhbmc9ImVuLVVTIiBkZXNjcmlwdGlvblR5cGU9IkFic3RyYWN0Ij5YTUwgZXhhbXBsZSBvZiBhbGwgRGF0YUNpdGUgTWV0YWRhdGEgU2NoZW1hIHY0LjQgcHJvcGVydGllcy48L2Rlc2NyaXB0aW9uPgogIDwvZGVzY3JpcHRpb25zPgogIDxnZW9Mb2NhdGlvbnM+CiAgICA8Z2VvTG9jYXRpb24+CiAgICAgIDxnZW9Mb2NhdGlvblBsYWNlPkF0bGFudGljIE9jZWFuPC9nZW9Mb2NhdGlvblBsYWNlPgogICAgICA8Z2VvTG9jYXRpb25Qb2ludD4KICAgICAgICA8cG9pbnRMYXRpdHVkZT4zMS4yMzM8L3BvaW50TGF0aXR1ZGU+CiAgICAgICAgPHBvaW50TG9uZ2l0dWRlPi02Ny4zMDI8L3BvaW50TG9uZ2l0dWRlPgogICAgICA8L2dlb0xvY2F0aW9uUG9pbnQ+CiAgICAgIDxnZW9Mb2NhdGlvbkJveD4KICAgICAgICA8d2VzdEJvdW5kTG9uZ2l0dWRlPi03MS4wMzI8L3dlc3RCb3VuZExvbmdpdHVkZT4KICAgICAgICA8ZWFzdEJvdW5kTG9uZ2l0dWRlPi02OC4yMTE8L2Vhc3RCb3VuZExvbmdpdHVkZT4KICAgICAgICA8c291dGhCb3VuZExhdGl0dWRlPjQxLjA5PC9zb3V0aEJvdW5kTGF0aXR1ZGU+CiAgICAgICAgPG5vcnRoQm91bmRMYXRpdHVkZT40Mi44OTM8L25vcnRoQm91bmRMYXRpdHVkZT4KICAgICAgPC9nZW9Mb2NhdGlvbkJveD4KICAgIDwvZ2VvTG9jYXRpb24+CiAgPC9nZW9Mb2NhdGlvbnM+CiAgPGZ1bmRpbmdSZWZlcmVuY2VzPgogICAgPGZ1bmRpbmdSZWZlcmVuY2U+CiAgICAgIDxmdW5kZXJOYW1lPk5hdGlvbmFsIFNjaWVuY2UgRm91bmRhdGlvbjwvZnVuZGVyTmFtZT4KICAgICAgPGZ1bmRlcklkZW50aWZpZXIgZnVuZGVySWRlbnRpZmllclR5cGU9IlJPUiI+MDVkeHBzMDU1PC9mdW5kZXJJZGVudGlmaWVyPgogICAgICA8YXdhcmROdW1iZXIgYXdhcmRVUkk9Imh0dHBzOi8vd3d3Lm1vb3JlLm9yZy9ncmFudHMvbGlzdC9HQk1GMzg1OS4wMSI+Q0JFVC0xMDY8L2F3YXJkTnVtYmVyPgogICAgICA8YXdhcmRUaXRsZT5GdWxsIERhdGFDaXRlIFhNTCBFeGFtcGxlPC9hd2FyZFRpdGxlPgogICAgPC9mdW5kaW5nUmVmZXJlbmNlPgogIDwvZnVuZGluZ1JlZmVyZW5jZXM+CjwvcmVzb3VyY2U+Cg==",
+      "url":"https://example.org",
+      "contentUrl":null,
+      "metadataVersion":2,
+      "schemaVersion":"http://datacite.org/schema/kernel-4",
+      "source":"fabricaForm",
+      "isActive":true,
+      "state":"findable",
+      "reason":null,
+      "viewCount":0,
+      "viewsOverTime":[
+        
+      ],
+      "downloadCount":0,
+      "downloadsOverTime":[
+        
+      ],
+      "referenceCount":0,
+      "citationCount":0,
+      "citationsOverTime":[
+        
+      ],
+      "partCount":0,
+      "partOfCount":0,
+      "versionCount":0,
+      "versionOfCount":0,
+      "created":"2023-01-04T18:40:02.000Z",
+      "registered":"2023-01-04T18:40:02.000Z",
+      "published":"2014",
+      "updated":"2023-01-31T17:55:14.000Z"
+    },
+    "relationships":{
+      "client":{
+        "data":{
+          "id":"datacite.mary",
+          "type":"clients"
+        }
+      },
+      "provider":{
+        "data":{
+          "id":"datacite",
+          "type":"providers"
+        }
+      },
+      "media":{
+        "data":{
+          "id":"10.17596/qf5s-pc52",
+          "type":"media"
+        }
+      },
+      "references":{
+        "data":[
+          
+        ]
+      },
+      "citations":{
+        "data":[
+          
+        ]
+      },
+      "parts":{
+        "data":[
+          
+        ]
+      },
+      "partOf":{
+        "data":[
+          
+        ]
+      },
+      "versions":{
+        "data":[
+          
+        ]
+      },
+      "versionOf":{
+        "data":[
+          
+        ]
+      }
+    }
+  }
+}

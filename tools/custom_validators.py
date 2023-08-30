@@ -35,7 +35,7 @@ class LinkTarget(String):
     def __init__(self, *args, name=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.name = name
-
+        
 
 class Link(Validator):
     """
@@ -82,17 +82,10 @@ class Keyword(String):
 class Fulltext(String):
     tag = "fulltext"
 
-
 class MacroMolecule_id(Keyword):
     tag = "macromolecule_id"
     # put into translation yamale2model
     # enum(pdb:, uniprot:)
-
-
-class Taxonomy_id(Keyword):
-    tag = "taxonomy_id"
-    # put into translation yamale2model
-    # enum(taxid:)
 
 
 class Database_id(Keyword):

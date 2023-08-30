@@ -87,6 +87,4 @@ as efficient.
 
 ## random_generator.py
 
-Early attempt at creating random data based on the a Yamale schema. Simple data
-types are working but link, link_targets, and choose are not implemented fully
-yet.
+Early attempt at creating random data based on the a Yamale schema
