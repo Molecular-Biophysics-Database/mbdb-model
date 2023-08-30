@@ -215,6 +215,10 @@ class ModelArray(ModelBase):
 
     def parse(self, data, includes):
         super().parse(data)
+        # to disallow empty list, minItems is set to one in case it has got a value already
+        if "minItems" not in self.constraints.keys():
+            self.constraints["minItems"] = 1
+
         if len(data.validators) > 1:
             self.item = parse(
                 {x.include_name: x for x in data.validators}, self.path, includes

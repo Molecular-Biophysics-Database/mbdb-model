@@ -1,5 +1,5 @@
 general_parameters:
-    schema_version: '0.9.6'
+    schema_version: '0.9.7'
     record_information:
         publisher: 'MBDB'
         resource_type_general: 'Dataset'

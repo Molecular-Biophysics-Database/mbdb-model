@@ -5,7 +5,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.6')
+        value           : keyword(equals='0.9.7')
 
     record_information:
         title:
@@ -378,12 +378,13 @@ Molecular_assembly:
     quality_controls:
         description     : str(equals='Quality controls performed e.g. purity,
                                       aggregation state etc.', required=False)
-        value           : list(nested_include('Quality_control'), required=False)
+        value           : list(nested_include('Quality_control'),
+                               required=False)
 
     preparation_protocol:
         description     : str(equals='The protocol used for preparing the
                                       molecular assembly', required=False)
-        value           : list(include('Step'),required=False)
+        value           : list(include('Step'), required=False)
 
     additional_specifications:
         description     : str(equals='Additional information about the
@@ -540,7 +541,7 @@ Polymer_modifications:
                                       synthesis (e.g. translation) of the
                                       polymer', required=False)
         searchable      : True
-        value           : list(nested_include('Modification'),required=False)
+        value           : list(nested_include('Modification'), required=False)
 
     biological_postprocessing:
         description     : str(equals='Modifications of the polymer made
@@ -549,7 +550,7 @@ Polymer_modifications:
                                       organism where synthesis occurred
                                       (e.g. glycosylation)', required=False)
         searchable      : True
-        value           : list(nested_include('Modification'),required=False)
+        value           : list(nested_include('Modification'), required=False)
 
 
     chemical:
@@ -559,8 +560,8 @@ Polymer_modifications:
                                       cysteine iodoacetamide labeling,
                                       deglycosylation, covalent fluorescent
                                       labeling)', required=False)
-        searchable  : True
-        value       : list(nested_include('Modification'), required=False)
+        searchable      : True
+        value           : list(nested_include('Modification'), required=False)
 
 
 ---
@@ -649,8 +650,7 @@ Chemical_environment:
                                       serum, etc.)',
                               required=False)
         searchable      : True
-        value           : list(nested_include('Constituent'),
-                               required=False)
+        value           : list(nested_include('Constituent'), required=False)
 
     pH:
         description     : str(equals='The pH value of the chemical environment
@@ -1059,7 +1059,7 @@ Lipid_assembly:
     additional_specifications:
         description     : str(equals='Additional information about the lipid
                                       assembly, if applicable', required=False)
-        value           : list(include('Step'),required=False)
+        value           : list(include('Step'), required=False)
 
 Complex_substance_of_industrial_production_origin:
     product:

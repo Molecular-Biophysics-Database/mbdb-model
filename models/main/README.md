@@ -92,6 +92,9 @@ Array of values:
   * `nested_list`: array of a maps, where comparison of the individual items
      within map can be
 
+ **Note that the minimum number of allowed elements if the array is active is
+  implicitly assumed to be 1 unless otherwise stated**   
+
 Reuse value (usually a map or enum) in another map:
   * `include`: a map (object) or enumerator to be reused (in the sense of
     composition)
