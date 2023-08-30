@@ -86,6 +86,7 @@ record:
         type: keyword
         help.en: The name of the software recommended for working with the file
       processing_steps[]:
+        ^minItems: 1
         ^help.en: List of the processing steps performed on the file before it was
           deposited (e.g. exported to xlsx)
         ^required: true
@@ -142,6 +143,7 @@ $defs:
         keys: [id, name]
         required: true
       analytes[]:
+        ^minItems: 1
         ^help.en: List of names (ids) of entities (from the entities of interest defined
           in the general parameters) that was used to alter the behavior of the target(s)
           or entities present at varying concentrations for a series of measurements
@@ -150,6 +152,7 @@ $defs:
       temperature:
         use: '#/$defs/Temperature'
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of steps taken to prepare the sample
         use: '#/$defs/Step'
   BLI_protocol_step:
@@ -214,6 +217,7 @@ $defs:
         help.en: The type of chemistry on ligands and surface that allows for immobilization
           of the ligands on the surface of the senor
       ligand_immobilization_protocol[]:
+        ^minItems: 1
         ^help.en: List of steps for immobilizing the ligand on the surface of the
           sensor
         use: '#/$defs/Step'
@@ -251,6 +255,7 @@ $defs:
         help.en: The expected type of surface of the wells after the modification
           (e.g. BSA coated)
       protocol[]:
+        ^minItems: 1
         ^help.en: List of protocol steps used to modify the surface of the wells
         ^required: true
         use: '#/$defs/Step'
@@ -278,6 +283,7 @@ $defs:
         keys: [id, name]
         required: true
       data_processing_steps[]:
+        ^minItems: 1
         ^help.en: Describe the steps in the data analysis prior to fitting (removing
           outliers in the raw data, applying data filter, placing data at same start
           time etc. )
@@ -299,6 +305,7 @@ $defs:
             help.en: Short descriptive title of the record
             required: true
           keywords[]:
+            ^minItems: 1
             ^help.en: List of keywords describing this particular record content,
               e.g. antibody, epitope, ligand optimization, SARS-CoV-2, agonist, antagonist,
               HIV, etc.
@@ -381,6 +388,7 @@ $defs:
             use: '#/$defs/Person'
             required: true
           contributors[]:
+            ^minItems: 1
             ^help.en: List of other people who contributed to generating the deposited
               data, metadata, derived parameters, or the deposition itself
             use: '#/$defs/Person'
@@ -388,6 +396,7 @@ $defs:
       associated_publications:
         use: '#/$defs/Associated_publications'
       funding_reference[]:
+        ^minItems: 1
         ^help.en: List of information about the grants that supported depositors
         keys: [id, title, props.funder_name]
         vocabulary-type: grants
@@ -438,6 +447,7 @@ $defs:
             mapping:
               type: nested
       derived_parameters[]:
+        ^minItems: 1
         ^help.en: List of the parameters (results) that were derived from analyzing
           measured raw data, and which steps were taken to obtain them
         use: '#/$defs/Derived_parameter'
@@ -507,6 +517,7 @@ $defs:
   Molecular_assembly:
     properties:
       external_databases[]:
+        ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the molecular assembly as a whole can be specified here
           (e.g. 1YQ2; PDB); information about the individual components should be
@@ -526,6 +537,7 @@ $defs:
         use: '#/$defs/Molecular_weight'
         required: true
       chemical_modifications[]:
+        ^minItems: 1
         ^help.en: List describing deliberate modifications made to the molecular assembly
           through chemical, biochemical, or physical means
         use: '#/$defs/Modification'
@@ -535,13 +547,16 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       quality_controls[]:
+        ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
         type: nested
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: The protocol used for preparing the molecular assembly
         use: '#/$defs/Step'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the macromolecular assembly can be
           specified here
         type: keyword
@@ -591,6 +606,7 @@ $defs:
         use: '#/$defs/Molecular_weight'
         required: true
       external_databases[]:
+        ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the polymer can be specified here (e.g Q8KRF6, UniProt)
         type: keyword
@@ -619,26 +635,31 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       quality_controls[]:
+        ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
         type: nested
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
         type: keyword
   Polymer_modifications:
     properties:
       synthesis[]:
+        ^minItems: 1
         ^help.en: Modifications (e.g. non-natural amino acids) of the polymer made
           during synthesis (e.g. translation) of the polymer
         use: '#/$defs/Modification'
         type: nested
       biological_postprocessing[]:
+        ^minItems: 1
         ^help.en: Modifications of the polymer made after synthesis (e.g. posttranslational
           modifications, DNA methylation) by the organism where synthesis occurred
           (e.g. glycosylation)
         use: '#/$defs/Modification'
         type: nested
       chemical[]:
+        ^minItems: 1
         ^help.en: Modifications of the polymer introduced by chemical, biochemical,
           or physical means in vitro (e.g. lysine methylation, cysteine iodoacetamide
           labeling, deglycosylation, covalent fluorescent labeling)
@@ -655,6 +676,7 @@ $defs:
           specified here)'
         required: true
       additional_identifiers[]:
+        ^minItems: 1
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
         type: keyword
@@ -668,10 +690,12 @@ $defs:
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
+        ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
         type: nested
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the chemical can be specified here
           (e.g. RNase free water, recrystallization, desalting)
         type: keyword
@@ -688,6 +712,7 @@ $defs:
           measurement steps
         required: true
       solvent[]:
+        ^minItems: 1
         ^help.en: Information about the solvent component(s) of the chemical environment
           (e.g. water, D2O, DMSO, EtOH) can be specified here
         ^required: true
@@ -696,6 +721,7 @@ $defs:
         mapping:
           type: nested
       constituents[]:
+        ^minItems: 1
         ^help.en: List of the constituents, excluding solvent components, that made
           up the chemical environment (i.e. buffer system, salts, surfactants, crowding
           agents, serum, etc.)
@@ -718,6 +744,7 @@ $defs:
       ultrafiltration_method:
         use: '#/$defs/Ultrafiltration'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the chemical environment can be specified
           here
         type: keyword
@@ -825,6 +852,7 @@ $defs:
         type: vocabulary
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -832,6 +860,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -905,6 +934,7 @@ $defs:
           from
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -915,6 +945,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -929,6 +960,7 @@ $defs:
         use: '#/$defs/Lipid_assembly'
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -936,6 +968,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -955,6 +988,7 @@ $defs:
         use: '#/$defs/Size'
         required: true
       components[]:
+        ^minItems: 1
         ^help.en: The components of the lipid assembly
         ^required: true
         use: '#/$defs/Assembly_component'
@@ -962,6 +996,7 @@ $defs:
         mapping:
           type: nested
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the lipid assembly, if applicable
         use: '#/$defs/Step'
   Complex_substance_of_industrial_production_origin:
@@ -973,6 +1008,7 @@ $defs:
           was derived from
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -980,6 +1016,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -994,10 +1031,12 @@ $defs:
         help.en: The family name(s) the person
         required: true
       identifiers[]:
+        ^minItems: 1
         ^help.en: Persistent identifier associated with the person, currently only
           ORCIDs are allowed
         type: keyword
       affiliations[]:
+        ^minItems: 1
         ^help.en: The affiliation of the person
         keys: [id, title, props.city, props.state, props.country]
         vocabulary-type: affiliations
@@ -1018,6 +1057,7 @@ $defs:
         help.en: The publication year
         required: true
       authors[]:
+        ^minItems: 1
         ^help.en: The authors of the publication
         use: '#/$defs/Person'
         type: nested
@@ -1052,6 +1092,7 @@ $defs:
       main:
         use: '#/$defs/Publication'
       additional[]:
+        ^minItems: 1
         ^help.en: Additional publications can be specified here, if applicable
         use: '#/$defs/Publication'
         type: nested
@@ -1115,6 +1156,7 @@ $defs:
         help.en: The type of modification
         required: true
       protocol[]:
+        ^minItems: 1
         ^help.en: List of steps that led to the modification taking place
         use: '#/$defs/Step'
   Ultrafiltration:
@@ -1359,6 +1401,7 @@ $defs:
       obtained_by:
         use: '#/$defs/OBTAINED_TYPES'
       obtained_protocol[]:
+        ^minItems: 1
         ^help.en: Information of how the concentration was obtained (e.g, Absorbance
           at 280 nm, buffer absorbance subtraction, extinction coefficient
         use: '#/$defs/Step'
@@ -1421,6 +1464,7 @@ $defs:
         type: keyword
         help.en: Short descriptive name of the data series
       values[]:
+        ^minItems: 1
         ^help.en: The numerical values of the data series
         ^required: true
         type: double
@@ -1438,6 +1482,7 @@ $defs:
       published_test_protocol:
         use: '#/$defs/Publication'
       sample_composition[]:
+        ^minItems: 1
         ^help.en: The composition of the sample the performance test was carried out
           on
         ^required: true
@@ -1457,6 +1502,7 @@ $defs:
       duration:
         use: '#/$defs/Time_duration'
       storage_preparation[]:
+        ^minItems: 1
         ^help.en: The specific steps that were taken to prepare the samples for storage
           (e.g. flash freezing in liquid nitrogen), if applicable
         use: '#/$defs/Step'
@@ -1470,6 +1516,7 @@ $defs:
         type: keyword
         help.en: The catalog number or identifier of the item
       further_information[]:
+        ^minItems: 1
         ^help.en: Further information e.g. batch number
         type: keyword
   Coordinates:
@@ -1537,6 +1584,7 @@ $defs:
         use: '#/$defs/Molecular_weight'
         required: true
       external_databases[]:
+        ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the polymer can be specified here (e.g Q8KRF6, UniProt)
         type: keyword
@@ -1565,10 +1613,12 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       quality_controls[]:
+        ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
         type: nested
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
         type: keyword
       name:
@@ -1598,6 +1648,7 @@ $defs:
           specified here)'
         required: true
       additional_identifiers[]:
+        ^minItems: 1
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
         type: keyword
@@ -1611,10 +1662,12 @@ $defs:
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
+        ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
         type: nested
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the chemical can be specified here
           (e.g. RNase free water, recrystallization, desalting)
         type: keyword
@@ -1637,6 +1690,7 @@ $defs:
   ConstituentMolecular_assemblyPolymorphic:
     properties:
       external_databases[]:
+        ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the molecular assembly as a whole can be specified here
           (e.g. 1YQ2; PDB); information about the individual components should be
@@ -1656,6 +1710,7 @@ $defs:
         use: '#/$defs/Molecular_weight'
         required: true
       chemical_modifications[]:
+        ^minItems: 1
         ^help.en: List describing deliberate modifications made to the molecular assembly
           through chemical, biochemical, or physical means
         use: '#/$defs/Modification'
@@ -1665,13 +1720,16 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       quality_controls[]:
+        ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
         type: nested
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: The protocol used for preparing the molecular assembly
         use: '#/$defs/Step'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the macromolecular assembly can be
           specified here
         type: keyword
@@ -1708,6 +1766,7 @@ $defs:
         use: '#/$defs/Molecular_weight'
         required: true
       external_databases[]:
+        ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the polymer can be specified here (e.g Q8KRF6, UniProt)
         type: keyword
@@ -1736,10 +1795,12 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       quality_controls[]:
+        ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
         type: nested
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
         type: keyword
       name:
@@ -1768,6 +1829,7 @@ $defs:
           specified here)'
         required: true
       additional_identifiers[]:
+        ^minItems: 1
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
         type: keyword
@@ -1781,10 +1843,12 @@ $defs:
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
+        ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
         type: nested
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the chemical can be specified here
           (e.g. RNase free water, recrystallization, desalting)
         type: keyword
@@ -1843,6 +1907,7 @@ $defs:
         type: vocabulary
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -1850,6 +1915,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -1903,6 +1969,7 @@ $defs:
         type: vocabulary
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -1910,6 +1977,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -1965,6 +2033,7 @@ $defs:
         type: vocabulary
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -1972,6 +2041,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -2000,6 +2070,7 @@ $defs:
           from
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -2010,6 +2081,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -2040,6 +2112,7 @@ $defs:
         use: '#/$defs/Lipid_assembly'
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -2047,6 +2120,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -2075,6 +2149,7 @@ $defs:
           was derived from
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -2082,6 +2157,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -2112,6 +2188,7 @@ $defs:
           specified here)'
         required: true
       additional_identifiers[]:
+        ^minItems: 1
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
         type: keyword
@@ -2125,10 +2202,12 @@ $defs:
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
+        ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
         type: nested
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the chemical can be specified here
           (e.g. RNase free water, recrystallization, desalting)
         type: keyword
@@ -2162,6 +2241,7 @@ $defs:
         use: '#/$defs/Molecular_weight'
         required: true
       external_databases[]:
+        ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the polymer can be specified here (e.g Q8KRF6, UniProt)
         type: keyword
@@ -2190,10 +2270,12 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       quality_controls[]:
+        ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
         type: nested
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
         type: keyword
       id:
@@ -2227,6 +2309,7 @@ $defs:
           specified here)'
         required: true
       additional_identifiers[]:
+        ^minItems: 1
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
         type: keyword
@@ -2240,10 +2323,12 @@ $defs:
       supplier:
         use: '#/$defs/Supplier'
       quality_controls[]:
+        ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
         type: nested
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the chemical can be specified here
           (e.g. RNase free water, recrystallization, desalting)
         type: keyword
@@ -2270,6 +2355,7 @@ $defs:
   EntityMolecular_assemblyPolymorphic:
     properties:
       external_databases[]:
+        ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the molecular assembly as a whole can be specified here
           (e.g. 1YQ2; PDB); information about the individual components should be
@@ -2289,6 +2375,7 @@ $defs:
         use: '#/$defs/Molecular_weight'
         required: true
       chemical_modifications[]:
+        ^minItems: 1
         ^help.en: List describing deliberate modifications made to the molecular assembly
           through chemical, biochemical, or physical means
         use: '#/$defs/Modification'
@@ -2298,13 +2385,16 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       quality_controls[]:
+        ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
         use: '#/$defs/Quality_control'
         type: nested
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: The protocol used for preparing the molecular assembly
         use: '#/$defs/Step'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the macromolecular assembly can be
           specified here
         type: keyword
@@ -2368,6 +2458,7 @@ $defs:
         type: vocabulary
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -2375,6 +2466,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -2432,6 +2524,7 @@ $defs:
         type: vocabulary
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -2439,6 +2532,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -2498,6 +2592,7 @@ $defs:
         type: vocabulary
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -2505,6 +2600,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -2537,6 +2633,7 @@ $defs:
           from
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -2547,6 +2644,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -2581,6 +2679,7 @@ $defs:
         use: '#/$defs/Lipid_assembly'
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -2588,6 +2687,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
@@ -2620,6 +2720,7 @@ $defs:
           was derived from
         required: true
       preparation_protocol[]:
+        ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
           substance
         ^required: true
@@ -2627,6 +2728,7 @@ $defs:
       storage:
         use: '#/$defs/Storage'
       additional_specifications[]:
+        ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword

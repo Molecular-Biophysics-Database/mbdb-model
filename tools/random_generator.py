@@ -508,7 +508,7 @@ def main():
     # number of generated test data records
     n = 25
 
-    data_dir = script_dir / 'random_gen_data'
+    data_dir = script_dir / 'random_generated_data'
 
     annotated_validators = to_av(full_schema.dict, full_schema.includes)
     for i in range(n):

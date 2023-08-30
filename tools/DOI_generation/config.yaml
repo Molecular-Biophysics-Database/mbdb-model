@@ -1,0 +1,11 @@
+url: "https://api.test.datacite.org"
+
+headers:
+  Content-Type: "application/vnd.api+json"
+
+data_template:
+  data:
+    type: dois
+    attributes: null
+
+prefix: '10.82657'
