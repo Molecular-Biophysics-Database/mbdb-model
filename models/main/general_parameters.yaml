@@ -5,7 +5,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.6')
+        value           : keyword(equals='0.9.8')
 
     record_information:
         title:
@@ -251,7 +251,8 @@ General_parameters:
                                       and which steps were taken to obtain
                                       them', required=False)
         searchable      : True
-        value           : list(nested_include('Derived_parameter'))
+        value           : list(nested_include('Derived_parameter'),
+                               required=False)
 ---
 # Entities and references to them
 
@@ -377,12 +378,13 @@ Molecular_assembly:
     quality_controls:
         description     : str(equals='Quality controls performed e.g. purity,
                                       aggregation state etc.', required=False)
-        value           : list(nested_include('Quality_control'), required=False)
+        value           : list(nested_include('Quality_control'),
+                               required=False)
 
     preparation_protocol:
         description     : str(equals='The protocol used for preparing the
                                       molecular assembly', required=False)
-        value           : list(include('Step'),required=False)
+        value           : list(include('Step'), required=False)
 
     additional_specifications:
         description     : str(equals='Additional information about the
@@ -539,7 +541,7 @@ Polymer_modifications:
                                       synthesis (e.g. translation) of the
                                       polymer', required=False)
         searchable      : True
-        value           : list(nested_include('Modification'),required=False)
+        value           : list(nested_include('Modification'), required=False)
 
     biological_postprocessing:
         description     : str(equals='Modifications of the polymer made
@@ -548,7 +550,7 @@ Polymer_modifications:
                                       organism where synthesis occurred
                                       (e.g. glycosylation)', required=False)
         searchable      : True
-        value           : list(nested_include('Modification'),required=False)
+        value           : list(nested_include('Modification'), required=False)
 
 
     chemical:
@@ -558,8 +560,8 @@ Polymer_modifications:
                                       cysteine iodoacetamide labeling,
                                       deglycosylation, covalent fluorescent
                                       labeling)', required=False)
-        searchable  : True
-        value       : list(nested_include('Modification'), required=False)
+        searchable      : True
+        value           : list(nested_include('Modification'), required=False)
 
 
 ---
@@ -648,8 +650,7 @@ Chemical_environment:
                                       serum, etc.)',
                               required=False)
         searchable      : True
-        value           : list(nested_include('Constituent'),
-                               required=False)
+        value           : list(nested_include('Constituent'), required=False)
 
     pH:
         description     : str(equals='The pH value of the chemical environment
@@ -1058,7 +1059,7 @@ Lipid_assembly:
     additional_specifications:
         description     : str(equals='Additional information about the lipid
                                       assembly, if applicable', required=False)
-        value           : list(include('Step'),required=False)
+        value           : list(include('Step'), required=False)
 
 Complex_substance_of_industrial_production_origin:
     product:
@@ -1847,29 +1848,29 @@ Coordinates:
         value           : num(min=-180, max=180)
 
 OBTAINED_TYPES          : enum('Measurement', 'Calculation', 'Assumption',
-                               'Other')
+                               'Other', required=False)
 ---
 # Unit definitions
 CONCENTRATION_UNITS     : enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM',
                                'g/L', 'mg/mL', 'µg/mL', 'ng/mL',
                                'mol/kg', 'mmol/kg',
                                'v/v %','w/w %', 'v/w %', 'w/v %',
-                               'U/ml','% saturated')
-FLOWRATE_UNITS          : enum('mL/min','µl/s')
-HUMIDITY_UNITS          : enum('%','g/m^3','oz/y^3')
+                               'U/ml','% saturated', required=False)
+FLOWRATE_UNITS          : enum('mL/min','µl/s', required=False)
+HUMIDITY_UNITS          : enum('%','g/m^3','oz/y^3', required=False)
 PRESSURE_UNITS          : enum('Pa', 'kPa', 'MPa',
                                'Bar','mBar',
                                'atm',
                                'Torr',
                                'PSI',
-                               'mmHg','inchHg')
+                               'mmHg','inchHg', required=False)
 TEMPERATURE_UNITS       : enum('K', '°C', '°F')
 TIME_UNITS              : enum('nanoseconds','microseconds', 'milliseconds',
-                               'seconds','minutes', 'hours', 'days')
-ENERGY_UNITS            : enum('kcal/mol','kJ/mol')
+                               'seconds','minutes', 'hours', 'days', required=False)
+ENERGY_UNITS            : enum('kcal/mol','kJ/mol', required=False)
 POWER_UNITS             : enum('µcal/s','µJ/s', required=False)
-LENGTH_UNITS            : enum('Å', 'nm', 'μm', 'mm', 'cm', 'm')
-MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa')
+LENGTH_UNITS            : enum('Å', 'nm', 'μm', 'mm', 'cm', 'm', required=False)
+MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
 
 
 ---
@@ -1877,7 +1878,7 @@ MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa')
 SUPPORTED_TECHNIQUES    : enum('Bio-layer interferometry (BLI)',
                                'Microscale thermophoresis/Temperature related
                                 intensity change (MST/TRIC)',
-                               'Surface plasmon resonance (SPR)')
+                               'Surface plasmon resonance (SPR)', required=False)
 
 # Likely very incomplete, more research is needed
 COMPANIES               : enum('Bio-Rad',
@@ -1891,4 +1892,4 @@ COMPANIES               : enum('Bio-Rad',
                                'Malvern Panalytical',
                                'Refeyn',
                                'TA Instruments',
-                                )
+                               required=False)

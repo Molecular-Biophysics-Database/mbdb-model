@@ -12,7 +12,7 @@ method_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MST method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.9.2')
+        value           : keyword(equals='0.9.3')
 
     experiment_type:
         description     : str(equals='Type of physical parameter measured',

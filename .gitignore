@@ -7,3 +7,4 @@ __pycache__
 .pytest_cache
 vocabularies/vocabulary_sources/*
 vocabularies/generated_vocabularies/*
+tools/random_generated_data/*

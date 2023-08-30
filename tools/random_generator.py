@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-import json
+import os
+
+import yamale.schema
 
 import custom_validators
+import json
 import numpy as np
 import random
 import string
 import uuid
 import ruamel.yaml
-import yamale
 import yamale.validators as validators
 from copy import deepcopy
 from pathlib import Path
@@ -443,40 +445,83 @@ def clean_enum_includes(dic):
             continue
 
 def get_vocabulary_ids(vocabulary_fixture_path):
-
     with open(vocabulary_fixture_path) as f:
         entries = ruamel.yaml.safe_load_all(f)
         return [vocab["id"] for vocab in entries]
 
-def make_file_name(n, i):
+def make_file_name(n, i, data_dir: Path):
+    if not data_dir.exists():
+        os.mkdir(data_dir)
+
     width = int(np.floor(np.log10(n)) + 1)
-    return f'{str(i + 1).zfill(width)}_testfile.json'
+    return data_dir / f'{str(i + 1).zfill(width)}_testfile.json'
 
 def with_header(mapped_dict):
     return {"metadata": mapped_dict}
 
+def changes_to_general_schema(schema: yamale.schema.Schema):
+    """changes requirement of fields such that consistent test data can be generated"""
+    # derived parameters optional, however as a derived parameter is also optional in later if it's not set to be
+    # required it can lead to links pointing to nowhere which is an error, so derived parameters is changed to required
+    schema.includes["General_parameters"]._schema["derived_parameters"].is_required = True
+
+    # marshmallow and random_generator has opposite ways of determining the required status of child items in the corner
+    # case it is an include of a single item. This, so far, only occurs for a few enums, so their status is changed to
+    # True to allow the parent item to determine if the include it's required or not.
+
+    const_enums = [
+                    'OBTAINED_TYPES',
+                    'CONCENTRATION_UNITS',
+                    'FLOWRATE_UNITS',
+                    'HUMIDITY_UNITS',
+                    'PRESSURE_UNITS',
+                    'TEMPERATURE_UNITS',
+                    'TIME_UNITS',
+                    'ENERGY_UNITS',
+                    'POWER_UNITS',
+                    'LENGTH_UNITS',
+                    'MOLECULAR_WEIGHT_UNITS',
+                    'SUPPORTED_TECHNIQUES',
+                    'COMPANIES',
+    ]
+    for con in const_enums:
+        schema.includes[con]._schema.is_required = True
+    return schema
+
 def main():
+    script_dir = Path(__file__).parent
+    vocab_dir = script_dir.parent / "vocabularies"
 
-    vocabs = glob('../vocabularies/generated_vocabularies/*.yaml')
+    vocabs = glob(f'{vocab_dir}/generated_vocabularies/*.yaml')
+    if not vocabs:
+        print("No vocabularies detected, generating them")
+        os.system( vocab_dir / "generate_vocabularies.py")
+        vocabs = glob(f'{vocab_dir}/generated_vocabularies/*.yaml')
+
     vocab_dict = {Path(vocab).stem: get_vocabulary_ids(vocab) for vocab in vocabs}
-
 
     mst = '../models/values-only/MST.yaml'
     gp = '../models/values-only/general_parameters.yaml'
-    full = merged_schema(mst, gp, validators=custom_validators.extend_validators)
-    annotated_validators = to_av(full.dict, full.includes)
+    full_schema = merged_schema(mst, gp, validators=custom_validators.extend_validators)
+    full_schema = changes_to_general_schema(full_schema)
 
+    # number of generated test data records
     n = 25
 
+    data_dir = script_dir / 'random_gen_data'
+
+    annotated_validators = to_av(full_schema.dict, full_schema.includes)
     for i in range(n):
         link_dict = {}
         mapped = type_mapping(annotated_validators, link_dict=link_dict, vocab_dict=vocab_dict)
         clean_linktargets(mapped)
         clean_enum_includes(mapped)
         clean_none(mapped)
-        fn = make_file_name(n=n, i=i)
+        fn = make_file_name(n=n, i=i, data_dir=data_dir)
         with open(fn, 'w') as f_out:
             json.dump(with_header(mapped), f_out, ensure_ascii=False, indent=2)
+
+    print(f'Generated {n} test files in {data_dir}')
 
 if __name__ == "__main__":
     main()
