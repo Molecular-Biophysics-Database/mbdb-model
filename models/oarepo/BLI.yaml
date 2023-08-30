@@ -289,7 +289,7 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.6]
+        enum: [0.9.8]
         help.en: The schema version used to annotate the general parameters
         required: true
       record_information:
@@ -440,7 +440,6 @@ $defs:
       derived_parameters[]:
         ^help.en: List of the parameters (results) that were derived from analyzing
           measured raw data, and which steps were taken to obtain them
-        ^required: true
         use: '#/$defs/Derived_parameter'
         type: nested
   Entity_base:
@@ -1490,20 +1489,16 @@ $defs:
   OBTAINED_TYPES:
     type: keyword
     enum: [Measurement, Calculation, Assumption, Other]
-    required: true
   CONCENTRATION_UNITS:
     type: keyword
     enum: [M, mM, µM, nM, pM, fM, aM, g/L, mg/mL, µg/mL, ng/mL, mol/kg, mmol/kg, v/v
         %, w/w %, v/w %, w/v %, U/ml, '% saturated']
-    required: true
   HUMIDITY_UNITS:
     type: keyword
     enum: ['%', g/m^3, oz/y^3]
-    required: true
   PRESSURE_UNITS:
     type: keyword
     enum: [Pa, kPa, MPa, Bar, mBar, atm, Torr, PSI, mmHg, inchHg]
-    required: true
   TEMPERATURE_UNITS:
     type: keyword
     enum: [K, °C, °F]
@@ -1511,25 +1506,20 @@ $defs:
   TIME_UNITS:
     type: keyword
     enum: [nanoseconds, microseconds, milliseconds, seconds, minutes, hours, days]
-    required: true
   LENGTH_UNITS:
     type: keyword
     enum: [Å, nm, μm, mm, cm, m]
-    required: true
   MOLECULAR_WEIGHT_UNITS:
     type: keyword
     enum: [g/mol, Da, kDa, MDa]
-    required: true
   SUPPORTED_TECHNIQUES:
     type: keyword
     enum: [Bio-layer interferometry (BLI), Microscale thermophoresis/Temperature related
         intensity change (MST/TRIC), Surface plasmon resonance (SPR)]
-    required: true
   COMPANIES:
     type: keyword
     enum: [Bio-Rad, Bruker, Cytiva, Gatorbio, GE Healthcare, Nanotemper, Nicoya Life,
       Sartorius, Malvern Panalytical, Refeyn, TA Instruments]
-    required: true
   ConstituentPolymerPolymorphic:
     properties:
       polymer_type:

@@ -1,6 +1,6 @@
 general_parameters: include('General_parameters')
 method_specific_parameters:
-  schema_version: keyword(equals='0.9.2')
+  schema_version: keyword(equals='0.9.3')
   experiment_type: enum('Affinity','Concentration', 'Other')
   signal_type: enum('Initial intensity','TRIC/MST', 'Spectral shift')
   excitation_led_color: enum('RED (ex 605-645nm, em 660-720nm)', 'RED (ex 610-645nm,

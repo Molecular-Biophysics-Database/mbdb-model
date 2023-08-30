@@ -1,5 +1,5 @@
 General_parameters:
-  schema_version: keyword(equals='0.9.6')
+  schema_version: keyword(equals='0.9.8')
   record_information:
     title: str()
     keywords: list(keyword())
@@ -33,7 +33,7 @@ General_parameters:
   chemical_information:
     chemical_environments: list(nested_include('Chemical_environment'), min=1)
     entities_of_interest: list(nested_include('Entity'), min=1)
-  derived_parameters: list(nested_include('Derived_parameter'))
+  derived_parameters: list(nested_include('Derived_parameter'), required=False)
 ---
 Entity_base:
   id: link_target(name="entity")
@@ -59,7 +59,7 @@ Molecular_assembly:
   supplier: include('Supplier', required=False)
   storage: include('Storage', required=False)
   quality_controls: list(nested_include('Quality_control'), required=False)
-  preparation_protocol: list(include('Step'),required=False)
+  preparation_protocol: list(include('Step'), required=False)
   additional_specifications: list(str(), required=False)
 Assembly_component_base:
   name: str()
@@ -86,8 +86,8 @@ Polymer:
   quality_controls: list(nested_include('Quality_control'), required=False)
   additional_specifications: list(str(), required=False)
 Polymer_modifications:
-  synthesis: list(nested_include('Modification'),required=False)
-  biological_postprocessing: list(nested_include('Modification'),required=False)
+  synthesis: list(nested_include('Modification'), required=False)
+  biological_postprocessing: list(nested_include('Modification'), required=False)
   chemical: list(nested_include('Modification'), required=False)
 ---
 Chemical:
@@ -178,7 +178,7 @@ Lipid_assembly:
   number_of_mono_layers: int(min=-1)
   size: include('Size')
   components: list(nested_include('Assembly_component'))
-  additional_specifications: list(include('Step'),required=False)
+  additional_specifications: list(include('Step'), required=False)
 Complex_substance_of_industrial_production_origin:
   product: enum('Beer', 'Cell medium', 'Whey', 'Other')
   preparation_protocol: list(include('Step'))
@@ -344,23 +344,24 @@ Supplier:
 Coordinates:
   S-N(latitude): num(min=-90, max=90)
   W-E(longitude): num(min=-180, max=180)
-OBTAINED_TYPES: enum('Measurement', 'Calculation', 'Assumption', 'Other')
+OBTAINED_TYPES: enum('Measurement', 'Calculation', 'Assumption', 'Other', required=False)
 ---
 CONCENTRATION_UNITS: enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM', 'g/L', 'mg/mL',
   'µg/mL', 'ng/mL', 'mol/kg', 'mmol/kg', 'v/v %','w/w %', 'v/w %', 'w/v %', 'U/ml','%
-  saturated')
-FLOWRATE_UNITS: enum('mL/min','µl/s')
-HUMIDITY_UNITS: enum('%','g/m^3','oz/y^3')
-PRESSURE_UNITS: enum('Pa', 'kPa', 'MPa', 'Bar','mBar', 'atm', 'Torr', 'PSI', 'mmHg','inchHg')
+  saturated', required=False)
+FLOWRATE_UNITS: enum('mL/min','µl/s', required=False)
+HUMIDITY_UNITS: enum('%','g/m^3','oz/y^3', required=False)
+PRESSURE_UNITS: enum('Pa', 'kPa', 'MPa', 'Bar','mBar', 'atm', 'Torr', 'PSI', 'mmHg','inchHg',
+  required=False)
 TEMPERATURE_UNITS: enum('K', '°C', '°F')
 TIME_UNITS: enum('nanoseconds','microseconds', 'milliseconds', 'seconds','minutes',
-  'hours', 'days')
-ENERGY_UNITS: enum('kcal/mol','kJ/mol')
+  'hours', 'days', required=False)
+ENERGY_UNITS: enum('kcal/mol','kJ/mol', required=False)
 POWER_UNITS: enum('µcal/s','µJ/s', required=False)
-LENGTH_UNITS: enum('Å', 'nm', 'μm', 'mm', 'cm', 'm')
-MOLECULAR_WEIGHT_UNITS: enum('g/mol', 'Da', 'kDa', 'MDa')
+LENGTH_UNITS: enum('Å', 'nm', 'μm', 'mm', 'cm', 'm', required=False)
+MOLECULAR_WEIGHT_UNITS: enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
 ---
 SUPPORTED_TECHNIQUES: enum('Bio-layer interferometry (BLI)', 'Microscale thermophoresis/Temperature
-  related intensity change (MST/TRIC)', 'Surface plasmon resonance (SPR)')
+  related intensity change (MST/TRIC)', 'Surface plasmon resonance (SPR)', required=False)
 COMPANIES: enum('Bio-Rad', 'Bruker', 'Cytiva', 'Gatorbio', 'GE Healthcare', 'Nanotemper',
-  'Nicoya Life', 'Sartorius', 'Malvern Panalytical', 'Refeyn', 'TA Instruments', )
+  'Nicoya Life', 'Sartorius', 'Malvern Panalytical', 'Refeyn', 'TA Instruments', required=False)
