@@ -344,7 +344,7 @@ Supplier:
 Coordinates:
   S-N(latitude): num(min=-90, max=90)
   W-E(longitude): num(min=-180, max=180)
-OBTAINED_TYPES: enum('Measurement', 'Calculation', 'Assumption', 'Other', required=False)
+OBTAINED_TYPES: enum('Measurement', 'Calculation', 'Assumption', 'Other')
 ---
 CONCENTRATION_UNITS: enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM', 'g/L', 'mg/mL',
   'µg/mL', 'ng/mL', 'mol/kg', 'mmol/kg', 'v/v %','w/w %', 'v/w %', 'w/v %', 'U/ml','%

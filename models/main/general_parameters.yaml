@@ -1847,7 +1847,7 @@ Coordinates:
         value           : num(min=-180, max=180)
 
 OBTAINED_TYPES          : enum('Measurement', 'Calculation', 'Assumption',
-                               'Other', required=False)
+                               'Other')
 ---
 # Unit definitions
 CONCENTRATION_UNITS     : enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM',

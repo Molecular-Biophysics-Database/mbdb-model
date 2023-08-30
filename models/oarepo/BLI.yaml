@@ -1490,6 +1490,7 @@ $defs:
   OBTAINED_TYPES:
     type: keyword
     enum: [Measurement, Calculation, Assumption, Other]
+    required: true
   CONCENTRATION_UNITS:
     type: keyword
     enum: [M, mM, µM, nM, pM, fM, aM, g/L, mg/mL, µg/mL, ng/mL, mol/kg, mmol/kg, v/v

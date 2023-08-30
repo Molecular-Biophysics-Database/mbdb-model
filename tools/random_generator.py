@@ -452,6 +452,9 @@ def make_file_name(n, i):
     width = int(np.floor(np.log10(n)) + 1)
     return f'{str(i + 1).zfill(width)}_testfile.json'
 
+def with_header(mapped_dict):
+    return {"metadata": mapped_dict}
+
 def main():
 
     vocabs = glob('../vocabularies/generated_vocabularies/*.yaml')
@@ -473,7 +476,7 @@ def main():
         clean_none(mapped)
         fn = make_file_name(n=n, i=i)
         with open(fn, 'w') as f_out:
-            json.dump(mapped, f_out, ensure_ascii=False, indent=2)
+            json.dump(with_header(mapped), f_out, ensure_ascii=False, indent=2)
 
 if __name__ == "__main__":
     main()
