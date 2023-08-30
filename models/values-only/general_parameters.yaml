@@ -1,5 +1,5 @@
 General_parameters:
-  schema_version: keyword(equals='0.9.7')
+  schema_version: keyword(equals='0.9.8')
   record_information:
     title: str()
     keywords: list(keyword())
@@ -135,7 +135,7 @@ Complex_substance_of_biological_origin: choose(include('Complex_substance_of_bio
   type_field='derived_from', Body_fluid=include('Body_fluid'), Cell_fraction=include('Cell_fraction'),
   Virion=include('Virion'))
 Complex_substance_of_biological_origin_base:
-  derived_from: enum('Body fluid', 'Cell fraction', 'Virion', required=False)
+  derived_from: enum('Body fluid', 'Cell fraction', 'Virion')
   organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]')
   preparation_protocol: list(include('Step'))
   storage: include('Storage', required=False)

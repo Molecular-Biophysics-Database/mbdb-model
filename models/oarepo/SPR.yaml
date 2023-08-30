@@ -276,7 +276,7 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.7]
+        enum: [0.9.8]
         help.en: The schema version used to annotate the general parameters
         required: true
       record_information:
@@ -826,6 +826,7 @@ $defs:
         type: keyword
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
+        required: true
       organism:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
@@ -1865,6 +1866,7 @@ $defs:
         type: keyword
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
+        required: true
       organism:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
@@ -1926,6 +1928,7 @@ $defs:
         type: keyword
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
+        required: true
       organism:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
@@ -1989,6 +1992,7 @@ $defs:
         type: keyword
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
+        required: true
       organism:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
@@ -2413,6 +2417,7 @@ $defs:
         type: keyword
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
+        required: true
       organism:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
@@ -2478,6 +2483,7 @@ $defs:
         type: keyword
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
+        required: true
       organism:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
@@ -2545,6 +2551,7 @@ $defs:
         type: keyword
         enum: [Body fluid, Cell fraction, Virion]
         help.en: The biological substance the complex substance is derived from
+        required: true
       organism:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
