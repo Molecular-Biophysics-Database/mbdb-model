@@ -93,7 +93,7 @@ Array of values:
      within map can be
 
  **Note that the minimum number of allowed elements if the array is active is
-  implicitly assumed to be 1 unless otherwise stated**   
+  implicitly assumed to be 1 unless otherwise stated**
 
 Reuse value (usually a map or enum) in another map:
   * `include`: a map (object) or enumerator to be reused (in the sense of
@@ -124,15 +124,14 @@ and introduces data structures that are more difficult to validate and test.
 # Descriptions and searchability are omitted for clarity
 
 Type_1:
-    item_from_1           : str()
-    another_item_from_1   : int()
+    specific_to_1         : str()
+    also_specific_to_1    : enum('foo', 'bar')
 
 Type_2:
-    item_from_1           : int()
-    another_item_from_1   : str()
+    specific_to_2         : int()
 
 Example_base:
-    # These items are present independent of which types is chosen
+    # items placed here are present independent of which type is chosen
     shared_item           : int()
     discriminator         : enum('Type 1', 'Type 2')
 
@@ -140,7 +139,7 @@ Example_base:
 Example                   : choose(include('Example_base'),
                                    type_field='discriminator',
                                    Type_1=include('Type_1'),
-                                   Type_2=include('Type_2')  )
+                                   Type_2=include('Type_2'))
 
 # include Example, not Example_base in cases where an Example is needed
 Use_case: include('Example')
@@ -154,12 +153,36 @@ Reference item
   * `link`: string with name of the `link_target` that should be linked to
      (analogous to a foreign key constrains in a relational data model).
 
+```yaml
+# Description and searchablity are omitted for clarity
+
+# All the params
+allowed_params: list(include("Parameter")
+
+obj_using_linking_to_param:
+    something: int()
+    # here the reference to a param is used
+    param: link(target='parameter')
+---
+Parameter:
+    #link targets are single fields that serves as unique id of the object
+    id: link_target(name="parameter")
+    # unless fields are specified, a name should also be included
+    name: str()
+    value_1: str()
+    value_2: int()
+
+```
+
+
 Vocabulary item
- * `vocabulary`: string with name of the vocabulary the to use as well as a list of which fields from that should be
+ * `vocabulary`: string with name of the vocabulary the to use as well as a list
+    of which fields from that should be
     included in the record
 
 ```yaml
 # Description and searchablity are omitted for clarity
+
 expression_organism: vocabulary(vocabulary='organisms',
                                 fields='[id,title,props.rank]',
                                 required=False)
@@ -187,7 +210,7 @@ map (object) and included (see below) with and marked by the `required=False`
 flag.
 
 **Note! For enums** that are being used as includes, they always have to be set
-to `required=False`! This is do to a quirk in how the oarepo schema is turned
+to `required=False`! This is due to a quirk in how the oarepo schema is turned
 into the (records) json schema that results in otherwise the overwrites the
 include's `required=False`.
 
