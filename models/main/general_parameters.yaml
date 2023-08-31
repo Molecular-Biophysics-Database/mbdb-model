@@ -12,6 +12,7 @@ General_parameters:
             description : str(equals='Short descriptive title of the record',
                               required=False)
             value       : str()
+            searchable  : True
 
         keywords:
             description : str(equals='List of keywords describing this
@@ -20,6 +21,7 @@ General_parameters:
                                       agonist, antagonist, HIV, etc.',
                               required=False)
             value       : list(keyword())
+            searchable  : True
 
         measurement_group_id:
             description : str(equals='Unique and persistent identifier which can
@@ -318,7 +320,6 @@ Entity_constituent:
     concentration:
         description     : str(equals='Concentration of the entity',
                               required=False)
-        searchable      : True
         value           : include('Concentration')
 
 ---
@@ -420,7 +421,6 @@ Assembly_component_base:
 Assembly_component:
     description     : str(equals='Details about the assembly component',
                                       required=False)
-    searchable      : True
     value           : choose(include('Assembly_component_base'),
                              Polymer=include('Polymer'),
                              Chemical=include('Chemical'))
@@ -441,7 +441,7 @@ Polymer:
                                'polypeptide(L)',
                                'polyribonucleotide',
                                'Other')
-
+        searchable      : True
 # make annoying popup if users do not provide a sequence
     sequence:
         description     : str(equals='Primary sequence of the polymer, using
@@ -663,7 +663,6 @@ Chemical_environment:
     ionic_strength:
         description     : str(equals='The ionic strength of the chemical
                                       environment', required=False)
-        searchable      : True
         value           : include('Ionic_strength', required=False)
 
     dynamic_viscosity:
@@ -719,7 +718,6 @@ Constituent_base:
                                       related to the collected sample or
                                       absolute concentration of the
                                       constituent', required=False)
-        searchable      : True
         value           : include('Concentration')
 
 
@@ -743,7 +741,6 @@ Chemical_constituent_base:
                                       its relative concentration related to the
                                       collected sample or absolute concentration
                                       of the constituent', required=False)
-        searchable      : True
         value           : include('Concentration')
 
 
@@ -782,7 +779,6 @@ Chemically_defined_constituent_base:
                                       related to the collected sample or
                                       absolute concentration of the
                                       constituent', required=False)
-        searchable      : True
         value           : include('Concentration')
 
 
@@ -792,7 +788,6 @@ Chemically_defined_constituent:
                                       constituent i.e. of type Polymer,
                                       Chemical, and Molecular assembly',
                               required=False)
-    searchable          : True
     value               : choose(include('Chemically_defined_constituent_base'),
                                  Polymer=include('Polymer'),
                                  Chemical=include('Chemical'),
@@ -810,7 +805,6 @@ Constituent:
                                       biological, environmental, chemical, or
                                       industrial production origin',
                               required=False)
-    searchable          : True
     value               : choose(include('Constituent_base'),
                                  Polymer=include('Polymer'),
                                  Chemical=include('Chemical'),
@@ -825,7 +819,6 @@ Complex_substance_of_biological_origin:
     description         : str(equals='Information about the biological substance
                                       the complex substance is derived from',
                               required=False)
-    searchable          : True
     value               : choose(include('Complex_substance_of_biological_origin_base'),
                                  type_field='derived_from',
                                  Body_fluid=include('Body_fluid'),
@@ -1161,6 +1154,7 @@ Project:
                                       to show a relation to other data within
                                       the MBDB', required=False)
         value           : keyword(required=False)
+        searchable      : True
 
     title:
         description     : str(equals='Short title of the MBDB project',
@@ -1437,7 +1431,6 @@ Physical_conditions:
                                       controlled (e.g. autosampler held at 15
                                       degrees, stored on ice, room
                                       temperature)', required=False)
-        searchable      : True
         value           : include('Temperature', required=False)
 
     pressure:
@@ -1446,7 +1439,6 @@ Physical_conditions:
                                       whether the pressure was actively being
                                       controlled, if applicable',
                               required=False)
-        searchable      : True
         value           : include('Pressure', required=False)
 
     humidity:
@@ -1455,7 +1447,6 @@ Physical_conditions:
                                       whether the humidity was actively being
                                       controlled, if applicable',
                              required=False)
-        searchable      : True
         value           : include('Humidity', required=False)
 
     atmosphere:
@@ -1464,7 +1455,6 @@ Physical_conditions:
                                       whether the atmosphere was actively being
                                       controlled, if applicable',
                               required=False)
-        searchable      : True
         value           : include('Atmosphere', required=False)
 
 
@@ -1690,7 +1680,6 @@ Ionic_strength:
         description     : str(equals='The numerical value of the ionic strength
                                       (https://en.wikipedia.org/wiki/Ionic_strength)',
                               required=False)
-        searchable      : True
         value           : num(min=0)
 
     unit:
