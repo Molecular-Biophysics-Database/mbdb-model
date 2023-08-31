@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import os
-
-import yamale.schema
-
+import click
 import custom_validators
 import json
 import numpy as np
@@ -10,6 +8,7 @@ import random
 import string
 import uuid
 import ruamel.yaml
+import yamale.schema
 import yamale.validators as validators
 from copy import deepcopy
 from pathlib import Path
@@ -449,16 +448,6 @@ def get_vocabulary_ids(vocabulary_fixture_path):
         entries = ruamel.yaml.safe_load_all(f)
         return [vocab["id"] for vocab in entries]
 
-def make_file_name(n, i, data_dir: Path):
-    if not data_dir.exists():
-        os.mkdir(data_dir)
-
-    width = int(np.floor(np.log10(n)) + 1)
-    return data_dir / f'{str(i + 1).zfill(width)}_testfile.json'
-
-def with_header(mapped_dict):
-    return {"metadata": mapped_dict}
-
 def changes_to_general_schema(schema: yamale.schema.Schema):
     """changes requirement of fields such that consistent test data can be generated"""
     # derived parameters optional, however as a derived parameter is also optional in later if it's not set to be
@@ -488,11 +477,43 @@ def changes_to_general_schema(schema: yamale.schema.Schema):
         schema.includes[con]._schema.is_required = True
     return schema
 
-def main():
-    script_dir = Path(__file__).parent
-    vocab_dir = script_dir.parent / "vocabularies"
+def make_file_name(n, i, data_dir):
+    data_dir = Path(data_dir)
+    if not data_dir.exists():
+        os.mkdir(data_dir)
 
+    width = int(np.floor(np.log10(n)) + 1)
+    return data_dir / f'{str(i + 1).zfill(width)}_testfile.json'
+
+def with_header(mapped_dict):
+    return {"metadata": mapped_dict}
+
+
+@click.command()
+@click.argument(
+    "input_file",
+    default=Path(__file__).parent.parent / "models" / "values-only" / "MST.yaml",
+    required=True,
+)
+@click.option(
+    "--n_outputs",
+    default=25,
+    required=False,
+)
+@click.option(
+    "--output_folder",
+    default=Path(__file__).parent / "random_generated_data",
+    required=False,
+)
+@click.option(
+    "--include_schema",
+    default=Path(__file__).parent.parent / "models" / "values-only" / "general_parameters.yaml",
+    required=False,
+)
+def main(input_file, n_outputs, output_folder, include_schema):
+    vocab_dir = Path(__file__).parent.parent / "vocabularies"
     vocabs = glob(f'{vocab_dir}/generated_vocabularies/*.yaml')
+
     if not vocabs:
         print("No vocabularies detected, generating them")
         os.system( vocab_dir / "generate_vocabularies.py")
@@ -500,28 +521,22 @@ def main():
 
     vocab_dict = {Path(vocab).stem: get_vocabulary_ids(vocab) for vocab in vocabs}
 
-    mst = '../models/values-only/MST.yaml'
-    gp = '../models/values-only/general_parameters.yaml'
-    full_schema = merged_schema(mst, gp, validators=custom_validators.extend_validators)
+    inputs = (input_file, include_schema)
+    full_schema = merged_schema(*inputs, validators=custom_validators.extend_validators)
     full_schema = changes_to_general_schema(full_schema)
 
-    # number of generated test data records
-    n = 25
-
-    data_dir = script_dir / 'random_generated_data'
-
     annotated_validators = to_av(full_schema.dict, full_schema.includes)
-    for i in range(n):
+    for i in range(n_outputs):
         link_dict = {}
         mapped = type_mapping(annotated_validators, link_dict=link_dict, vocab_dict=vocab_dict)
         clean_linktargets(mapped)
         clean_enum_includes(mapped)
         clean_none(mapped)
-        fn = make_file_name(n=n, i=i, data_dir=data_dir)
+        fn = make_file_name(n=n_outputs, i=i, data_dir=output_folder)
         with open(fn, 'w') as f_out:
             json.dump(with_header(mapped), f_out, ensure_ascii=False, indent=2)
 
-    print(f'Generated {n} test files in {data_dir}')
+    print(f'Generated {n_outputs} test files in {output_folder}')
 
 if __name__ == "__main__":
     main()
