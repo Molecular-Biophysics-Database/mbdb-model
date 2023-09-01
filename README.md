@@ -31,12 +31,19 @@ pipenv install --dev
 Remember to activate the virtual environment:
 
 ```bash
-pyenv shell
+pipenv shell 
 ```
+
+Close the shell either by issuing the following command: 
+
+```bash
+exit 
+```
+or by pressing <kbd>Ctrl</kbd> + <kbd>D</kbd> 
 
 #### Using requirements.txt
 
-Alternatively it can be installed using the requirements.txt
+Alternatively, dependencies it can be installed using the requirements.txt with or without virtual environment
 
 ```bash
 pip install -r requirements.txt
