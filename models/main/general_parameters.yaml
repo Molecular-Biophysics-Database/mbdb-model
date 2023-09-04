@@ -11,8 +11,9 @@ General_parameters:
         title:
             description : str(equals='Short descriptive title of the record',
                               required=False)
-            value       : str()
             searchable  : True
+            value       : str()
+
 
         keywords:
             description : str(equals='List of keywords describing this
@@ -20,8 +21,8 @@ General_parameters:
                                       epitope, ligand optimization, SARS-CoV-2,
                                       agonist, antagonist, HIV, etc.',
                               required=False)
+            searchable  : True                              
             value       : list(keyword())
-            searchable  : True
 
         measurement_group_id:
             description : str(equals='Unique and persistent identifier which can
@@ -44,7 +45,6 @@ General_parameters:
                                       projects that would be expected to
                                       get many MBDB records associated with it
                                       over time', required=False)
-            searchable  : True
             value       : include('Project', required=False)
 
 
@@ -137,7 +137,6 @@ General_parameters:
         depositor:
             description : str(equals='The person who made the deposition to
                                       MBDB', required=False)
-            searchable  : True
             value       : include('Person')
 
         principal_contact:
@@ -146,7 +145,6 @@ General_parameters:
                                       typically be the principle investigator
                                       group leader, or laboratory head',
                               required=False)
-            searchable  : True
             value       : include('Person')
 
         contributors:
@@ -154,7 +152,6 @@ General_parameters:
                                       generating the deposited data, metadata,
                                       derived parameters, or the deposition
                                       itself', required=False)
-            searchable  : True
             value       : list(nested_include('Person'), required=False)
 
 
@@ -162,13 +159,11 @@ General_parameters:
         description     : str(equals='Information about if data in this record
                                       is associated with published literature,
                                       if applicable', required=False)
-        searchable      : True
         value           : include('Associated_publications', required=False)
 
     funding_reference:
         description     : str(equals='List of information about the grants that
                                       supported depositors', required=False)
-        searchable      : True
         value           : list(vocabulary(vocabulary='grants',
                                           fields='[id,title,props.funder_name]'),
                                           required=False)
@@ -298,7 +293,6 @@ Entity:
     description     : str(equals='Description of the entity
                                   which varies depending on the type of
                                   entity', required=False)
-    searchable      : True
     value           : choose(include('Entity_base'),
                              Polymer=include('Polymer'),
                              Chemical=include('Chemical'),
@@ -310,7 +304,7 @@ Entity:
                              )
 Entity_constituent:
     entity:
-        description     : str(equals='Name (ids) of the entity (from the
+        description     : str(equals='Name (id) of the entity (from the
                                       entities of interest defined in the
                                       general parameters)', required=False)
         searchable      : True
@@ -345,7 +339,6 @@ Molecular_assembly:
                                       composed of (e.g. Hemoglobin alpha) and
                                       how many copies of each component
                                       were present', required=False)
-        searchable      : True
         value           : list(nested_include('Assembly_component'), min=1)
 
     molecular_weight:
@@ -359,7 +352,6 @@ Molecular_assembly:
                                       made to the molecular assembly
                                       through chemical, biochemical, or physical
                                       means', required=False)
-        searchable      : True
         value           : list(nested_include('Modification'), required=False)
 
     supplier:
@@ -415,6 +407,7 @@ Assembly_component_base:
         description     : str(equals='Number of molecules of the component
                                       within the assembly, -1 if unknown',
                               required=False)
+        searchable      : True
         value           : num(min=-1)
 
 
@@ -432,6 +425,7 @@ Polymer:
     polymer_type:
         description     : str(equals='The type of polymer (e.g.
                                       polypeptide(L))')
+        searchable      : True
         value           : enum('cyclic-pseudo-peptide',
                                'peptide nucleic acid',
                                'polydeoxyribonucleotide',
@@ -441,7 +435,6 @@ Polymer:
                                'polypeptide(L)',
                                'polyribonucleotide',
                                'Other')
-        searchable      : True
 # make annoying popup if users do not provide a sequence
     sequence:
         description     : str(equals='Primary sequence of the polymer, using
@@ -474,6 +467,7 @@ Polymer:
                                       purification tags, etc. (A53T,
                                       C-terminal GFP, N-terminal 6xHis-tag)',
                               required=False)
+        searchable      : True
         value           : str(required=False)
 
     organism:
@@ -497,6 +491,7 @@ Polymer:
     expression_source_type:
         description     : str(equals='How the polymer was produced',
                               required=False)
+        searchable      : True
         value           : enum('Natively', 'Recombinantly', 'Synthetically')
 
     expression_organism:
@@ -521,6 +516,7 @@ Polymer:
                                       including temperature and
                                       duration', required=False)
         value           : include('Storage', required=False)
+ 
     quality_controls:
         description     : str(equals='Quality controls performed e.g. purity,
                                       aggregation state etc. ', required=False)
@@ -529,9 +525,9 @@ Polymer:
 
 
     additional_specifications:
-            description : str(equals='Additional information about the polymer
+        description     : str(equals='Additional information about the polymer
                                       can be specified here', required=False)
-            value       : list(str(), required=False)
+        value           : list(str(), required=False)
 
 
 Polymer_modifications:
@@ -540,7 +536,6 @@ Polymer_modifications:
                                       acids) of the polymer made during
                                       synthesis (e.g. translation) of the
                                       polymer', required=False)
-        searchable      : True
         value           : list(nested_include('Modification'), required=False)
 
     biological_postprocessing:
@@ -549,9 +544,7 @@ Polymer_modifications:
                                       modifications, DNA methylation) by the
                                       organism where synthesis occurred
                                       (e.g. glycosylation)', required=False)
-        searchable      : True
         value           : list(nested_include('Modification'), required=False)
-
 
     chemical:
         description     : str(equals='Modifications of the polymer introduced by
@@ -560,7 +553,6 @@ Polymer_modifications:
                                       cysteine iodoacetamide labeling,
                                       deglycosylation, covalent fluorescent
                                       labeling)', required=False)
-        searchable      : True
         value           : list(nested_include('Modification'), required=False)
 
 
@@ -586,6 +578,7 @@ Chemical:
                                       external source; options of sources are
                                       CAS number, Pubchem Compound ID, and
                                       Pubchem Substance ID', required=False)
+        searchable      : True
         value           : list(chemical_id(), required=False)
 
     isotopic_labeling:
@@ -649,7 +642,6 @@ Chemical_environment:
                                       salts, surfactants, crowding agents,
                                       serum, etc.)',
                               required=False)
-        searchable      : True
         value           : list(nested_include('Constituent'), required=False)
 
     pH:
@@ -750,7 +742,6 @@ Chemical_constituent:
                                       constituent i.e. of type Polymer,
                                       Chemical, and Molecular assembly',
                               required=False)
-    searchable          : True
     value               : choose(include('Chemical_constituent_base'),
                                  Chemical=include('Chemical'))
 
@@ -1001,7 +992,6 @@ Complex_substance_of_chemical_origin:
         description     : str(equals='The chemical origin where the
                                       complex substance was derived from',
                               required=False)
-        searchable      : True
         value           : include('Lipid_assembly')
 
     preparation_protocol:
@@ -1046,7 +1036,6 @@ Lipid_assembly:
 
     components:
         description     : str(equals='The components of the lipid assembly')
-        searchable      : True
         value           : list(nested_include('Assembly_component'))
 
     additional_specifications:
@@ -1125,6 +1114,7 @@ Publication:
     title:
         description     : str(equals='The title of the publication',
                               required=False)
+        searchable      : True
         value           : str(required=False)
 
     publication_year:
@@ -1855,7 +1845,8 @@ PRESSURE_UNITS          : enum('Pa', 'kPa', 'MPa',
                                'mmHg','inchHg', required=False)
 TEMPERATURE_UNITS       : enum('K', '°C', '°F')
 TIME_UNITS              : enum('nanoseconds','microseconds', 'milliseconds',
-                               'seconds','minutes', 'hours', 'days', required=False)
+                               'seconds','minutes', 'hours', 'days', 
+                               required=False)
 ENERGY_UNITS            : enum('kcal/mol','kJ/mol', required=False)
 POWER_UNITS             : enum('µcal/s','µJ/s', required=False)
 LENGTH_UNITS            : enum('Å', 'nm', 'μm', 'mm', 'cm', 'm', required=False)
@@ -1867,7 +1858,8 @@ MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
 SUPPORTED_TECHNIQUES    : enum('Bio-layer interferometry (BLI)',
                                'Microscale thermophoresis/Temperature related
                                 intensity change (MST/TRIC)',
-                               'Surface plasmon resonance (SPR)', required=False)
+                               'Surface plasmon resonance (SPR)', 
+                               required=False)
 
 # Likely very incomplete, more research is needed
 COMPANIES               : enum('Bio-Rad',
