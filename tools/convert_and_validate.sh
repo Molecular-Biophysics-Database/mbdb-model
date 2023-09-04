@@ -5,7 +5,8 @@
 --output-folder ../models/values-only/
 
 # Unroll schemas
-./unroll.py ../models/values-only/*.yaml \
+./unroll.py \
+--schema-files ../models/values-only/*.yaml \
 --output-folder ../models/unrolled/ \
 --includes ../models/values-only/general_parameters.yaml
 

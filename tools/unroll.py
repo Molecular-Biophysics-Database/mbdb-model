@@ -9,39 +9,16 @@ import yamale
 import yamale.validators.validators as validators
 from yamale.readers import parse_yaml
 
-from custom_validators import extend_validators
-
-
-def _mk_arg_parser() -> ArgumentParser:
-    """Command line interface"""
-    parser = ArgumentParser(description="Unrolling the mbdb values-only yamale schemas")
-    parser.add_argument(
-        "schema_files",
-        nargs="+",
-        type=Path,
-        help="Input Yamale schema files without descriptions",
-    )
-    parser.add_argument(
-        "--output-folder",
-        type=Path,
-        help="Output folder where the unrolled structures will be stored",
-    )
-    parser.add_argument(
-        "--includes",
-        type=Path,
-        nargs="+",
-        help="Additional Yamale schema input files without descriptions to be used as includes",
-    )
-    return parser
+import custom_validators
 
 
 class YamaleTree:
     """Class for building and storing unrolled yaml tree"""
 
     def __init__(self, schema_file: Path):
-        self.schema = yamale.make_schema(schema_file, validators=extend_validators)
+        self.schema = yamale.make_schema(schema_file, validators=custom_validators.extend_validators)
         self.includes = self.schema.includes
-        self.tree = deepcopy(self.schema.dict)
+        self.tree = deepcopy(self.schema._schema)
 
     def add_external_includes(self, *args: Path) -> None:
         """adds includes from external schemas"""
@@ -121,18 +98,36 @@ class YamaleTree:
                 yield from self._walk_tree(value, level=level + 1)
 
             # make sure all elements in a yamale list or any object is extracted
-            elif isinstance(value, validators.List) or isinstance(
-                value, validators.Any
-            ):
+            elif isinstance(value, validators.List):
                 for arg in value.args:
                     if isinstance(arg, dict):
                         yield from self._walk_tree(arg, level=level + 1)
 
     def _get_include(self, value, att="dict"):
         """Helper function to extract the content of a yamale include"""
-        if not att == "dict":
+        if att == "dict":
+            return self.includes[value.include_name].dict
+        elif att == "_schema":
             return self.includes[value.include_name]._schema
-        return self.includes[value.include_name].dict
+        elif att == "choose":
+            return self._from_choose(value)
+        else:
+            return
+
+    def _from_choose(self, value, tree=None):
+        if tree is None:
+            tree = {}
+        value = yamale.make_schema(content=f"tmp: {value}",
+                                   validators=custom_validators.extend_validators)
+        value = value.dict['tmp']
+        tree.update(deepcopy(self.includes[value.base_schema.include_name].dict))
+        for v in value.detailed_schemas.values():
+            inc = self.includes[v.include_name].dict
+            if not isinstance(inc, str):
+                tree.update(inc)
+            else:
+                self._from_choose(inc, tree)
+        return tree
 
     def _construct_tree(self, tree):
         """
@@ -149,25 +144,26 @@ class YamaleTree:
 
             elif isinstance(value, validators.Include):
                 ## debugging
-                # print(f'direct: {key}')
+                #print(f'direct: {key}')
                 include = self._get_include(value)
                 if isinstance(include, str):
                     include = self._get_include(value, "_schema")
                 tree.update({key: include})
 
-            elif isinstance(value, validators.List) or isinstance(
-                value, validators.Any
-            ):
+            elif isinstance(value, validators.List):
                 includes = []
                 value_class = value.__class__
                 for arg in value.args:
                     include = arg
                     if isinstance(arg, validators.Include):
                         ## debugging
-                        # print(f'list: {key}')
+                        #print(f'list: {key}')
                         include = self._get_include(arg)
                     elif isinstance(arg, dict):
                         self._construct_tree(arg)
+                    # choose validator ends up being of type str
+                    elif isinstance(arg, str):
+                        include = self._get_include(arg, "choose")
                     includes.append(include)
                 if includes:
                     tree.update({key: value_class(*includes)})
@@ -179,6 +175,32 @@ def new_filename(file):
     parent_folder = file.parent
     file_name = file.name.replace(".yaml", ".txt")
     return parent_folder, file_name
+
+
+def _mk_arg_parser() -> ArgumentParser:
+    """Command line interface"""
+    parser = ArgumentParser(description="Unrolling the mbdb values-only yamale schemas")
+    parser.add_argument(
+        "--schema-files",
+        nargs="+",
+        type=Path,
+        help="Input Yamale schema files without descriptions",
+        default=[Path(__file__).parent.parent / "models" / "values-only" / "MST.yaml"],
+    )
+    parser.add_argument(
+        "--output-folder",
+        type=Path,
+        help="Output folder where the unrolled structures will be stored",
+        default=Path(__file__).parent.parent / "models" / "unrolled",
+    )
+    parser.add_argument(
+        "--includes",
+        nargs="+",
+        type=Path,
+        help="Additional Yamale schema input files without descriptions to be used as includes",
+        default=[Path(__file__).parent.parent / "models" / "values-only" / "general_parameters.yaml"],
+    )
+    return parser
 
 
 def main():
