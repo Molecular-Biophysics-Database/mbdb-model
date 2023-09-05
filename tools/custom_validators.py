@@ -35,7 +35,7 @@ class LinkTarget(String):
     def __init__(self, *args, name=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.name = name
-        
+
 
 class Link(Validator):
     """
@@ -72,6 +72,9 @@ class Link(Validator):
             return False
         if "$ref" not in value:
             return False
+        for field in [f for f in self.fields if f != "id"]:
+            if field not in value:
+                return False
         return True
 
 
@@ -81,6 +84,7 @@ class Keyword(String):
 
 class Fulltext(String):
     tag = "fulltext"
+
 
 class MacroMolecule_id(Keyword):
     tag = "macromolecule_id"
@@ -118,7 +122,6 @@ class Publication_id(Keyword):
 
 class Choose(Validator):
     tag = "choose"
-    # put into translation yamale2model
 
     def __init__(self, base_schema, *args, type_field="type", **kwargs):
         super().__init__(*args)
@@ -170,6 +173,8 @@ class Uuid(Validator):
     tag = "uuid"
 
     def _is_valid(self, value):
+        if not isinstance(value, str):
+            return False
         try:
             UUID(value)
             return True
@@ -206,7 +211,7 @@ class Vocabulary(Validator):
     tag = "vocabulary"
 
     def __init__(self, *args, fields=None, vocabulary=None, **kwargs):
-        super().__init__(*args, fields=fields, **kwargs)
+        super().__init__(*args, **kwargs)
         self.vocabulary = vocabulary
         self.fields = fields
 
