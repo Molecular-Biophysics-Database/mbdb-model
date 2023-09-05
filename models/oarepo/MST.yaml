@@ -1,4 +1,4 @@
-profiles: [record, files]
+profiles: [record, files, draft]
 record:
   use: [invenio]
   module:
@@ -107,6 +107,7 @@ record:
           deposited (e.g. exported to xlsx)
         ^required: true
         use: '#/$defs/Processing_step'
+  draft: {}
   mapping:
     template:
       settings:
@@ -116,7 +117,7 @@ plugins:
   builder:
     disable: [script_sample_data]
   packages: [oarepo-model-builder-files==4.*, oarepo-model-builder-cf==4.*, oarepo-model-builder-vocabularies==4.*,
-    oarepo-model-builder-relations==4.*, oarepo-model-builder-polymorphic==1.*]
+    oarepo-model-builder-relations==4.*, oarepo-model-builder-polymorphic==1.*, oarepo-model-builder-drafts]
 $defs:
   MST_data_analysis:
     properties:
