@@ -573,6 +573,7 @@ class Model:
                 "properties": {"metadata": self.model.to_json()},
                 "files": self.files_meta,
                 "draft": {},
+                "draft-files": {},
                 "mapping": {
                     "template": {
                         "settings": {
@@ -591,6 +592,7 @@ class Model:
                     "oarepo-model-builder-relations==4.*",
                     "oarepo-model-builder-polymorphic==1.*",
                     "oarepo-model-builder-drafts",
+                    "oarepo-model-builder-drafts-files",
                 ],
             },
             "$defs": includes,
