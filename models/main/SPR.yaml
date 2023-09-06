@@ -9,10 +9,10 @@ general_parameters:
 
 method_specific_parameters:
     schema_version:
-        description     : str(equals='The schema version used to annotate the 
-                                      SPR method specific parameters', 
-                                      required=False)       
-        value           : keyword(equals='0.9.0')
+        description     : str(equals='The schema version used to annotate the
+                                      SPR method specific parameters',
+                                      required=False)
+        value           : keyword(equals='0.9.1')
 
     experiment_type:
         description     : str(equals='Which type of parameter is sought with
@@ -28,26 +28,26 @@ method_specific_parameters:
         description     : str(equals='Information about each of the positions
                                       where data was collected including
                                       reference positions', required=False)
-        value           : list(include('Measurement_position'), min=1)
+        value           : list(include('Measurement_position'))
 
 
     measurement_protocol:
         description     : str(equals='List of the steps in the measurement
                                       protocol', required=False)
-        value           : list(include('Measurement_step'), min=1)
+        value           : list(include('Measurement_step'))
 
     measurements:
         description     : str(equals='List of measurements where the complete
                                       output from a single sensor going through
                                       the measurement protocol is considered a
                                       separate measurement', required=False)
-        value           : list(include('Measurement'), min=1)
+        value           : list(include('Measurement'))
 
     data_analysis:
         description     : str(equals='Details of how the data was processed and
                                       model in order to derive parameters
                                       from it', required=False)
-        value           : list(include('SPR_data_analysis'), min=1)
+        value           : list(include('SPR_data_analysis'), required=False)
 
 # End of schema
 
@@ -59,7 +59,15 @@ SPR_data_analysis:
                                       defined in the general parameters',
                                       required=False)
 
-        value           : link(target='derived-parameter')
+        value           : link(target='derived-parameter', required=False)
+
+
+    measurements:
+        description     : str(equals='List of measurement links that was
+                                      analyzed together', required=False)
+
+        value           : list(link(target='spr-measurement'), required=False)
+
 
     data_processing_steps:
         description     : str(equals='Describe the steps in the data analysis
@@ -74,9 +82,24 @@ SPR_data_analysis:
         description     : str(equals='The details of how data fitting of the
                                       data to obtain the derived parameter was
                                       performed', required=False)
-        value           : include('Data_fitting')
+        value           : include('Data_fitting', required=False)
 
 Measurement:
+    id:
+        description     : str(equals='Unique ID to be used as a link target',
+                              required=False)
+        value           : link_target(name='spr-measurement')
+
+    name:
+        description     : str(equals='Name (id) of the measurement which must be
+                                      unique within a record (i.e. triplicates
+                                      must be named individually in the raw data
+                                      file). The name must allow location of the
+                                      measurement data within the raw data file
+                                      as well as processed data files if these
+                                      are present', required=False)
+        value           : str()
+
     measurement_position:
         description     : str(equals='Name (id) of the measurement position',
                                       required=False)
