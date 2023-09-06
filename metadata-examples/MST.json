@@ -344,7 +344,7 @@
         ]
       },
       "method_specific_parameters": {
-        "schema_version": "0.9.3",
+        "schema_version": "0.9.4",
         "experiment_type": "Affinity",
         "signal_type": "TRIC/MST",
         "excitation_led_color": "RED (ex 605-645nm, em 660-720nm)",
@@ -359,11 +359,26 @@
             "data_fitting": {
               "model": "1:1",
               "software_name": "MO.Affinity Analysis Software"
-            }
+            },
+            "measurements": [
+              {
+                "id": "pos_1_rep_1",
+                "name": "1 nM hemoglobin + 10 mg/ml Human serum"
+              },
+              {
+                "id": "pos_2_rep_1",
+                "name": "1 nM hemoglobin + 20 mg/ml Human serum"
+              },
+              {
+                "id": "pos_3_rep_1",
+                "name": "1 nM hemoglobin + 40 mg/ml Human serum"
+              }
+            ]
           }
         ],
         "measurements": [
           {
+            "id": "pos_1_rep_1",
             "name": "1 nM hemoglobin + 10 mg/ml Human serum",
             "position": "1",
             "sample": {
@@ -1499,6 +1514,7 @@
             }
           },
           {
+            "id": "pos_2_rep_1",
             "name": "1 nM hemoglobin + 20 mg/ml Human serum",
             "position": "2",
             "sample": {
@@ -2634,8 +2650,9 @@
             }
           },
           {
+            "id": "pos_3_rep_1",
             "name": "1 nM hemoglobin + 40 mg/ml Human serum",
-            "position": "2",
+            "position": "3",
             "sample": {
               "targets": [
                 {

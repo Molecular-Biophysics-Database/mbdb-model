@@ -441,7 +441,7 @@
         ]
       },
       "method_specific_parameters": {
-        "schema_version": "0.9.0",
+        "schema_version": "0.9.1",
         "experiment_type": "Affinity",
         "sensor": {
           "surface_properties": "protein G",
@@ -513,6 +513,8 @@
         ],
         "measurements": [
           {
+            "id": "active",
+            "name": "Activation",
             "measurement_position": {
               "id": "position-1-measure",
               "name": "Measurement"
@@ -593,6 +595,8 @@
             ]
           },
           {
+            "id": "pass",
+            "name": "passivation",
             "measurement_position": {
               "id": "position-2-reference",
               "name": "Reference"

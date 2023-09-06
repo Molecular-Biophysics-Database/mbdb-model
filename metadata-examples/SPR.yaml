@@ -346,7 +346,7 @@ general_parameters:
           unit: 'nM'
 
 method_specific_parameters:
-    schema_version: '0.9.0'
+    schema_version: '0.9.1'
     experiment_type: 'Affinity'
     sensor:
         surface_properties: 'protein G'
@@ -396,7 +396,9 @@ method_specific_parameters:
             software_name: 'Biacore analysis software'
 
     measurements:
-        - measurement_position:
+        - id: 'active'
+          name: 'Activation'
+          measurement_position:
               $ref: 'position-1-measure'
               name: 'Measurement'
           reference_measurement_position:
@@ -445,7 +447,9 @@ method_specific_parameters:
                           value: 20
                           unit: 'nM'
 
-        - measurement_position:
+        - id: "pass"
+          name: "passivation"
+          measurement_position:
               $ref: 'position-2-reference'
               name: 'Reference'
           samples:
