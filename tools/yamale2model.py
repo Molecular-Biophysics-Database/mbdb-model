@@ -566,14 +566,14 @@ class Model:
     def to_json(self):
         includes = {k: v.to_json() for k, v in self.includes.items()}
         return {
-            "profiles": ["record", "files", "draft"],
+            "profiles": ["record", "draft", "files", "draft_files"],
             "record": {
                 "use": ["invenio"],
                 "module": {"qualified": f"mbdb_{self.package}"},
                 "properties": {"metadata": self.model.to_json()},
-                "files": self.files_meta,
+                "files": {**self.files_meta, "use": ["invenio_files"]},
                 "draft": {},
-                "draft-files": {},
+                "draft_files": {},
                 "mapping": {
                     "template": {
                         "settings": {

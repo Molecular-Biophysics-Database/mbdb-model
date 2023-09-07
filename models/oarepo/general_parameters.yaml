@@ -1,4 +1,4 @@
-profiles: [record, files, draft]
+profiles: [record, draft, files, draft_files]
 record:
   use: [invenio]
   module:
@@ -214,8 +214,9 @@ record:
           deposited (e.g. exported to xlsx)
         ^required: true
         use: '#/$defs/Processing_step'
+    use: [invenio_files]
   draft: {}
-  draft-files: {}
+  draft_files: {}
   mapping:
     template:
       settings:
