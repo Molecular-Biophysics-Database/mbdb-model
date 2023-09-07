@@ -12,7 +12,7 @@ method_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MST method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.9.3')
+        value           : keyword(equals='0.9.4')
 
     experiment_type:
         description     : str(equals='Type of physical parameter measured',
@@ -71,7 +71,7 @@ method_specific_parameters:
         description     : str(equals='Details of how the data was processed and
                                       model in order to derive parameters
                                       from it', required=False)
-        value           : list(include('MST_data_analysis'), min=1)
+        value           : list(include('MST_data_analysis'), required=False)
 
 # End of schema
 
@@ -83,8 +83,14 @@ MST_data_analysis:
                                       defined in the general parameters',
                                       required=False)
 
-        value           : link(target='derived-parameter')
+        value           : link(target='derived-parameter', required=False)
 
+    measurements:
+        description     : str(equals='List of measurement links that was 
+                                      analyzed together', required=False)
+
+        value           : list(link(target='mst-measurement'), required=False)
+        
 
     f_cold_and_hot:
         description     : str(equals='If the data was analyzed with time windows
@@ -107,7 +113,7 @@ MST_data_analysis:
         description     : str(equals='The details of how data fitting of the
                                       data to obtain the derived parameter was
                                       performed', required=False)
-        value           : include('Data_fitting')
+        value           : include('Data_fitting', required=False)
 
 
 F_cold_and_hot:
@@ -144,6 +150,11 @@ F_cold_and_hot:
 
 
 Measurement:
+    id:
+        description     : str(equals='Unique ID to be used as a link target',
+                              required=False)
+        value           : link_target(name='mst-measurement')
+    
     name:
         description     : str(equals='Name (id) of the measurement which must be
                                       unique within a record (i.e. triplicates

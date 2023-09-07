@@ -347,7 +347,7 @@ general_parameters:
 
 
 method_specific_parameters:
-    schema_version: '0.9.1'
+    schema_version: '0.9.2'
     experiment_type: 'Affinity'
     plates:
         - id: 'plate-1'
@@ -444,7 +444,9 @@ method_specific_parameters:
 
 
     measurements:
-        - sensor:
+        - id: "a1-baseline"
+          name: Baseline of sensor A1
+          sensor:
               $ref: 'sensor-1-measure'
               name: 'A1'
           measurement_protocol_step:
@@ -1082,7 +1084,9 @@ method_specific_parameters:
               0.034660495817661285]
                   unit: "nm"
 
-        - sensor:
+        - id: "a1-assoc"
+          name: Association of sensor A1
+          sensor:
               $ref: 'sensor-1-measure'
               name: 'A1'
           measurement_protocol_step:
@@ -2914,7 +2918,9 @@ method_specific_parameters:
               0.19518762826919556]
                   unit: "nm"
 
-        - sensor:
+        - id: "a1-diss"
+          name: Dissociation of sensor A1
+          sensor:
               $ref: 'sensor-1-measure'
               name: 'A1'
           measurement_protocol_step:
@@ -5939,7 +5945,9 @@ method_specific_parameters:
               0.1810150146484375]
                   unit: "nm"
 
-        - sensor:
+        - id: "a1-regen"
+          name: Regeneration of sensor A1
+          sensor:
               $ref: 'sensor-1-measure'
               name: 'A1'
           measurement_protocol_step:
@@ -6114,7 +6122,9 @@ method_specific_parameters:
               1.6485706567764282]
                   unit: "nm"
 
-        - sensor:
+        - id: "a2-baseline"
+          name: Baseline of sensor A2
+          sensor:
               $ref: 'sensor-2-measure'
               name: 'A2'
           measurement_protocol_step:
@@ -6751,7 +6761,9 @@ method_specific_parameters:
               0.04388170316815376]
                   unit: "nm"
 
-        - sensor:
+        - id: "a2-assoc"
+          name: Association of sensor A2
+          sensor:
               $ref: 'sensor-2-measure'
               name: 'A2'
           measurement_protocol_step:
@@ -8583,7 +8595,9 @@ method_specific_parameters:
               0.1595040261745453]
                   unit: "nm"
 
-        - sensor:
+        - id: "a2-diss"
+          name: Dissociation of sensor A2
+          sensor:
               $ref: 'sensor-2-measure'
               name: 'A2'
           measurement_protocol_step:
@@ -11607,7 +11621,9 @@ method_specific_parameters:
               0.15050508081912994,
               0.15147724747657776]
                   unit: "nm"
-        - sensor:
+        - id: "a2-regen"
+          name: Regeneration of sensor A2
+          sensor:
               $ref: 'sensor-2-measure'
               name: 'A2'
           measurement_protocol_step:

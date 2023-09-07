@@ -13,7 +13,7 @@ record:
           properties:
             schema_version:
               type: keyword
-              enum: [0.9.3]
+              enum: [0.9.4]
               help.en: The schema version used to annotate the MST method specific
                 parameters
               required: true
@@ -64,7 +64,6 @@ record:
               ^minItems: 1
               ^help.en: Details of how the data was processed and model in order to
                 derive parameters from it
-              ^required: true
               use: '#/$defs/MST_data_analysis'
   files:
     properties:
@@ -124,7 +123,12 @@ $defs:
         type: relation
         model: '#derived-parameter'
         keys: [id, name]
-        required: true
+      measurements[]:
+        ^minItems: 1
+        ^help.en: List of measurement links that was analyzed together
+        type: relation
+        model: '#mst-measurement'
+        keys: [id, name]
       f_cold_and_hot:
         use: '#/$defs/F_cold_and_hot'
       data_processing_steps[]:
@@ -135,7 +139,6 @@ $defs:
         use: '#/$defs/Processing_step'
       data_fitting:
         use: '#/$defs/Data_fitting'
-        required: true
   F_cold_and_hot:
     properties:
       time_unit:
@@ -167,6 +170,9 @@ $defs:
         required: true
   Measurement:
     properties:
+      id:
+        type: keyword
+        required: true
       name:
         type: keyword
         help.en: Name (id) of the measurement which must be unique within a record
@@ -189,6 +195,7 @@ $defs:
           y_data:
             use: '#/$defs/Measured_data_series'
             required: true
+    id: mst-measurement
   Sample:
     properties:
       targets[]:

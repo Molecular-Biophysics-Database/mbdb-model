@@ -13,7 +13,7 @@ record:
           properties:
             schema_version:
               type: keyword
-              enum: [0.9.1]
+              enum: [0.9.2]
               help.en: The schema version used to annotate the BLI method specific
                 parameters
               required: true
@@ -48,7 +48,6 @@ record:
               ^minItems: 1
               ^help.en: Details of how the data was processed and model in order to
                 derive parameters from it
-              ^required: true
               use: '#/$defs/BLI_data_analysis'
   files:
     properties:
@@ -104,6 +103,16 @@ plugins:
 $defs:
   BLI_Measurement:
     properties:
+      id:
+        type: keyword
+        required: true
+      name:
+        type: keyword
+        help.en: Name (id) of the measurement which must be unique within a record
+          (i.e. triplicates must be named individually in the raw data file). The
+          name must allow location of the measurement data within the raw data file
+          as well as processed data files if these are present
+        required: true
       sensor:
         type: relation
         model: '#bli-sensor'
@@ -125,6 +134,7 @@ $defs:
           response:
             use: '#/$defs/Measured_data_series'
             required: true
+    id: bli-measurement
   Sample:
     properties:
       plate:
@@ -281,7 +291,12 @@ $defs:
         type: relation
         model: '#derived-parameter'
         keys: [id, name]
-        required: true
+      measurements[]:
+        ^minItems: 1
+        ^help.en: List of measurement links that was analyzed together
+        type: relation
+        model: '#bli-measurement'
+        keys: [id, name]
       data_processing_steps[]:
         ^minItems: 1
         ^help.en: Describe the steps in the data analysis prior to fitting (removing
@@ -290,7 +305,6 @@ $defs:
         use: '#/$defs/Processing_step'
       data_fitting:
         use: '#/$defs/Data_fitting'
-        required: true
   General_parameters:
     properties:
       schema_version:
