@@ -5,154 +5,18 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.8')
+        value           : keyword(equals='0.9.9')
 
     record_information:
-        title:
-            description : str(equals='Short descriptive title of the record',
+        description     : str(equals='The metadata of the record itself',
                               required=False)
-            searchable  : True
-            value       : str()
-
-
-        keywords:
-            description : str(equals='List of keywords describing this
-                                      particular record content, e.g. antibody,
-                                      epitope, ligand optimization, SARS-CoV-2,
-                                      agonist, antagonist, HIV, etc.',
-                              required=False)
-            searchable  : True                              
-            value       : list(keyword())
-
-        measurement_group_id:
-            description : str(equals='Unique and persistent identifier which can
-                                      be generated upon deposition of the first
-                                      if a group of data is deposited at the
-                                      same time. These can be used to specified
-                                      records are closely connected e.g. one
-                                      sample measured with multiple techniques.
-                                      For more loosely connected results the
-                                      project field should be used as sole
-                                      link',
-                              required=False)
-            value       : keyword(required=False)
-
-
-        project:
-            description : str(equals='The MBDB project the records belongs to
-                                      can be specified here. Projects are
-                                      typically  longer running research
-                                      projects that would be expected to
-                                      get many MBDB records associated with it
-                                      over time', required=False)
-            value       : include('Project', required=False)
-
-
-        access_rights:
-            description : str(equals='The access rights to the uploaded files.
-                                      There are three options, 1) "open access"
-                                      where the files are accessible immediately
-                                      when the deposition is published, 2)
-                                      "embargoed access" where the files will
-                                      only become available after a specified
-                                      date, 3) "restricted access" where
-                                      depositors are of the record are the only
-                                      ones who has access', required=False)
-            value       : enum('open access', 'embargoed access',
-                               'restricted access')
-
-        metadata_access_rights:
-            description : str(equals='The access rights to the metadata. Minimal
-                                      metadata that includes title and
-                                      depositors is accessible regardless of
-                                      which type is chosen as it is required to
-                                      obtain a DOI. There are three options, 1)
-                                      "open access" where the complete metadata
-                                      are accessible immediately when the
-                                      deposition is published, 2)
-                                      "embargoed access" where the files will
-                                      only become available after a specified
-                                      date, 3) "restricted access" where
-                                      depositors are of the record are the only
-                                      ones who has access', required=False)
-            value       : enum('open access', 'embargoed access',
-                               'restricted access')
-
-
-
-        publisher:
-            description : str(equals='When made available MBDB is to be
-                                      considered the publisher, however, the
-                                      depositors are still the owners',
-                                      required=False)
-            value       : keyword(equals='MBDB')
-
-        resource_type_general:
-            description : str(equals='All records are considered to be
-                                      datasets', required=False)
-            value       : keyword(equals='Dataset')
-
-        resource_type:
-            description : str(equals='Datacite item which will show the type of
-                                      experiment (MST/BLI/SPR)',required=False)
-            value       : keyword()
-
-        internal_id:
-            description : str(equals='Unique and persistent internal identifier
-                                      the record. This will automatically be
-                                      generated upon deposition',
-                              required=False)
-            value       : keyword()
-
-        identifier:
-            description : str(equals='The (external) identifier of the record
-                                      which is a DOI generated by Datacite. This
-                                      will automatically be generated when the
-                                      record is published', required=False)
-            value       : database_id()
-
-
-        subject_category:
-            description : str(equals='Subject category the record data belongs
-                                      to default is Biophysics', required=False)
-            value       : keyword(equals='Biophysics')
-
-
-        deposition_date:
-            description : str(equals='The date when the data was deposited;
-                                      automatically generated', required=False)
-            searchable  : True
-            value       : day()
-
-
-        date_available:
-            description : str(equals='The date when the data was/will be made
-                                      publicly available. Will be automatically
-                                      generated', required=False)
-            searchable  : True
-            value       : day(required=False)
+        value           : include('Record_information')
 
 
     depositors:
-        depositor:
-            description : str(equals='The person who made the deposition to
-                                      MBDB', required=False)
-            value       : include('Person')
-
-        principal_contact:
-            description : str(equals='The person responsible for the record and
-                                      the one to contact for inquiries, would
-                                      typically be the principle investigator
-                                      group leader, or laboratory head',
-                              required=False)
-            value       : include('Person')
-
-        contributors:
-            description : str(equals='List of other people who contributed to
-                                      generating the deposited data, metadata,
-                                      derived parameters, or the deposition
-                                      itself', required=False)
-            value       : list(nested_include('Person'), required=False)
+        description     : str(equals='Information about the depositors (authors)
+                                      of the record', required=False)
+        value           : include('Depositors')
 
 
     associated_publications:
@@ -182,31 +46,11 @@ General_parameters:
         value           : day()
 
     instrument:
-        manufacturer:
-            description : str(equals='Name of the manufacturer of the instrument
-                                      used for raw data collection',
+        description     : str(equals='Information about the instrument being
+                                      used to collect (measure) data',
                               required=False)
-            value       : include('COMPANIES')
+        value           : include('Instrument')
 
-        name:
-            description : str(equals='The name of the instrument as provided by
-                                      the manufacturer', required=False)
-            value       : str()
-
-        model:
-            description : str(equals='Model number and/or setup details of
-                                      instrument used for raw data collection;
-                                      include special instrument features
-                                      (e.g. 10.1,RED/BLUE LASER, backreflection
-                                      optics)', required=False)
-            value       : str(required=False)
-
-        performance_test:
-            description : str(equals='If a performance test of the instrument
-                                      that was carried out, the details and
-                                      results can be specified here',
-                                      required=False)
-            value       : include('Performance_test', required=False)
 
 
     physical_conditions_at_sample_handling:
@@ -222,25 +66,15 @@ General_parameters:
 
 
     chemical_information:
-        chemical_environments:
-            description : str(equals='Composition of the chemical environment
-                                      (colloquially known as buffer) which are
-                                      not being directly used to affect the
-                                      behavior of the directly measured
-                                      entities during the measurement',
-                              required=False)
-            searchable  : True
-            value       : list(nested_include('Chemical_environment'), min=1)
+        description     : str(equals='Information about entities of interest
+                                      that were being measured (e.g. Lysozyme)
+                                      or used to alter the behaviour of the
+                                      measured species (e.g. Peptidoglycan), and
+                                      the chemical environments that was used in
+                                      the measurement (e.g. buffers, cleaning
+                                      solutions)', required=False)
+        value           : include('Chemical_information')
 
-        entities_of_interest:
-            description : str(equals='List of the entities that are being
-                                      directly measured, as well as the entities
-                                      that are being used as a variable to
-                                      influence the behavior of the directly
-                                      measured entities (e.g. lysozyme, NAG3,
-                                      NaCl)', required=False)
-            searchable  : True
-            value       : list(nested_include('Entity'), min=1)
 
     derived_parameters:
         description     : str(equals='List of the parameters (results) that were
@@ -250,6 +84,167 @@ General_parameters:
         searchable      : True
         value           : list(nested_include('Derived_parameter'),
                                required=False)
+
+---
+# Record metadata
+
+
+Record_information:
+    title:
+        description : str(equals='Short descriptive title of the record',
+                          required=False)
+        searchable  : True
+        value       : str()
+
+
+    keywords:
+        description : str(equals='List of keywords describing this
+                                  particular record content, e.g. antibody,
+                                  epitope, ligand optimization, SARS-CoV-2,
+                                  agonist, antagonist, HIV, etc.',
+                          required=False)
+        searchable  : True
+        value       : list(keyword())
+
+    measurement_group_id:
+        description : str(equals='Unique and persistent identifier which can
+                                  be generated upon deposition of the first
+                                  if a group of data is deposited at the
+                                  same time. These can be used to specified
+                                  records are closely connected e.g. one
+                                  sample measured with multiple techniques.
+                                  For more loosely connected results the
+                                  project field should be used as sole
+                                  link',
+                          required=False)
+        value       : keyword(required=False)
+
+
+    project:
+        description : str(equals='The MBDB project the records belongs to
+                                  can be specified here. Projects are
+                                  typically  longer running research
+                                  projects that would be expected to
+                                  get many MBDB records associated with it
+                                  over time', required=False)
+        value       : include('Project', required=False)
+
+
+    access_rights:
+        description : str(equals='The access rights to the uploaded files.
+                                  There are three options, 1) "open access"
+                                  where the files are accessible immediately
+                                  when the deposition is published, 2)
+                                  "embargoed access" where the files will
+                                  only become available after a specified
+                                  date, 3) "restricted access" where
+                                  depositors are of the record are the only
+                                  ones who has access', required=False)
+        value       : enum('open access', 'embargoed access',
+                           'restricted access')
+
+    metadata_access_rights:
+        description : str(equals='The access rights to the metadata. Minimal
+                                  metadata that includes title and
+                                  depositors is accessible regardless of
+                                  which type is chosen as it is required to
+                                  obtain a DOI. There are three options, 1)
+                                  "open access" where the complete metadata
+                                  are accessible immediately when the
+                                  deposition is published, 2)
+                                  "embargoed access" where the files will
+                                  only become available after a specified
+                                  date, 3) "restricted access" where
+                                  depositors are of the record are the only
+                                  ones who has access', required=False)
+        value       : enum('open access', 'embargoed access',
+                           'restricted access')
+
+
+
+    publisher:
+        description : str(equals='When made available MBDB is to be
+                                  considered the publisher, however, the
+                                  depositors are still the owners',
+                                  required=False)
+        value       : keyword(equals='MBDB')
+
+    resource_type_general:
+        description : str(equals='All records are considered to be
+                                  datasets', required=False)
+        value       : keyword(equals='Dataset')
+
+    resource_type:
+        description : str(equals='Datacite item which will show the type of
+                                  experiment (MST/BLI/SPR)',required=False)
+        value       : keyword()
+
+    internal_id:
+        description : str(equals='Unique and persistent internal identifier
+                                  the record. This will automatically be
+                                  generated upon deposition',
+                          required=False)
+        value       : keyword()
+
+    identifier:
+        description : str(equals='The (external) identifier of the record
+                                  which is a DOI generated by Datacite. This
+                                  will automatically be generated when the
+                                  record is published', required=False)
+        value       : database_id()
+
+
+    subject_category:
+        description : str(equals='Subject category the record data belongs
+                                  to default is Biophysics', required=False)
+        value       : keyword(equals='Biophysics')
+
+
+    deposition_date:
+        description : str(equals='The date when the data was deposited;
+                                  automatically generated', required=False)
+        searchable  : True
+        value       : day()
+
+
+    date_available:
+        description : str(equals='The date when the data was/will be made
+                                  publicly available. Will be automatically
+                                  generated', required=False)
+        searchable  : True
+        value       : day(required=False)
+
+---
+# Instrument information
+
+Instrument:
+    manufacturer:
+        description : str(equals='Name of the manufacturer of the instrument
+                                  used for raw data collection',
+                          required=False)
+        value       : include('COMPANIES')
+
+    name:
+        description : str(equals='The name of the instrument as provided by
+                                  the manufacturer', required=False)
+        value       : str()
+
+    model:
+        description : str(equals='Model number and/or setup details of
+                                  instrument used for raw data collection;
+                                  include special instrument features
+                                  (e.g. 10.1,RED/BLUE LASER, backreflection
+                                  optics)', required=False)
+        value       : str(required=False)
+
+    performance_test:
+        description : str(equals='If a performance test of the instrument
+                                  that was carried out, the details and
+                                  results can be specified here',
+                                  required=False)
+        value       : include('Performance_test', required=False)
+
+
 ---
 # Entities and references to them
 
@@ -516,7 +511,7 @@ Polymer:
                                       including temperature and
                                       duration', required=False)
         value           : include('Storage', required=False)
- 
+
     quality_controls:
         description     : str(equals='Quality controls performed e.g. purity,
                                       aggregation state etc. ', required=False)
@@ -558,6 +553,28 @@ Polymer_modifications:
 
 ---
 # Entities and constituents
+Chemical_information:
+    chemical_environments:
+        description : str(equals='Composition of the chemical environment
+                                  (colloquially known as buffer) which are
+                                  not being directly used to affect the
+                                  behavior of the directly measured
+                                  entities during the measurement',
+                          required=False)
+        searchable  : True
+        value       : list(nested_include('Chemical_environment'), min=1)
+
+    entities_of_interest:
+        description : str(equals='List of the entities that are being
+                                  directly measured, as well as the entities
+                                  that are being used as a variable to
+                                  influence the behavior of the directly
+                                  measured entities (e.g. lysozyme, NAG3,
+                                  NaCl)', required=False)
+        searchable  : True
+        value       : list(nested_include('Entity'), min=1)
+
+
 
 Chemical:
     inchikey:
@@ -1072,6 +1089,29 @@ Complex_substance_of_industrial_production_origin:
 
 ---
 # People, publications, and funding objects
+
+Depositors:
+    depositor:
+        description : str(equals='The person who made the deposition to
+                                  MBDB', required=False)
+        value       : include('Person')
+
+    principal_contact:
+        description : str(equals='The person responsible for the record and
+                                  the one to contact for inquiries, would
+                                  typically be the principle investigator
+                                  group leader, or laboratory head',
+                          required=False)
+        value       : include('Person')
+
+    contributors:
+        description : str(equals='List of other people who contributed to
+                                  generating the deposited data, metadata,
+                                  derived parameters, or the deposition
+                                  itself', required=False)
+        value       : list(nested_include('Person'), required=False)
+
+
 
 Person:
     given_name:
@@ -1845,7 +1885,7 @@ PRESSURE_UNITS          : enum('Pa', 'kPa', 'MPa',
                                'mmHg','inchHg', required=False)
 TEMPERATURE_UNITS       : enum('K', '°C', '°F')
 TIME_UNITS              : enum('nanoseconds','microseconds', 'milliseconds',
-                               'seconds','minutes', 'hours', 'days', 
+                               'seconds','minutes', 'hours', 'days',
                                required=False)
 ENERGY_UNITS            : enum('kcal/mol','kJ/mol', required=False)
 POWER_UNITS             : enum('µcal/s','µJ/s', required=False)
@@ -1858,7 +1898,7 @@ MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
 SUPPORTED_TECHNIQUES    : enum('Bio-layer interferometry (BLI)',
                                'Microscale thermophoresis/Temperature related
                                 intensity change (MST/TRIC)',
-                               'Surface plasmon resonance (SPR)', 
+                               'Surface plasmon resonance (SPR)',
                                required=False)
 
 # Likely very incomplete, more research is needed

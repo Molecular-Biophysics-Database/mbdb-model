@@ -1,5 +1,5 @@
  General_parameters                                                                         ('singular', 'required', ['dict'], {}) "
-"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.9.8'}) "
+"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.9.9'}) "
 "  |   record_information                                                                    ('singular', 'required', ['dict'], {}) "
 "  |    |   title                                                                            ('singular', 'required', ['String'], {}) "
 "  |    |   keywords                                                                         ('list', 'required', ['Keyword'], {}) "

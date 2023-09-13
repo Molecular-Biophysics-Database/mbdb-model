@@ -7,12 +7,22 @@ general_parameters:
                                       measurements', required=False)
     value               : include('General_parameters')
 
+
 method_specific_parameters:
+    description         : str(equals='The parameters of the experiment that is
+                                      specific to SPR', required=False)
+    value               : include('SPR_specific_parameters')
+
+# End of schema
+---
+# Support objects (includes)
+
+SPR_specific_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       SPR method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.9.1')
+        value           : keyword(equals='0.9.2')
 
     experiment_type:
         description     : str(equals='Which type of parameter is sought with
@@ -49,10 +59,6 @@ method_specific_parameters:
                                       from it', required=False)
         value           : list(include('SPR_data_analysis'), required=False)
 
-# End of schema
-
----
-# Support objects (includes)
 SPR_data_analysis:
     derived_parameter:
         description     : str(equals='Link to a derived parameter that was

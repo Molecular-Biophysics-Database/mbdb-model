@@ -8,11 +8,22 @@ general_parameters:
     value               : include('General_parameters')
 
 method_specific_parameters:
+    description         : str(equals='The parameters of the experiment that is
+                                      specific to MST/TRIC/Spectral Shift',
+                                      required=False)
+    value               : include('MST_specific_parameters')
+
+# End of schema
+
+---
+# Support objects (includes)
+
+MST_specific_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       MST method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.9.4')
+        value           : keyword(equals='0.9.5')
 
     experiment_type:
         description     : str(equals='Type of physical parameter measured',
@@ -73,10 +84,7 @@ method_specific_parameters:
                                       from it', required=False)
         value           : list(include('MST_data_analysis'), required=False)
 
-# End of schema
 
----
-# Support objects (includes)
 MST_data_analysis:
     derived_parameter:
         description     : str(equals='Link to a derived parameter that was
@@ -86,11 +94,11 @@ MST_data_analysis:
         value           : link(target='derived-parameter', required=False)
 
     measurements:
-        description     : str(equals='List of measurement links that was 
+        description     : str(equals='List of measurement links that was
                                       analyzed together', required=False)
 
         value           : list(link(target='mst-measurement'), required=False)
-        
+
 
     f_cold_and_hot:
         description     : str(equals='If the data was analyzed with time windows
@@ -154,7 +162,7 @@ Measurement:
         description     : str(equals='Unique ID to be used as a link target',
                               required=False)
         value           : link_target(name='mst-measurement')
-    
+
     name:
         description     : str(equals='Name (id) of the measurement which must be
                                       unique within a record (i.e. triplicates

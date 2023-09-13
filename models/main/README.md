@@ -95,7 +95,7 @@ Array of values:
  **Note that the minimum number of allowed elements if the array is active is
   implicitly assumed to be 1 unless otherwise stated**
 
-Reuse value (usually a map or enum) in another map:
+Reuse value (a map or enum) in another map:
   * `include`: a map (object) or enumerator to be reused (in the sense of
     composition)
 
@@ -214,13 +214,6 @@ to `required=False`! This is due to a quirk in how the oarepo schema is turned
 into the (records) json schema that results in otherwise the overwrites the
 include's `required=False`.
 
-
-### Namespace items
-
-Namespace items are maps (objects) which only purpose is serve to collect
-items under a common namespace. This means that they don't have the
-`description`, `value` and `searchable` elements. They're always required, and
-only found in the at the top level in the `General_parameters` map (object).
 
 # Structure of a record
 
