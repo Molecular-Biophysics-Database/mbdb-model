@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.8",
+        "schema_version": "0.9.9",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -344,7 +344,7 @@
         ]
       },
       "method_specific_parameters": {
-        "schema_version": "0.9.4",
+        "schema_version": "0.9.5",
         "experiment_type": "Affinity",
         "signal_type": "TRIC/MST",
         "excitation_led_color": "RED (ex 605-645nm, em 660-720nm)",

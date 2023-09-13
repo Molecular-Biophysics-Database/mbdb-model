@@ -10,45 +10,8 @@ record:
           use: '#/$defs/General_parameters'
           required: true
         method_specific_parameters:
-          properties:
-            schema_version:
-              type: keyword
-              enum: [0.9.2]
-              help.en: The schema version used to annotate the BLI method specific
-                parameters
-              required: true
-            experiment_type:
-              type: keyword
-              enum: [Affinity, Quantification, Other]
-              help.en: Which type of parameter is sought with the measurements
-              required: true
-            plates[]:
-              ^minItems: 1
-              ^help.en: List of the plate types used for the measurements
-              ^required: true
-              use: '#/$defs/Plate'
-            sensors[]:
-              ^minItems: 1
-              ^help.en: List of the senors used for the measurements, reference sensors
-                included
-              ^required: true
-              use: '#/$defs/Sensor'
-            measurement_protocol[]:
-              ^minItems: 1
-              ^help.en: List of the steps in the measurement protocol
-              ^required: true
-              use: '#/$defs/BLI_protocol_step'
-            measurements[]:
-              ^minItems: 1
-              ^help.en: List of measurement where each step from each sensor is considered
-                a single measurement
-              ^required: true
-              use: '#/$defs/BLI_Measurement'
-            data_analysis[]:
-              ^minItems: 1
-              ^help.en: Details of how the data was processed and model in order to
-                derive parameters from it
-              use: '#/$defs/BLI_data_analysis'
+          use: '#/$defs/BLI_specific_parameters'
+          required: true
   files:
     properties:
       name:
@@ -105,6 +68,45 @@ plugins:
     oarepo-model-builder-relations==4.*, oarepo-model-builder-polymorphic==1.*, oarepo-model-builder-drafts,
     oarepo-model-builder-drafts-files]
 $defs:
+  BLI_specific_parameters:
+    properties:
+      schema_version:
+        type: keyword
+        enum: [0.9.3]
+        help.en: The schema version used to annotate the BLI method specific parameters
+        required: true
+      experiment_type:
+        type: keyword
+        enum: [Affinity, Quantification, Other]
+        help.en: Which type of parameter is sought with the measurements
+        required: true
+      plates[]:
+        ^minItems: 1
+        ^help.en: List of the plate types used for the measurements
+        ^required: true
+        use: '#/$defs/Plate'
+      sensors[]:
+        ^minItems: 1
+        ^help.en: List of the senors used for the measurements, reference sensors
+          included
+        ^required: true
+        use: '#/$defs/Sensor'
+      measurement_protocol[]:
+        ^minItems: 1
+        ^help.en: List of the steps in the measurement protocol
+        ^required: true
+        use: '#/$defs/BLI_protocol_step'
+      measurements[]:
+        ^minItems: 1
+        ^help.en: List of measurement where each step from each sensor is considered
+          a single measurement
+        ^required: true
+        use: '#/$defs/BLI_Measurement'
+      data_analysis[]:
+        ^minItems: 1
+        ^help.en: Details of how the data was processed and model in order to derive
+          parameters from it
+        use: '#/$defs/BLI_data_analysis'
   BLI_Measurement:
     properties:
       id:
@@ -313,104 +315,15 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.8]
+        enum: [0.9.9]
         help.en: The schema version used to annotate the general parameters
         required: true
       record_information:
-        properties:
-          title:
-            type: keyword
-            help.en: Short descriptive title of the record
-            required: true
-          keywords[]:
-            ^minItems: 1
-            ^help.en: List of keywords describing this particular record content,
-              e.g. antibody, epitope, ligand optimization, SARS-CoV-2, agonist, antagonist,
-              HIV, etc.
-            ^required: true
-            type: keyword
-          measurement_group_id:
-            type: keyword
-            help.en: Unique and persistent identifier which can be generated upon
-              deposition of the first if a group of data is deposited at the same
-              time. These can be used to specified records are closely connected e.g.
-              one sample measured with multiple techniques. For more loosely connected
-              results the project field should be used as sole link
-          project:
-            use: '#/$defs/Project'
-          access_rights:
-            type: keyword
-            enum: [open access, embargoed access, restricted access]
-            help.en: The access rights to the uploaded files. There are three options,
-              1) "open access" where the files are accessible immediately when the
-              deposition is published, 2) "embargoed access" where the files will
-              only become available after a specified date, 3) "restricted access"
-              where depositors are of the record are the only ones who has access
-            required: true
-          metadata_access_rights:
-            type: keyword
-            enum: [open access, embargoed access, restricted access]
-            help.en: The access rights to the metadata. Minimal metadata that includes
-              title and depositors is accessible regardless of which type is chosen
-              as it is required to obtain a DOI. There are three options, 1) "open
-              access" where the complete metadata are accessible immediately when
-              the deposition is published, 2) "embargoed access" where the files will
-              only become available after a specified date, 3) "restricted access"
-              where depositors are of the record are the only ones who has access
-            required: true
-          publisher:
-            type: keyword
-            enum: [MBDB]
-            help.en: When made available MBDB is to be considered the publisher, however,
-              the depositors are still the owners
-            required: true
-          resource_type_general:
-            type: keyword
-            enum: [Dataset]
-            help.en: All records are considered to be datasets
-            required: true
-          resource_type:
-            type: keyword
-            help.en: Datacite item which will show the type of experiment (MST/BLI/SPR)
-            required: true
-          internal_id:
-            type: keyword
-            help.en: Unique and persistent internal identifier the record. This will
-              automatically be generated upon deposition
-            required: true
-          identifier:
-            type: keyword
-            help.en: The (external) identifier of the record which is a DOI generated
-              by Datacite. This will automatically be generated when the record is
-              published
-            required: true
-          subject_category:
-            type: keyword
-            enum: [Biophysics]
-            help.en: Subject category the record data belongs to default is Biophysics
-            required: true
-          deposition_date:
-            type: date
-            help.en: The date when the data was deposited; automatically generated
-            required: true
-          date_available:
-            type: date
-            help.en: The date when the data was/will be made publicly available. Will
-              be automatically generated
+        use: '#/$defs/Record_information'
+        required: true
       depositors:
-        properties:
-          depositor:
-            use: '#/$defs/Person'
-            required: true
-          principal_contact:
-            use: '#/$defs/Person'
-            required: true
-          contributors[]:
-            ^minItems: 1
-            ^help.en: List of other people who contributed to generating the deposited
-              data, metadata, derived parameters, or the deposition itself
-            use: '#/$defs/Person'
-            type: nested
+        use: '#/$defs/Depositors'
+        required: true
       associated_publications:
         use: '#/$defs/Associated_publications'
       funding_reference[]:
@@ -427,49 +340,115 @@ $defs:
         help.en: The time when collection of the data began
         required: true
       instrument:
-        properties:
-          manufacturer:
-            use: '#/$defs/COMPANIES'
-            required: true
-          name:
-            type: keyword
-            help.en: The name of the instrument as provided by the manufacturer
-            required: true
-          model:
-            type: keyword
-            help.en: Model number and/or setup details of instrument used for raw
-              data collection; include special instrument features (e.g. 10.1,RED/BLUE
-              LASER, backreflection optics)
-          performance_test:
-            use: '#/$defs/Performance_test'
+        use: '#/$defs/Instrument'
+        required: true
       physical_conditions_at_sample_handling:
         use: '#/$defs/Physical_conditions'
       chemical_information:
-        properties:
-          chemical_environments[]:
-            ^minItems: 1
-            ^help.en: Composition of the chemical environment (colloquially known
-              as buffer) which are not being directly used to affect the behavior
-              of the directly measured entities during the measurement
-            ^required: true
-            use: '#/$defs/Chemical_environment'
-            type: nested
-          entities_of_interest[]:
-            ^minItems: 1
-            ^help.en: List of the entities that are being directly measured, as well
-              as the entities that are being used as a variable to influence the behavior
-              of the directly measured entities (e.g. lysozyme, NAG3, NaCl)
-            ^required: true
-            use: '#/$defs/Entity'
-            type: polymorphic
-            mapping:
-              type: nested
+        use: '#/$defs/Chemical_information'
+        required: true
       derived_parameters[]:
         ^minItems: 1
         ^help.en: List of the parameters (results) that were derived from analyzing
           measured raw data, and which steps were taken to obtain them
         use: '#/$defs/Derived_parameter'
         type: nested
+  Record_information:
+    properties:
+      title:
+        type: keyword
+        help.en: Short descriptive title of the record
+        required: true
+      keywords[]:
+        ^minItems: 1
+        ^help.en: List of keywords describing this particular record content, e.g.
+          antibody, epitope, ligand optimization, SARS-CoV-2, agonist, antagonist,
+          HIV, etc.
+        ^required: true
+        type: keyword
+      measurement_group_id:
+        type: keyword
+        help.en: Unique and persistent identifier which can be generated upon deposition
+          of the first if a group of data is deposited at the same time. These can
+          be used to specified records are closely connected e.g. one sample measured
+          with multiple techniques. For more loosely connected results the project
+          field should be used as sole link
+      project:
+        use: '#/$defs/Project'
+      access_rights:
+        type: keyword
+        enum: [open access, embargoed access, restricted access]
+        help.en: The access rights to the uploaded files. There are three options,
+          1) "open access" where the files are accessible immediately when the deposition
+          is published, 2) "embargoed access" where the files will only become available
+          after a specified date, 3) "restricted access" where depositors are of the
+          record are the only ones who has access
+        required: true
+      metadata_access_rights:
+        type: keyword
+        enum: [open access, embargoed access, restricted access]
+        help.en: The access rights to the metadata. Minimal metadata that includes
+          title and depositors is accessible regardless of which type is chosen as
+          it is required to obtain a DOI. There are three options, 1) "open access"
+          where the complete metadata are accessible immediately when the deposition
+          is published, 2) "embargoed access" where the files will only become available
+          after a specified date, 3) "restricted access" where depositors are of the
+          record are the only ones who has access
+        required: true
+      publisher:
+        type: keyword
+        enum: [MBDB]
+        help.en: When made available MBDB is to be considered the publisher, however,
+          the depositors are still the owners
+        required: true
+      resource_type_general:
+        type: keyword
+        enum: [Dataset]
+        help.en: All records are considered to be datasets
+        required: true
+      resource_type:
+        type: keyword
+        help.en: Datacite item which will show the type of experiment (MST/BLI/SPR)
+        required: true
+      internal_id:
+        type: keyword
+        help.en: Unique and persistent internal identifier the record. This will automatically
+          be generated upon deposition
+        required: true
+      identifier:
+        type: keyword
+        help.en: The (external) identifier of the record which is a DOI generated
+          by Datacite. This will automatically be generated when the record is published
+        required: true
+      subject_category:
+        type: keyword
+        enum: [Biophysics]
+        help.en: Subject category the record data belongs to default is Biophysics
+        required: true
+      deposition_date:
+        type: date
+        help.en: The date when the data was deposited; automatically generated
+        required: true
+      date_available:
+        type: date
+        help.en: The date when the data was/will be made publicly available. Will
+          be automatically generated
+  Instrument:
+    properties:
+      manufacturer:
+        use: '#/$defs/COMPANIES'
+        required: true
+      name:
+        type: keyword
+        help.en: The name of the instrument as provided by the manufacturer
+        required: true
+      model:
+        type: keyword
+        help.en: Model number and/or setup details of instrument used for raw data
+          collection; include special instrument features (e.g. 10.1,RED/BLUE LASER,
+          backreflection optics)
+      performance_test:
+        use: '#/$defs/Performance_test'
   Entity_base:
     properties:
       id:
@@ -683,6 +662,26 @@ $defs:
           labeling, deglycosylation, covalent fluorescent labeling)
         use: '#/$defs/Modification'
         type: nested
+  Chemical_information:
+    properties:
+      chemical_environments[]:
+        ^minItems: 1
+        ^help.en: Composition of the chemical environment (colloquially known as buffer)
+          which are not being directly used to affect the behavior of the directly
+          measured entities during the measurement
+        ^required: true
+        use: '#/$defs/Chemical_environment'
+        type: nested
+      entities_of_interest[]:
+        ^minItems: 1
+        ^help.en: List of the entities that are being directly measured, as well as
+          the entities that are being used as a variable to influence the behavior
+          of the directly measured entities (e.g. lysozyme, NAG3, NaCl)
+        ^required: true
+        use: '#/$defs/Entity'
+        type: polymorphic
+        mapping:
+          type: nested
   Chemical:
     properties:
       inchikey:
@@ -1038,6 +1037,20 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
+  Depositors:
+    properties:
+      depositor:
+        use: '#/$defs/Person'
+        required: true
+      principal_contact:
+        use: '#/$defs/Person'
+        required: true
+      contributors[]:
+        ^minItems: 1
+        ^help.en: List of other people who contributed to generating the deposited
+          data, metadata, derived parameters, or the deposition itself
+        use: '#/$defs/Person'
+        type: nested
   Person:
     properties:
       given_name:
