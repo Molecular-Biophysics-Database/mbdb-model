@@ -573,7 +573,7 @@ class Model:
                 "properties": {"metadata": self.model.to_json()},
                 "files": {**self.files_meta, "use": ["invenio_files"]},
                 "draft": {},
-                "draft_files": {},
+                "draft-files": {},
                 "mapping": {
                     "template": {
                         "settings": {

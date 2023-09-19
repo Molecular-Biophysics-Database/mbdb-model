@@ -91,7 +91,7 @@ record:
         use: '#/$defs/Processing_step'
     use: [invenio_files]
   draft: {}
-  draft_files: {}
+  draft-files: {}
   mapping:
     template:
       settings:
