@@ -89,8 +89,6 @@ Primitive (single) value types:
 
 Array of values:
   * `list`: array of a certain type (nested array is allowed)
-  * `nested_list`: array of a maps, where comparison of the individual items
-     within map can be
 
  **Note that the minimum number of allowed elements if the array is active is
   implicitly assumed to be 1 unless otherwise stated**
@@ -98,6 +96,9 @@ Array of values:
 Reuse value (a map or enum) in another map:
   * `include`: a map (object) or enumerator to be reused (in the sense of
     composition)
+  * `nested_include`: should be used if the include occurs inside an array,
+     and where comparison of the individual item within map should be made
+     during searches.  
 
 Identifiers:
   * `person_id`: validates [ORCID] when a valid ORCID is prefixed with the
