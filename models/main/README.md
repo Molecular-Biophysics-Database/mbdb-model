@@ -252,17 +252,17 @@ The overall structure of `General_parameters` is:
 
 ```yaml
 General_parameters:
-  record
+  record_information
   associated_publications
   depositors
   funding
   technique
   instrument
-  physical_environment_at_sample_handling
+  physical_conditions_at_sample_handling
   chemical_information
   derived_parameters
 ```
-### `record`
+### `record_information`
 
 Namespace item containing the metadata of the record itself *i.e.* the unique
 identifier of the records and which version of the schema the record was recorded in.
@@ -297,7 +297,7 @@ shift)
 Information about the instrument used to perform the measurement, including
 test of instrument performance.
 
-### `physical_environment_at_sample_handling`
+### `physical_conditions_at_sample_handling`
 
 Information about the physical state of the sample immediately prior
 to being measured.
