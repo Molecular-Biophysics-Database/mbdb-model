@@ -117,6 +117,7 @@ $defs:
           ligand(s), chemical environment, and position of the sample within the instrument
         ^required: true
         use: '#/$defs/Measurement'
+        type: nested
       data_analysis[]:
         ^minItems: 1
         ^help.en: Details of how the data was processed and model in order to derive
@@ -192,6 +193,7 @@ $defs:
       sample:
         use: '#/$defs/Sample'
         required: true
+        type: nested
       measured_data:
         properties:
           x_data:
