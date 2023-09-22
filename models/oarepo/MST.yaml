@@ -116,8 +116,7 @@ $defs:
         ^help.en: List of the information about each measurement, including, target(s),
           ligand(s), chemical environment, and position of the sample within the instrument
         ^required: true
-        use: '#/$defs/Measurement'
-        type: nested
+        use: '#/$defs/MST_measurement'
       data_analysis[]:
         ^minItems: 1
         ^help.en: Details of how the data was processed and model in order to derive
@@ -174,7 +173,7 @@ $defs:
         help.en: Numerical value of the end point of time interval used to establish
           the fluorescence temperature induced change in fluorescence, F_hot
         required: true
-  Measurement:
+  MST_measurement:
     properties:
       id:
         type: keyword
@@ -191,9 +190,8 @@ $defs:
         help.en: Position of the measured sample within the instrument
         required: true
       sample:
-        use: '#/$defs/Sample'
+        use: '#/$defs/MST_sample'
         required: true
-        type: nested
       measured_data:
         properties:
           x_data:
@@ -203,7 +201,7 @@ $defs:
             use: '#/$defs/Measured_data_series'
             required: true
     id: mst-measurement
-  Sample:
+  MST_sample:
     properties:
       targets[]:
         ^minItems: 1

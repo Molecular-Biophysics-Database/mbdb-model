@@ -76,7 +76,7 @@ MST_specific_parameters:
                                       ligand(s), chemical environment, and
                                       position of the sample within the
                                       instrument', required=False)
-        value           : list(nested_include('Measurement'), min=1)
+        value           : list(include('MST_measurement'), min=1)
 
     data_analysis:
         description     : str(equals='Details of how the data was processed and
@@ -157,7 +157,7 @@ F_cold_and_hot:
         value           : num(min=0)
 
 
-Measurement:
+MST_measurement:
     id:
         description     : str(equals='Unique ID to be used as a link target',
                               required=False)
@@ -181,7 +181,7 @@ Measurement:
     sample:
         description     : str(equals='Information about the sample including',
                                       required=False)
-        value           : nested_include('Sample')
+        value           : include('MST_sample')
 
     measured_data:
         x_data:
@@ -196,7 +196,7 @@ Measurement:
                                       measured data', required=False)
             value       : include('Measured_data_series')
 
-Sample:
+MST_sample:
     targets:
         description     : str(equals='List of names (ids), from the entities of
                                       interest defined in the general

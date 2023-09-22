@@ -11,7 +11,7 @@ MST_specific_parameters:
     'UV (ex 260-300nm, em 330-380nm)', 'Spectral shift')
   excitation_led_power: num(min=0, max=100)
   ir_mst_laser_power: num(min=0, max=100)
-  measurements: list(nested_include('Measurement'), min=1)
+  measurements: list(include('MST_measurement'), min=1)
   data_analysis: list(include('MST_data_analysis'), required=False)
 MST_data_analysis:
   derived_parameter: link(target='derived-parameter', required=False)
@@ -25,15 +25,15 @@ F_cold_and_hot:
   f_cold_end: num(min=-100)
   f_hot_start: num(min=0)
   f_hot_end: num(min=0)
-Measurement:
+MST_measurement:
   id: link_target(name='mst-measurement')
   name: str()
   position: keyword()
-  sample: nested_include('Sample')
+  sample: include('MST_sample')
   measured_data:
     x_data: include('Measured_data_series')
     y_data: include('Measured_data_series')
-Sample:
+MST_sample:
   targets: list(include('Entity_constituent'), min=1)
   ligands: list(include('Entity_constituent'))
   chemical_environment: link(target='chemical-environment')
