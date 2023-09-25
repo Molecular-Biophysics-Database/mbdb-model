@@ -57,9 +57,8 @@ general_parameters:
                 - id: '02hpadn98'
 
     funding_reference:
-        - id: "308726"
-
-        - id: "5T32NS007444-10"
+        - id: "213912"
+        - id: "208342"
 
     technique: 'Microscale thermophoresis/Temperature related intensity change
                (MST/TRIC)'
