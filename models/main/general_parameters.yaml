@@ -5,7 +5,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.9')
+        value           : keyword(equals='0.9.10')
 
     record_information:
         description     : str(equals='The metadata of the record itself',
@@ -84,10 +84,14 @@ General_parameters:
         searchable      : True
         value           : list(nested_include('Derived_parameter'),
                                required=False)
+    raw_measurements:
+        description     : str(equals='List of file(s) containing the raw
+                                      measurements', required=False)
+        value           : list(url())
+        ui_file_context : str(equals='raw measurement data')
 
 ---
 # Record metadata
-
 
 Record_information:
     title:
@@ -1112,7 +1116,6 @@ Depositors:
         value       : list(nested_include('Person'), required=False)
 
 
-
 Person:
     given_name:
         description     : str(equals='The given name(s), including
@@ -1380,7 +1383,7 @@ Quality_control:
                                       control, as a pdf file',
                               required=False)
         value           : url()
-
+        ui_file_context : str(equals='quality control report')
 
 Data_fitting:
     model:
@@ -1411,7 +1414,6 @@ Data_fitting:
                                       required=False)
         value           : enum('R^2', 'SEM', 'red. Chi^2', '1sigma', '2sigma',
                                '3sigma', '5sigma', 'Skewness', required=False)
-
 
 Processing_step:
     name:
@@ -1448,7 +1450,9 @@ Processing_step:
                                       a link can be specified here (e.g.
                                       self-written python script in a GitHub
                                       repository', required=False)
-        value           : keyword(required=False)
+        value           : url(required=False)
+
+
 
 ---
 # Physical and chemical parameter objects
@@ -1771,8 +1775,6 @@ Size:
 ---
 # Computer related objects
 
-
-
 Measured_data_series:
     id:
         description     : str(equals='Unique ID for the measured data to be
@@ -1798,11 +1800,11 @@ Measured_data_series:
 # Additional objects
 
 Performance_test:
-    report:
-        description     : str(equals='The file containing the report of the
-                                      performance test, preferably in pdf',
+    sample_composition:
+        description     : str(equals='The composition of the sample the
+                                      performance test was carried out on',
                               required=False)
-        value           : url()
+        value           : list(nested_include('Constituent'))
 
     published_test_protocol:
         description     : str(equals='If the protocol used for the performance
@@ -1810,11 +1812,12 @@ Performance_test:
                                       can be specified here', required=False)
         value           : include('Publication', required=False)
 
-    sample_composition:
-        description     : str(equals='The composition of the sample the
-                                      performance test was carried out on',
+    report:
+        description     : str(equals='The file containing the report of the
+                                      performance test, preferably in pdf',
                               required=False)
-        value           : list(nested_include('Constituent'))
+        value           : url()
+        ui_file_context : str(equals='performance test report')
 
     additional_information:
         description     : str(equals='Additional information about the
@@ -1857,8 +1860,8 @@ Supplier:
 
 Coordinates:
     S-N(latitude):
-        description     : str(equals='The latitude in degrees (decimal notation)
-                                     ', required=False)
+        description     : str(equals='The latitude in degrees (decimal
+                                      notation)', required=False)
         value           : num(min=-90, max=90)
 
     W-E(longitude):
@@ -1870,6 +1873,7 @@ OBTAINED_TYPES          : enum('Measurement', 'Calculation', 'Assumption',
                                'Other', required=False)
 ---
 # Unit definitions
+
 CONCENTRATION_UNITS     : enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM',
                                'g/L', 'mg/mL', 'µg/mL', 'ng/mL',
                                'mol/kg', 'mmol/kg',
@@ -1885,8 +1889,8 @@ PRESSURE_UNITS          : enum('Pa', 'kPa', 'MPa',
                                'mmHg','inchHg', required=False)
 TEMPERATURE_UNITS       : enum('K', '°C', '°F')
 TIME_UNITS              : enum('nanoseconds','microseconds', 'milliseconds',
-                               'seconds','minutes', 'hours', 'days',
-                               required=False)
+                               'seconds','minutes', 'hours', 'days', 'months',
+                               'years', required=False)
 ENERGY_UNITS            : enum('kcal/mol','kJ/mol', required=False)
 POWER_UNITS             : enum('µcal/s','µJ/s', required=False)
 LENGTH_UNITS            : enum('Å', 'nm', 'μm', 'mm', 'cm', 'm', required=False)

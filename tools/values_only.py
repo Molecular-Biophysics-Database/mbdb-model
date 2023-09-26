@@ -50,6 +50,7 @@ class SimplifiedSchema:
     def strip_description(self) -> None:
         """Go through all yaml documents and remove descriptions inplace"""
         for doc in self.yaml_docs:
+            self._remove_extension_elements(doc)
             self._remove_description(doc)
 
     def _remove_description(self, doc: dict) -> None:
@@ -67,6 +68,23 @@ class SimplifiedSchema:
 
             else:
                 self._remove_description((doc[key]))
+
+    def _remove_extension_elements(self, doc: dict, extension_elements=("ui_file_context",)) -> None:
+        """
+        Recursively remove extension elements from the schema
+        """
+        if not isinstance(doc, dict):
+            return
+
+        for key, value in doc.items():
+            if isinstance(value, dict):
+                for v in value:
+                    if v in extension_elements:
+                        print(v)
+                        del doc[key]
+
+            else:
+                self._remove_extension_elements((doc[key]))
 
 
 def new_filename(file):
