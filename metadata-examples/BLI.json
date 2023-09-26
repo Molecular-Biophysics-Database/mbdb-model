@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.9",
+        "schema_version": "0.9.10",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -439,6 +439,9 @@
             "value": 10.3,
             "unit": "nM"
           }
+        ],
+        "raw_measurements": [
+          "https://mbdb.eu/mst/files/foo.txt"
         ]
       },
       "method_specific_parameters": {

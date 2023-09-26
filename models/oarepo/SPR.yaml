@@ -295,7 +295,7 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.9]
+        enum: [0.9.10]
         help.en: The schema version used to annotate the general parameters
         required: true
       record_information:
@@ -333,6 +333,15 @@ $defs:
           measured raw data, and which steps were taken to obtain them
         use: '#/$defs/Derived_parameter'
         type: nested
+      raw_measurements[]:
+        ^minItems: 1
+        ^help.en: List of file(s) containing the raw measurements
+        ^required: true
+        ^ui_file_context:
+          type: keyword
+          enum: [raw measurement data]
+          required: true
+        type: url
   Record_information:
     properties:
       title:
@@ -1213,6 +1222,10 @@ $defs:
         type: url
         help.en: Report with the results of the quality control, as a pdf file
         required: true
+        ui_file_context:
+          type: keyword
+          enum: [quality control report]
+          required: true
   Data_fitting:
     properties:
       model:
@@ -1255,7 +1268,7 @@ $defs:
         help.en: The name of the tool within the specified software, i.e. a particular
           method called or "button pressed" (e.g. equation solver, buffer subtraction)
       link_to_source_code:
-        type: keyword
+        type: url
         help.en: If processing was performed with software where the source code is
           legally available a link can be specified here (e.g. self-written python
           script in a GitHub repository
@@ -1467,13 +1480,6 @@ $defs:
         help.en: The distribution type of sizes (e.g. log-normal)
   Performance_test:
     properties:
-      report:
-        type: url
-        help.en: The file containing the report of the performance test, preferably
-          in pdf
-        required: true
-      published_test_protocol:
-        use: '#/$defs/Publication'
       sample_composition[]:
         ^minItems: 1
         ^help.en: The composition of the sample the performance test was carried out
@@ -1483,6 +1489,17 @@ $defs:
         type: polymorphic
         mapping:
           type: nested
+      published_test_protocol:
+        use: '#/$defs/Publication'
+      report:
+        type: url
+        help.en: The file containing the report of the performance test, preferably
+          in pdf
+        required: true
+        ui_file_context:
+          type: keyword
+          enum: [performance test report]
+          required: true
       additional_information:
         type: keyword
         help.en: Additional information about the performance test can be specified
@@ -1548,7 +1565,8 @@ $defs:
     required: true
   TIME_UNITS:
     type: keyword
-    enum: [nanoseconds, microseconds, milliseconds, seconds, minutes, hours, days]
+    enum: [nanoseconds, microseconds, milliseconds, seconds, minutes, hours, days,
+      months, years]
   LENGTH_UNITS:
     type: keyword
     enum: [Å, nm, μm, mm, cm, m]
@@ -2750,3 +2768,4 @@ $defs:
         required: true
 settings:
   i18n-languages: [en]
+  extension-elements: [ui_file_context]
