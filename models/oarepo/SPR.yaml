@@ -46,7 +46,8 @@ record:
         help.en: Short description of what the file contains
       recommended_software:
         type: keyword
-        help.en: The name of the software recommended for working with the file
+        help.en: The name of the software recommended for opening and working with
+          the file
       processing_steps[]:
         ^minItems: 1
         ^help.en: List of the processing steps performed on the file before it was

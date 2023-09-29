@@ -46,7 +46,8 @@ record:
         help.en: Short description of what the file contains
       recommended_software:
         type: keyword
-        help.en: The name of the software recommended for working with the file
+        help.en: The name of the software recommended for opening and working with
+          the file
       processing_steps[]:
         ^minItems: 1
         ^help.en: List of the processing steps performed on the file before it was
@@ -139,8 +140,7 @@ $defs:
       data_processing_steps[]:
         ^minItems: 1
         ^help.en: Describe the steps in the data analysis prior to fitting (removing
-          outliers in the raw data, applying data filter, placing data at same start
-          time etc. )
+          outliers in the raw data, applying smoothing filters, etc.)
         use: '#/$defs/Processing_step'
       data_fitting:
         use: '#/$defs/Data_fitting'
