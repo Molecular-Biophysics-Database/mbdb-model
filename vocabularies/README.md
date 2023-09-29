@@ -1,15 +1,11 @@
 # vocabularies
 
-**WARNING**
-The tools are in an early state of development, so please be careful when using
-them
-
 Vocabularies can, from a schema perspective, be considered to a user-extendable
 multi-field enumerator.
 
 From an Invenio perspective, the individual vocabulary items are a special kind
-of records that lives in a different endpoint than the main records, and
-they're more restrictive in which schemas are allowed (see below) .
+of records that lives at a different endpoint than the main records, and
+they're more restrictive in terms of which schemas are allowed (see below).
 
 ## schemas
 
@@ -28,19 +24,27 @@ props: !!map
 
 The requirements are:
  - The fields `id` and `title` are mandatory
- - The `props` map and all its subfields are optional   
- - No values are allowed to be `null`, however optional fields can be removed altogether from individual vocabulary to
-   accommodate missing values
+ - The `props` map and all its subfields are optional, and can have as many or few items as needed   
+ - No values are allowed to be `null`, however optional fields can be removed altogether from an individual entry
+   to accommodate missing values
  - All input must be string type
+
+It's important to note that Invenio currently uses an internal schema to validate all vocabularies, NOT the schemas 
+defined in /schemas! Schemas aren't strictly speaking necessary for registering vocabularies, however they're 
+very useful in order to generate test vocabularies. 
 
 ### Register vocabulary  
 
-It is important to note that schemas are strictly speaking not necessary register a vocabulary, however they're 
-important for generating vocabularies. Installation itself is done by registering it in the [app](https://github.com/Molecular-Biophysics-Database/mbdb-app) in the file:
+1. Create sample vocabulary: 
+   1. Add a generator to [generate_vocabularies.py](#generate_vocabularies.py) that will create a fixture that can 
+      be used for testing
+   2. Place the generated fixture in the [app] inside the folder `mbdb-app/local/mbdb-common/mbdb_common/fixtures`
+2. Provide a vocabulary getter:
+   1. Create a class inside [vocabulary_getters.py](#vocabulary_getters.py)
+   2. Replace vocabulary_getters.py found in the [app] inside the folder `mbdb-app/local/mbdb-common/mbdb_common/`
+3. Register the vocabulary inside the [app] in the file:
+```mbdb-app/local/mbdb-common/mbdb_common/fixtures/catalogue.yaml```
 
-```mbdb-app/local/mbdb-common/mbdb_common/fixtures/catalogue.yaml``` 
-
-as well as providing a sample vocabulary (see below) to be
 
 ## generate_vocabularies.py
  
@@ -50,10 +54,10 @@ One generator should be made for each vocabulary.
 Note that it downloads resources and uses them to generate sample vocabularies. As 100ks-1Ms of items are present in 
 these resource, online tools for searching them will be used for adding new vocabularies (see below). 
 
-## auth_getters.py
+## vocabulary_getters.py
 
-These tools are for searching the respective resources whenever a vocabulary. An auth getter should be defined for each 
-vocabulary.
+To enable adding and updating vocabulary entries, a class defining how to request information via REST APIs needs
+to be generated for
 
 ### API for affiliations
 
@@ -67,8 +71,8 @@ vocabulary.
 
 #### Fields of interest:
  
- - `id` (it's in the form url/ror_id)
- - `name` 
+ - `id` (id) 
+ - `name` (title)  
  - `addresses[0].city` 
  - `addresses[0].state`
  - `country.country_name`
@@ -83,9 +87,9 @@ vocabulary.
     part of grant vocabulary schema 
 
 #### Fields of interest (json format):
- 
+ - `header.dri:objIdentifier.code` (id)
+ - `metadata.oaf:entity.oaf:project.title` (title) 
  - `metadata.oaf:entity.oaf:project.code`
- - `metadata.oaf:entity.oaf:project.title`
  - `metadata.oaf:entity.oaf:project.fundingtree.funder.name`
  - (`header.dri:dateOfCollection`)
  - (`header.dri:dateOfTransformation`)
@@ -112,6 +116,9 @@ Information is extracted using this endpoint:
 
 #### Fields of interest (json format):
  
- - `taxonomy.tax_id`
- - `taxonomy.organism_name`
- - `taxonomy.rank`
+ - `taxonomy.tax_id` (id)
+ - `taxonomy.organism_name` (title)
+ - `taxonomy.rank` 
+
+
+[app]: https://github.com/Molecular-Biophysics-Database/mbdb-app
