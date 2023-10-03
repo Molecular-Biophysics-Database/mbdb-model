@@ -210,7 +210,7 @@
               "fluid": "Serum",
               "health_status": "Healthy",
               "organism": {
-                "id": "12374"
+                "id": "taxid:12374"
               },
               "additional_specifications": [
                 "Blood was drawn after 12 hours of fasting"
@@ -348,7 +348,7 @@
                   "copy_number": 2,
                   "polymer_type": "polypeptide(L)",
                   "organism": {
-                    "id": "12374"
+                    "id": "taxid:12374"
                   },
                   "variant": "WT",
                   "expression_source_type": "Natively",
@@ -366,7 +366,7 @@
                   "copy_number": 2,
                   "polymer_type": "polypeptide(L)",
                   "organism": {
-                    "id": "12374"
+                    "id": "taxid:12374"
                   },
                   "variant": "V2A",
                   "modifications": {
