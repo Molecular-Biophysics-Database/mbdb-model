@@ -33,7 +33,8 @@ description:
 
 recommended_software:
     description     : str(equals='The name of the software recommended for
-                                  working with the file', required=False)
+                                  opening and working with the file',
+                                  required=False)
     value           : str(required=False)
 
 processing_steps:

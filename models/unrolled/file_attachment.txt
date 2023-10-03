@@ -11,5 +11,5 @@
 "  |   software_name                                                                         ('singular', 'optional', ['String'], {}) "
 "  |   software_version                                                                      ('singular', 'optional', ['Keyword'], {}) "
 "  |   software_tool                                                                         ('singular', 'optional', ['String'], {}) "
-"  |   link_to_source_code                                                                   ('singular', 'optional', ['Keyword'], {}) "
+"  |   link_to_source_code                                                                   ('singular', 'optional', ['Url'], {}) "
 "

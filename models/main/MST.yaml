@@ -111,9 +111,8 @@ MST_data_analysis:
     data_processing_steps:
         description     : str(equals='Describe the steps in the data analysis
                                       prior to fitting (removing outliers in the
-                                      raw data, applying data filter, placing
-                                      data at same start time etc. )',
-                                      required=False)
+                                      raw data, applying smoothing filters,
+                                      etc.)', required=False)
 
         value           : list(include('Processing_step'), required=False)
 

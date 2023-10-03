@@ -104,6 +104,7 @@ class ArrayModifier(KeyModifier):
 class ModelBase:
     path = None
     description = None
+    extension_elements = None
 
     def __init__(self, path, required) -> None:
         self.constraints = {}
@@ -131,6 +132,9 @@ class ModelBase:
             ret["help.en"] = self.description.strip()
         if self.required:
             ret["required"] = True
+        if self.extension_elements:
+            for k, v in self.extension_elements.items():
+                ret[k] = v.to_json()
         return ret
 
     def get_links(self, links, path, defs):
@@ -384,7 +388,7 @@ class ModelChoose(ModelBase):
         # collect id from the base schema
         base_schema: ModelObject = defs[self.base_schema.include]
         if "id" in base_schema.children and isinstance(
-            base_schema.children["id"], ModelLinkTarget
+                base_schema.children["id"], ModelLinkTarget
         ):
             self.link_id = base_schema.children["id"].name
 
@@ -455,9 +459,9 @@ class ModelChoose(ModelBase):
             handling_prefix = True
             for pth_idx, pth_part in enumerate(pth):
                 if (
-                    handling_prefix
-                    and pth_idx < len(previous_path)
-                    and previous_path[pth_idx] == pth_part
+                        handling_prefix
+                        and pth_idx < len(previous_path)
+                        and previous_path[pth_idx] == pth_part
                 ):
                     continue
                 else:
@@ -596,7 +600,10 @@ class Model:
                 ],
             },
             "$defs": includes,
-            "settings": {"i18n-languages": ["en"]},
+            "settings": {
+                "i18n-languages": ["en"],
+                "extension-elements": ["ui_file_context"],
+            }
         }
 
     def set_links(self):
@@ -635,6 +642,7 @@ def parse_described_value(d, path, includes):
     value = parse(value, f"{path}/value", includes)
     value.description = description
     value.searchable = searchable
+    value.extension_elements = {k: parse(v, f"{path}/{k}", includes) for k, v in d.items() if k not in ("description", "value", "searchable")}
     return value
 
 
@@ -642,17 +650,7 @@ def parse(d, path, includes):
     clz = type(d)
     if clz is dict:
         log.debug("%s: %s", path, {k: type(v).__name__ for k, v in d.items()})
-        known_count = 1 if "value" in d else 0
-        known_count += (
-            1 if "description" in d and isinstance(d["description"], String) else 0
-        )
-        known_count += (
-            1
-            if "searchable" in d
-            and isinstance(d["searchable"], (TrueValidator, FalseValidator))
-            else 0
-        )
-        if known_count == len(d):
+        if ("description" in d) and ("value" in d):
             log.debug("... described value")
             return parse_described_value(d, path, includes)
         log.debug("... plain dict")
@@ -797,9 +795,9 @@ def set_flow_style(d):
 @click.option(
     "--include",
     default=Path(__file__).parent.parent
-    / "models"
-    / "main"
-    / "general_parameters.yaml",
+            / "models"
+            / "main"
+            / "general_parameters.yaml",
     required=False,
 )
 def run(input_file, output_file, debug, include):
@@ -807,7 +805,7 @@ def run(input_file, output_file, debug, include):
         logging.basicConfig(level=logging.DEBUG)
     ym_file = input_file
     attachment = (
-        Path(__file__).parent.parent / "models" / "main" / "file_attachment.yaml"
+            Path(__file__).parent.parent / "models" / "main" / "file_attachment.yaml"
     )
     model = parse_file(ym_file)
     if include:

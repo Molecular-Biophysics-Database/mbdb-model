@@ -1,5 +1,5 @@
 General_parameters:
-  schema_version: keyword(equals='0.9.9')
+  schema_version: keyword(equals='0.9.10')
   record_information: include('Record_information')
   depositors: include('Depositors')
   associated_publications: include('Associated_publications', required=False)
@@ -11,6 +11,7 @@ General_parameters:
   physical_conditions_at_sample_handling: include('Physical_conditions', required=False)
   chemical_information: include('Chemical_information')
   derived_parameters: list(nested_include('Derived_parameter'), required=False)
+  raw_measurements: list(url())
 ---
 Record_information:
   title: str()
@@ -260,7 +261,7 @@ Processing_step:
   software_name: str(required=False)
   software_version: keyword(required=False)
   software_tool: str(required=False)
-  link_to_source_code: keyword(required=False)
+  link_to_source_code: url(required=False)
 ---
 Physical_conditions:
   temperature: include('Temperature', required=False)
@@ -335,9 +336,9 @@ Measured_data_series:
   unit: keyword()
 ---
 Performance_test:
-  report: url()
-  published_test_protocol: include('Publication', required=False)
   sample_composition: list(nested_include('Constituent'))
+  published_test_protocol: include('Publication', required=False)
+  report: url()
   additional_information: str(required=False)
 Storage:
   temperature: include('Temperature')
@@ -361,7 +362,7 @@ PRESSURE_UNITS: enum('Pa', 'kPa', 'MPa', 'Bar','mBar', 'atm', 'Torr', 'PSI', 'mm
   required=False)
 TEMPERATURE_UNITS: enum('K', '°C', '°F')
 TIME_UNITS: enum('nanoseconds','microseconds', 'milliseconds', 'seconds','minutes',
-  'hours', 'days', required=False)
+  'hours', 'days', 'months', 'years', required=False)
 ENERGY_UNITS: enum('kcal/mol','kJ/mol', required=False)
 POWER_UNITS: enum('µcal/s','µJ/s', required=False)
 LENGTH_UNITS: enum('Å', 'nm', 'μm', 'mm', 'cm', 'm', required=False)
