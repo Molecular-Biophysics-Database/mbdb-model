@@ -20,7 +20,7 @@ general_parameters:
                 identifiers:
                     - 'orcid:0000-0002-1825-0097'
                 affiliations:
-                    - id: '05gq02987'
+                    - id: 'ror:05gq02987'
 
         deposition_date: 2022-01-23
         date_available: 2023-01-23
@@ -35,7 +35,7 @@ general_parameters:
             given_name: 'Max'
             family_name: 'Mustermann'
             affiliations:
-                - id: '02hpadn98'
+                - id: 'ror:02hpadn98'
 
         principal_contact:
             given_name: 'Josiah'
@@ -43,22 +43,22 @@ general_parameters:
             identifiers:
                 - 'orcid:0000-0002-1825-0097'
             affiliations:
-                - id: '05gq02987'
+                - id: 'ror:05gq02987'
 
         contributors:
             - given_name: 'Jane'
               family_name: 'Doe'
               affiliations:
-                - id: '02hpadn98'
+                - id: 'ror:02hpadn98'
 
             - given_name: 'John'
               family_name: 'Doe'
               affiliations:
-                - id: '02hpadn98'
+                - id: 'ror:02hpadn98'
 
     funding_reference:
-        - id: "213912"
-        - id: "208342"
+        - id: "oa:aka_________::0138cbca472312ad7dd56c2cdb8a55c2"
+        - id: "oa:aka_________::05f51e273cb679ac343eb5be8ecbd9b5"
 
     technique: 'Microscale thermophoresis/Temperature related intensity change
                (MST/TRIC)'
@@ -153,7 +153,7 @@ general_parameters:
               fluid: 'Serum'
               health_status: 'Healthy'
               organism:
-                  id: '12374'
+                  id: 'taxid:12374'
               additional_specifications:
                 - "Blood was drawn after 12 hours of fasting"
               preparation_protocol:
@@ -194,7 +194,7 @@ general_parameters:
                     copy_number: 2
                     polymer_type: 'polypeptide(L)'
                     organism:
-                        id: '12374'
+                        id: 'taxid:12374'
                     variant: 'WT'
                     expression_source_type: 'Natively'
                     external_databases:
@@ -209,7 +209,7 @@ general_parameters:
                     copy_number: 2
                     polymer_type: 'polypeptide(L)'
                     organism:
-                        id: '12374'
+                        id: 'taxid:12374'
                     variant:  'V2A'
                     modifications:
                         biological_postprocessing:

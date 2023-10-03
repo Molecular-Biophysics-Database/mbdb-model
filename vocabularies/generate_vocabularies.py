@@ -147,7 +147,8 @@ class Organism(Vocabulary):
     def dict_item_factory(self, cursor, row):
         """returns with converted """
         row_dict = {key: value for key, value in zip(self.converted_name.values(), row)}
-        return {"id": str(row_dict["id"]),
+        return {
+                "id": f'taxid:{row_dict["id"]}',
                 "title": {"en": row_dict["title"]},
                 "props": {"rank": row_dict["rank"]},
                 }
@@ -188,9 +189,9 @@ class Affiliation(Vocabulary):
     def extract_affiliation(ror_dict):
         """Converts a ror json record dict to a vocabulary dict"""
         affiliation = {
-            "id": ror_dict["id"].split("/")[-1],
+            "id": f'ror:{ror_dict["id"].split("/")[-1]}',
             "title": {"en": ror_dict["name"]},
-            "props":{
+            "props": {
                 "city": ror_dict["addresses"][0]["city"],
                 "country": ror_dict["country"]["country_name"],
                 "state": ror_dict["addresses"][0]["state"]
@@ -252,14 +253,21 @@ class Grant(Vocabulary):
         logging.debug(f'Extracting grantID: {openaire_dict["code"]}')
 
         try:
-           funder_name = openaire_dict["funding"][0]["name"]
+            funder_name = openaire_dict["funding"][0]["name"]
         except IndexError:
-           funder_name = "Unknown Funder"
+            funder_name = "UNKNOWN FUNDER NAME"
+
+        try:
+            title = openaire_dict["title"]
+        except KeyError:
+            title = "UNKNOWN TITLE"
 
         return {
-            "id": openaire_dict["code"],
-            "title": {"en": openaire_dict["title"]},
-            "props": {"funder_name": funder_name}
+            "id": f'oa:{openaire_dict["id"]}',
+            "title": {"en": title},
+            "props": {
+                "grant_id": openaire_dict["code"],
+                "funder_name": funder_name}
         }
 
     def iter_of_records(self) -> Iterator[dict]:
