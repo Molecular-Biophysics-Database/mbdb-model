@@ -105,6 +105,7 @@ class ModelBase:
     path = None
     description = None
     extension_elements = None
+    default_search = None
 
     def __init__(self, path, required) -> None:
         self.constraints = {}
@@ -132,9 +133,11 @@ class ModelBase:
             ret["help.en"] = self.description.strip()
         if self.required:
             ret["required"] = True
+        if self.default_search:
+            ret["mapping"] = {"copy_to": "collected_default_search_fields"}
         if self.extension_elements:
-            for k, v in self.extension_elements.items():
-                ret[k] = v.to_json()
+            for key, value in self.extension_elements.items():
+                ret[key] = value.to_json()
         return ret
 
     def get_links(self, links, path, defs):
@@ -574,7 +577,14 @@ class Model:
             "record": {
                 "use": ["invenio"],
                 "module": {"qualified": f"mbdb_{self.package}"},
-                "properties": {"metadata": self.model.to_json()},
+                "properties": {"metadata": self.model.to_json(),
+                               "collected_default_search_fields": {
+                                   "type": "fulltext",
+                                   "marshmallow": {
+                                       "read": False,
+                                       "write": False
+                                   }
+                               }},
                 "files": {**self.files_meta, "use": ["invenio_files"]},
                 "draft": {},
                 "draft-files": {},
@@ -583,6 +593,7 @@ class Model:
                         "settings": {
                             "index.mapping.total_fields.limit": 3000,
                             "index.mapping.nested_fields.limit": 200,
+                            "index.query.default_field": "collected_default_search_fields",
                         }
                     }
                 },
@@ -602,7 +613,10 @@ class Model:
             "$defs": includes,
             "settings": {
                 "i18n-languages": ["en"],
-                "extension-elements": ["ui_file_context"],
+                "extension-elements": [
+                                       "ui_file_context",
+
+                ],
             }
         }
 
@@ -633,16 +647,33 @@ class Model:
 
 def parse_described_value(d, path, includes):
     value = d.get("value")
+
     description = d.get("description")
     if description:
         description = description.kwargs.get("equals", None)
+
     searchable = d.get("searchable", False)
     if searchable:
         searchable = isinstance(searchable, TrueValidator)
+
+    default_search = d.get("default_search", False)
+    if default_search:
+        default_search = isinstance(default_search, TrueValidator)
+
     value = parse(value, f"{path}/value", includes)
     value.description = description
     value.searchable = searchable
-    value.extension_elements = {k: parse(v, f"{path}/{k}", includes) for k, v in d.items() if k not in ("description", "value", "searchable")}
+    value.default_search = default_search
+
+    value.extension_elements = {
+        k: parse(v, f"{path}/{k}", includes)
+        for k, v in d.items() if k not in (
+            "description",
+            "value",
+            "searchable",
+            "default_search"
+        )
+    }
     return value
 
 
@@ -739,20 +770,16 @@ def parse_chemical_id(d, path):
     return parse_keyword(d, path)
 
 
-def parse_schema(schema, path, includes, skip_top=False):
+def parse_schema(schema, path, includes):
     for k, v in schema.includes.items():
         includes[k] = v
-    if skip_top:
-        assert len(schema.dict) == 1
-        top_name, top_value = list(schema.dict.items())[0]
-        return parse(top_value, f"{path}/{top_name}", includes)
-    else:
-        return parse(schema.dict, path, includes)
+    return parse(schema.dict, path, includes)
 
 
 def parse_file(ym_file, modelbase_only=False) -> Union[Model, ModelBase]:
     schema_data = Path(ym_file).read_text()
     schema_data = re.sub(r"searchable(\s*:\s*)True", r"searchable\1true()", schema_data)
+    schema_data = re.sub(r"default_search(\s*:\s*)True", r"default_search\1true()", schema_data)
     schema = yamale.make_schema(content=schema_data, validators=validators)
     includes = {}
     model = parse_schema(schema, "", includes)
@@ -790,7 +817,14 @@ def set_flow_style(d):
     default=Path(__file__).parent.parent / "models" / "main" / "MST.yaml",
     required=True,
 )
-@click.argument("output_file", required=False)
+@click.argument(
+    "output_file",
+    default=Path(__file__).parent.parent
+            / "models"
+            / "oarepo"
+            / "test_MST.yaml",
+    required=False
+)
 @click.option("--debug", type=bool)
 @click.option(
     "--include",
