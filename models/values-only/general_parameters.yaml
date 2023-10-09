@@ -1,5 +1,5 @@
 General_parameters:
-  schema_version: keyword(equals='0.9.10')
+  schema_version: keyword(equals='0.9.12')
   record_information: include('Record_information')
   depositors: include('Depositors')
   associated_publications: include('Associated_publications', required=False)
@@ -76,7 +76,8 @@ Polymer:
   molecular_weight: include('Molecular_weight')
   external_databases: list(database_id(), required=False)
   variant: str(required=False)
-  organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]', required=False)
+  source_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
+    required=False)
   modifications: include('Polymer_modifications', required=False)
   expression_source_type: enum('Natively', 'Recombinantly', 'Synthetically')
   expression_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
@@ -139,7 +140,7 @@ Complex_substance_of_biological_origin: choose(include('Complex_substance_of_bio
   Virion=include('Virion'))
 Complex_substance_of_biological_origin_base:
   derived_from: enum('Body fluid', 'Cell fraction', 'Virion')
-  organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]')
+  source_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]')
   preparation_protocol: list(include('Step'))
   storage: include('Storage', required=False)
   additional_specifications: list(str(), required=False)
