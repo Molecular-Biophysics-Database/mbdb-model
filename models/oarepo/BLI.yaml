@@ -336,8 +336,6 @@ $defs:
       funding_reference[]:
         ^minItems: 1
         ^help.en: List of information about the grants that supported depositors
-        ^mapping:
-          copy_to: collected_default_search_fields
         keys: [id, title, props.funder_name]
         vocabulary-type: grants
         type: vocabulary
@@ -360,8 +358,6 @@ $defs:
         ^minItems: 1
         ^help.en: List of the parameters (results) that were derived from analyzing
           measured raw data, and which steps were taken to obtain them
-        ^mapping:
-          copy_to: collected_default_search_fields
         use: '#/$defs/Derived_parameter'
         type: nested
       raw_measurements[]:
@@ -387,8 +383,6 @@ $defs:
           antibody, epitope, ligand optimization, SARS-CoV-2, agonist, antagonist,
           HIV, etc.
         ^required: true
-        ^mapping:
-          copy_to: collected_default_search_fields
         type: keyword
       measurement_group_id:
         type: keyword
@@ -547,8 +541,6 @@ $defs:
           information about the molecular assembly as a whole can be specified here
           (e.g. 1YQ2; PDB); information about the individual components should be
           specified in the details of the individual components
-        ^mapping:
-          copy_to: collected_default_search_fields
         type: keyword
       components[]:
         ^minItems: 1
@@ -642,8 +634,6 @@ $defs:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the polymer can be specified here (e.g Q8KRF6, UniProt)
-        ^mapping:
-          copy_to: collected_default_search_fields
         type: keyword
       variant:
         type: keyword
@@ -656,6 +646,12 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
       modifications:
         use: '#/$defs/Polymer_modifications'
       expression_source_type:
@@ -914,6 +910,12 @@ $defs:
         vocabulary-type: organisms
         type: vocabulary
         required: true
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -1123,14 +1125,10 @@ $defs:
         ^minItems: 1
         ^help.en: Persistent identifier associated with the person, currently only
           ORCIDs are allowed
-        ^mapping:
-          copy_to: collected_default_search_fields
         type: keyword
       affiliations[]:
         ^minItems: 1
         ^help.en: The affiliation of the person
-        ^mapping:
-          copy_to: collected_default_search_fields
         keys: [id, title, props.city, props.state, props.country]
         vocabulary-type: affiliations
         type: vocabulary
@@ -1703,8 +1701,6 @@ $defs:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the polymer can be specified here (e.g Q8KRF6, UniProt)
-        ^mapping:
-          copy_to: collected_default_search_fields
         type: keyword
       variant:
         type: keyword
@@ -1717,6 +1713,12 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
       modifications:
         use: '#/$defs/Polymer_modifications'
       expression_source_type:
@@ -1821,8 +1823,6 @@ $defs:
           information about the molecular assembly as a whole can be specified here
           (e.g. 1YQ2; PDB); information about the individual components should be
           specified in the details of the individual components
-        ^mapping:
-          copy_to: collected_default_search_fields
         type: keyword
       components[]:
         ^minItems: 1
@@ -1903,8 +1903,6 @@ $defs:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the polymer can be specified here (e.g Q8KRF6, UniProt)
-        ^mapping:
-          copy_to: collected_default_search_fields
         type: keyword
       variant:
         type: keyword
@@ -1917,6 +1915,12 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
       modifications:
         use: '#/$defs/Polymer_modifications'
       expression_source_type:
@@ -2052,6 +2056,12 @@ $defs:
         vocabulary-type: organisms
         type: vocabulary
         required: true
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2118,6 +2128,12 @@ $defs:
         vocabulary-type: organisms
         type: vocabulary
         required: true
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2184,6 +2200,12 @@ $defs:
         vocabulary-type: organisms
         type: vocabulary
         required: true
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2416,8 +2438,6 @@ $defs:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the polymer can be specified here (e.g Q8KRF6, UniProt)
-        ^mapping:
-          copy_to: collected_default_search_fields
         type: keyword
       variant:
         type: keyword
@@ -2430,6 +2450,12 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
       modifications:
         use: '#/$defs/Polymer_modifications'
       expression_source_type:
@@ -2546,8 +2572,6 @@ $defs:
           information about the molecular assembly as a whole can be specified here
           (e.g. 1YQ2; PDB); information about the individual components should be
           specified in the details of the individual components
-        ^mapping:
-          copy_to: collected_default_search_fields
         type: keyword
       components[]:
         ^minItems: 1
@@ -2651,6 +2675,12 @@ $defs:
         vocabulary-type: organisms
         type: vocabulary
         required: true
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2723,6 +2753,12 @@ $defs:
         vocabulary-type: organisms
         type: vocabulary
         required: true
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2795,6 +2831,12 @@ $defs:
         vocabulary-type: organisms
         type: vocabulary
         required: true
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
