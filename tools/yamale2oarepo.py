@@ -115,7 +115,8 @@ class ModelBase:
     path = None
     description = None
     extension_elements = None
-    default_search = None
+    searchable = FalseValidator()
+    default_search = FalseValidator()
 
     def __init__(self, path, required) -> None:
         self.constraints = {}
@@ -146,6 +147,9 @@ class ModelBase:
         if self.extension_elements:
             for key, value in self.extension_elements.items():
                 ret[key] = value.to_json()
+                ret[key].pop("required", False)
+                ret[key].pop("mapping", False)
+
         return ret
 
     def get_links(self, links, path, defs):
@@ -285,6 +289,7 @@ class ModelPrimitive(ModelBase):
         super().__init__(path, is_required)
         self.type = type
         self.path = path
+
         if data:
             self.parse(data)
 
@@ -296,9 +301,8 @@ class ModelPrimitive(ModelBase):
 
     def to_json(self, **extras):
         ret = super().to_json(type=self.type, **extras)
-        if self.type in ("fulltext", "keyword"):
-            if self.default_search:
-                ret["mapping"] = PRIMITIVES_MAPPING
+        if (self.type in ("fulltext", "keyword")) and self.default_search:
+            ret["mapping"] = PRIMITIVES_MAPPING
         return ret
 
     def get_links(self, links, path, defs):
@@ -556,7 +560,8 @@ class ModelLink(ModelBase):
 
 
 class ModelVocabulary(ModelLink):
-    def __init__(self, data, path: str) -> None:
+    def __init__(self, data, path: str,
+                 ) -> None:
         data.target = None
         super().__init__(data, path)
         self.vocabulary = data.vocabulary
@@ -807,7 +812,10 @@ def set_flow_style(d):
 @click.command()
 @click.argument(
     "input_file",
-    default=Path(__file__).parent.parent / "models" / "main" / "MST.yaml",
+    default=Path(__file__).parent.parent
+            / "models"
+            / "main"
+            / "MST.yaml",
     required=True,
 )
 @click.argument(
