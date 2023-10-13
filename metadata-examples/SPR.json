@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.10",
+        "schema_version": "0.9.12",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -209,7 +209,7 @@
               "derived_from": "Body fluid",
               "fluid": "Serum",
               "health_status": "Healthy",
-              "organism": {
+              "source_organism": {
                 "id": "taxid:12374"
               },
               "additional_specifications": [
@@ -261,7 +261,7 @@
                   },
                   "copy_number": 2,
                   "polymer_type": "polypeptide(L)",
-                  "organism": {
+                  "source_organism": {
                     "id": "taxid:12374"
                   },
                   "variant": "WT",
@@ -279,7 +279,7 @@
                   },
                   "copy_number": 2,
                   "polymer_type": "polypeptide(L)",
-                  "organism": {
+                  "source_organism": {
                     "id": "taxid:12374"
                   },
                   "variant": "V2A",
@@ -347,7 +347,7 @@
                   },
                   "copy_number": 2,
                   "polymer_type": "polypeptide(L)",
-                  "organism": {
+                  "source_organism": {
                     "id": "taxid:12374"
                   },
                   "variant": "WT",
@@ -365,7 +365,7 @@
                   },
                   "copy_number": 2,
                   "polymer_type": "polypeptide(L)",
-                  "organism": {
+                  "source_organism": {
                     "id": "taxid:12374"
                   },
                   "variant": "V2A",

@@ -5,7 +5,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.10')
+        value           : keyword(equals='0.9.12')
 
     record_information:
         description     : str(equals='The metadata of the record itself',
@@ -28,6 +28,8 @@ General_parameters:
     funding_reference:
         description     : str(equals='List of information about the grants that
                                       supported depositors', required=False)
+        searchable      : True
+        default_search  : True
         value           : list(vocabulary(vocabulary='grants',
                                           fields='[id,title,props.funder_name]'),
                                           required=False)
@@ -82,6 +84,7 @@ General_parameters:
                                       and which steps were taken to obtain
                                       them', required=False)
         searchable      : True
+        default_search  : True
         value           : list(nested_include('Derived_parameter'),
                                required=False)
     raw_measurements:
@@ -98,6 +101,7 @@ Record_information:
         description : str(equals='Short descriptive title of the record',
                           required=False)
         searchable  : True
+        default_search  : True
         value       : str()
 
 
@@ -108,6 +112,7 @@ Record_information:
                                   agonist, antagonist, HIV, etc.',
                           required=False)
         searchable  : True
+        default_search: True
         value       : list(keyword())
 
     measurement_group_id:
@@ -226,6 +231,8 @@ Instrument:
         description : str(equals='Name of the manufacturer of the instrument
                                   used for raw data collection',
                           required=False)
+        searchable  : True
+        default_search : True
         value       : include('COMPANIES')
 
     name:
@@ -267,6 +274,7 @@ Entity_base:
                                       present in measured sample',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : str()
 
     type:
@@ -280,6 +288,7 @@ Entity_base:
                                       composition, e.g. blood, serum, plant
                                       extract', required=False)
         searchable      : True
+        default_search  : True
         value           : enum('Polymer',
                                'Chemical',
                                'Molecular assembly',
@@ -329,6 +338,7 @@ Molecular_assembly:
                                       details of the individual components',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : list(database_id(), required=False)
 
     components:
@@ -392,6 +402,7 @@ Assembly_component_base:
                                       unique within a record',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : str()
 
     type:
@@ -425,6 +436,7 @@ Polymer:
         description     : str(equals='The type of polymer (e.g.
                                       polypeptide(L))')
         searchable      : True
+        default_search  : True
         value           : enum('cyclic-pseudo-peptide',
                                'peptide nucleic acid',
                                'polydeoxyribonucleotide',
@@ -441,6 +453,8 @@ Polymer:
                                       (e.g. SAGRELLE, AGTTA,).
                                       For non-natural see link for
                                       nomenclature', required=False)
+        searchable      : True
+        default_search  : True
         value           : str(required=False)
 
     molecular_weight:
@@ -456,6 +470,7 @@ Polymer:
                                       be specified here (e.g Q8KRF6, UniProt)',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : list(database_id(), required=False)
 
     variant:
@@ -467,13 +482,15 @@ Polymer:
                                       C-terminal GFP, N-terminal 6xHis-tag)',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : str(required=False)
 
-    organism:
+    source_organism:
         description     : str(equals='[NCBI taxid]() of the biological
                                       species where the polymer
                                       naturally occurs', required=False)
         searchable      : True
+        default_search  : True
         value           : vocabulary(vocabulary='organisms',
                                      fields='[id,title,props.rank]',
                                      required=False)
@@ -521,7 +538,6 @@ Polymer:
                                       aggregation state etc. ', required=False)
         value           : list(nested_include('Quality_control'),
                                required=False)
-
 
     additional_specifications:
         description     : str(equals='Additional information about the polymer
@@ -592,6 +608,7 @@ Chemical:
                                       LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
                                       specified here)', required=False)
         searchable      : True
+        default_search  : True
         value           : keyword()
 
     additional_identifiers:
@@ -710,6 +727,7 @@ Constituent_base:
                                       constituent, must be unique within
                                       a record', required=False)
         searchable      : True
+        default_search  : True
         value           : str()
 
     type:
@@ -740,6 +758,7 @@ Chemical_constituent_base:
                                       constituent, must be unique within
                                       a record', required=False)
         searchable      : True
+        default_search  : True
         value           : str()
 
     type:
@@ -774,6 +793,7 @@ Chemically_defined_constituent_base:
                                       constituent, must be unique within
                                       a record', required=False)
         searchable      : True
+        default_search  : True
         value           : str()
 
     type:
@@ -846,10 +866,11 @@ Complex_substance_of_biological_origin_base:
         value           : enum('Body fluid',
                                'Cell fraction',
                                'Virion')
-    organism:
+    source_organism:
         description     : str(equals='Identification of the organism to the
                                       lowest taxonomic rank possible e.g.
                                       strain', required=False)
+        default_search  : True
         searchable      : True
         value           : vocabulary(vocabulary='organisms',
                                      fields='[id,title,props.rank]')
@@ -880,6 +901,7 @@ Body_fluid:
                                       substance is derived from',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : enum('Blood', 'Fecal matter', 'Milk',
                                'Plasma', 'Saliva', 'Serum', 'Urine',
                                'Plant extract', 'Other')
@@ -896,6 +918,7 @@ Cell_fraction:
         description     : str(equals='The subcelluar component e.g. (Ribosome)',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : enum('Ribosome', 'Cell wall', 'Vesicle'
                                'Cell lysate/Cytoplasm', 'Cell Membrane',
                                'Extracellular matrix', 'Lysosome',
@@ -970,6 +993,7 @@ Complex_substance_of_environmental_origin:
                                       substance was derived from',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : enum('Fresh water', 'Marine', 'Ice core', 'Sediment',
                                'Sewage', 'Soil', 'Other')
 
@@ -1070,6 +1094,7 @@ Complex_substance_of_industrial_production_origin:
                                       product the complex substance was derived
                                       from', required=False)
         searchable      : True
+        default_search  : True
         value           : enum('Beer', 'Cell medium', 'Whey', 'Other')
 
     preparation_protocol:
@@ -1121,12 +1146,14 @@ Person:
         description     : str(equals='The given name(s), including
                                       middlename(s), of the person',
                               required=False)
+        default_search  : True
         searchable      : True
         value           : str()
 
     family_name:
         description     : str(equals='The family name(s) the person',
                               required=False)
+        default_search  : True
         searchable      : True
         value           : str()
 
@@ -1134,6 +1161,7 @@ Person:
         description     : str(equals='Persistent identifier associated with the
                                       person, currently only ORCIDs are
                                       allowed', required=False)
+        default_search  : True
         searchable      : True
         value           : list(person_id(), required=False)
 
@@ -1141,6 +1169,7 @@ Person:
         description     : str(equals='The affiliation of the person',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : list(vocabulary(vocabulary='affiliations',
                                fields='[id, title, props.city, props.state, props.country]'),
                                required=False)
@@ -1152,12 +1181,14 @@ Publication:
                                       publication (e.g. DOI, ISBN)',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : publication_id()
 
     title:
         description     : str(equals='The title of the publication',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : str(required=False)
 
     publication_year:
@@ -1193,6 +1224,7 @@ Project:
         description     : str(equals='Short title of the MBDB project',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : str()
 
     description:
@@ -1237,12 +1269,14 @@ Derived_parameter:
                                       be unique with in a record',
                               required=False)
         searchable      : True
+        default_search  : True
         value           : str()
 
     type:
         description     : str(equals='The type of physical parameter the derived
                                       parameter represents', required=False)
         searchable      : True
+        default_search  : True
         value           : enum('Concentration',
                                'Stoichiometry',
                                'Constant of association (K_A)',
@@ -1395,6 +1429,7 @@ Data_fitting:
         description     : str(equals='The name of the software that was
                                       used for doing the fitting (e.g. Excel)',
                               required=False)
+        searchable      : True
         value           : str(required=False)
 
     software_version:
@@ -1846,11 +1881,13 @@ Storage:
 Supplier:
     name:
         description     : str(equals='Name of the supplier', required=False)
+        searchable      : True
         value           : str()
 
     catalog_number:
         description     : str(equals='The catalog number or identifier of the
                                       item', required=False)
+        searchable      : True
         value           : keyword(required=False)
 
     further_information:

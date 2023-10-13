@@ -11,6 +11,16 @@ from pathlib import Path
 from typing import Any, Dict, Union
 from ruamel.yaml import YAML as ruamel_YAML
 from yamale.schema import Schema
+from yamale2oarepo_config import (
+    PRIMITIVES_MAPPING,
+    QUERY_STRING_FIELD,
+    PROFILES,
+    PLUGINS,
+    MODEL_SETTINGS,
+    QUERY_STRING_FIELD_SETTINGS,
+    RECORD_MAPPING,
+    VOCABULARY_MAPPING,
+)
 from yamale.validators import (
     Boolean,
     Day,
@@ -105,6 +115,8 @@ class ModelBase:
     path = None
     description = None
     extension_elements = None
+    searchable = FalseValidator()
+    default_search = FalseValidator()
 
     def __init__(self, path, required) -> None:
         self.constraints = {}
@@ -133,8 +145,11 @@ class ModelBase:
         if self.required:
             ret["required"] = True
         if self.extension_elements:
-            for k, v in self.extension_elements.items():
-                ret[k] = v.to_json()
+            for key, value in self.extension_elements.items():
+                ret[key] = value.to_json()
+                ret[key].pop("required", False)
+                ret[key].pop("mapping", False)
+
         return ret
 
     def get_links(self, links, path, defs):
@@ -274,6 +289,7 @@ class ModelPrimitive(ModelBase):
         super().__init__(path, is_required)
         self.type = type
         self.path = path
+
         if data:
             self.parse(data)
 
@@ -284,7 +300,10 @@ class ModelPrimitive(ModelBase):
         self.constraints["maximum"] = constraint.max
 
     def to_json(self, **extras):
-        return super().to_json(type=self.type, **extras)
+        ret = super().to_json(type=self.type, **extras)
+        if (self.type in ("fulltext", "keyword")) and self.default_search:
+            ret["mapping"] = PRIMITIVES_MAPPING
+        return ret
 
     def get_links(self, links, path, defs):
         pass
@@ -541,7 +560,8 @@ class ModelLink(ModelBase):
 
 
 class ModelVocabulary(ModelLink):
-    def __init__(self, data, path: str) -> None:
+    def __init__(self, data, path: str,
+                 ) -> None:
         data.target = None
         super().__init__(data, path)
         self.vocabulary = data.vocabulary
@@ -554,6 +574,11 @@ class ModelVocabulary(ModelLink):
         }
         if self.required:
             ret["required"] = True
+
+        if self.default_search:
+            # note that only vocabularies titles are made searchable
+            # TODO: allow placement of custom fields to be searchable
+            ret["extras"] = VOCABULARY_MAPPING
         return ret
 
     def set_links(self, links, defs):
@@ -568,42 +593,29 @@ class Model:
     package: str = None
 
     def to_json(self):
-        includes = {k: v.to_json() for k, v in self.includes.items()}
         return {
-            "profiles": ["record", "draft", "files", "draft_files"],
-            "record": {
-                "use": ["invenio"],
-                "module": {"qualified": f"mbdb_{self.package}"},
-                "properties": {"metadata": self.model.to_json()},
-                "files": {**self.files_meta, "use": ["invenio_files"]},
-                "draft": {},
-                "draft-files": {},
-                "mapping": {
-                    "template": {
-                        "settings": {
-                            "index.mapping.total_fields.limit": 3000,
-                            "index.mapping.nested_fields.limit": 200,
-                        }
-                    }
-                },
+            "profiles": PROFILES,
+            "record": self._to_record(),
+            "plugins": PLUGINS,
+            "$defs": self._to_defs(),
+            "settings": MODEL_SETTINGS
+        }
+
+    def _to_defs(self):
+        return {k: v.to_json() for k, v in self.includes.items()}
+
+    def _to_record(self):
+        return {
+            "use": ["invenio"],
+            "module": {"qualified": f"mbdb_{self.package}"},
+            "properties": {
+                "metadata": self.model.to_json(),
+                QUERY_STRING_FIELD: QUERY_STRING_FIELD_SETTINGS
             },
-            "plugins": {
-                "builder": {"disable": ["script_sample_data"]},
-                "packages": [
-                    "oarepo-model-builder-files==4.*",
-                    "oarepo-model-builder-cf==4.*",
-                    "oarepo-model-builder-vocabularies==4.*",
-                    "oarepo-model-builder-relations==4.*",
-                    "oarepo-model-builder-polymorphic==1.*",
-                    "oarepo-model-builder-drafts",
-                    "oarepo-model-builder-drafts-files",
-                ],
-            },
-            "$defs": includes,
-            "settings": {
-                "i18n-languages": ["en"],
-                "extension-elements": ["ui_file_context"],
-            }
+            "files": {**self.files_meta, "use": ["invenio_files"]},
+            "draft": {},
+            "draft-files": {},
+            "mapping": RECORD_MAPPING,
         }
 
     def set_links(self):
@@ -633,16 +645,33 @@ class Model:
 
 def parse_described_value(d, path, includes):
     value = d.get("value")
+
     description = d.get("description")
     if description:
         description = description.kwargs.get("equals", None)
+
     searchable = d.get("searchable", False)
     if searchable:
         searchable = isinstance(searchable, TrueValidator)
+
+    default_search = d.get("default_search", False)
+    if default_search:
+        default_search = isinstance(default_search, TrueValidator)
+
     value = parse(value, f"{path}/value", includes)
     value.description = description
     value.searchable = searchable
-    value.extension_elements = {k: parse(v, f"{path}/{k}", includes) for k, v in d.items() if k not in ("description", "value", "searchable")}
+    value.default_search = default_search
+
+    value.extension_elements = {
+        k: parse(v, f"{path}/{k}", includes)
+        for k, v in d.items() if k not in (
+            "description",
+            "value",
+            "searchable",
+            "default_search"
+        )
+    }
     return value
 
 
@@ -739,20 +768,16 @@ def parse_chemical_id(d, path):
     return parse_keyword(d, path)
 
 
-def parse_schema(schema, path, includes, skip_top=False):
+def parse_schema(schema, path, includes):
     for k, v in schema.includes.items():
         includes[k] = v
-    if skip_top:
-        assert len(schema.dict) == 1
-        top_name, top_value = list(schema.dict.items())[0]
-        return parse(top_value, f"{path}/{top_name}", includes)
-    else:
-        return parse(schema.dict, path, includes)
+    return parse(schema.dict, path, includes)
 
 
 def parse_file(ym_file, modelbase_only=False) -> Union[Model, ModelBase]:
     schema_data = Path(ym_file).read_text()
     schema_data = re.sub(r"searchable(\s*:\s*)True", r"searchable\1true()", schema_data)
+    schema_data = re.sub(r"default_search(\s*:\s*)True", r"default_search\1true()", schema_data)
     schema = yamale.make_schema(content=schema_data, validators=validators)
     includes = {}
     model = parse_schema(schema, "", includes)
@@ -787,10 +812,20 @@ def set_flow_style(d):
 @click.command()
 @click.argument(
     "input_file",
-    default=Path(__file__).parent.parent / "models" / "main" / "MST.yaml",
+    default=Path(__file__).parent.parent
+            / "models"
+            / "main"
+            / "MST.yaml",
     required=True,
 )
-@click.argument("output_file", required=False)
+@click.argument(
+    "output_file",
+    default=Path(__file__).parent.parent
+            / "models"
+            / "oarepo"
+            / "test_MST.yaml",
+    required=False
+)
 @click.option("--debug", type=bool)
 @click.option(
     "--include",
