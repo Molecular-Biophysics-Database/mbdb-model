@@ -15,6 +15,7 @@ from pathlib import Path
 from glob import glob
 from validate_examples import merged_schema
 
+
 class AnnotatedValidator:
     def __init__(self, name: str, value: validators.Validator | dict, includes):
         self.name = name
@@ -35,10 +36,13 @@ class AnnotatedValidator:
         return validator.kwargs
 
     def __repr__(self):
-        return f"<name={self.name}, " \
-               f"validator_type={self.validator_type}, " \
-               f"constrains={self.constraints}, " \
-               f"is_required={self.is_required}>"
+        return (
+            f"<name={self.name}, "
+            f"validator_type={self.validator_type}, "
+            f"constrains={self.constraints}, "
+            f"is_required={self.is_required}>"
+        )
+
 
 class EnumValidator(AnnotatedValidator):
     def __init__(self, name, value: validators.Enum, includes):
@@ -50,29 +54,37 @@ class EnumValidator(AnnotatedValidator):
         return validator.args
 
     def __repr__(self):
-        return f"<name={self.name}, " \
-               f"validator_type={self.validator_type}, " \
-               f"constrains={self.constraints}, " \
-               f"is_required={self.is_required}, " \
-               f"args={self.args}>"
+        return (
+            f"<name={self.name}, "
+            f"validator_type={self.validator_type}, "
+            f"constrains={self.constraints}, "
+            f"is_required={self.is_required}, "
+            f"args={self.args}>"
+        )
+
 
 class VocabularyValidator(AnnotatedValidator):
     def __init__(self, name, value: custom_validators.Vocabulary, includes):
         super().__init__(name=name, value=value, includes=includes)
         self.vocabulary = value.vocabulary
 
+
 class LinkTargetValidator(AnnotatedValidator):
     def __init__(self, name, value: custom_validators.LinkTarget, includes):
         super().__init__(name=name, value=value, includes=includes)
         self.target_name = value.name
+
 
 class LinkValidator(AnnotatedValidator):
     def __init__(self, name, value: custom_validators.Link, includes):
         super().__init__(name=name, value=value, includes=includes)
         self.target = value.target
 
+
 class NestedValidator(AnnotatedValidator):
-    def __init__(self, name, value: validators.Validator | dict, includes, nested_elements=None):
+    def __init__(
+        self, name, value: validators.Validator | dict, includes, nested_elements=None
+    ):
         super().__init__(name=name, value=value, includes=includes)
         self.nested_elements = nested_elements
         if nested_elements is None:
@@ -108,20 +120,21 @@ class NestedValidator(AnnotatedValidator):
         unrolled.update(value.detailed_schemas)
         return [{k: v for k, v in unrolled.items()}]
 
-
     def from_include(self, key, value: validators.Include, includes: dict, **kwargs):
         include = deepcopy(includes[value.include_name]._schema)
         if isinstance(include, (custom_validators.Choose, validators.Enum)):
             include = {key: include}
-             
+
         return [{k: v} for k, v in include.items()]
 
     def __repr__(self):
-        return f"<name={self.name}, " \
-               f"validator_type={self.validator_type}, " \
-               f"constrains={self.constraints}, " \
-               f"is_required={self.is_required}, " \
-               f"nested_elements={self.nested_elements}>"
+        return (
+            f"<name={self.name}, "
+            f"validator_type={self.validator_type}, "
+            f"constrains={self.constraints}, "
+            f"is_required={self.is_required}, "
+            f"nested_elements={self.nested_elements}>"
+        )
 
 
 class ChooseValidator(NestedValidator):
@@ -134,12 +147,15 @@ class ChooseValidator(NestedValidator):
         return value.type_field
 
     def __repr__(self):
-        return f"<name={self.name}, " \
-               f"validator_type={self.validator_type}, " \
-               f"constrains={self.constraints}, " \
-               f"is_required={self.is_required}, " \
-               f"type_field={self.type_field}, " \
-               f"nested_elements={self.nested_elements}>"
+        return (
+            f"<name={self.name}, "
+            f"validator_type={self.validator_type}, "
+            f"constrains={self.constraints}, "
+            f"is_required={self.is_required}, "
+            f"type_field={self.type_field}, "
+            f"nested_elements={self.nested_elements}>"
+        )
+
 
 def pick_av(validator_type):
     primitives = (
@@ -178,7 +194,7 @@ def pick_av(validator_type):
 
     elif validator_type is custom_validators.Link:
         return LinkValidator
-    
+
     elif validator_type is custom_validators.LinkTarget:
         return LinkTargetValidator
 
@@ -190,6 +206,7 @@ def pick_av(validator_type):
 
     else:
         raise ValueError(f"'{validator_type}' is not a known validator")
+
 
 def is_nested(validator: validators.Validator | dict):
     nested_validators = (
@@ -204,14 +221,16 @@ def is_nested(validator: validators.Validator | dict):
 def to_av(tree, includes):
     av_list = []
     for name, value in tree.items():
-        
         val = pick_av(type(value))
-        av_list.append(val(name=name, value=value, includes=includes) )
+        av_list.append(val(name=name, value=value, includes=includes))
 
     if len(av_list) == 1:
         return av_list[0]
     else:
-        return NestedValidator(name='', value={}, nested_elements=av_list, includes=includes)
+        return NestedValidator(
+            name="", value={}, nested_elements=av_list, includes=includes
+        )
+
 
 def random_int(*args, min=-9999, max=9999):
     return random.randint(min, max)
@@ -235,9 +254,11 @@ def random_string(*args, min=10, max=100, equals=None, char_set=None):
 
 
 def random_dict_like(av, link_dict, vocab_dict):
-
     # dict like random objects (excluding includes that only have a chose element)
-    ret = {nested.name: type_mapping(nested, link_dict, vocab_dict) for nested in av.nested_elements}
+    ret = {
+        nested.name: type_mapping(nested, link_dict, vocab_dict)
+        for nested in av.nested_elements
+    }
 
     # chose elements are implemented as includes. This leads to a nesting artifact e.g.,
     # {chose_name: {choose_name: {k1: v1, k2: v2 }}, which needs to be removed to get the correct return value of
@@ -256,22 +277,24 @@ def random_dict_like(av, link_dict, vocab_dict):
 
 def random_list(av, link_dict=None, vocab_dict=None, min=1, max=5):
     number_of_items = random.randint(min, max)
-    return [type_mapping(av.nested_elements[0], link_dict=link_dict, vocab_dict=vocab_dict) for i in range(number_of_items)]
+    return [
+        type_mapping(av.nested_elements[0], link_dict=link_dict, vocab_dict=vocab_dict)
+        for i in range(number_of_items)
+    ]
 
 
 def random_enum(av, **kwargs):
     return random.choice(av.args)
 
 
-def random_link(av: LinkValidator, link_dict , **kwargs):
+def random_link(av: LinkValidator, link_dict, **kwargs):
     targets = link_dict[av.target]
     r_id = random.choice(tuple(targets.keys()))
-    
-    return {'id': r_id, 'name': targets[r_id]}
+
+    return {"id": r_id, "name": targets[r_id]}
 
 
-def random_linktarget(av: LinkTargetValidator, link_dict , **kwargs):
- 
+def random_linktarget(av: LinkTargetValidator, link_dict, **kwargs):
     if av.target_name not in link_dict.keys():
         link_dict[av.target_name] = {}
 
@@ -283,14 +306,17 @@ def random_linktarget(av: LinkTargetValidator, link_dict , **kwargs):
             linktarget_name = random_string(max=10)
             exists_id[r_id] = linktarget_name
             break
-        
-    return {'id': linktarget_id, 'name': linktarget_name}
+
+    return {"id": linktarget_id, "name": linktarget_name}
 
 
 def random_choose(av, link_dict, vocab_dict, **kwargs):
     elements = av.nested_elements[0].nested_elements
     types = [e.args for e in elements if e.name == av.type_field][0]
-    unrolled = {nested.name: type_mapping(nested, link_dict=link_dict, vocab_dict=vocab_dict) for nested in elements}
+    unrolled = {
+        nested.name: type_mapping(nested, link_dict=link_dict, vocab_dict=vocab_dict)
+        for nested in elements
+    }
 
     picked_type = unrolled[av.type_field].replace("_", " ")
     exclude_types = [t for t in types if t != picked_type]
@@ -300,33 +326,42 @@ def random_choose(av, link_dict, vocab_dict, **kwargs):
     unrolled.update(picked_content)
     return unrolled
 
+
 def random_vocabulary(av: VocabularyValidator, vocab_dict, **kwargs):
-    return {'id': random.choice(vocab_dict[av.vocabulary])}
+    return {"id": random.choice(vocab_dict[av.vocabulary])}
+
 
 def random_person_id(*args):
-    orcid = '-'.join([random_string(min=4, max=4, char_set='0123456789') for i in range(4)])
-    return f'ORCID:{orcid}'
+    orcid = "-".join(
+        [random_string(min=4, max=4, char_set="0123456789") for i in range(4)]
+    )
+    return f"ORCID:{orcid}"
+
 
 def random_id(av, *args):
-    return f'{random_string(min=4, max=10)}:{random_string(min=4, max=10)}'
+    return f"{random_string(min=4, max=10)}:{random_string(min=4, max=10)}"
+
 
 def random_uuid(*args):
     return str(uuid.uuid4())
 
+
 def random_url(*args):
     site = random_string(min=4, max=10)
-    domain = f'{random_string(min=2, max=3)}.{random_string(min=2, max=3)}'
+    domain = f"{random_string(min=2, max=3)}.{random_string(min=2, max=3)}"
     endpoint = random_string(min=5, max=10)
-    return f'https://{site}.{domain}/{endpoint}'
+    return f"https://{site}.{domain}/{endpoint}"
 
 
-def random_day(*args,min='2020-01-01', max='2030-01-01'):
+def random_day(*args, min="2020-01-01", max="2030-01-01"):
     span_int = np.datetime64(max) - np.datetime64(min)
     r_int = random.randint(0, span_int.astype(int))
-    return str(np.datetime64(min) + r_int)    
- 
+    return str(np.datetime64(min) + r_int)
+
+
 def random_bool(*args):
     return choose_state()
+
 
 def choose_state(optional_probability=0.5):
     return random.choices(
@@ -355,7 +390,6 @@ def type_mapping(av: AnnotatedValidator, link_dict, vocab_dict):
         custom_validators.Person_id: random_person_id,
         custom_validators.Url: random_url,
         custom_validators.Uuid: random_uuid,
-        
     }
 
     nested_and_links = {
@@ -374,7 +408,9 @@ def type_mapping(av: AnnotatedValidator, link_dict, vocab_dict):
         return random_value
 
     elif av.validator_type in nested_and_links.keys():
-        random_value = nested_and_links[av.validator_type](av, link_dict=link_dict, vocab_dict=vocab_dict,  **av.constraints)
+        random_value = nested_and_links[av.validator_type](
+            av, link_dict=link_dict, vocab_dict=vocab_dict, **av.constraints
+        )
         return random_value
 
     else:
@@ -382,31 +418,33 @@ def type_mapping(av: AnnotatedValidator, link_dict, vocab_dict):
             f"a random value for fields of type {av.validator_type} has not been implemented"
         )
 
+
 def clean_linktargets(dic):
     """recursively turns all key value pairs of the form 'id': {'id': 'foo', 'name': bar}
-    into 'id': 'foo', 'name': bar """
-    if 'id' in dic:
+    into 'id': 'foo', 'name': bar"""
+    if "id" in dic:
         try:
-            id_content = tuple(dic['id'])
+            id_content = tuple(dic["id"])
         except TypeError:
             id_content = (None,)
-        if 'id' in id_content and 'name' in id_content:
-           dic.update(dic['id'])
-           return
+        if "id" in id_content and "name" in id_content:
+            dic.update(dic["id"])
+            return
 
     else:
-        for key, value in dic.items():        
+        for key, value in dic.items():
             if isinstance(value, dict):
                 clean_linktargets(value)
-    
+
             elif isinstance(value, list):
                 if not isinstance(value[0], dict):
                     continue
                 for list_element in value:
                     clean_linktargets(list_element)
             else:
-                continue    
-        
+                continue
+
+
 def clean_none(dic):
     """recursively removes all key: value pairs of the form key: None"""
     for key, value in tuple(dic.items()):
@@ -423,6 +461,7 @@ def clean_none(dic):
                 clean_none(list_element)
         else:
             continue
+
 
 def clean_enum_includes(dic):
     """recursively turns all key value pairs of the form 'a': {'a': 'b'} into only the inner part 'a': 'b'"""
@@ -443,39 +482,53 @@ def clean_enum_includes(dic):
         else:
             continue
 
+
 def get_vocabulary_ids(vocabulary_fixture_path):
     with open(vocabulary_fixture_path) as f:
         entries = ruamel.yaml.safe_load_all(f)
         return [vocab["id"] for vocab in entries]
 
-def changes_to_general_schema(schema: yamale.schema.Schema):
+
+def changes_to_general_schema(schema: yamale.schema.Schema, input_file: Path):
     """changes requirement of fields such that consistent test data can be generated"""
     # derived parameters optional, however as a derived parameter is also optional in later if it's not set to be
     # required it can lead to links pointing to nowhere which is an error, so derived parameters is changed to required
-    schema.includes["General_parameters"]._schema["derived_parameters"].is_required = True
+    schema.includes["General_parameters"]._schema[
+        "derived_parameters"
+    ].is_required = True
+
+    # make sure that supported technique is fixed to the technique of the input file
+    technique = {
+        "BLI": "Bio-layer interferometry (BLI)",
+        "MST": "Microscale thermophoresis/Temperature related intensity change (MST/TRIC)",
+        "SPR": "Surface plasmon resonance (SPR)",
+    }
+
+    schema.includes["SUPPORTED_TECHNIQUES"]._schema.args = (technique[input_file.stem],)
 
     # marshmallow and random_generator has opposite ways of determining the required status of child items in the corner
     # case it is an include of a single item. This, so far, only occurs for a few enums, so their status is changed to
     # True to allow the parent item to determine if the include it's required or not.
 
     const_enums = [
-                    'OBTAINED_TYPES',
-                    'CONCENTRATION_UNITS',
-                    'FLOWRATE_UNITS',
-                    'HUMIDITY_UNITS',
-                    'PRESSURE_UNITS',
-                    'TEMPERATURE_UNITS',
-                    'TIME_UNITS',
-                    'ENERGY_UNITS',
-                    'POWER_UNITS',
-                    'LENGTH_UNITS',
-                    'MOLECULAR_WEIGHT_UNITS',
-                    'SUPPORTED_TECHNIQUES',
-                    'COMPANIES',
+        "OBTAINED_TYPES",
+        "CONCENTRATION_UNITS",
+        "FLOWRATE_UNITS",
+        "HUMIDITY_UNITS",
+        "PRESSURE_UNITS",
+        "TEMPERATURE_UNITS",
+        "TIME_UNITS",
+        "ENERGY_UNITS",
+        "POWER_UNITS",
+        "LENGTH_UNITS",
+        "MOLECULAR_WEIGHT_UNITS",
+        "SUPPORTED_TECHNIQUES",
+        "COMPANIES",
     ]
     for con in const_enums:
         schema.includes[con]._schema.is_required = True
     return schema
+
 
 def make_file_name(n, i, data_dir):
     data_dir = Path(data_dir)
@@ -483,10 +536,21 @@ def make_file_name(n, i, data_dir):
         os.mkdir(data_dir)
 
     width = int(np.floor(np.log10(n)) + 1)
-    return data_dir / f'{str(i + 1).zfill(width)}_testfile.json'
+    return data_dir / f"{str(i + 1).zfill(width)}_testfile.json"
+
 
 def with_header(mapped_dict):
     return {"metadata": mapped_dict}
+
+
+def write_file(document_list, output_folder, as_fixture):
+    if as_fixture:
+        document_list = [document_list]
+
+    for i, document in enumerate(document_list):
+        fn = make_file_name(n=len(document_list), i=i, data_dir=output_folder)
+        with open(fn, "w") as f_out:
+            json.dump(document, f_out, ensure_ascii=False, indent=2)
 
 
 @click.command()
@@ -494,10 +558,16 @@ def with_header(mapped_dict):
     "input_file",
     default=Path(__file__).parent.parent / "models" / "values-only" / "MST.yaml",
     required=True,
+    type=Path,
 )
 @click.option(
     "--n_outputs",
     default=25,
+    required=False,
+)
+@click.option(
+    "--as_fixture",
+    default=False,
     required=False,
 )
 @click.option(
@@ -507,36 +577,45 @@ def with_header(mapped_dict):
 )
 @click.option(
     "--include_schema",
-    default=Path(__file__).parent.parent / "models" / "values-only" / "general_parameters.yaml",
+    default=Path(__file__).parent.parent
+    / "models"
+    / "values-only"
+    / "general_parameters.yaml",
     required=False,
 )
-def main(input_file, n_outputs, output_folder, include_schema):
+def main(input_file, n_outputs, output_folder, include_schema, as_fixture):
     vocab_dir = Path(__file__).parent.parent / "vocabularies"
-    vocabs = glob(f'{vocab_dir}/generated_vocabularies/*.yaml')
+    vocabs = glob(f"{vocab_dir}/generated_vocabularies/*.yaml")
 
     if not vocabs:
         print("No vocabularies detected, generating them")
-        os.system( vocab_dir / "generate_vocabularies.py")
-        vocabs = glob(f'{vocab_dir}/generated_vocabularies/*.yaml')
+        os.system(vocab_dir / "generate_vocabularies.py")
+        vocabs = glob(f"{vocab_dir}/generated_vocabularies/*.yaml")
 
     vocab_dict = {Path(vocab).stem: get_vocabulary_ids(vocab) for vocab in vocabs}
 
     inputs = (input_file, include_schema)
     full_schema = merged_schema(*inputs, validators=custom_validators.extend_validators)
-    full_schema = changes_to_general_schema(full_schema)
+    full_schema = changes_to_general_schema(full_schema, input_file)
 
     annotated_validators = to_av(full_schema.dict, full_schema.includes)
+
+    document_list = []
     for i in range(n_outputs):
         link_dict = {}
-        mapped = type_mapping(annotated_validators, link_dict=link_dict, vocab_dict=vocab_dict)
-        clean_linktargets(mapped)
-        clean_enum_includes(mapped)
-        clean_none(mapped)
-        fn = make_file_name(n=n_outputs, i=i, data_dir=output_folder)
-        with open(fn, 'w') as f_out:
-            json.dump(with_header(mapped), f_out, ensure_ascii=False, indent=2)
+        document = type_mapping(
+            annotated_validators, link_dict=link_dict, vocab_dict=vocab_dict
+        )
+        clean_linktargets(document)
+        clean_enum_includes(document)
+        clean_none(document)
 
-    print(f'Generated {n_outputs} test files in {output_folder}')
+        document_list.append(with_header(document))
+
+    write_file(document_list, output_folder, as_fixture)
+
+    print(f"Generated {n_outputs} test documents in {output_folder}")
+
 
 if __name__ == "__main__":
     main()
