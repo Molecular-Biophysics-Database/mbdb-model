@@ -598,7 +598,7 @@ class Model:
             "record": self._to_record(),
             "plugins": PLUGINS,
             "$defs": self._to_defs(),
-            "settings": MODEL_SETTINGS
+            "settings": MODEL_SETTINGS,
         }
 
     def _to_defs(self):
@@ -616,6 +616,9 @@ class Model:
             "draft": {},
             "draft-files": {},
             "mapping": RECORD_MAPPING,
+            "resource-config": {
+                "base-html-url": f"/{self.package}/"
+            }
         }
 
     def set_links(self):
