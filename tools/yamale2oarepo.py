@@ -51,7 +51,7 @@ from custom_validators import (
     Vocabulary,
 )
 
-log = logging.getLogger("yamale2model")
+log = logging.getLogger("yamale2oarepo")
 
 
 class NonAliasingRTRepresenter(ruamel.yaml.RoundTripRepresenter):
@@ -115,13 +115,15 @@ class ModelBase:
     path = None
     description = None
     extension_elements = None
-    searchable = FalseValidator()
-    default_search = FalseValidator()
+    searchable = None
+    default_search = None
 
-    def __init__(self, path, required) -> None:
+    def __init__(self, path, required, searchable, default_search) -> None:
         self.constraints = {}
         self.path = path
         self.required = required
+        self.searchable = searchable
+        self.default_search = default_search
 
     def parse(self, data):
         if isinstance(data, Validator):
@@ -144,6 +146,11 @@ class ModelBase:
             ret["help.en"] = self.description.strip()
         if self.required:
             ret["required"] = True
+        if self.default_search:
+            if "mapping" not in ret:
+                ret["mapping"] = {}
+            ret["mapping"].update(PRIMITIVES_MAPPING)
+
         if self.extension_elements:
             for key, value in self.extension_elements.items():
                 ret[key] = value.to_json()
@@ -169,9 +176,14 @@ class ModelBase:
 
 
 class ModelObject(ModelBase):
-    def __init__(self, data: Any, path: str, includes) -> None:
+    def __init__(
+        self, data: Any, path: str, includes, searchable, default_search
+    ) -> None:
         super().__init__(
-            path, data.is_required if not isinstance(data, dict) else False
+            path=path,
+            required=data.is_required if not isinstance(data, dict) else False,
+            searchable=searchable,
+            default_search=default_search,
         )
         self.children = {}
         self.parse(data, includes)
@@ -179,7 +191,10 @@ class ModelObject(ModelBase):
     def parse(self, data, includes):
         super().parse(data)
         self.children = {
-            k: parse(v, f"{self.path}/{k}", includes) for k, v in data.items()
+            k: parse(
+                v, f"{self.path}/{k}", includes, self.searchable, self.default_search
+            )
+            for k, v in data.items()
         }
 
     def to_json(self, **extras):
@@ -219,7 +234,13 @@ class ModelObject(ModelBase):
     def update_children(self, children, defs):
         for k, v in children.items():
             if k == "id" and isinstance(v, ModelLinkTarget):
-                v = ModelPrimitive(None, "keyword", v.path)
+                v = ModelPrimitive(
+                    None,
+                    "keyword",
+                    v.path,
+                    searchable=self.searchable,
+                    default_search=self.default_search,
+                )
             if k not in self.children:
                 self.children[k] = v.copy()
             else:
@@ -227,8 +248,10 @@ class ModelObject(ModelBase):
 
 
 class ModelArray(ModelBase):
-    def __init__(self, data: Any, path: str, includes) -> None:
-        super().__init__(path, data.is_required)
+    def __init__(
+        self, data: Any, path: str, includes, searchable, default_search
+    ) -> None:
+        super().__init__(path, data.is_required, searchable, default_search)
         self.item = None
         self.parse(data, includes)
 
@@ -240,22 +263,33 @@ class ModelArray(ModelBase):
 
         if len(data.validators) > 1:
             self.item = parse(
-                {x.include_name: x for x in data.validators}, self.path, includes
+                {x.include_name: x for x in data.validators},
+                self.path,
+                includes,
+                searchable=self.searchable,
+                default_search=self.default_search,
             )
         else:
-            self.item = parse(data.validators[0], self.path, includes)
+            self.item = parse(
+                data.validators[0],
+                self.path,
+                includes,
+                searchable=self.searchable,
+                default_search=self.default_search,
+            )
 
     def parse_LengthMin(self, constraint):
         self.constraints["minItems"] = constraint.min
 
     def to_json(self, **extras):
         ret = super().to_json(**extras)
-        ret = {f"^{k}": v for k, v in ret.items()}
+        # mapping for arrays needs to be an item attribute, not an array attribute
+        ret = {f"^{k}": v for k, v in ret.items() if not k == "mapping"}
         if isinstance(self.item, ModelArray):
             ret.update(self.item.to_explicit_json())
         else:
             ret.update(self.item.to_json())
-        # remove required from the item
+        # remove required from item
         ret.pop("required", False)
         return ArrayModifier(ret)
 
@@ -281,12 +315,14 @@ class ModelArray(ModelBase):
 
 
 class ModelPrimitive(ModelBase):
-    def __init__(self, data: Any, type: str, path: str) -> None:
+    def __init__(
+        self, data: Any, type: str, path: str, searchable, default_search
+    ) -> None:
         is_required = False
         if data is not None:
             is_required = data.is_required
 
-        super().__init__(path, is_required)
+        super().__init__(path, is_required, searchable, default_search)
         self.type = type
         self.path = path
 
@@ -301,7 +337,13 @@ class ModelPrimitive(ModelBase):
 
     def to_json(self, **extras):
         ret = super().to_json(type=self.type, **extras)
-        if (self.type in ("fulltext", "keyword")) and self.default_search:
+        if (
+            self.type
+            in (
+                "fulltext",
+                "keyword",
+            )
+        ) and self.default_search:
             ret["mapping"] = PRIMITIVES_MAPPING
         return ret
 
@@ -319,8 +361,8 @@ class ModelPrimitive(ModelBase):
 
 
 class ModelEnum(ModelPrimitive):
-    def __init__(self, data, path: str) -> None:
-        super().__init__(data, "keyword", path)
+    def __init__(self, data, path: str, searchable, default_search) -> None:
+        super().__init__(data, "keyword", path, searchable, default_search)
         if hasattr(data, "enums"):
             self.constraints["enum"] = data.enums
 
@@ -330,14 +372,14 @@ class ModelEnum(ModelPrimitive):
 
 
 class ModelRegex(ModelPrimitive):
-    def __init__(self, data, path: str) -> None:
-        super().__init__(data, "keyword", path)
+    def __init__(self, data, path: str, searchable, default_search) -> None:
+        super().__init__(data, "keyword", path, searchable, default_search)
         self.constraints["regex"] = data.args[0]
 
 
 class ModelInclude(ModelBase):
-    def __init__(self, data: Any, path: str) -> None:
-        super().__init__(path, data.is_required)
+    def __init__(self, data, path: str, searchable, default_search) -> None:
+        super().__init__(path, data.is_required, searchable, default_search)
         self.include = data.include_name
 
     def to_json(self):
@@ -365,8 +407,8 @@ class ModelInclude(ModelBase):
 
 
 class ModelNestedInclude(ModelInclude):
-    def __init__(self, data, path):
-        super().__init__(data, path)
+    def __init__(self, data, path: str, searchable, default_search) -> None:
+        super().__init__(data, path, searchable, default_search)
         self.json_proto = {"type": "nested"}
 
     def to_json(self):
@@ -381,12 +423,14 @@ class ModelNestedInclude(ModelInclude):
 
 
 class ModelChoose(ModelBase):
-    def __init__(self, data: Any, path: str) -> None:
-        super().__init__(path, data.is_required)
-        self.base_schema = ModelInclude(data.base_schema, path)
+    def __init__(self, data, path: str, searchable, default_search) -> None:
+        super().__init__(path, data.is_required, searchable, default_search)
+        self.base_schema = ModelInclude(
+            data.base_schema, path, searchable, default_search
+        )
         self.type_field = data.type_field
         self.subschemas = {
-            k.replace("_", " "): ModelInclude(v, path)
+            k.replace("_", " "): ModelInclude(v, path, searchable, default_search)
             for k, v in data.detailed_schemas.items()
         }
         self.link_id = None
@@ -407,7 +451,7 @@ class ModelChoose(ModelBase):
         # collect id from the base schema
         base_schema: ModelObject = defs[self.base_schema.include]
         if "id" in base_schema.children and isinstance(
-                base_schema.children["id"], ModelLinkTarget
+            base_schema.children["id"], ModelLinkTarget
         ):
             self.link_id = base_schema.children["id"].name
 
@@ -443,7 +487,10 @@ class ModelChoose(ModelBase):
                     "IncludeParams", "include_name, is_required"
                 )(new_include, subschema_include.required)
                 new_subschema_include = ModelInclude(
-                    new_include_params, subschema_include.path
+                    new_include_params,
+                    subschema_include.path,
+                    self.searchable,
+                    self.default_search,
                 )
                 new_subschemas[subschema_name] = new_subschema_include
                 new_subschema_include.propagate_polymorphic_base_schemas(
@@ -478,9 +525,9 @@ class ModelChoose(ModelBase):
             handling_prefix = True
             for pth_idx, pth_part in enumerate(pth):
                 if (
-                        handling_prefix
-                        and pth_idx < len(previous_path)
-                        and previous_path[pth_idx] == pth_part
+                    handling_prefix
+                    and pth_idx < len(previous_path)
+                    and previous_path[pth_idx] == pth_part
                 ):
                     continue
                 else:
@@ -507,8 +554,8 @@ class ModelChoose(ModelBase):
 
 
 class ModelLinkTarget(ModelBase):
-    def __init__(self, data, path: str) -> None:
-        super().__init__(path, data.is_required)
+    def __init__(self, data, path: str, searchable, default_search) -> None:
+        super().__init__(path, data.is_required, searchable, default_search)
         self.name = data.name
 
     def to_json(self):
@@ -533,8 +580,8 @@ class ModelLinkTarget(ModelBase):
 
 
 class ModelLink(ModelBase):
-    def __init__(self, data, path: str) -> None:
-        super().__init__(path, data.is_required)
+    def __init__(self, data, path: str, searchable, default_search) -> None:
+        super().__init__(path, data.is_required, searchable, default_search)
         self.target = data.target
         self.fields = data.fields
         if isinstance(self.fields, str):
@@ -560,10 +607,9 @@ class ModelLink(ModelBase):
 
 
 class ModelVocabulary(ModelLink):
-    def __init__(self, data, path: str,
-                 ) -> None:
+    def __init__(self, data, path: str, searchable, default_search) -> None:
         data.target = None
-        super().__init__(data, path)
+        super().__init__(data, path, searchable, default_search)
         self.vocabulary = data.vocabulary
 
     def to_json(self):
@@ -598,7 +644,7 @@ class Model:
             "record": self._to_record(),
             "plugins": PLUGINS,
             "$defs": self._to_defs(),
-            "settings": MODEL_SETTINGS
+            "settings": MODEL_SETTINGS,
         }
 
     def _to_defs(self):
@@ -610,7 +656,7 @@ class Model:
             "module": {"qualified": f"mbdb_{self.package}"},
             "properties": {
                 "metadata": self.model.to_json(),
-                QUERY_STRING_FIELD: QUERY_STRING_FIELD_SETTINGS
+                QUERY_STRING_FIELD: QUERY_STRING_FIELD_SETTINGS,
             },
             "files": {**self.files_meta, "use": ["invenio_files"]},
             "draft": {},
@@ -658,24 +704,27 @@ def parse_described_value(d, path, includes):
     if default_search:
         default_search = isinstance(default_search, TrueValidator)
 
-    value = parse(value, f"{path}/value", includes)
+    value = parse(
+        value,
+        f"{path}/value",
+        includes,
+        searchable=searchable,
+        default_search=default_search,
+    )
     value.description = description
     value.searchable = searchable
     value.default_search = default_search
 
     value.extension_elements = {
         k: parse(v, f"{path}/{k}", includes)
-        for k, v in d.items() if k not in (
-            "description",
-            "value",
-            "searchable",
-            "default_search"
-        )
+        for k, v in d.items()
+        if k not in ("description", "value", "searchable", "default_search")
     }
+
     return value
 
 
-def parse(d, path, includes):
+def parse(d, path, includes, searchable=False, default_search=False):
     clz = type(d)
     if clz is dict:
         log.debug("%s: %s", path, {k: type(v).__name__ for k, v in d.items()})
@@ -683,53 +732,53 @@ def parse(d, path, includes):
             log.debug("... described value")
             return parse_described_value(d, path, includes)
         log.debug("... plain dict")
-        return ModelObject(d, path, includes)
+        return ModelObject(d, path, includes, searchable, default_search)
     elif clz is String:
-        return parse_keyword(d, path)
+        return parse_keyword(d, path, searchable, default_search)
     elif clz is Enum:
-        return ModelEnum(d, path)
+        return ModelEnum(d, path, searchable, default_search)
     elif clz is Uuid:
-        return ModelPrimitive(d, "uuid", path)
+        return ModelPrimitive(d, "uuid", path, searchable, default_search)
     elif clz is Url:
-        return ModelPrimitive(d, "url", path)
+        return ModelPrimitive(d, "url", path, searchable, default_search)
     elif clz is Day:
-        return ModelPrimitive(d, "date", path)
+        return ModelPrimitive(d, "date", path, searchable, default_search)
     elif clz is Boolean:
-        return ModelPrimitive(d, "boolean", path)
+        return ModelPrimitive(d, "boolean", path, searchable, default_search)
     elif clz is Number:
-        return ModelPrimitive(d, "double", path)
+        return ModelPrimitive(d, "double", path, searchable, default_search)
     elif clz is Integer:
-        return ModelPrimitive(d, "integer", path)
+        return ModelPrimitive(d, "integer", path, searchable, default_search)
     elif clz is Keyword:
-        return parse_keyword(d, path)
+        return parse_keyword(d, path, searchable, default_search)
     elif clz is Fulltext:
-        return ModelPrimitive(d, "fulltext", path)
+        return ModelPrimitive(d, "fulltext", path, searchable, default_search)
     elif clz is Regex:
-        return ModelRegex(d, path)
+        return ModelRegex(d, path, searchable, default_search)
     elif clz is Include:
-        return ModelInclude(d, path)
+        return ModelInclude(d, path, searchable, default_search)
     elif clz is Nested_include:
-        return ModelNestedInclude(d, path)
+        return ModelNestedInclude(d, path, searchable, default_search)
     elif clz is List:
-        return ModelArray(d, path, includes)
+        return ModelArray(d, path, includes, searchable, default_search)
     elif clz is Schema:
         return parse_schema(d, path, includes)
     elif clz is LinkTarget:
-        return ModelLinkTarget(d, path)
+        return ModelLinkTarget(d, path, searchable, default_search)
     elif clz is Vocabulary:
-        return ModelVocabulary(d, path)
+        return ModelVocabulary(d, path, searchable, default_search)
     elif clz is Link:
-        return ModelLink(d, path)
+        return ModelLink(d, path, searchable, default_search)
     elif clz is Choose:
-        return ModelChoose(d, path)
+        return ModelChoose(d, path, searchable, default_search)
     elif clz is Publication_id:
-        return parse_publication_id(d, path)
+        return parse_publication_id(d, path, searchable, default_search)
     elif clz is Chemical_id:
-        return parse_chemical_id(d, path)
+        return parse_chemical_id(d, path, searchable, default_search)
     elif clz is Person_id:
-        return parse_person_id(d, path)
+        return parse_person_id(d, path, searchable, default_search)
     elif clz is Database_id:
-        return parse_database_id(d, path)
+        return parse_database_id(d, path, searchable, default_search)
     elif clz is str:
         return parse(
             yamale.make_schema(content="root:\n" + "    " + d).dict["root"],
@@ -742,30 +791,30 @@ def parse(d, path, includes):
         )
 
 
-def parse_keyword(d, path):
+def parse_keyword(d, path, searchable, default_search):
     for constraint in d._constraints_inst:
         constraint_name = type(constraint).__name__
         if not constraint.is_active:
             continue
         if constraint_name == "StringEquals":
-            return ModelEnum(d, path)
-    return ModelPrimitive(d, "keyword", path)
+            return ModelEnum(d, path, searchable, default_search)
+    return ModelPrimitive(d, "keyword", path, searchable, default_search)
 
 
-def parse_database_id(d, path):
-    return parse_keyword(d, path)
+def parse_database_id(d, path, searchable, default_search):
+    return parse_keyword(d, path, searchable, default_search)
 
 
-def parse_person_id(d, path):
-    return parse_keyword(d, path)
+def parse_person_id(d, path, searchable, default_search):
+    return parse_keyword(d, path, searchable, default_search)
 
 
-def parse_publication_id(d, path):
-    return parse_keyword(d, path)
+def parse_publication_id(d, path, searchable, default_search):
+    return parse_keyword(d, path, searchable, default_search)
 
 
-def parse_chemical_id(d, path):
-    return parse_keyword(d, path)
+def parse_chemical_id(d, path, searchable, default_search):
+    return parse_keyword(d, path, searchable, default_search)
 
 
 def parse_schema(schema, path, includes):
@@ -777,7 +826,9 @@ def parse_schema(schema, path, includes):
 def parse_file(ym_file, modelbase_only=False) -> Union[Model, ModelBase]:
     schema_data = Path(ym_file).read_text()
     schema_data = re.sub(r"searchable(\s*:\s*)True", r"searchable\1true()", schema_data)
-    schema_data = re.sub(r"default_search(\s*:\s*)True", r"default_search\1true()", schema_data)
+    schema_data = re.sub(
+        r"default_search(\s*:\s*)True", r"default_search\1true()", schema_data
+    )
     schema = yamale.make_schema(content=schema_data, validators=validators)
     includes = {}
     model = parse_schema(schema, "", includes)
@@ -812,27 +863,17 @@ def set_flow_style(d):
 @click.command()
 @click.argument(
     "input_file",
-    default=Path(__file__).parent.parent
-            / "models"
-            / "main"
-            / "MST.yaml",
+    default=Path(__file__).parent.parent / "models" / "main" / "MST.yaml",
     required=True,
 )
-@click.argument(
-    "output_file",
-    default=Path(__file__).parent.parent
-            / "models"
-            / "oarepo"
-            / "test_MST.yaml",
-    required=False
-)
+@click.argument("output_file", required=False)
 @click.option("--debug", type=bool)
 @click.option(
     "--include",
     default=Path(__file__).parent.parent
-            / "models"
-            / "main"
-            / "general_parameters.yaml",
+    / "models"
+    / "main"
+    / "general_parameters.yaml",
     required=False,
 )
 def run(input_file, output_file, debug, include):
@@ -840,7 +881,7 @@ def run(input_file, output_file, debug, include):
         logging.basicConfig(level=logging.DEBUG)
     ym_file = input_file
     attachment = (
-            Path(__file__).parent.parent / "models" / "main" / "file_attachment.yaml"
+        Path(__file__).parent.parent / "models" / "main" / "file_attachment.yaml"
     )
     model = parse_file(ym_file)
     if include:
