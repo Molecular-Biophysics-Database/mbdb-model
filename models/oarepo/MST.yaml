@@ -269,6 +269,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       technique:
         use: '#/$defs/SUPPORTED_TECHNIQUES'
         required: true
@@ -512,8 +515,6 @@ $defs:
         ^help.en: Additional information about the macromolecular assembly can be
           specified here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
   Assembly_component_base:
     properties:
       name:
@@ -589,6 +590,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       modifications:
         use: '#/$defs/Polymer_modifications'
       expression_source_type:
@@ -613,8 +617,6 @@ $defs:
         ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
   Polymer_modifications:
     properties:
       synthesis[]:
@@ -674,8 +676,6 @@ $defs:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       isotopic_labeling:
         type: keyword
         help.en: If the isotopic composition of the chemical was altered from the
@@ -695,8 +695,6 @@ $defs:
         ^help.en: Additional information about the chemical can be specified here
           (e.g. RNase free water, recrystallization, desalting)
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
   Chemical_environment:
     properties:
       id:
@@ -746,8 +744,6 @@ $defs:
         ^help.en: Additional information about the chemical environment can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
     id: chemical-environment
   Constituent_base:
     properties:
@@ -861,6 +857,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -874,8 +873,6 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
   Body_fluid:
     properties:
       fluid:
@@ -967,8 +964,6 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
   Complex_substance_of_chemical_origin:
     properties:
       class:
@@ -992,8 +987,6 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
   Lipid_assembly:
     properties:
       type:
@@ -1044,8 +1037,6 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
   Depositors:
     properties:
       depositor:
@@ -1093,6 +1084,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
   Publication:
     properties:
       pid:
@@ -1587,8 +1581,6 @@ $defs:
         ^minItems: 1
         ^help.en: Further information e.g. batch number
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
   Coordinates:
     properties:
       S-N(latitude):
@@ -1606,58 +1598,38 @@ $defs:
   OBTAINED_TYPES:
     type: keyword
     enum: [Measurement, Calculation, Assumption, Other]
-    mapping:
-      copy_to: collected_default_search_fields
   CONCENTRATION_UNITS:
     type: keyword
     enum: [M, mM, µM, nM, pM, fM, aM, g/L, mg/mL, µg/mL, ng/mL, mol/kg, mmol/kg, v/v
         %, w/w %, v/w %, w/v %, U/ml, '% saturated']
-    mapping:
-      copy_to: collected_default_search_fields
   HUMIDITY_UNITS:
     type: keyword
     enum: ['%', g/m^3, oz/y^3]
-    mapping:
-      copy_to: collected_default_search_fields
   PRESSURE_UNITS:
     type: keyword
     enum: [Pa, kPa, MPa, Bar, mBar, atm, Torr, PSI, mmHg, inchHg]
-    mapping:
-      copy_to: collected_default_search_fields
   TEMPERATURE_UNITS:
     type: keyword
     enum: [K, °C, °F]
     required: true
-    mapping:
-      copy_to: collected_default_search_fields
   TIME_UNITS:
     type: keyword
     enum: [nanoseconds, microseconds, milliseconds, seconds, minutes, hours, days,
       months, years]
-    mapping:
-      copy_to: collected_default_search_fields
   LENGTH_UNITS:
     type: keyword
     enum: [Å, nm, μm, mm, cm, m]
-    mapping:
-      copy_to: collected_default_search_fields
   MOLECULAR_WEIGHT_UNITS:
     type: keyword
     enum: [g/mol, Da, kDa, MDa]
-    mapping:
-      copy_to: collected_default_search_fields
   SUPPORTED_TECHNIQUES:
     type: keyword
     enum: [Bio-layer interferometry (BLI), Microscale thermophoresis/Temperature related
         intensity change (MST/TRIC), Surface plasmon resonance (SPR)]
-    mapping:
-      copy_to: collected_default_search_fields
   COMPANIES:
     type: keyword
     enum: [Bio-Rad, Bruker, Cytiva, Gatorbio, GE Healthcare, Nanotemper, Nicoya Life,
       Sartorius, Malvern Panalytical, Refeyn, TA Instruments]
-    mapping:
-      copy_to: collected_default_search_fields
   ConstituentPolymerPolymorphic:
     properties:
       polymer_type:
@@ -1702,6 +1674,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       modifications:
         use: '#/$defs/Polymer_modifications'
       expression_source_type:
@@ -1726,8 +1701,6 @@ $defs:
         ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
@@ -1763,8 +1736,6 @@ $defs:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       isotopic_labeling:
         type: keyword
         help.en: If the isotopic composition of the chemical was altered from the
@@ -1784,8 +1755,6 @@ $defs:
         ^help.en: Additional information about the chemical can be specified here
           (e.g. RNase free water, recrystallization, desalting)
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
@@ -1852,8 +1821,6 @@ $defs:
         ^help.en: Additional information about the macromolecular assembly can be
           specified here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
@@ -1916,6 +1883,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       modifications:
         use: '#/$defs/Polymer_modifications'
       expression_source_type:
@@ -1940,8 +1910,6 @@ $defs:
         ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) given to the assembly component. The
@@ -1976,8 +1944,6 @@ $defs:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       isotopic_labeling:
         type: keyword
         help.en: If the isotopic composition of the chemical was altered from the
@@ -1997,8 +1963,6 @@ $defs:
         ^help.en: Additional information about the chemical can be specified here
           (e.g. RNase free water, recrystallization, desalting)
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) given to the assembly component. The
@@ -2063,6 +2027,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2076,8 +2043,6 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
@@ -2137,6 +2102,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2150,8 +2118,6 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
@@ -2211,6 +2177,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2224,8 +2193,6 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
@@ -2270,8 +2237,6 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
@@ -2313,8 +2278,6 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
@@ -2356,8 +2319,6 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
@@ -2393,8 +2354,6 @@ $defs:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       isotopic_labeling:
         type: keyword
         help.en: If the isotopic composition of the chemical was altered from the
@@ -2414,8 +2373,6 @@ $defs:
         ^help.en: Additional information about the chemical can be specified here
           (e.g. RNase free water, recrystallization, desalting)
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
@@ -2475,6 +2432,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       modifications:
         use: '#/$defs/Polymer_modifications'
       expression_source_type:
@@ -2499,12 +2459,8 @@ $defs:
         ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       id:
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
@@ -2544,8 +2500,6 @@ $defs:
         ^help.en: Unique and persistent identifier from an external source; options
           of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       isotopic_labeling:
         type: keyword
         help.en: If the isotopic composition of the chemical was altered from the
@@ -2565,12 +2519,8 @@ $defs:
         ^help.en: Additional information about the chemical can be specified here
           (e.g. RNase free water, recrystallization, desalting)
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       id:
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
@@ -2641,12 +2591,8 @@ $defs:
         ^help.en: Additional information about the macromolecular assembly can be
           specified here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       id:
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
@@ -2716,6 +2662,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2729,12 +2678,8 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       id:
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
@@ -2798,6 +2743,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2811,12 +2759,8 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       id:
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
@@ -2880,6 +2824,9 @@ $defs:
               properties:
                 en:
                   copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2893,12 +2840,8 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       id:
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
@@ -2947,12 +2890,8 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       id:
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
@@ -2998,12 +2937,8 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       id:
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
@@ -3049,12 +2984,8 @@ $defs:
         ^help.en: Additional information about the complex substance can be specified
           here
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       id:
         type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
       name:
         type: keyword
         help.en: Short descriptive name (id) of the entity; must be unique within
