@@ -1,20 +1,17 @@
 # objects that are only used elsewhere and therefore should be ignored by validation
 
 EXTENSION_ELEMENTS = [
-        "ui_file_context",
+    "ui_file_context",
 ]
 
-MODEL_SETTINGS = {
-    "i18n-languages": ["en"],
-    "extension-elements": EXTENSION_ELEMENTS
-}
+MODEL_SETTINGS = {"i18n-languages": ["en"], "extension-elements": EXTENSION_ELEMENTS}
 
 PROFILES = [
-        "record",
-        "draft",
-        "files",
-        "draft_files",
-    ]
+    "record",
+    "draft",
+    "files",
+    "draft_files",
+]
 
 PLUGINS = {
     "builder": {"disable": ["script_sample_data"]},
@@ -25,19 +22,16 @@ PLUGINS = {
         "oarepo-model-builder-relations==4.*",
         "oarepo-model-builder-polymorphic==1.*",
         "oarepo-model-builder-drafts",
-        "oarepo-model-builder-drafts-files"
-    ]
+        "oarepo-model-builder-drafts-files",
+    ],
 }
 
+# Mapping related constants
 
 QUERY_STRING_FIELD = "collected_default_search_fields"
-
 QUERY_STRING_FIELD_SETTINGS = {
     "type": "fulltext",
-    "marshmallow": {
-        "read": False,
-        "write": False
-    }
+    "marshmallow": {"read": False, "write": False},
 }
 
 RECORD_MAPPING = {
@@ -50,18 +44,11 @@ RECORD_MAPPING = {
     }
 }
 
-# note that only vocabularies titles are made searchable
+PRIMITIVES_MAPPING = {"copy_to": QUERY_STRING_FIELD}
+
+# note that only vocabularies titles and id are made searchable
 # TODO: allow placement of custom fields to be searchable
 VOCABULARY_MAPPING = {
-    "title": {
-        "mapping": {
-            "properties": {
-                "en": {
-                    "copy_to": QUERY_STRING_FIELD
-                }
-            }
-        }
-    }
+    "title": {"mapping": {"properties": {"en": PRIMITIVES_MAPPING}}},
+    "id": {"mapping": PRIMITIVES_MAPPING},
 }
-
-PRIMITIVES_MAPPING = {"copy_to": QUERY_STRING_FIELD}
