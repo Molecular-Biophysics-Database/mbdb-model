@@ -662,6 +662,9 @@ class Model:
             "draft": {},
             "draft-files": {},
             "mapping": RECORD_MAPPING,
+            "resource-config": {
+                "base-html-url": f"/{self.package}/"
+            }
         }
 
     def set_links(self):

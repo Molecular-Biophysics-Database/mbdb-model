@@ -121,6 +121,8 @@ record:
         index.mapping.total_fields.limit: 3000
         index.mapping.nested_fields.limit: 200
         index.query.default_field: collected_default_search_fields
+  resource-config:
+    base-html-url: /general_parameters/
 plugins:
   builder:
     disable: [script_sample_data]
