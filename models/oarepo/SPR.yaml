@@ -304,7 +304,7 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.12]
+        enum: [0.9.13]
         help.en: The schema version used to annotate the general parameters
         required: true
       record_information:
@@ -369,9 +369,8 @@ $defs:
           copy_to: collected_default_search_fields
       keywords[]:
         ^minItems: 1
-        ^help.en: List of keywords describing this particular record content, e.g.
-          antibody, epitope, ligand optimization, SARS-CoV-2, agonist, antagonist,
-          HIV, etc.
+        ^help.en: User chosen keywords describing the record content (e.g. antibody,
+          epitope, ligand optimization, SARS-CoV-2, agonist, antagonist, HIV, etc.)
         ^required: true
         type: keyword
         mapping:
@@ -800,7 +799,9 @@ $defs:
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the chemical environment can be specified
-          here
+          here (e.g. prepared just prior to conducting the measurement, additional
+          treatments like UV irradiation, specific storage container of chemical environment
+          if that influenced the measurement etc.)
         type: keyword
     id: chemical-environment
   Constituent_base:
@@ -808,7 +809,7 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
-          a record
+          a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -1379,11 +1380,11 @@ $defs:
     properties:
       upper_error:
         type: double
-        help.en: The upper error, i.e. the number added to the parameter value
+        help.en: The upper error, i.e. the number added to the value
         required: true
       lower_error:
         type: double
-        help.en: The lower error, i.e. the number subtracted from the parameter value
+        help.en: The lower error, i.e. the number subtracted from the value
         required: true
       errors_are_relative:
         type: boolean
@@ -1747,7 +1748,7 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
-          a record
+          a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -1801,7 +1802,7 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
-          a record
+          a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -1867,7 +1868,7 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
-          a record
+          a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2089,7 +2090,7 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
-          a record
+          a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2164,7 +2165,7 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
-          a record
+          a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2239,7 +2240,7 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
-          a record
+          a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2283,7 +2284,7 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
-          a record
+          a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2324,7 +2325,7 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
-          a record
+          a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2365,7 +2366,7 @@ $defs:
       name:
         type: keyword
         help.en: Short descriptive name (id) of the constituent, must be unique within
-          a record
+          a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
         required: true
         mapping:
           copy_to: collected_default_search_fields

@@ -5,7 +5,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.12')
+        value           : keyword(equals='0.9.13')
 
     record_information:
         description     : str(equals='The metadata of the record itself',
@@ -106,11 +106,10 @@ Record_information:
 
 
     keywords:
-        description : str(equals='List of keywords describing this
-                                  particular record content, e.g. antibody,
-                                  epitope, ligand optimization, SARS-CoV-2,
-                                  agonist, antagonist, HIV, etc.',
-                          required=False)
+        description : str(equals='User chosen keywords describing the record
+                                  content (e.g. antibody, epitope, ligand
+                                  optimization, SARS-CoV-2, agonist, antagonist,
+                                  HIV, etc.)', required=False)
         searchable  : True
         default_search: True
         value       : list(keyword())
@@ -716,7 +715,12 @@ Chemical_environment:
 
     additional_specifications:
         description     : str(equals='Additional information about the chemical
-                                      environment can be specified here',
+                                      environment can be specified here (e.g.
+                                      prepared just prior to conducting the
+                                      measurement, additional treatments like UV
+                                      irradiation, specific storage container of
+                                      chemical environment if that influenced
+                                      the measurement etc.)',
                               required=False)
         value           : list(str(), required=False)
 
@@ -725,7 +729,8 @@ Constituent_base:
     name:
         description     : str(equals='Short descriptive name (id) of the
                                       constituent, must be unique within
-                                      a record', required=False)
+                                      a record (e.g. NaCl, Human serum P1,
+                                      Lysozyme, etc.)', required=False)
         searchable      : True
         default_search  : True
         value           : str()
@@ -1530,13 +1535,13 @@ Physical_conditions:
 Value_error:
     upper_error:
         description     : str(equals='The upper error, i.e. the number added to
-                                      the parameter value',
+                                      the value',
                               required=False)
         value           : num()
 
     lower_error:
         description     : str(equals='The lower error, i.e. the number
-                                      subtracted from the parameter value',
+                                      subtracted from the value',
                               required=False)
         value           : num()
     errors_are_relative:

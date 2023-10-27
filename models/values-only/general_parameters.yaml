@@ -1,5 +1,5 @@
 General_parameters:
-  schema_version: keyword(equals='0.9.12')
+  schema_version: keyword(equals='0.9.13')
   record_information: include('Record_information')
   depositors: include('Depositors')
   associated_publications: include('Associated_publications', required=False)
