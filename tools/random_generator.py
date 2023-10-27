@@ -564,11 +564,14 @@ def write_file(document_list, output_folder, as_fixture):
     "--n_outputs",
     default=25,
     required=False,
+    show_default=True,
+
 )
 @click.option(
     "--as_fixture",
     default=False,
     required=False,
+    show_default=True,
 )
 @click.option(
     "--output_folder",
