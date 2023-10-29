@@ -9,9 +9,12 @@ record:
         general_parameters:
           use: '#/$defs/General_parameters'
           required: true
+          help.en: The general parameter of the experiment
         method_specific_parameters:
           use: '#/$defs/MST_specific_parameters'
           required: true
+          help.en: The parameters of the experiment that is specific to MST/TRIC/Spectral
+            Shift
     collected_default_search_fields:
       type: fulltext
       marshmallow:
@@ -145,6 +148,9 @@ $defs:
         keys: [id, name]
       f_cold_and_hot:
         use: '#/$defs/F_cold_and_hot'
+        help.en: If the data was analyzed with time windows corresponding to fluorescence
+          before and after an IR laser was heating the sample the edges of the time
+          windows can be specified here
       data_processing_steps[]:
         ^minItems: 1
         ^help.en: Describe the steps in the data analysis prior to fitting (removing
@@ -152,11 +158,14 @@ $defs:
         use: '#/$defs/Processing_step'
       data_fitting:
         use: '#/$defs/Data_fitting'
+        help.en: The details of how data fitting of the data to obtain the derived
+          parameter was performed
   F_cold_and_hot:
     properties:
       time_unit:
         use: '#/$defs/TIME_UNITS'
         required: true
+        help.en: The unit of time used for reporting measurement data
       f_cold_start:
         type: double
         minimum: -100.0
@@ -200,14 +209,19 @@ $defs:
       sample:
         use: '#/$defs/Sample'
         required: true
+        help.en: Information about the sample including
       measured_data:
         properties:
           x_data:
             use: '#/$defs/Measured_data_series'
             required: true
+            help.en: Values for the independent variable, normally time, of the measured
+              data
           y_data:
             use: '#/$defs/Measured_data_series'
             required: true
+            help.en: Values for the dependent variable, normally fluorescence intensity,
+              of the measured data
     id: mst-measurement
   Sample:
     properties:
@@ -254,11 +268,15 @@ $defs:
       record_information:
         use: '#/$defs/Record_information'
         required: true
+        help.en: The metadata of the record itself
       depositors:
         use: '#/$defs/Depositors'
         required: true
+        help.en: Information about the depositors (authors) of the record
       associated_publications:
         use: '#/$defs/Associated_publications'
+        help.en: Information about if data in this record is associated with published
+          literature, if applicable
       funding_reference[]:
         ^minItems: 1
         ^help.en: List of information about the grants that supported depositors
@@ -277,6 +295,8 @@ $defs:
       technique:
         use: '#/$defs/SUPPORTED_TECHNIQUES'
         required: true
+        help.en: The type of experimental technique employed for collection of raw
+          data
       collection_start_time:
         type: date
         help.en: The time when collection of the data began
@@ -284,11 +304,21 @@ $defs:
       instrument:
         use: '#/$defs/Instrument'
         required: true
+        help.en: Information about the instrument being used to collect (measure)
+          data
       physical_conditions_at_sample_handling:
         use: '#/$defs/Physical_conditions'
+        help.en: Information about the physical conditions immediately before sample
+          handling. Especially relevant when the conditions differ from measurement
+          conditions or where special precautions were taken (e.g. keeping samples
+          on ice until measured, or stored under Argon atmosphere until it was measured)
       chemical_information:
         use: '#/$defs/Chemical_information'
         required: true
+        help.en: Information about entities of interest that were being measured (e.g.
+          Lysozyme) or used to alter the behaviour of the measured species (e.g. Peptidoglycan),
+          and the chemical environments that was used in the measurement (e.g. buffers,
+          cleaning solutions)
       derived_parameters[]:
         ^minItems: 1
         ^help.en: List of the parameters (results) that were derived from analyzing
@@ -328,6 +358,9 @@ $defs:
           field should be used as sole link
       project:
         use: '#/$defs/Project'
+        help.en: The MBDB project the records belongs to can be specified here. Projects
+          are typically  longer running research projects that would be expected to
+          get many MBDB records associated with it over time
       access_rights:
         type: keyword
         enum: [open access, embargoed access, restricted access]
@@ -391,6 +424,7 @@ $defs:
       manufacturer:
         use: '#/$defs/COMPANIES'
         required: true
+        help.en: Name of the manufacturer of the instrument used for raw data collection
       name:
         type: keyword
         help.en: The name of the instrument as provided by the manufacturer
@@ -402,6 +436,8 @@ $defs:
           backreflection optics)
       performance_test:
         use: '#/$defs/Performance_test'
+        help.en: If a performance test of the instrument that was carried out, the
+          details and results can be specified here
   Entity_base:
     properties:
       id:
@@ -468,6 +504,7 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the entity
   Molecular_assembly:
     properties:
       external_databases[]:
@@ -492,6 +529,7 @@ $defs:
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
+        help.en: The molecular weight of the molecular assembly
       chemical_modifications[]:
         ^minItems: 1
         ^help.en: List describing deliberate modifications made to the molecular assembly
@@ -500,8 +538,12 @@ $defs:
         type: nested
       supplier:
         use: '#/$defs/Supplier'
+        help.en: If the molecular assembly was purchased from a supplier, the name
+          and catlog number can be specified here
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the molecular assembly was stored between being
+          acquired and measured, including temperature and duration
       quality_controls[]:
         ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
@@ -567,6 +609,7 @@ $defs:
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
+        help.en: The molecular weight of the polymer
       external_databases[]:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
@@ -596,6 +639,9 @@ $defs:
               copy_to: collected_default_search_fields
       modifications:
         use: '#/$defs/Polymer_modifications'
+        help.en: If the polymer contains modifications such as non-natural aminoacids,
+          post translational modification, or chemically modifications like labeling,
+          it can be specified here
       expression_source_type:
         type: keyword
         enum: [Natively, Recombinantly, Synthetically]
@@ -607,8 +653,12 @@ $defs:
         type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
+        help.en: If the polymer was purchased from a supplier, the name and catalog
+          number can be specified here (Merck, SKU 10837059001)
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the polymer assembly between being acquired
+          and measured, including temperature and duration
       quality_controls[]:
         ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
@@ -684,8 +734,10 @@ $defs:
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
+        help.en: The molecular weight of the polymer
       supplier:
         use: '#/$defs/Supplier'
+        help.en: The name of the supplier and the catalog number of the chemical
       quality_controls[]:
         ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
@@ -729,10 +781,13 @@ $defs:
       pH:
         use: '#/$defs/PH'
         required: true
+        help.en: The pH value of the chemical environment and how the value was determined
       ionic_strength:
         use: '#/$defs/Ionic_strength'
+        help.en: The ionic strength of the chemical environment
       dynamic_viscosity:
         use: '#/$defs/Dynamic_viscosity'
+        help.en: The dynamic viscosity of the chemical environment
       degassing_method:
         type: keyword
         enum: [Low pressure, Heating, Sonication bath]
@@ -740,6 +795,8 @@ $defs:
           here
       ultrafiltration_method:
         use: '#/$defs/Ultrafiltration'
+        help.en: If the chemical environment was subjected to ultrafiltration, the
+          method method can be specified here
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the chemical environment can be specified
@@ -768,6 +825,8 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   Chemical_constituent_base:
     properties:
       name:
@@ -785,6 +844,8 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   Chemical_constituent:
     help.en: The details about the chemically defined constituent i.e. of type Polymer,
       Chemical, and Molecular assembly
@@ -871,6 +932,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -960,8 +1023,12 @@ $defs:
       location:
         use: '#/$defs/Coordinates'
         required: true
+        help.en: The coordinates, in decimal notation, where the complex substance
+          was collected
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -977,6 +1044,7 @@ $defs:
       details:
         use: '#/$defs/Lipid_assembly'
         required: true
+        help.en: The chemical origin where the complex substance was derived from
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -985,6 +1053,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -1005,6 +1075,7 @@ $defs:
       size:
         use: '#/$defs/Size'
         required: true
+        help.en: The size of the lipid assembly
       components[]:
         ^minItems: 1
         ^help.en: The components of the lipid assembly
@@ -1035,6 +1106,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -1045,9 +1118,13 @@ $defs:
       depositor:
         use: '#/$defs/Person'
         required: true
+        help.en: The person who made the deposition to MBDB
       principal_contact:
         use: '#/$defs/Person'
         required: true
+        help.en: The person responsible for the record and the one to contact for
+          inquiries, would typically be the principle investigator group leader, or
+          laboratory head
       contributors[]:
         ^minItems: 1
         ^help.en: List of other people who contributed to generating the deposited
@@ -1142,10 +1219,14 @@ $defs:
       owner:
         use: '#/$defs/Person'
         required: true
+        help.en: The person responsible for the research MBDB project, typically a
+          project leader, principle investigator of group leader
   Associated_publications:
     properties:
       main:
         use: '#/$defs/Publication'
+        help.en: Persistent link to publication where the data or derived parameters
+          first appeared as well as basic information about the publication
       additional[]:
         ^minItems: 1
         ^help.en: Additional publications can be specified here, if applicable
@@ -1186,6 +1267,8 @@ $defs:
         required: true
       value_error:
         use: '#/$defs/Value_error'
+        help.en: The expected error of the derived parameter (e.g. standard deviation,
+          % error)
       unit:
         type: keyword
         help.en: Unit of the derived parameter
@@ -1257,6 +1340,8 @@ $defs:
       storage_until_measurement:
         use: '#/$defs/Storage'
         required: true
+        help.en: How the sample was stored between the quality control was performed
+          until it was measured, including temperature and duration
       report:
         type: url
         help.en: Report with the results of the quality control, as a pdf file
@@ -1314,12 +1399,21 @@ $defs:
     properties:
       temperature:
         use: '#/$defs/Temperature'
+        help.en: The storage temperature of the samples immediately prior to being
+          measured and whether the temperature was actively being controlled (e.g.
+          autosampler held at 15 degrees, stored on ice, room temperature)
       pressure:
         use: '#/$defs/Pressure'
+        help.en: The storage pressure of the samples immediately prior to being measured
+          and whether the pressure was actively being controlled, if applicable
       humidity:
         use: '#/$defs/Humidity'
+        help.en: The storage humidity of the samples immediately prior to being measured
+          and whether the humidity was actively being controlled, if applicable
       atmosphere:
         use: '#/$defs/Atmosphere'
+        help.en: The storage atmosphere of the samples immediately prior to being
+          measured and whether the atmosphere was actively being controlled, if applicable
   Value_error:
     properties:
       upper_error:
@@ -1347,6 +1441,8 @@ $defs:
         required: true
       value_error:
         use: '#/$defs/Value_error'
+        help.en: The expected error of the dynamic viscosity (e.g. standard deviation,
+          % error)
       unit:
         type: keyword
         enum: [Pa s]
@@ -1355,6 +1451,7 @@ $defs:
       obtained_by:
         use: '#/$defs/OBTAINED_TYPES'
         required: true
+        help.en: The means by which the dynamic viscosity was obtained
   PH:
     properties:
       value:
@@ -1363,9 +1460,12 @@ $defs:
         required: true
       value_error:
         use: '#/$defs/Value_error'
+        help.en: The reported error of the value of pH (e.g. standard deviation, %
+          error)
       obtained_by:
         use: '#/$defs/OBTAINED_TYPES'
         required: true
+        help.en: The means through which the pH value was obtained
   Temperature:
     properties:
       value:
@@ -1374,6 +1474,8 @@ $defs:
         required: true
       value_error:
         use: '#/$defs/Value_error'
+        help.en: The reported error of the value of the temperature (e.g. standard
+          deviation, % error)
       operational_value:
         type: keyword
         enum: [Room temperature, On Ice, Other]
@@ -1382,9 +1484,11 @@ $defs:
       unit:
         use: '#/$defs/TEMPERATURE_UNITS'
         required: true
+        help.en: The unit of temperature
       obtained_by:
         use: '#/$defs/OBTAINED_TYPES'
         required: true
+        help.en: The means through which the temperature value was obtained
       controlled:
         type: boolean
         help.en: Whether the temperature was actively controlled
@@ -1397,12 +1501,16 @@ $defs:
         required: true
       value_error:
         use: '#/$defs/Value_error'
+        help.en: The reported error of the value of the pressure (e.g. standard deviation,
+          % error)
       unit:
         use: '#/$defs/PRESSURE_UNITS'
         required: true
+        help.en: The unit of the pressure
       obtained_by:
         use: '#/$defs/OBTAINED_TYPES'
         required: true
+        help.en: The means through which the pressure value was obtained
       controlled:
         type: boolean
         help.en: Whether the pressure was actively controlled
@@ -1415,12 +1523,16 @@ $defs:
         required: true
       value_error:
         use: '#/$defs/Value_error'
+        help.en: The reported error of the value of the humidity (e.g. standard deviation,
+          % error)
       unit:
         use: '#/$defs/HUMIDITY_UNITS'
         required: true
+        help.en: The unit of the humidity
       obtained_by:
         use: '#/$defs/OBTAINED_TYPES'
         required: true
+        help.en: The means through which the humidity value was obtained
       controlled:
         type: boolean
         help.en: Whether the humidity was actively controlled
@@ -1445,9 +1557,12 @@ $defs:
         required: true
       value_error:
         use: '#/$defs/Value_error'
+        help.en: The reported error of the value of the time point or duration (e.g.
+          standard deviation, % error)
       unit:
         use: '#/$defs/TIME_UNITS'
         required: true
+        help.en: The unit of the time duration
   Concentration:
     properties:
       value:
@@ -1457,11 +1572,15 @@ $defs:
         required: true
       value_error:
         use: '#/$defs/Value_error'
+        help.en: The expected error of the concentration (e.g. standard  deviation,
+          % error)
       unit:
         use: '#/$defs/CONCENTRATION_UNITS'
         required: true
+        help.en: The unit of the concentration
       obtained_by:
         use: '#/$defs/OBTAINED_TYPES'
+        help.en: The means through which the concentration was obtained
       obtained_protocol[]:
         ^minItems: 1
         ^help.en: Information of how the concentration was obtained (e.g, Absorbance
@@ -1477,6 +1596,7 @@ $defs:
       unit:
         use: '#/$defs/CONCENTRATION_UNITS'
         required: true
+        help.en: The unit of the ionic strength
   Molecular_weight:
     properties:
       value:
@@ -1485,9 +1605,12 @@ $defs:
         required: true
       value_error:
         use: '#/$defs/Value_error'
+        help.en: The expected error of the molecular weight (e.g. standard  deviation,
+          % error)
       unit:
         use: '#/$defs/MOLECULAR_WEIGHT_UNITS'
         required: true
+        help.en: The unit of the molecular weight
   Size:
     properties:
       type:
@@ -1503,6 +1626,7 @@ $defs:
       unit:
         use: '#/$defs/LENGTH_UNITS'
         required: true
+        help.en: The unit of the size
       median:
         type: double
         minimum: 0.0
@@ -1547,6 +1671,8 @@ $defs:
           type: nested
       published_test_protocol:
         use: '#/$defs/Publication'
+        help.en: If the protocol used for the performance test has been published,
+          the publication can be specified here
       report:
         type: url
         help.en: The file containing the report of the performance test, preferably
@@ -1564,8 +1690,10 @@ $defs:
       temperature:
         use: '#/$defs/Temperature'
         required: true
+        help.en: The temperature the sample was stored at
       duration:
         use: '#/$defs/Time_duration'
+        help.en: Length of time the sample was stored before being measured
       storage_preparation[]:
         ^minItems: 1
         ^help.en: The specific steps that were taken to prepare the samples for storage
@@ -1653,6 +1781,7 @@ $defs:
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
+        help.en: The molecular weight of the polymer
       external_databases[]:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
@@ -1682,6 +1811,9 @@ $defs:
               copy_to: collected_default_search_fields
       modifications:
         use: '#/$defs/Polymer_modifications'
+        help.en: If the polymer contains modifications such as non-natural aminoacids,
+          post translational modification, or chemically modifications like labeling,
+          it can be specified here
       expression_source_type:
         type: keyword
         enum: [Natively, Recombinantly, Synthetically]
@@ -1693,8 +1825,12 @@ $defs:
         type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
+        help.en: If the polymer was purchased from a supplier, the name and catalog
+          number can be specified here (Merck, SKU 10837059001)
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the polymer assembly between being acquired
+          and measured, including temperature and duration
       quality_controls[]:
         ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
@@ -1722,6 +1858,8 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   ConstituentChemicalPolymorphic:
     properties:
       inchikey:
@@ -1746,8 +1884,10 @@ $defs:
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
+        help.en: The molecular weight of the polymer
       supplier:
         use: '#/$defs/Supplier'
+        help.en: The name of the supplier and the catalog number of the chemical
       quality_controls[]:
         ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
@@ -1776,6 +1916,8 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   ConstituentMolecular_assemblyPolymorphic:
     properties:
       external_databases[]:
@@ -1800,6 +1942,7 @@ $defs:
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
+        help.en: The molecular weight of the molecular assembly
       chemical_modifications[]:
         ^minItems: 1
         ^help.en: List describing deliberate modifications made to the molecular assembly
@@ -1808,8 +1951,12 @@ $defs:
         type: nested
       supplier:
         use: '#/$defs/Supplier'
+        help.en: If the molecular assembly was purchased from a supplier, the name
+          and catlog number can be specified here
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the molecular assembly was stored between being
+          acquired and measured, including temperature and duration
       quality_controls[]:
         ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
@@ -1842,6 +1989,8 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   Assembly_componentPolymerPolymorphic:
     properties:
       polymer_type:
@@ -1862,6 +2011,7 @@ $defs:
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
+        help.en: The molecular weight of the polymer
       external_databases[]:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
@@ -1891,6 +2041,9 @@ $defs:
               copy_to: collected_default_search_fields
       modifications:
         use: '#/$defs/Polymer_modifications'
+        help.en: If the polymer contains modifications such as non-natural aminoacids,
+          post translational modification, or chemically modifications like labeling,
+          it can be specified here
       expression_source_type:
         type: keyword
         enum: [Natively, Recombinantly, Synthetically]
@@ -1902,8 +2055,12 @@ $defs:
         type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
+        help.en: If the polymer was purchased from a supplier, the name and catalog
+          number can be specified here (Merck, SKU 10837059001)
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the polymer assembly between being acquired
+          and measured, including temperature and duration
       quality_controls[]:
         ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
@@ -1954,8 +2111,10 @@ $defs:
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
+        help.en: The molecular weight of the polymer
       supplier:
         use: '#/$defs/Supplier'
+        help.en: The name of the supplier and the catalog number of the chemical
       quality_controls[]:
         ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
@@ -2041,6 +2200,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -2064,6 +2225,8 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   Complex_substance_of_biological_originCell_fractionPolymorphic:
     properties:
       fraction:
@@ -2116,6 +2279,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -2139,6 +2304,8 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   Complex_substance_of_biological_originVirionPolymorphic:
     properties:
       Genetic_material:
@@ -2191,6 +2358,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -2214,6 +2383,8 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   ConstituentComplex_substance_of_environmental_originPolymorphic:
     properties:
       source:
@@ -2233,8 +2404,12 @@ $defs:
       location:
         use: '#/$defs/Coordinates'
         required: true
+        help.en: The coordinates, in decimal notation, where the complex substance
+          was collected
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -2258,6 +2433,8 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   ConstituentComplex_substance_of_chemical_originPolymorphic:
     properties:
       class:
@@ -2268,6 +2445,7 @@ $defs:
       details:
         use: '#/$defs/Lipid_assembly'
         required: true
+        help.en: The chemical origin where the complex substance was derived from
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2276,6 +2454,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -2299,6 +2479,8 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   ConstituentComplex_substance_of_industrial_production_originPolymorphic:
     properties:
       product:
@@ -2317,6 +2499,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -2340,6 +2524,8 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   Chemical_constituentChemicalPolymorphic:
     properties:
       inchikey:
@@ -2364,8 +2550,10 @@ $defs:
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
+        help.en: The molecular weight of the polymer
       supplier:
         use: '#/$defs/Supplier'
+        help.en: The name of the supplier and the catalog number of the chemical
       quality_controls[]:
         ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
@@ -2391,6 +2579,8 @@ $defs:
       concentration:
         use: '#/$defs/Concentration'
         required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   EntityPolymerPolymorphic:
     properties:
       polymer_type:
@@ -2411,6 +2601,7 @@ $defs:
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
+        help.en: The molecular weight of the polymer
       external_databases[]:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
@@ -2440,6 +2631,9 @@ $defs:
               copy_to: collected_default_search_fields
       modifications:
         use: '#/$defs/Polymer_modifications'
+        help.en: If the polymer contains modifications such as non-natural aminoacids,
+          post translational modification, or chemically modifications like labeling,
+          it can be specified here
       expression_source_type:
         type: keyword
         enum: [Natively, Recombinantly, Synthetically]
@@ -2451,8 +2645,12 @@ $defs:
         type: vocabulary
       supplier:
         use: '#/$defs/Supplier'
+        help.en: If the polymer was purchased from a supplier, the name and catalog
+          number can be specified here (Merck, SKU 10837059001)
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the polymer assembly between being acquired
+          and measured, including temperature and duration
       quality_controls[]:
         ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
@@ -2510,8 +2708,10 @@ $defs:
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
+        help.en: The molecular weight of the polymer
       supplier:
         use: '#/$defs/Supplier'
+        help.en: The name of the supplier and the catalog number of the chemical
       quality_controls[]:
         ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
@@ -2570,6 +2770,7 @@ $defs:
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
+        help.en: The molecular weight of the molecular assembly
       chemical_modifications[]:
         ^minItems: 1
         ^help.en: List describing deliberate modifications made to the molecular assembly
@@ -2578,8 +2779,12 @@ $defs:
         type: nested
       supplier:
         use: '#/$defs/Supplier'
+        help.en: If the molecular assembly was purchased from a supplier, the name
+          and catlog number can be specified here
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the molecular assembly was stored between being
+          acquired and measured, including temperature and duration
       quality_controls[]:
         ^minItems: 1
         ^help.en: Quality controls performed e.g. purity, aggregation state etc.
@@ -2676,6 +2881,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -2757,6 +2964,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -2838,6 +3047,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -2886,8 +3097,12 @@ $defs:
       location:
         use: '#/$defs/Coordinates'
         required: true
+        help.en: The coordinates, in decimal notation, where the complex substance
+          was collected
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -2927,6 +3142,7 @@ $defs:
       details:
         use: '#/$defs/Lipid_assembly'
         required: true
+        help.en: The chemical origin where the complex substance was derived from
       preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of the steps performed during the preparation of the complex
@@ -2935,6 +3151,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
@@ -2982,6 +3200,8 @@ $defs:
         use: '#/$defs/Step'
       storage:
         use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the complex substance can be specified
