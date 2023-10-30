@@ -386,6 +386,8 @@ class ModelInclude(ModelBase):
         ret = {"use": f"#/$defs/{self.include}"}
         if self.required:
             ret["required"] = True
+        if self.description:
+            ret["help.en"] = self.description.strip()
         return ret
 
     def get_links(self, links, path, defs):
