@@ -1,6 +1,13 @@
 import yamale
-
-from tools.custom_validators import *
+from tools.custom_validators import extend_validators
+from tools.custom_validators import (
+    Link,
+    LinkTarget,
+    Vocabulary,
+    Uuid,
+    Url,
+    Choose
+)
 
 
 class TestLink:
@@ -51,6 +58,29 @@ class TestLink:
     def test_invalid_links_fields(self):
         for invalid in self.invalid_links_fields:
             assert not self.L_fields.is_valid(invalid)
+
+
+class TestLinkTarget:
+    linktarget = LinkTarget()
+
+    valid_linktargets = [
+        "test",
+    ]
+
+    invalid_linktargets = [
+        123,
+        "",
+        None,
+        {},
+        [],
+    ]
+    def test_valid_linktargets(self):
+        for valid in self.valid_linktargets:
+            assert self.linktarget.is_valid(valid)
+
+    def test_invalid_links_fields(self):
+        for invalid in self.invalid_linktargets:
+            assert not self.linktarget.is_valid(invalid)
 
 
 class TestVocabulary:
@@ -134,6 +164,7 @@ class TestUrl:
         "https://...google...com",
         ".google.com",
         ".google.co.",
+        "",
     ]
 
     validator = Url()
@@ -149,10 +180,6 @@ class TestUrl:
 
 class TestChoose:
     yamale_schema = """                                        
-Test: choose(include('Base_test'),
-             Case_1=include('Case_1'),
-             Case_2=include('Case_2'))   
----
 Base_test:
     name: str()
     type: enum('Case 1', 'Case 2')                        
@@ -161,20 +188,23 @@ Case_1:
 Case_2:
     test_2: num()   
 """
-    schema = yamale.make_schema(validators=extend_validators, content=yamale_schema)
+    test_schema = yamale.make_schema(validators=extend_validators, content=yamale_schema)
 
-    validator = schema.dict["Test"]
+    base_schema = test_schema.dict["Base_test"]
+    case_1 = test_schema.dict["Case_1"]
+    case_2 = test_schema.dict["Case_2"]
+    validator = Choose(base_schema=base_schema, Case_1=case_1, Case_2=case_2)
 
     valid_choose = [
         {"name": "test", "type": "Case 1", "test_1": 1},
         {"name": "test 2", "type": "Case 2", "test_2": 2.2},
     ]
     invalid_choose = [
-        {"name": "test", "type": "Case 1", "test_1": 1.1},
-        {"type": "Case 2", "test_1": 1},
-        {"type": "Case 2", "test_1": 1},
-        {"name": "test 2", "test_1": 1},
-        {},
+        {"type": "Case 2", "test_2": 1},                     # missing name field
+        {"type": "Case 2", "test_1": 1},                     # Case 2 should have the test_2 field, not test_1
+        {"name": "test 2", "test_1": 1},                     # missing type field
+        {"name": "test", "type": "Case 1", "test_1": 1.1},   # wrong type of test_1
+        {},                                                  # empty object no allowed
     ]
 
     def test_valid_choose(self):
