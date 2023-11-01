@@ -5,29 +5,34 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.13')
+        value           : keyword(equals='0.9.14')
 
     record_information:
-        description     : str(equals='The metadata of the record itself',
+        description     : str(equals='Information about the record itself,
+                                      including whether this particular record
+                                      is associated with other records',
                               required=False)
         value           : include('Record_information')
 
 
     depositors:
         description     : str(equals='Information about the depositors (authors)
-                                      of the record', required=False)
+                                      of this record', required=False)
         value           : include('Depositors')
 
 
     associated_publications:
         description     : str(equals='Information about if data in this record
-                                      is associated with published literature,
-                                      if applicable', required=False)
+                                      is associated with published literature',
+                              required=False)
         value           : include('Associated_publications', required=False)
 
     funding_reference:
         description     : str(equals='List of information about the grants that
-                                      supported depositors', required=False)
+                                      supported generation of the raw data
+                                      annotated by this record. Note that this
+                                      information is based on OpenAire
+                              Projects', required=False)
         searchable      : True
         default_search  : True
         value           : list(vocabulary(vocabulary='grants',
@@ -35,22 +40,22 @@ General_parameters:
                                           required=False)
 
     technique:
-        description     : str(equals='The type of experimental technique
-                                      employed for collection of raw data',
-                              required=False)
+        description     : str(equals='The type of experimental technique used
+                                      for collecting the raw data annotated by
+                                      this record', required=False)
         searchable      : True
         value           : include('SUPPORTED_TECHNIQUES')
 
     collection_start_time:
-        description     : str(equals='The time when collection of the
-                                      data began', required=False)
+        description     : str(equals='The date when collection of the raw data
+                                      began', required=False)
         searchable      : True
         value           : day()
 
     instrument:
         description     : str(equals='Information about the instrument being
-                                      used to collect (measure) data',
-                              required=False)
+                                      used to collect (measure) the raw data
+                                      annotated by this record', required=False)
         value           : include('Instrument')
 
 
@@ -59,7 +64,7 @@ General_parameters:
         description     : str(equals='Information about the physical conditions
                                       immediately before sample handling.
                                       Especially relevant when the conditions
-                                      differ from measurement conditions or
+                                      differ from the measurement conditions or
                                       where special precautions were taken (e.g.
                                       keeping samples on ice until measured, or
                                       stored under Argon atmosphere until it was
@@ -129,12 +134,10 @@ Record_information:
 
 
     project:
-        description : str(equals='The MBDB project the records belongs to
-                                  can be specified here. Projects are
-                                  typically  longer running research
-                                  projects that would be expected to
-                                  get many MBDB records associated with it
-                                  over time', required=False)
+        description : str(equals='Projects are typically longer running research
+                                  projects that would be expected to have
+                                  several records associated with them over
+                                  time', required=False)
         value       : include('Project', required=False)
 
 
@@ -183,8 +186,10 @@ Record_information:
         value       : keyword(equals='Dataset')
 
     resource_type:
-        description : str(equals='Datacite item which will show the type of
-                                  experiment (MST/BLI/SPR)',required=False)
+        description : str(equals='DataCite item which shows type of dataset the
+                                  record is and corresponds directly to which
+                                  kind of technique was used (MST/BLI/SPR)',
+                          required=False)
         value       : keyword()
 
     internal_id:
@@ -203,8 +208,9 @@ Record_information:
 
 
     subject_category:
-        description : str(equals='Subject category the record data belongs
-                                  to default is Biophysics', required=False)
+        description : str(equals='DataCite subject category the record data
+                                  belongs to default is Biophysics',
+                          required=False)
         value       : keyword(equals='Biophysics')
 
 
@@ -235,8 +241,8 @@ Instrument:
         value       : include('COMPANIES')
 
     name:
-        description : str(equals='The name of the instrument as provided by
-                                  the manufacturer', required=False)
+        description : str(equals='The name of the instrument as provided by the
+                                  manufacturer', required=False)
         value       : str()
 
     model:
@@ -282,10 +288,12 @@ Entity_base:
                                       Molecular assembly or Complex substance.
                                       Chemical polymers such as PEG 5000 should
                                       be described as being a Chemical. Complex
-                                      substance refers to substance which cannot
-                                      be exactly specified as for its chemical
-                                      composition, e.g. blood, serum, plant
-                                      extract', required=False)
+                                      substance refers to substances which are
+                                      not exactly specified by their exact
+                                      chemical composition by the time
+                                      measurement were performed, but e.g.
+                                      blood, serum, plant extract',
+                              required=False)
         searchable      : True
         default_search  : True
         value           : enum('Polymer',
@@ -297,9 +305,10 @@ Entity_base:
                                'Complex substance of industrial production origin')
 
 Entity:
-    description     : str(equals='Description of the entity
-                                  which varies depending on the type of
-                                  entity', required=False)
+    description     : str(equals='Details of the entity including identifiers
+                                  and protocols used to obtain the entity. Which
+                                  information is required, varies depending the
+                                  type of entity', required=False)
     value           : choose(include('Entity_base'),
                              Polymer=include('Polymer'),
                              Chemical=include('Chemical'),
@@ -331,7 +340,7 @@ Molecular_assembly:
         description     : str(equals='List of identifiers to records in external
                                       databases containing information about the
                                       molecular assembly as a whole can be
-                                      specified here (e.g. 1YQ2; PDB);
+                                      specified here (e.g. PDB:1YQ2 );
                                       information about the individual
                                       components should be specified in the
                                       details of the individual components',
@@ -466,7 +475,7 @@ Polymer:
         description     : str(equals='List of identifiers to records in
                                       external databases containing
                                       information about the polymer can
-                                      be specified here (e.g Q8KRF6, UniProt)',
+                                      be specified here (e.g UNIPROT:Q8KRF6)',
                               required=False)
         searchable      : True
         default_search  : True
@@ -485,9 +494,9 @@ Polymer:
         value           : str(required=False)
 
     source_organism:
-        description     : str(equals='[NCBI taxid]() of the biological
-                                      species where the polymer
-                                      naturally occurs', required=False)
+        description     : str(equals='The biological species where the polymer
+                                      naturally occurs. Note that this is based
+                                      on the NCBI taxonomy', required=False)
         searchable      : True
         default_search  : True
         value           : vocabulary(vocabulary='organisms',
@@ -510,9 +519,9 @@ Polymer:
         value           : enum('Natively', 'Recombinantly', 'Synthetically')
 
     expression_organism:
-        description     : str(equals='[NCBI taxid]() of the biological species
-                                      where the polymer was produced',
-                              required=False)
+        description     : str(equals='The biological species where the polymer
+                                      naturally occurs. Note that this is based
+                                      on the NCBI taxonomy', required=False)
         searchable      : True
         value           : vocabulary(vocabulary='organisms',
                                      fields='[id,title,props.rank]',
@@ -874,7 +883,8 @@ Complex_substance_of_biological_origin_base:
     source_organism:
         description     : str(equals='Identification of the organism to the
                                       lowest taxonomic rank possible e.g.
-                                      strain', required=False)
+                                      strain. Note that this is based on the
+                                      NCBI taxonomy', required=False)
         default_search  : True
         searchable      : True
         value           : vocabulary(vocabulary='organisms',
@@ -980,8 +990,10 @@ Virion:
                                'Synthetic', 'Other')
     host_organism:
         description     : str(equals='The host organism the virion was produced
-                                      in', required=False)
+                                      in. Note that information is based on the
+                                      NCBI taxonomy', required=False)
         searchable      : True
+
         value           : vocabulary(vocabulary='organisms',
                                      fields='[id,title,props.rank]',
                                      required=False)
@@ -1171,8 +1183,9 @@ Person:
         value           : list(person_id(), required=False)
 
     affiliations:
-        description     : str(equals='The affiliation of the person',
-                              required=False)
+        description     : str(equals='The affiliation of the person. Note that
+                                      this is based on the Research Organization
+                                      Registry (ROR)', required=False)
         searchable      : True
         default_search  : True
         value           : list(vocabulary(vocabulary='affiliations',
@@ -1198,11 +1211,11 @@ Publication:
 
     publication_year:
         description     : str(equals='The publication year', required=False)
-        value           : int(min=1800)
+        value           : int(min=1900)
 
     authors:
-        description     : str(equals='The authors of the publication',
-                              required=False)
+        description     : str(equals='Information about the authors of the
+                                      publication', required=False)
         value           : list(nested_include('Person'), required=False)
 
     resource_type:
@@ -1226,37 +1239,36 @@ Project:
         searchable      : True
 
     title:
-        description     : str(equals='Short title of the MBDB project',
+        description     : str(equals='Short title of the project',
                               required=False)
         searchable      : True
         default_search  : True
         value           : str()
 
     description:
-        description     : str(equals='Short description of what the MBDB project
-                                      is about', required=False)
+        description     : str(equals='Short description of what the project is
+                                      about', required=False)
         searchable      : True
         value           : str()
 
     owner:
-        description     : str(equals='The person responsible for the research
-                                      MBDB project, typically a project leader,
-                                      principle investigator of group leader',
+        description     : str(equals='The person responsible for the project,
+                                      typically a project leader, principle
+                                      investigator, or group leader',
                               required=False)
         value           : include('Person')
 
 
 Associated_publications:
     main:
-        description     : str(equals='Persistent link to publication where the
-                                      data or derived parameters first appeared
-                                      as well as basic information about the
-                                      publication', required=False)
+        description     : str(equals='Information about the publication where
+                                      the raw data or derived parameters first
+                                      appeared', required=False)
         value           : include('Publication', required=False)
 
     additional:
-        description     : str(equals='Additional publications can be specified
-                                      here, if applicable', required=False)
+        description     : str(equals='Information about publications in addition
+                                      to the main publication', required=False)
         value           : list(nested_include('Publication'), required=False)
 
 ---
@@ -1269,9 +1281,9 @@ Derived_parameter:
         value           : link_target(name="derived-parameter")
 
     name:
-        description     : str(equals='Descriptive name (id) of the parameter
-                                      (e.g. Kd between Lysozyme and VHH). Must
-                                      be unique with in a record',
+        description     : str(equals='Descriptive name (id) of the derived
+                                      parameter (e.g. Kd of Lysozyme and VHH2).
+                                      Must be unique within a record',
                               required=False)
         searchable      : True
         default_search  : True
@@ -1310,8 +1322,9 @@ Derived_parameter:
 
     value_error:
         description     : str(equals='The expected error of the derived
-                                      parameter (e.g. standard deviation,
-                                      % error)', required=False)
+                                      parameter (e.g. in terms of
+                                      standard deviations, or relative error)',
+                              required=False)
         value           : include('Value_error', required=False)
 
     unit:
@@ -1351,7 +1364,8 @@ Modification:
         value           : str(required=False)
 
     modification:
-        description     : str(equals='The type of modification', required=False)
+        description     : str(equals='The common name/type of the modification',
+                              required=False)
         searchable      : True
         value           : str()
 
@@ -1426,20 +1440,20 @@ Quality_control:
 
 Data_fitting:
     model:
-        description     : str(equals='Description of the model(e.g.
+        description     : str(equals='Description of the model (e.g.
                                       1:1 binding)', required=False)
         value           : str()
 
     software_name:
-        description     : str(equals='The name of the software that was
-                                      used for doing the fitting (e.g. Excel)',
+        description     : str(equals='The name of the software that was used for
+                                      doing the data fitting (e.g. Excel)',
                               required=False)
         searchable      : True
         value           : str(required=False)
 
     software_version:
-        description     : str(equals='The version of the software that was
-                                      used for the step', required=False)
+        description     : str(equals='The version of the software that was used
+                                      for the step', required=False)
         value           : keyword(required=False)
 
 
@@ -1457,8 +1471,8 @@ Data_fitting:
 
 Processing_step:
     name:
-        description     : str(equals='Descriptive name of the processing step',
-                              required=False)
+        description     : str(equals='Short descriptive name of the processing
+                                      step', required=False)
         value           : str()
 
     description:
@@ -1534,15 +1548,15 @@ Physical_conditions:
 
 Value_error:
     upper_error:
-        description     : str(equals='The upper error, i.e. the number added to
-                                      the value',
-                              required=False)
+        description     : str(equals='The upper error, i.e. the number that
+                                      should be added the value to get the
+                                      upper bound', required=False)
         value           : num()
 
     lower_error:
-        description     : str(equals='The lower error, i.e. the number
-                                      subtracted from the value',
-                              required=False)
+        description     : str(equals='The lower error, i.e. the number that
+                                      should be subtracted from the value to get
+                                      the lower bound', required=False)
         value           : num()
     errors_are_relative:
         description     : str(equals='Whether the errors should be interpreted
@@ -1563,8 +1577,8 @@ Dynamic_viscosity:
 
     value_error:
         description     : str(equals='The expected error of the dynamic
-                                      viscosity (e.g. standard deviation,
-                                      % error)', required=False)
+                                      viscosity (e.g. standard deviation, %
+                                      error)', required=False)
         value           : include('Value_error', required=False)
 
     unit:
@@ -1598,15 +1612,15 @@ PH:
 
 Temperature:
     value:
-        description     : str(equals='Numeric value of the temperature',
+        description     : str(equals='The numeric value of the temperature',
                               required=False)
         searchable      : True
         value           : num()
 
     value_error:
         description     : str(equals='The reported error of the value of the
-                                      temperature (e.g. standard deviation,
-                                      % error)', required=False)
+                                      temperature (e.g. standard deviation, %
+                                      error)', required=False)
         value           : include('Value_error', required=False)
 
     operational_value:
@@ -1636,15 +1650,15 @@ Temperature:
 
 Pressure:
     value:
-        description     : str(equals='Numeric value of the pressure',
+        description     : str(equals='The numeric value of the pressure',
                               required=False)
         searchable      : True
         value           : num()
 
     value_error:
         description     : str(equals='The reported error of the value of the
-                                      pressure (e.g. standard deviation,
-                                      % error)',required=False)
+                                      pressure (e.g. standard deviation, %
+                                      error)',required=False)
         value           : include('Value_error', required=False)
 
     unit:
@@ -1664,7 +1678,7 @@ Pressure:
 
 Humidity:
     value:
-        description     : str(equals='Numeric value of the humidity',
+        description     : str(equals='The numeric value of the humidity',
                               required=False)
         searchable      : True
         value           : num()
@@ -1701,7 +1715,7 @@ Atmosphere:
 
 Time_duration:
     value:
-        description     : str(equals='Numerical value of the time point or
+        description     : str(equals='The numerical value of the time point or
                                       duration', required=False)
         searchable      : True
         value           : num(min=0)

@@ -22,17 +22,17 @@ MST_specific_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       MST method specific parameters',
-                                      required=False)
-        value           : keyword(equals='0.9.5')
+                              required=False)
+        value           : keyword(equals='0.9.6')
 
     experiment_type:
-        description     : str(equals='Type of physical parameter measured',
-                                      required=False)
+        description     : str(equals='The type of physical parameter that was
+                                      sought', required=False)
         value           : enum('Affinity','Concentration', 'Other')
 
     signal_type:
-        description     : str(equals='Which type of signal was measured',
-                                      required=False)
+        description     : str(equals='The type of signal that was being
+                                      measured', required=False)
         value           : enum('Initial intensity','TRIC/MST', 'Spectral shift')
 
     excitation_led_color:
@@ -42,7 +42,7 @@ MST_specific_parameters:
                                       occurs, e.g. the GREEN in a BLUE/GREEN
                                       instrument, is not the same as the GREEN
                                       in a GREEN/RED instrument',
-                                      required=False)
+                              required=False)
 
         value           : enum('RED (ex 605-645nm, em 660-720nm)',
                                'RED (ex 610-645nm, em 680-720nm)',
@@ -62,25 +62,26 @@ MST_specific_parameters:
 
     ir_mst_laser_power:
         description     : str(equals="The power of the infrared LASER used in
-                                      the experiment in percentages. A change in
-                                      nomenclature occurred in Nanotemper's
-                                      software, however the underlying
-                                      data is still stored in percentages use
-                                      the following conversion; Low = 20,
-                                      Medium = 40, High = 60", required=False)
+                                      the experiment in percentages. Even though
+                                      a change in nomenclature occurred in
+                                      Nanotemper's control software, the
+                                      underlying data is still stored in
+                                      percentages. Use the following conversion;
+                                      Low = 20, Medium = 40, High = 60",
+                              required=False)
         value           : num(min=0, max=100)
 
     measurements:
         description     : str(equals='List of the information about each
-                                      measurement, including, target(s),
-                                      ligand(s), chemical environment, and
+                                      measurement. This includes target(s),
+                                      ligand(s), chemical environment, and the
                                       position of the sample within the
                                       instrument', required=False)
         value           : list(include('Measurement'), min=1)
 
     data_analysis:
         description     : str(equals='Details of how the data was processed and
-                                      model in order to derive parameters
+                                      modelled in order to derive parameters
                                       from it', required=False)
         value           : list(include('MST_data_analysis'), required=False)
 
@@ -94,8 +95,9 @@ MST_data_analysis:
         value           : link(target='derived-parameter', required=False)
 
     measurements:
-        description     : str(equals='List of measurement links that was
-                                      analyzed together', required=False)
+        description     : str(equals='List of the measurements that was
+                                      analyzed together for a specific
+                                      parameter', required=False)
 
         value           : list(link(target='mst-measurement'), required=False)
 
@@ -129,27 +131,27 @@ F_cold_and_hot:
                                       measurement data', required=False)
         value           : include('TIME_UNITS')
     f_cold_start:
-        description     : str(equals='Numerical value of the start point of time
+        description     : str(equals='Numerical value of the start-point of time
                                       interval used to establish the initial
                                       fluorescence, F_cold', required=False)
         value           : num(min=-100)
 
 
     f_cold_end:
-        description     : str(equals='Numerical value of the end point of time
+        description     : str(equals='Numerical value of the end-point of time
                                       interval used to establish the initial
                                       fluorescence, F_cold', required=False)
         value           : num(min=-100)
 
     f_hot_start:
-        description     : str(equals='Numerical value of the start point of time
+        description     : str(equals='Numerical value of the start-point of time
                                       interval used to establish the
                                       fluorescence temperature induced change in
                                       fluorescence, F_hot', required=False)
         value           : num(min=0)
 
     f_hot_end:
-        description     : str(equals='Numerical value of the end point of time
+        description     : str(equals='Numerical value of the end-point of time
                                       interval used to establish the
                                       fluorescence temperature induced change in
                                       fluorescence, F_hot', required=False)
@@ -178,8 +180,10 @@ Measurement:
         value           : keyword()
 
     sample:
-        description     : str(equals='Information about the sample including',
-                                      required=False)
+        description     : str(equals='Information about the sample including
+                                      concentrations of ligands and targets, and
+                                      which chemical environment the sample was
+                                      composed of', required=False)
         value           : include('Sample')
 
     measured_data:
