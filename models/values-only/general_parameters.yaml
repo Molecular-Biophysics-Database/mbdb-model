@@ -1,5 +1,5 @@
 General_parameters:
-  schema_version: keyword(equals='0.9.13')
+  schema_version: keyword(equals='0.9.14')
   record_information: include('Record_information')
   depositors: include('Depositors')
   associated_publications: include('Associated_publications', required=False)
@@ -202,7 +202,7 @@ Person:
 Publication:
   pid: publication_id()
   title: str(required=False)
-  publication_year: int(min=1800)
+  publication_year: int(min=1900)
   authors: list(nested_include('Person'), required=False)
   resource_type: enum('Article', 'Book', 'Thesis')
   publisher: str(required=False)

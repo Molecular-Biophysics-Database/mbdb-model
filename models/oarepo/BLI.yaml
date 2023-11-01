@@ -348,24 +348,27 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.13]
+        enum: [0.9.14]
         help.en: The schema version used to annotate the general parameters
         required: true
       record_information:
         use: '#/$defs/Record_information'
         required: true
-        help.en: The metadata of the record itself
+        help.en: Information about the record itself, including whether this particular
+          record is associated with other records
       depositors:
         use: '#/$defs/Depositors'
         required: true
-        help.en: Information about the depositors (authors) of the record
+        help.en: Information about the depositors (authors) of this record
       associated_publications:
         use: '#/$defs/Associated_publications'
         help.en: Information about if data in this record is associated with published
-          literature, if applicable
+          literature
       funding_reference[]:
         ^minItems: 1
-        ^help.en: List of information about the grants that supported depositors
+        ^help.en: List of information about the grants that supported generation of
+          the raw data annotated by this record. Note that this information is based
+          on OpenAire Projects
         keys: [id, title, props.funder_name]
         vocabulary-type: grants
         type: vocabulary
@@ -381,21 +384,21 @@ $defs:
       technique:
         use: '#/$defs/SUPPORTED_TECHNIQUES'
         required: true
-        help.en: The type of experimental technique employed for collection of raw
-          data
+        help.en: The type of experimental technique used for collecting the raw data
+          annotated by this record
       collection_start_time:
         type: date
-        help.en: The time when collection of the data began
+        help.en: The date when collection of the raw data began
         required: true
       instrument:
         use: '#/$defs/Instrument'
         required: true
         help.en: Information about the instrument being used to collect (measure)
-          data
+          the raw data annotated by this record
       physical_conditions_at_sample_handling:
         use: '#/$defs/Physical_conditions'
         help.en: Information about the physical conditions immediately before sample
-          handling. Especially relevant when the conditions differ from measurement
+          handling. Especially relevant when the conditions differ from the measurement
           conditions or where special precautions were taken (e.g. keeping samples
           on ice until measured, or stored under Argon atmosphere until it was measured)
       chemical_information:
@@ -444,9 +447,8 @@ $defs:
           field should be used as sole link
       project:
         use: '#/$defs/Project'
-        help.en: The MBDB project the records belongs to can be specified here. Projects
-          are typically  longer running research projects that would be expected to
-          get many MBDB records associated with it over time
+        help.en: Projects are typically longer running research projects that would
+          be expected to have several records associated with them over time
       access_rights:
         type: keyword
         enum: [open access, embargoed access, restricted access]
@@ -480,7 +482,8 @@ $defs:
         required: true
       resource_type:
         type: keyword
-        help.en: Datacite item which will show the type of experiment (MST/BLI/SPR)
+        help.en: DataCite item which shows type of dataset the record is and corresponds
+          directly to which kind of technique was used (MST/BLI/SPR)
         required: true
       internal_id:
         type: keyword
@@ -495,7 +498,7 @@ $defs:
       subject_category:
         type: keyword
         enum: [Biophysics]
-        help.en: Subject category the record data belongs to default is Biophysics
+        help.en: DataCite subject category the record data belongs to default is Biophysics
         required: true
       deposition_date:
         type: date
@@ -546,14 +549,15 @@ $defs:
         help.en: The type of the entity, where the options are (biological) Polymer,
           Chemical, Molecular assembly or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substance which cannot be exactly specified as for its chemical composition,
-          e.g. blood, serum, plant extract
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
         required: true
         mapping:
           copy_to: collected_default_search_fields
     id: entity
   Entity:
-    help.en: Description of the entity which varies depending on the type of entity
+    help.en: Details of the entity including identifiers and protocols used to obtain
+      the entity. Which information is required, varies depending the type of entity
     required: true
     schemas:
       Polymer:
@@ -597,7 +601,7 @@ $defs:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the molecular assembly as a whole can be specified here
-          (e.g. 1YQ2; PDB); information about the individual components should be
+          (e.g. PDB:1YQ2 ); information about the individual components should be
           specified in the details of the individual components
         type: keyword
         mapping:
@@ -699,7 +703,7 @@ $defs:
       external_databases[]:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
-          information about the polymer can be specified here (e.g Q8KRF6, UniProt)
+          information about the polymer can be specified here (e.g UNIPROT:Q8KRF6)
         type: keyword
         mapping:
           copy_to: collected_default_search_fields
@@ -1240,7 +1244,8 @@ $defs:
           copy_to: collected_default_search_fields
       affiliations[]:
         ^minItems: 1
-        ^help.en: The affiliation of the person
+        ^help.en: The affiliation of the person. Note that this is based on the Research
+          Organization Registry (ROR)
         keys: [id, title, props.city, props.state, props.country]
         vocabulary-type: affiliations
         type: vocabulary
@@ -1269,12 +1274,12 @@ $defs:
           copy_to: collected_default_search_fields
       publication_year:
         type: integer
-        minimum: 1800
+        minimum: 1900
         help.en: The publication year
         required: true
       authors[]:
         ^minItems: 1
-        ^help.en: The authors of the publication
+        ^help.en: Information about the authors of the publication
         use: '#/$defs/Person'
         type: nested
       resource_type:
@@ -1294,28 +1299,28 @@ $defs:
           to other data within the MBDB
       title:
         type: keyword
-        help.en: Short title of the MBDB project
+        help.en: Short title of the project
         required: true
         mapping:
           copy_to: collected_default_search_fields
       description:
         type: keyword
-        help.en: Short description of what the MBDB project is about
+        help.en: Short description of what the project is about
         required: true
       owner:
         use: '#/$defs/Person'
         required: true
-        help.en: The person responsible for the research MBDB project, typically a
-          project leader, principle investigator of group leader
+        help.en: The person responsible for the project, typically a project leader,
+          principle investigator, or group leader
   Associated_publications:
     properties:
       main:
         use: '#/$defs/Publication'
-        help.en: Persistent link to publication where the data or derived parameters
-          first appeared as well as basic information about the publication
+        help.en: Information about the publication where the raw data or derived parameters
+          first appeared
       additional[]:
         ^minItems: 1
-        ^help.en: Additional publications can be specified here, if applicable
+        ^help.en: Information about publications in addition to the main publication
         use: '#/$defs/Publication'
         type: nested
   Derived_parameter:
@@ -1325,8 +1330,8 @@ $defs:
         required: true
       name:
         type: keyword
-        help.en: Descriptive name (id) of the parameter (e.g. Kd between Lysozyme
-          and VHH). Must be unique with in a record
+        help.en: Descriptive name (id) of the derived parameter (e.g. Kd of Lysozyme
+          and VHH2). Must be unique within a record
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -1353,8 +1358,8 @@ $defs:
         required: true
       value_error:
         use: '#/$defs/Value_error'
-        help.en: The expected error of the derived parameter (e.g. standard deviation,
-          % error)
+        help.en: The expected error of the derived parameter (e.g. in terms of standard
+          deviations, or relative error)
       unit:
         type: keyword
         help.en: Unit of the derived parameter
@@ -1381,7 +1386,7 @@ $defs:
         help.en: The position where the modification occurs
       modification:
         type: keyword
-        help.en: The type of modification
+        help.en: The common name/type of the modification
         required: true
       protocol[]:
         ^minItems: 1
@@ -1439,12 +1444,12 @@ $defs:
     properties:
       model:
         type: keyword
-        help.en: Description of the model(e.g. 1:1 binding)
+        help.en: Description of the model (e.g. 1:1 binding)
         required: true
       software_name:
         type: keyword
-        help.en: The name of the software that was used for doing the fitting (e.g.
-          Excel)
+        help.en: The name of the software that was used for doing the data fitting
+          (e.g. Excel)
       software_version:
         type: keyword
         help.en: The version of the software that was used for the step
@@ -1460,7 +1465,7 @@ $defs:
     properties:
       name:
         type: keyword
-        help.en: Descriptive name of the processing step
+        help.en: Short descriptive name of the processing step
         required: true
       description:
         type: keyword
@@ -1504,11 +1509,13 @@ $defs:
     properties:
       upper_error:
         type: double
-        help.en: The upper error, i.e. the number added to the value
+        help.en: The upper error, i.e. the number that should be added the value to
+          get the upper bound
         required: true
       lower_error:
         type: double
-        help.en: The lower error, i.e. the number subtracted from the value
+        help.en: The lower error, i.e. the number that should be subtracted from the
+          value to get the lower bound
         required: true
       errors_are_relative:
         type: boolean
@@ -1556,7 +1563,7 @@ $defs:
     properties:
       value:
         type: double
-        help.en: Numeric value of the temperature
+        help.en: The numeric value of the temperature
         required: true
       value_error:
         use: '#/$defs/Value_error'
@@ -1583,7 +1590,7 @@ $defs:
     properties:
       value:
         type: double
-        help.en: Numeric value of the pressure
+        help.en: The numeric value of the pressure
         required: true
       value_error:
         use: '#/$defs/Value_error'
@@ -1605,7 +1612,7 @@ $defs:
     properties:
       value:
         type: double
-        help.en: Numeric value of the humidity
+        help.en: The numeric value of the humidity
         required: true
       value_error:
         use: '#/$defs/Value_error'
@@ -1639,7 +1646,7 @@ $defs:
       value:
         type: double
         minimum: 0.0
-        help.en: Numerical value of the time point or duration
+        help.en: The numerical value of the time point or duration
         required: true
       value_error:
         use: '#/$defs/Value_error'
@@ -1871,7 +1878,7 @@ $defs:
       external_databases[]:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
-          information about the polymer can be specified here (e.g Q8KRF6, UniProt)
+          information about the polymer can be specified here (e.g UNIPROT:Q8KRF6)
         type: keyword
         mapping:
           copy_to: collected_default_search_fields
@@ -2010,7 +2017,7 @@ $defs:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the molecular assembly as a whole can be specified here
-          (e.g. 1YQ2; PDB); information about the individual components should be
+          (e.g. PDB:1YQ2 ); information about the individual components should be
           specified in the details of the individual components
         type: keyword
         mapping:
@@ -2101,7 +2108,7 @@ $defs:
       external_databases[]:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
-          information about the polymer can be specified here (e.g Q8KRF6, UniProt)
+          information about the polymer can be specified here (e.g UNIPROT:Q8KRF6)
         type: keyword
         mapping:
           copy_to: collected_default_search_fields
@@ -2691,7 +2698,7 @@ $defs:
       external_databases[]:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
-          information about the polymer can be specified here (e.g Q8KRF6, UniProt)
+          information about the polymer can be specified here (e.g UNIPROT:Q8KRF6)
         type: keyword
         mapping:
           copy_to: collected_default_search_fields
@@ -2765,8 +2772,8 @@ $defs:
         help.en: The type of the entity, where the options are (biological) Polymer,
           Chemical, Molecular assembly or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substance which cannot be exactly specified as for its chemical composition,
-          e.g. blood, serum, plant extract
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2827,8 +2834,8 @@ $defs:
         help.en: The type of the entity, where the options are (biological) Polymer,
           Chemical, Molecular assembly or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substance which cannot be exactly specified as for its chemical composition,
-          e.g. blood, serum, plant extract
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2838,7 +2845,7 @@ $defs:
         ^minItems: 1
         ^help.en: List of identifiers to records in external databases containing
           information about the molecular assembly as a whole can be specified here
-          (e.g. 1YQ2; PDB); information about the individual components should be
+          (e.g. PDB:1YQ2 ); information about the individual components should be
           specified in the details of the individual components
         type: keyword
         mapping:
@@ -2904,8 +2911,8 @@ $defs:
         help.en: The type of the entity, where the options are (biological) Polymer,
           Chemical, Molecular assembly or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substance which cannot be exactly specified as for its chemical composition,
-          e.g. blood, serum, plant extract
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2993,8 +3000,8 @@ $defs:
         help.en: The type of the entity, where the options are (biological) Polymer,
           Chemical, Molecular assembly or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substance which cannot be exactly specified as for its chemical composition,
-          e.g. blood, serum, plant extract
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -3076,8 +3083,8 @@ $defs:
         help.en: The type of the entity, where the options are (biological) Polymer,
           Chemical, Molecular assembly or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substance which cannot be exactly specified as for its chemical composition,
-          e.g. blood, serum, plant extract
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -3159,8 +3166,8 @@ $defs:
         help.en: The type of the entity, where the options are (biological) Polymer,
           Chemical, Molecular assembly or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substance which cannot be exactly specified as for its chemical composition,
-          e.g. blood, serum, plant extract
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -3213,8 +3220,8 @@ $defs:
         help.en: The type of the entity, where the options are (biological) Polymer,
           Chemical, Molecular assembly or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substance which cannot be exactly specified as for its chemical composition,
-          e.g. blood, serum, plant extract
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -3263,8 +3270,8 @@ $defs:
         help.en: The type of the entity, where the options are (biological) Polymer,
           Chemical, Molecular assembly or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substance which cannot be exactly specified as for its chemical composition,
-          e.g. blood, serum, plant extract
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -3312,8 +3319,8 @@ $defs:
         help.en: The type of the entity, where the options are (biological) Polymer,
           Chemical, Molecular assembly or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substance which cannot be exactly specified as for its chemical composition,
-          e.g. blood, serum, plant extract
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
         required: true
         mapping:
           copy_to: collected_default_search_fields
