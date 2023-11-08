@@ -202,9 +202,9 @@ class ModelObject(ModelBase):
         for k, v in self.children.items():
             val = v.to_json()
             if isinstance(val, KeyModifier):
-                properties[val.key(k)] = val.value
+                properties[val.key(k).lower()] = val.value
             else:
-                properties[k] = val
+                properties[k.lower()] = val
             if k == "id" and isinstance(v, ModelLinkTarget):
                 extras["id"] = v.name
         return super().to_json(properties=properties, **extras)
@@ -257,7 +257,7 @@ class ModelArray(ModelBase):
 
     def parse(self, data, includes):
         super().parse(data)
-        # to disallow empty list, minItems is set to one in case it has got a value already
+        # to disallow empty list, minItems is set to one in case it has not got a value already
         if "minItems" not in self.constraints.keys():
             self.constraints["minItems"] = 1
 
@@ -664,9 +664,7 @@ class Model:
             "draft": {},
             "draft-files": {},
             "mapping": RECORD_MAPPING,
-            "resource-config": {
-                "base-html-url": f"/{self.package}/"
-            }
+            "resource-config": {"base-html-url": f"/{self.package}/"},
         }
 
     def set_links(self):

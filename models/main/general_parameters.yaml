@@ -94,7 +94,7 @@ General_parameters:
                                required=False)
     raw_measurements:
         description     : str(equals='List of file(s) containing the raw
-                                      measurements', required=False)
+                                      measurements', required=False, minItems=0)
         value           : list(url())
         ui_file_context : str(equals='raw measurement data')
 

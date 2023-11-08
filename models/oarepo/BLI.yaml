@@ -868,7 +868,7 @@ $defs:
         type: polymorphic
         mapping:
           type: nested
-      pH:
+      ph:
         use: '#/$defs/PH'
         required: true
         help.en: The pH value of the chemical environment and how the value was determined
@@ -1071,7 +1071,7 @@ $defs:
         required: true
   Virion:
     properties:
-      Genetic_material:
+      genetic_material:
         type: keyword
         enum: [No genetic material, Virus genome, Synthetic, Other]
         help.en: The genetic material carried by the virions (None, virus genome,
@@ -1807,13 +1807,13 @@ $defs:
         type: keyword
   Coordinates:
     properties:
-      S-N(latitude):
+      s-n(latitude):
         type: double
         minimum: -90.0
         maximum: 90.0
         help.en: The latitude in degrees (decimal notation)
         required: true
-      W-E(longitude):
+      w-e(longitude):
         type: double
         minimum: -180.0
         maximum: 180.0
@@ -2401,7 +2401,7 @@ $defs:
           related to the collected sample or absolute concentration of the constituent
   Complex_substance_of_biological_originVirionPolymorphic:
     properties:
-      Genetic_material:
+      genetic_material:
         type: keyword
         enum: [No genetic material, Virus genome, Synthetic, Other]
         help.en: The genetic material carried by the virions (None, virus genome,
@@ -3090,7 +3090,7 @@ $defs:
           copy_to: collected_default_search_fields
   entity_Complex_substance_of_biological_originVirionPolymorphic:
     properties:
-      Genetic_material:
+      genetic_material:
         type: keyword
         enum: [No genetic material, Virus genome, Synthetic, Other]
         help.en: The genetic material carried by the virions (None, virus genome,
