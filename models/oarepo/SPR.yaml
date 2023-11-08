@@ -386,13 +386,12 @@ $defs:
         use: '#/$defs/Derived_parameter'
         type: nested
       raw_measurements[]:
-        ^minItems: 0
+        ^minItems: 1
         ^help.en: List of file(s) containing the raw measurements
-        ^required: true
         ^ui_file_context:
           type: keyword
           enum: [raw measurement data]
-        type: file
+        type: url
   Record_information:
     properties:
       title:
@@ -1405,7 +1404,7 @@ $defs:
         help.en: How the sample was stored between the quality control was performed
           until it was measured, including temperature and duration
       report:
-        type: file
+        type: url
         help.en: Report with the results of the quality control, as a pdf file
         required: true
         ui_file_context:
@@ -1720,7 +1719,7 @@ $defs:
         help.en: If the protocol used for the performance test has been published,
           the publication can be specified here
       report:
-        type: file
+        type: url
         help.en: The file containing the report of the performance test, preferably
           in pdf
         required: true

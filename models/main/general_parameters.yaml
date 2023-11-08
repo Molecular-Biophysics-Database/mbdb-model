@@ -103,7 +103,7 @@ General_parameters:
     raw_measurements:
         description     : str(equals='List of file(s) containing the raw
                                       measurements', required=False)
-        value           : list(file(), min=0)
+        value           : list(url(), required=False)
         ui_file_context : str(equals='raw measurement data')
 
 ---
@@ -1443,7 +1443,7 @@ Quality_control:
         description     : str(equals='Report with the results of the quality
                                       control, as a pdf file',
                               required=False)
-        value           : file()
+        value           : url()
         ui_file_context : str(equals='quality control report')
 
 Data_fitting:
@@ -1878,7 +1878,7 @@ Performance_test:
         description     : str(equals='The file containing the report of the
                                       performance test, preferably in pdf',
                               required=False)
-        value           : file()
+        value           : url()
         ui_file_context : str(equals='performance test report')
 
     additional_information:
