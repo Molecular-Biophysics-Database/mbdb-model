@@ -13,7 +13,7 @@ General_parameters:
   physical_conditions_at_sample_handling: include('Physical_conditions', required=False)
   chemical_information: include('Chemical_information')
   derived_parameters: list(nested_include('Derived_parameter'), required=False)
-  raw_measurements: list(url(), min=0)
+  raw_measurements: list(file(), min=0)
 ---
 Record_information:
   title: str()
@@ -250,7 +250,7 @@ Quality_control:
     'Other')
   technique: keyword()
   storage_until_measurement: include('Storage')
-  report: url()
+  report: file()
 Data_fitting:
   model: str()
   software_name: str(required=False)
@@ -341,7 +341,7 @@ Measured_data_series:
 Performance_test:
   sample_composition: list(nested_include('Constituent'))
   published_test_protocol: include('Publication', required=False)
-  report: url()
+  report: file()
   additional_information: str(required=False)
 Storage:
   temperature: include('Temperature')
@@ -352,8 +352,8 @@ Supplier:
   catalog_number: keyword(required=False)
   further_information: list(str(), required=False)
 Coordinates:
-  s-n(latitude): num(min=-90, max=90)
-  w-e(longitude): num(min=-180, max=180)
+  latitude: num(min=-90, max=90)
+  longitude: num(min=-180, max=180)
 OBTAINED_TYPES: enum('Measurement', 'Calculation', 'Assumption', 'Other', required=False)
 ---
 CONCENTRATION_UNITS: enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM', 'g/L', 'mg/mL',

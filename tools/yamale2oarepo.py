@@ -49,6 +49,7 @@ from custom_validators import (
     Url,
     Uuid,
     Vocabulary,
+    File
 )
 
 log = logging.getLogger("yamale2oarepo")
@@ -96,7 +97,7 @@ validators[Nested_include.tag] = Nested_include
 validators[Choose.tag] = Choose
 validators[Vocabulary.tag] = Vocabulary
 validators[Url.tag] = Url
-
+validators[File.tag] = File
 
 class KeyModifier:
     def __init__(self, value) -> None:
@@ -744,6 +745,8 @@ def parse(d, path, includes, searchable=False, default_search=False):
         return ModelPrimitive(d, "uuid", path, searchable, default_search)
     elif clz is Url:
         return ModelPrimitive(d, "url", path, searchable, default_search)
+    elif clz is File:
+        return ModelPrimitive(d, "file", path, searchable, default_search)
     elif clz is Day:
         return ModelPrimitive(d, "date", path, searchable, default_search)
     elif clz is Boolean:

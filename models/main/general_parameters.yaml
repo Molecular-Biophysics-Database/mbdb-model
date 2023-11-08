@@ -1,7 +1,7 @@
 # general_parameters_with description file holds definitions, it's NOT
 # an independent schema
 
-# Intentional redundancy . Don't fix unless you really know what you're doing!  
+# Intentional redundancy . Don't fix unless you really know what you're doing!
 
 general_parameters:
     description         : str(equals='The general information of the
@@ -103,7 +103,7 @@ General_parameters:
     raw_measurements:
         description     : str(equals='List of file(s) containing the raw
                                       measurements', required=False)
-        value           : list(url(), min=0)
+        value           : list(file(), min=0)
         ui_file_context : str(equals='raw measurement data')
 
 ---
@@ -1443,7 +1443,7 @@ Quality_control:
         description     : str(equals='Report with the results of the quality
                                       control, as a pdf file',
                               required=False)
-        value           : url()
+        value           : file()
         ui_file_context : str(equals='quality control report')
 
 Data_fitting:
@@ -1878,7 +1878,7 @@ Performance_test:
         description     : str(equals='The file containing the report of the
                                       performance test, preferably in pdf',
                               required=False)
-        value           : url()
+        value           : file()
         ui_file_context : str(equals='performance test report')
 
     additional_information:
@@ -1923,14 +1923,16 @@ Supplier:
         value           : list(str(), required=False)
 
 Coordinates:
-    s-n(latitude):
-        description     : str(equals='The latitude in degrees (decimal
-                                      notation)', required=False)
+    latitude:
+        description     : str(equals='The latitude, from south to north, in
+                                      degrees (decimal notation)',
+                              required=False)
         value           : num(min=-90, max=90)
 
-    w-e(longitude):
-        description     : str(equals='The longitude in degrees (decimal
-                                      notation)', required=False)
+    longitude:
+        description     : str(equals='The longitude, from west to east, in
+                                      degrees (decimal notation)',
+                              required=False)
         value           : num(min=-180, max=180)
 
 OBTAINED_TYPES          : enum('Measurement', 'Calculation', 'Assumption',

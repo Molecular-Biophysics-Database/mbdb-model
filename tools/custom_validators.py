@@ -205,6 +205,11 @@ class Url(Validator):
         return re.match(self.url_regex, value) is not None
 
 
+class File(Url):
+    """File validator"""
+    tag = "file"
+
+
 class Vocabulary(Validator):
     """Vocabulary validator"""
 
@@ -241,5 +246,6 @@ for val in (
     Choose,
     Nested_include,
     Vocabulary,
+    File,
 ):
     extend_validators[val.tag] = val
