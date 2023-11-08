@@ -6,85 +6,10 @@ record:
   properties:
     metadata:
       properties:
-        General_parameters:
-          properties:
-            schema_version:
-              type: keyword
-              enum: [0.9.14]
-              help.en: The schema version used to annotate the general parameters
-              required: true
-            record_information:
-              use: '#/$defs/Record_information'
-              required: true
-              help.en: Information about the record itself, including whether this
-                particular record is associated with other records
-            depositors:
-              use: '#/$defs/Depositors'
-              required: true
-              help.en: Information about the depositors (authors) of this record
-            associated_publications:
-              use: '#/$defs/Associated_publications'
-              help.en: Information about if data in this record is associated with
-                published literature
-            funding_reference[]:
-              ^minItems: 1
-              ^help.en: List of information about the grants that supported generation
-                of the raw data annotated by this record. Note that this information
-                is based on OpenAire Projects
-              keys: [id, title, props.funder_name]
-              vocabulary-type: grants
-              type: vocabulary
-              extras:
-                title:
-                  mapping:
-                    properties:
-                      en:
-                        copy_to: collected_default_search_fields
-                id:
-                  mapping:
-                    copy_to: collected_default_search_fields
-            technique:
-              use: '#/$defs/SUPPORTED_TECHNIQUES'
-              required: true
-              help.en: The type of experimental technique used for collecting the
-                raw data annotated by this record
-            collection_start_time:
-              type: date
-              help.en: The date when collection of the raw data began
-              required: true
-            instrument:
-              use: '#/$defs/Instrument'
-              required: true
-              help.en: Information about the instrument being used to collect (measure)
-                the raw data annotated by this record
-            physical_conditions_at_sample_handling:
-              use: '#/$defs/Physical_conditions'
-              help.en: Information about the physical conditions immediately before
-                sample handling. Especially relevant when the conditions differ from
-                the measurement conditions or where special precautions were taken
-                (e.g. keeping samples on ice until measured, or stored under Argon
-                atmosphere until it was measured)
-            chemical_information:
-              use: '#/$defs/Chemical_information'
-              required: true
-              help.en: Information about entities of interest that were being measured
-                (e.g. Lysozyme) or used to alter the behaviour of the measured species
-                (e.g. Peptidoglycan), and the chemical environments that was used
-                in the measurement (e.g. buffers, cleaning solutions)
-            derived_parameters[]:
-              ^minItems: 1
-              ^help.en: List of the parameters (results) that were derived from analyzing
-                measured raw data, and which steps were taken to obtain them
-              use: '#/$defs/Derived_parameter'
-              type: nested
-            raw_measurements[]:
-              ^minItems: 1
-              ^help.en: List of file(s) containing the raw measurements
-              ^required: true
-              ^ui_file_context:
-                type: keyword
-                enum: [raw measurement data]
-              type: url
+        general_parameters:
+          use: '#/$defs/General_parameters'
+          required: true
+          help.en: The general information of the measurements
     collected_default_search_fields:
       type: fulltext
       marshmallow:
@@ -150,6 +75,84 @@ plugins:
     oarepo-model-builder-relations==4.*, oarepo-model-builder-polymorphic==1.*, oarepo-model-builder-drafts,
     oarepo-model-builder-drafts-files]
 $defs:
+  General_parameters:
+    properties:
+      schema_version:
+        type: keyword
+        enum: [0.9.15]
+        help.en: The schema version used to annotate the general parameters
+        required: true
+      record_information:
+        use: '#/$defs/Record_information'
+        required: true
+        help.en: Information about the record itself, including whether this particular
+          record is associated with other records
+      depositors:
+        use: '#/$defs/Depositors'
+        required: true
+        help.en: Information about the depositors (authors) of this record
+      associated_publications:
+        use: '#/$defs/Associated_publications'
+        help.en: Information about if data in this record is associated with published
+          literature
+      funding_reference[]:
+        ^minItems: 1
+        ^help.en: List of information about the grants that supported generation of
+          the raw data annotated by this record. Note that this information is based
+          on OpenAire Projects
+        keys: [id, title, props.funder_name]
+        vocabulary-type: grants
+        type: vocabulary
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
+      technique:
+        use: '#/$defs/SUPPORTED_TECHNIQUES'
+        required: true
+        help.en: The type of experimental technique used for collecting the raw data
+          annotated by this record
+      collection_start_time:
+        type: date
+        help.en: The date when collection of the raw data began
+        required: true
+      instrument:
+        use: '#/$defs/Instrument'
+        required: true
+        help.en: Information about the instrument being used to collect (measure)
+          the raw data annotated by this record
+      physical_conditions_at_sample_handling:
+        use: '#/$defs/Physical_conditions'
+        help.en: Information about the physical conditions immediately before sample
+          handling. Especially relevant when the conditions differ from the measurement
+          conditions or where special precautions were taken (e.g. keeping samples
+          on ice until measured, or stored under Argon atmosphere until it was measured)
+      chemical_information:
+        use: '#/$defs/Chemical_information'
+        required: true
+        help.en: Information about entities of interest that were being measured (e.g.
+          Lysozyme) or used to alter the behaviour of the measured species (e.g. Peptidoglycan),
+          and the chemical environments that was used in the measurement (e.g. buffers,
+          cleaning solutions)
+      derived_parameters[]:
+        ^minItems: 1
+        ^help.en: List of the parameters (results) that were derived from analyzing
+          measured raw data, and which steps were taken to obtain them
+        use: '#/$defs/Derived_parameter'
+        type: nested
+      raw_measurements[]:
+        ^minItems: 0
+        ^help.en: List of file(s) containing the raw measurements
+        ^required: true
+        ^ui_file_context:
+          type: keyword
+          enum: [raw measurement data]
+        type: file
   Record_information:
     properties:
       title:
@@ -585,8 +588,8 @@ $defs:
         type: polymorphic
         mapping:
           type: nested
-      pH:
-        use: '#/$defs/PH'
+      ph:
+        use: '#/$defs/Ph'
         required: true
         help.en: The pH value of the chemical environment and how the value was determined
       ionic_strength:
@@ -788,7 +791,7 @@ $defs:
         required: true
   Virion:
     properties:
-      Genetic_material:
+      genetic_material:
         type: keyword
         enum: [No genetic material, Virus genome, Synthetic, Other]
         help.en: The genetic material carried by the virions (None, virus genome,
@@ -1151,7 +1154,7 @@ $defs:
         help.en: How the sample was stored between the quality control was performed
           until it was measured, including temperature and duration
       report:
-        type: url
+        type: file
         help.en: Report with the results of the quality control, as a pdf file
         required: true
         ui_file_context:
@@ -1216,7 +1219,7 @@ $defs:
         use: '#/$defs/OBTAINED_TYPES'
         required: true
         help.en: The means by which the dynamic viscosity was obtained
-  PH:
+  Ph:
     properties:
       value:
         type: double
@@ -1420,7 +1423,7 @@ $defs:
         help.en: If the protocol used for the performance test has been published,
           the publication can be specified here
       report:
-        type: url
+        type: file
         help.en: The file containing the report of the performance test, preferably
           in pdf
         required: true
@@ -1460,17 +1463,17 @@ $defs:
         type: keyword
   Coordinates:
     properties:
-      S-N(latitude):
+      latitude:
         type: double
         minimum: -90.0
         maximum: 90.0
-        help.en: The latitude in degrees (decimal notation)
+        help.en: The latitude, from south to north, in degrees (decimal notation)
         required: true
-      W-E(longitude):
+      longitude:
         type: double
         minimum: -180.0
         maximum: 180.0
-        help.en: The longitude in degrees (decimal notation)
+        help.en: The longitude, from west to east, in degrees (decimal notation)
         required: true
   OBTAINED_TYPES:
     type: keyword
@@ -2054,7 +2057,7 @@ $defs:
           related to the collected sample or absolute concentration of the constituent
   Complex_substance_of_biological_originVirionPolymorphic:
     properties:
-      Genetic_material:
+      genetic_material:
         type: keyword
         enum: [No genetic material, Virus genome, Synthetic, Other]
         help.en: The genetic material carried by the virions (None, virus genome,
@@ -2743,7 +2746,7 @@ $defs:
           copy_to: collected_default_search_fields
   entity_Complex_substance_of_biological_originVirionPolymorphic:
     properties:
-      Genetic_material:
+      genetic_material:
         type: keyword
         enum: [No genetic material, Virus genome, Synthetic, Other]
         help.en: The genetic material carried by the virions (None, virus genome,

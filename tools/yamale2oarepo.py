@@ -49,6 +49,7 @@ from custom_validators import (
     Url,
     Uuid,
     Vocabulary,
+    File
 )
 
 log = logging.getLogger("yamale2oarepo")
@@ -96,7 +97,7 @@ validators[Nested_include.tag] = Nested_include
 validators[Choose.tag] = Choose
 validators[Vocabulary.tag] = Vocabulary
 validators[Url.tag] = Url
-
+validators[File.tag] = File
 
 class KeyModifier:
     def __init__(self, value) -> None:
@@ -202,9 +203,9 @@ class ModelObject(ModelBase):
         for k, v in self.children.items():
             val = v.to_json()
             if isinstance(val, KeyModifier):
-                properties[val.key(k)] = val.value
+                properties[val.key(k).lower()] = val.value
             else:
-                properties[k] = val
+                properties[k.lower()] = val
             if k == "id" and isinstance(v, ModelLinkTarget):
                 extras["id"] = v.name
         return super().to_json(properties=properties, **extras)
@@ -257,7 +258,7 @@ class ModelArray(ModelBase):
 
     def parse(self, data, includes):
         super().parse(data)
-        # to disallow empty list, minItems is set to one in case it has got a value already
+        # to disallow empty list, minItems is set to one in case it has not got a value already
         if "minItems" not in self.constraints.keys():
             self.constraints["minItems"] = 1
 
@@ -664,9 +665,7 @@ class Model:
             "draft": {},
             "draft-files": {},
             "mapping": RECORD_MAPPING,
-            "resource-config": {
-                "base-html-url": f"/{self.package}/"
-            }
+            "resource-config": {"base-html-url": f"/{self.package}/"},
         }
 
     def set_links(self):
@@ -746,6 +745,8 @@ def parse(d, path, includes, searchable=False, default_search=False):
         return ModelPrimitive(d, "uuid", path, searchable, default_search)
     elif clz is Url:
         return ModelPrimitive(d, "url", path, searchable, default_search)
+    elif clz is File:
+        return ModelPrimitive(d, "file", path, searchable, default_search)
     elif clz is Day:
         return ModelPrimitive(d, "date", path, searchable, default_search)
     elif clz is Boolean:

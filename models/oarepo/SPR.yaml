@@ -319,7 +319,7 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.14]
+        enum: [0.9.15]
         help.en: The schema version used to annotate the general parameters
         required: true
       record_information:
@@ -386,13 +386,13 @@ $defs:
         use: '#/$defs/Derived_parameter'
         type: nested
       raw_measurements[]:
-        ^minItems: 1
+        ^minItems: 0
         ^help.en: List of file(s) containing the raw measurements
         ^required: true
         ^ui_file_context:
           type: keyword
           enum: [raw measurement data]
-        type: url
+        type: file
   Record_information:
     properties:
       title:
@@ -839,8 +839,8 @@ $defs:
         type: polymorphic
         mapping:
           type: nested
-      pH:
-        use: '#/$defs/PH'
+      ph:
+        use: '#/$defs/Ph'
         required: true
         help.en: The pH value of the chemical environment and how the value was determined
       ionic_strength:
@@ -1042,7 +1042,7 @@ $defs:
         required: true
   Virion:
     properties:
-      Genetic_material:
+      genetic_material:
         type: keyword
         enum: [No genetic material, Virus genome, Synthetic, Other]
         help.en: The genetic material carried by the virions (None, virus genome,
@@ -1405,7 +1405,7 @@ $defs:
         help.en: How the sample was stored between the quality control was performed
           until it was measured, including temperature and duration
       report:
-        type: url
+        type: file
         help.en: Report with the results of the quality control, as a pdf file
         required: true
         ui_file_context:
@@ -1516,7 +1516,7 @@ $defs:
         use: '#/$defs/OBTAINED_TYPES'
         required: true
         help.en: The means by which the dynamic viscosity was obtained
-  PH:
+  Ph:
     properties:
       value:
         type: double
@@ -1720,7 +1720,7 @@ $defs:
         help.en: If the protocol used for the performance test has been published,
           the publication can be specified here
       report:
-        type: url
+        type: file
         help.en: The file containing the report of the performance test, preferably
           in pdf
         required: true
@@ -1760,17 +1760,17 @@ $defs:
         type: keyword
   Coordinates:
     properties:
-      S-N(latitude):
+      latitude:
         type: double
         minimum: -90.0
         maximum: 90.0
-        help.en: The latitude in degrees (decimal notation)
+        help.en: The latitude, from south to north, in degrees (decimal notation)
         required: true
-      W-E(longitude):
+      longitude:
         type: double
         minimum: -180.0
         maximum: 180.0
-        help.en: The longitude in degrees (decimal notation)
+        help.en: The longitude, from west to east, in degrees (decimal notation)
         required: true
   OBTAINED_TYPES:
     type: keyword
@@ -2357,7 +2357,7 @@ $defs:
           related to the collected sample or absolute concentration of the constituent
   Complex_substance_of_biological_originVirionPolymorphic:
     properties:
-      Genetic_material:
+      genetic_material:
         type: keyword
         enum: [No genetic material, Virus genome, Synthetic, Other]
         help.en: The genetic material carried by the virions (None, virus genome,
@@ -3046,7 +3046,7 @@ $defs:
           copy_to: collected_default_search_fields
   entity_Complex_substance_of_biological_originVirionPolymorphic:
     properties:
-      Genetic_material:
+      genetic_material:
         type: keyword
         enum: [No genetic material, Virus genome, Synthetic, Other]
         help.en: The genetic material carried by the virions (None, virus genome,

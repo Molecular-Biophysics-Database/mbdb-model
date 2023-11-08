@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.14",
+        "schema_version": "0.9.15",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -125,7 +125,7 @@
                   "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
                 }
               ],
-              "pH": {
+              "ph": {
                 "value": 7.4,
                 "obtained_by": "Assumption"
               },
@@ -180,7 +180,7 @@
                   "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
                 }
               ],
-              "pH": {
+              "ph": {
                 "value": 1,
                 "obtained_by": "Measurement"
               },
