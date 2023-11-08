@@ -49,7 +49,6 @@ from custom_validators import (
     Url,
     Uuid,
     Vocabulary,
-    File
 )
 
 log = logging.getLogger("yamale2oarepo")
@@ -744,9 +743,7 @@ def parse(d, path, includes, searchable=False, default_search=False):
     elif clz is Uuid:
         return ModelPrimitive(d, "uuid", path, searchable, default_search)
     elif clz is Url:
-        return ModelPrimitive(d, "url", path, searchable, default_search)
-    elif clz is File:
-        return ModelPrimitive(d, "file", path, searchable, default_search)
+        return ModelPrimitive(d, "url", path, searchable, default_search))
     elif clz is Day:
         return ModelPrimitive(d, "date", path, searchable, default_search)
     elif clz is Boolean:
