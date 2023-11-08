@@ -1,11 +1,19 @@
 # general_parameters_with description file holds definitions, it's NOT
 # an independent schema
 
+# Intentional redundancy . Don't fix unless you really know what you're doing!  
+
+general_parameters:
+    description         : str(equals='The general information of the
+                                      measurements', required=False)
+    value               : include('General_parameters')
+
+---
 General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.14')
+        value           : keyword(equals='0.9.15')
 
     record_information:
         description     : str(equals='Information about the record itself,
@@ -94,8 +102,8 @@ General_parameters:
                                required=False)
     raw_measurements:
         description     : str(equals='List of file(s) containing the raw
-                                      measurements', required=False, minItems=0)
-        value           : list(url())
+                                      measurements', required=False)
+        value           : list(url(), min=0)
         ui_file_context : str(equals='raw measurement data')
 
 ---
@@ -690,12 +698,12 @@ Chemical_environment:
                               required=False)
         value           : list(nested_include('Constituent'), required=False)
 
-    pH:
+    ph:
         description     : str(equals='The pH value of the chemical environment
                                       and how the value was determined',
                               required=False)
         searchable      : True
-        value           : include('PH')
+        value           : include('Ph')
 
 # preferably calculated from constituents rather than by the user
     ionic_strength:
@@ -967,7 +975,7 @@ Cell_fraction:
 
 
 Virion:
-    Genetic_material:
+    genetic_material:
         description     : str(equals='The genetic material carried by the
                                       virions (None, virus genome, synthetic)',
                               required=False)
@@ -1591,7 +1599,7 @@ Dynamic_viscosity:
                                       was obtained', required=False)
         value           : include('OBTAINED_TYPES')
 
-PH:
+Ph:
     value:
         description     : str(equals='The pH value of the solution',
                               required=False)
@@ -1915,12 +1923,12 @@ Supplier:
         value           : list(str(), required=False)
 
 Coordinates:
-    S-N(latitude):
+    s-n(latitude):
         description     : str(equals='The latitude in degrees (decimal
                                       notation)', required=False)
         value           : num(min=-90, max=90)
 
-    W-E(longitude):
+    w-e(longitude):
         description     : str(equals='The longitude in degrees (decimal
                                       notation)', required=False)
         value           : num(min=-180, max=180)
