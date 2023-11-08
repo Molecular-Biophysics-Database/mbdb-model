@@ -319,7 +319,7 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.14]
+        enum: [0.9.15]
         help.en: The schema version used to annotate the general parameters
         required: true
       record_information:
@@ -386,7 +386,7 @@ $defs:
         use: '#/$defs/Derived_parameter'
         type: nested
       raw_measurements[]:
-        ^minItems: 1
+        ^minItems: 0
         ^help.en: List of file(s) containing the raw measurements
         ^required: true
         ^ui_file_context:
@@ -840,7 +840,7 @@ $defs:
         mapping:
           type: nested
       ph:
-        use: '#/$defs/PH'
+        use: '#/$defs/Ph'
         required: true
         help.en: The pH value of the chemical environment and how the value was determined
       ionic_strength:
@@ -1516,7 +1516,7 @@ $defs:
         use: '#/$defs/OBTAINED_TYPES'
         required: true
         help.en: The means by which the dynamic viscosity was obtained
-  PH:
+  Ph:
     properties:
       value:
         type: double
