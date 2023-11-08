@@ -241,6 +241,6 @@ for val in (
     Choose,
     Nested_include,
     Vocabulary,
-    File,
+
 ):
     extend_validators[val.tag] = val
