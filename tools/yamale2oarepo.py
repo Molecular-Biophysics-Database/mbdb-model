@@ -96,7 +96,8 @@ validators[Nested_include.tag] = Nested_include
 validators[Choose.tag] = Choose
 validators[Vocabulary.tag] = Vocabulary
 validators[Url.tag] = Url
-validators[File.tag] = File
+# validators[File.tag] = File
+
 
 class KeyModifier:
     def __init__(self, value) -> None:
@@ -660,9 +661,23 @@ class Model:
                 "metadata": self.model.to_json(),
                 QUERY_STRING_FIELD: QUERY_STRING_FIELD_SETTINGS,
             },
-            "files": {**self.files_meta, "use": ["invenio_files"]},
+            "files": {
+                **self.files_meta,
+                "use": ["invenio_files"],
+                "resource": {
+                    "base-classes": [
+                        "oarepo_ui.resources.file_resource.S3RedirectFileResource"
+                    ]
+                },
+            },
             "draft": {},
-            "draft-files": {},
+            "draft-files": {
+                "resource": {
+                    "base-classes": [
+                        "oarepo_ui.resources.file_resource.S3RedirectFileResource"
+                    ]
+                }
+            },
             "mapping": RECORD_MAPPING,
             "resource-config": {"base-html-url": f"/{self.package}/"},
         }
@@ -743,7 +758,7 @@ def parse(d, path, includes, searchable=False, default_search=False):
     elif clz is Uuid:
         return ModelPrimitive(d, "uuid", path, searchable, default_search)
     elif clz is Url:
-        return ModelPrimitive(d, "url", path, searchable, default_search))
+        return ModelPrimitive(d, "url", path, searchable, default_search)
     elif clz is Day:
         return ModelPrimitive(d, "date", path, searchable, default_search)
     elif clz is Boolean:
