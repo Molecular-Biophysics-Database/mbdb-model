@@ -93,8 +93,9 @@
         ],
         "technique": "Surface plasmon resonance (SPR)",
         "instrument": {
-          "manufacturer": "Cytiva",
-          "name": "Biacore T200"
+          "instrument": {
+            "id": "i:123"
+          }
         },
         "collection_start_time": "2020-06-05",
         "physical_conditions_at_sample_handling": {

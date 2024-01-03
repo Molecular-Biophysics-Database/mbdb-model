@@ -244,19 +244,19 @@ $defs:
           be automatically generated
   Instrument:
     properties:
-      manufacturer:
-        use: '#/$defs/COMPANIES'
-        required: true
-        help.en: Name of the manufacturer of the instrument used for raw data collection
-      name:
-        type: keyword
-        help.en: The name of the instrument as provided by the manufacturer
-        required: true
-      model:
-        type: keyword
-        help.en: Model number and/or setup details of instrument used for raw data
-          collection; include special instrument features (e.g. 10.1,RED/BLUE LASER,
-          backreflection optics)
+      instrument:
+        keys: [id, title, props.manufacturer]
+        vocabulary-type: instrument
+        type: vocabulary
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
       performance_test:
         use: '#/$defs/Performance_test'
         help.en: If a performance test of the instrument that was carried out, the
@@ -1509,10 +1509,6 @@ $defs:
     type: keyword
     enum: [Bio-layer interferometry (BLI), Microscale thermophoresis/Temperature related
         intensity change (MST/TRIC), Surface plasmon resonance (SPR)]
-  COMPANIES:
-    type: keyword
-    enum: [Bio-Rad, Bruker, Cytiva, Gatorbio, GE Healthcare, Nanotemper, Nicoya Life,
-      Sartorius, Malvern Panalytical, Refeyn, TA Instruments]
   ConstituentPolymerPolymorphic:
     properties:
       polymer_type:

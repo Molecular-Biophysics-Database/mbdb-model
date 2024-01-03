@@ -62,9 +62,8 @@ general_parameters:
     technique: 'Bio-layer interferometry (BLI)'
 
     instrument:
-        manufacturer: 'Sartorius'
-        name: 'Octet'
-        model: 'R8'
+        instrument: 
+            id: "i:123"
 
     collection_start_time: 2020-06-05
 

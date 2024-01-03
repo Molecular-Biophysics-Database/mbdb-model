@@ -93,9 +93,9 @@
         ],
         "technique": "Microscale thermophoresis/Temperature related intensity change (MST/TRIC)",
         "instrument": {
-          "manufacturer": "Nanotemper",
-          "name": "Monolith NT.115",
-          "model": "GREEN/RED excitation"
+          "instrument": {
+            "id": "i:123"
+          }
         },
         "collection_start_time": "2022-01-02",
         "physical_conditions_at_sample_handling": {

@@ -32,9 +32,8 @@ Record_information:
   date_available: day(required=False)
 ---
 Instrument:
-  manufacturer: include('COMPANIES')
-  name: str()
-  model: str(required=False)
+  instrument: vocabulary(vocabulary='instrument', fields='[id, title, props.manufacturer]',
+    required=False)
   performance_test: include('Performance_test', required=False)
 ---
 Entity_base:
