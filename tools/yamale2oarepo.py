@@ -20,6 +20,7 @@ from yamale2oarepo_config import (
     QUERY_STRING_FIELD_SETTINGS,
     RECORD_MAPPING,
     VOCABULARY_MAPPING,
+    FILE_RESOURCE,
 )
 from yamale.validators import (
     Boolean,
@@ -643,25 +644,18 @@ class Model:
             "use": ["invenio"],
             "module": {"qualified": f"mbdb_{self.package}"},
             "properties": {
+                "id": {"mapping": PRIMITIVES_MAPPING},  # add record id field to default search
                 "metadata": self.model.to_json(),
                 QUERY_STRING_FIELD: QUERY_STRING_FIELD_SETTINGS,
             },
             "files": {
                 **self.files_meta,
                 "use": ["invenio_files"],
-                "resource": {
-                    "base-classes": [
-                        "oarepo_ui.resources.file_resource.S3RedirectFileResource"
-                    ]
-                },
+                "resource": FILE_RESOURCE,
             },
             "draft": {},
             "draft-files": {
-                "resource": {
-                    "base-classes": [
-                        "oarepo_ui.resources.file_resource.S3RedirectFileResource"
-                    ]
-                }
+                "resource": FILE_RESOURCE,
             },
             "mapping": RECORD_MAPPING,
             "resource-config": {"base-html-url": f"/{self.package}/"},
