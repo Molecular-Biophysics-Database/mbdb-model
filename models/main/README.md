@@ -41,7 +41,6 @@ stoichiometry:
     description     : str(equals='Number of copies of the entity that
                                   contribute to the derived parameter, -1
                                   if unknown', required=False)
-    searchable      : True
     value           : num(min=-1)
 ```
 
@@ -68,9 +67,8 @@ Each item is composed of three mandatory elements:
   3. A `value` where the data type and constrains is specified.
 
 Each item also have an optional element:
-  1. `searchable` which describes whether an item is searchable.
-      Unless it's explicitly set to `True`, the item is currently not
-      searchable.
+  1. `default_search` which describes whether among the fields to search in
+      when no field is specified in the search query. Can be set to `True`. 
 
 ### Item value types
 

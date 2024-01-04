@@ -1,10 +1,18 @@
+# virutal environemnt
 .venv
+
+# editor related
+.DS_Store
 .vscode
 .idea
-*.log
+.attach_pid*
+
+# python generated
 __pycache__
-.DS_Store
 .pytest_cache
+
+# module specific
+*.log
 vocabularies/vocabulary_sources/*
 vocabularies/generated_vocabularies/*
 tools/random_generated_data/*
