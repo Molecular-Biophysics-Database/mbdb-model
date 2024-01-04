@@ -26,8 +26,13 @@ PLUGINS = {
     ],
 }
 
-# Mapping related constants
+FILE_RESOURCE = {
+    "base-classes": [
+        "oarepo_ui.resources.file_resource.S3RedirectFileResource"
+    ]
+}
 
+# Mapping related constants
 QUERY_STRING_FIELD = "collected_default_search_fields"
 QUERY_STRING_FIELD_SETTINGS = {
     "type": "fulltext",
