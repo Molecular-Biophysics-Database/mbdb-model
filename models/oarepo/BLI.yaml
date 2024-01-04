@@ -4,6 +4,9 @@ record:
   module:
     qualified: mbdb_bli
   properties:
+    id:
+      mapping:
+        copy_to: collected_default_search_fields
     metadata:
       properties:
         general_parameters:
