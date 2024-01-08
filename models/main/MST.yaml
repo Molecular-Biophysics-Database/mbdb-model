@@ -23,7 +23,7 @@ MST_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MST method specific parameters',
                               required=False)
-        value           : keyword(equals='0.9.6')
+        value           : keyword(equals='0.9.7')
 
     experiment_type:
         description     : str(equals='The type of physical parameter that was
@@ -52,7 +52,6 @@ MST_specific_parameters:
                                'BLUE (ex 460-500nm, em 515-560nm)',
                                'UV (ex 260-300nm, em 330-380nm)',
                                'Spectral shift')
-
 
     excitation_led_power:
         description     : str(equals='The power, in percentage, of the
@@ -85,7 +84,6 @@ MST_specific_parameters:
                                       from it', required=False)
         value           : list(include('MST_data_analysis'), required=False)
 
-
 MST_data_analysis:
     derived_parameter:
         description     : str(equals='Link to a derived parameter that was
@@ -100,7 +98,6 @@ MST_data_analysis:
                                       parameter', required=False)
 
         value           : list(link(target='mst-measurement'), required=False)
-
 
     f_cold_and_hot:
         description     : str(equals='If the data was analyzed with time windows
@@ -123,7 +120,6 @@ MST_data_analysis:
                                       data to obtain the derived parameter was
                                       performed', required=False)
         value           : include('Data_fitting', required=False)
-
 
 F_cold_and_hot:
     time_unit:
@@ -157,7 +153,6 @@ F_cold_and_hot:
                                       fluorescence, F_hot', required=False)
         value           : num(min=0)
 
-
 Measurement:
     id:
         description     : str(equals='Unique ID to be used as a link target',
@@ -175,8 +170,9 @@ Measurement:
         value           : str()
 
     position:
-        description     : str(equals='Position of the measured sample within the
-                                      instrument', required=False)
+        description     : str(equals='Position where the container (capillary) of the
+                                      measured sample within the instrument (e.g. 1, 2, 3)',
+                                      required=False)
         value           : keyword()
 
     sample:
