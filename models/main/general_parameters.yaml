@@ -1,8 +1,7 @@
 # general_parameters_with description file holds definitions, it's NOT
 # an independent schema
 
-# Intentional redundancy . Don't fix unless you really know what you're doing!
-
+# Intentional redundancy. Don't fix unless you really know what you're doing!
 general_parameters:
     description         : str(equals='The general information of the
                                       measurements', required=False)
@@ -12,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.15')
+        value           : keyword(equals='0.9.16')
 
     record_information:
         description     : str(equals='Information about the record itself,
@@ -27,8 +26,10 @@ General_parameters:
         value           : include('Depositors')
 
     associated_publications:
-        description     : str(equals='Information about if data in this record
-                                      is associated with published literature',
+        description     : str(equals='If the data in this record occurs in published
+                                      literature (article, journal, thesis),
+                                      information about the literature 
+                                      can be specified here',
                               required=False)
         value           : include('Associated_publications', required=False)
 
@@ -60,7 +61,7 @@ General_parameters:
                                       annotated by this record', required=False)
         value           : include('Instrument')
 
-    physical_conditions_at_sample_handling:
+    physical_conditions_prior_to_measurement:
         description     : str(equals='Information about the physical conditions
                                       immediately before sample handling.
                                       Especially relevant when the conditions
@@ -137,7 +138,6 @@ Record_information:
                                   time', required=False)
         value       : include('Project', required=False)
 
-
     access_rights:
         description : str(equals='The access rights to the uploaded files.
                                   There are three options, 1) "open access"
@@ -201,7 +201,6 @@ Record_information:
                                   record is published', required=False)
         value       : database_id()
 
-
     subject_category:
         description : str(equals='DataCite subject category the record data
                                   belongs to default is Biophysics',
@@ -251,7 +250,6 @@ Instrument:
                                   required=False)
         value       : include('Performance_test', required=False)
 
-
 ---
 # Entities and references to them
 
@@ -275,7 +273,9 @@ Entity_base:
     type:
         description     : str(equals='The type of the entity, where the options
                                       are (biological) Polymer, Chemical,
-                                      Molecular assembly or Complex substance.
+                                      Molecular assembly (also includes all 
+                                      proteins composed of more than one 
+                                      polypeptide chain) or Complex substance.
                                       Chemical polymers such as PEG 5000 should
                                       be described as being a Chemical. Complex
                                       substance refers to substances which are
@@ -283,7 +283,7 @@ Entity_base:
                                       chemical composition by the time
                                       measurement were performed, but e.g.
                                       blood, serum, plant extract',
-                              required=False)
+                          required=False)
         default_search  : True
         value           : enum('Polymer',
                                'Chemical',
@@ -440,10 +440,10 @@ Polymer:
 # make annoying popup if users do not provide a sequence
     sequence:
         description     : str(equals='Primary sequence of the polymer, using
-                                      single letter codes, including variant
-                                      (e.g. SAGRELLE, AGTTA,).
-                                      For non-natural see link for
-                                      nomenclature', required=False)
+                                      single letter codes (e.g. SAGRELLE, AGTTA).
+                                      In case of non-natural amino acids or 
+                                      nucleotides, please place the monomer in 
+                                      brackets', required=False)
         default_search  : True
         value           : str(required=False)
 
@@ -555,7 +555,6 @@ Polymer_modifications:
                                       labeling)', required=False)
         value           : list(nested_include('Modification'), required=False)
 
-
 ---
 # Entities and constituents
 Chemical_information:
@@ -581,7 +580,7 @@ Chemical_information:
 
 Chemical:
     inchikey:
-        description     : str(equals='[InChIKey]() identifier of the chemical.
+        description     : str(equals='InChIKey identifier of the chemical.
                                       In case of chemical polymers please
                                       specify the InChIKey of the monomer and
                                       specify the specific type in the
@@ -619,7 +618,7 @@ Chemical:
 
     quality_controls:
         description     : str(equals='Quality controls performed e.g. purity,
-                                      aggregation state etc. ', required=False)
+                                      aggregation state etc.', required=False)
         value           : list(nested_include('Quality_control'),
                                               required=False)
 
@@ -1147,7 +1146,7 @@ Person:
 Publication:
     pid:
         description     : str(equals='Persistent identifier associated with the
-                                      publication (e.g. DOI, ISBN)',
+                                      publication (e.g. DOI, ISBN, URN)',
                               required=False)
         default_search  : True
         value           : publication_id()
@@ -1392,7 +1391,6 @@ Data_fitting:
                                       for the step', required=False)
         value           : keyword(required=False)
 
-
     quality:
         description     : str(equals='Numerical value representing the quality
                                       estimate of the derived parameter',
@@ -1442,8 +1440,6 @@ Processing_step:
                                       repository', required=False)
         value           : url(required=False)
 
-
-
 ---
 # Physical and chemical parameter objects
 
@@ -1480,7 +1476,6 @@ Physical_conditions:
                                       controlled, if applicable',
                               required=False)
         value           : include('Atmosphere', required=False)
-
 
 Value_error:
     upper_error:
@@ -1750,7 +1745,7 @@ Size:
         value           : keyword(required=False)
 
 ---
-# Computer related objects
+# Raw data objects
 
 Measured_data_series:
     id:
@@ -1878,13 +1873,14 @@ MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
 
 ---
 # Techniques and company definitions
+
 SUPPORTED_TECHNIQUES    : enum('Bio-layer interferometry (BLI)',
                                'Microscale thermophoresis/Temperature related
                                 intensity change (MST/TRIC)',
                                'Surface plasmon resonance (SPR)',
                                required=False)
 
-# Likely very incomplete, more research is needed
+# Likely incomplete
 COMPANIES               : enum('Bio-Rad',
                                'Bruker',
                                'Cytiva',
