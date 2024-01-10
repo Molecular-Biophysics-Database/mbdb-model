@@ -1286,7 +1286,7 @@
 "  |    |   unit                                                                             ('singular', 'required', ['Keyword'], {}) "
 "  |   raw_measurements                                                                      ('list', 'required', ['Url'], {}) "
 " method_specific_parameters                                                                 ('singular', 'required', ['dict'], {}) "
-"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.9.6'}) "
+"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.9.7'}) "
 "  |   experiment_type                                                                       ('singular', 'required', ['Enum'], {}) "
 "  |   signal_type                                                                           ('singular', 'required', ['Enum'], {}) "
 "  |   excitation_led_color                                                                  ('singular', 'required', ['Enum'], {}) "
