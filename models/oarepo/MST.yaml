@@ -91,7 +91,7 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.6]
+        enum: [0.9.7]
         help.en: The schema version used to annotate the MST method specific parameters
         required: true
       experiment_type:
@@ -213,7 +213,8 @@ $defs:
         required: true
       position:
         type: keyword
-        help.en: Position of the measured sample within the instrument
+        help.en: Position where the container (capillary) of the measured sample within
+          the instrument (e.g. 1, 2, 3)
         required: true
       sample:
         use: '#/$defs/Sample'

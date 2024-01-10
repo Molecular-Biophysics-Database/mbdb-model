@@ -270,7 +270,7 @@ general_parameters:
     raw_measurements: ['https://mbdb.eu/mst/files/foo.txt']
 
 method_specific_parameters:
-    schema_version: '0.9.6'
+    schema_version: '0.9.7'
     experiment_type: 'Affinity'
     signal_type: 'TRIC/MST'
     excitation_led_color: 'RED (ex 605-645nm, em 660-720nm)'
