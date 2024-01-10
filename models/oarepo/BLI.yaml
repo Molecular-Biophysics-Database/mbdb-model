@@ -355,7 +355,7 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.15]
+        enum: [0.9.16]
         help.en: The schema version used to annotate the general parameters
         required: true
       record_information:
@@ -369,8 +369,8 @@ $defs:
         help.en: Information about the depositors (authors) of this record
       associated_publications:
         use: '#/$defs/Associated_publications'
-        help.en: Information about if data in this record is associated with published
-          literature
+        help.en: If the data in this record occurs in published literature (article,
+          journal, thesis), information about the literature can be specified here
       funding_reference[]:
         ^minItems: 1
         ^help.en: List of information about the grants that supported generation of
@@ -402,7 +402,7 @@ $defs:
         required: true
         help.en: Information about the instrument being used to collect (measure)
           the raw data annotated by this record
-      physical_conditions_at_sample_handling:
+      physical_conditions_prior_to_measurement:
         use: '#/$defs/Physical_conditions'
         help.en: Information about the physical conditions immediately before sample
           handling. Especially relevant when the conditions differ from the measurement
@@ -553,7 +553,8 @@ $defs:
             origin, Complex substance of environmental origin, Complex substance of
             chemical origin, Complex substance of industrial production origin]
         help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substances which are not exactly specified by their exact chemical composition
           by the time measurement were performed, but e.g. blood, serum, plant extract
@@ -698,8 +699,9 @@ $defs:
           copy_to: collected_default_search_fields
       sequence:
         type: keyword
-        help.en: Primary sequence of the polymer, using single letter codes, including
-          variant (e.g. SAGRELLE, AGTTA,). For non-natural see link for nomenclature
+        help.en: Primary sequence of the polymer, using single letter codes (e.g.
+          SAGRELLE, AGTTA). In case of non-natural amino acids or nucleotides, please
+          place the monomer in brackets
         mapping:
           copy_to: collected_default_search_fields
       molecular_weight:
@@ -810,11 +812,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: '[InChIKey]() identifier of the chemical. In case of chemical polymers
+        help.en: InChIKey identifier of the chemical. In case of chemical polymers
           please specify the InChIKey of the monomer and specify the specific type
           in the additional identifiers field (e.g. if PEG 3350 was employed, the
           InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)'
+          specified here)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -1269,7 +1271,7 @@ $defs:
       pid:
         type: keyword
         help.en: Persistent identifier associated with the publication (e.g. DOI,
-          ISBN)
+          ISBN, URN)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -1873,8 +1875,9 @@ $defs:
           copy_to: collected_default_search_fields
       sequence:
         type: keyword
-        help.en: Primary sequence of the polymer, using single letter codes, including
-          variant (e.g. SAGRELLE, AGTTA,). For non-natural see link for nomenclature
+        help.en: Primary sequence of the polymer, using single letter codes (e.g.
+          SAGRELLE, AGTTA). In case of non-natural amino acids or nucleotides, please
+          place the monomer in brackets
         mapping:
           copy_to: collected_default_search_fields
       molecular_weight:
@@ -1963,11 +1966,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: '[InChIKey]() identifier of the chemical. In case of chemical polymers
+        help.en: InChIKey identifier of the chemical. In case of chemical polymers
           please specify the InChIKey of the monomer and specify the specific type
           in the additional identifiers field (e.g. if PEG 3350 was employed, the
           InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)'
+          specified here)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2103,8 +2106,9 @@ $defs:
           copy_to: collected_default_search_fields
       sequence:
         type: keyword
-        help.en: Primary sequence of the polymer, using single letter codes, including
-          variant (e.g. SAGRELLE, AGTTA,). For non-natural see link for nomenclature
+        help.en: Primary sequence of the polymer, using single letter codes (e.g.
+          SAGRELLE, AGTTA). In case of non-natural amino acids or nucleotides, please
+          place the monomer in brackets
         mapping:
           copy_to: collected_default_search_fields
       molecular_weight:
@@ -2190,11 +2194,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: '[InChIKey]() identifier of the chemical. In case of chemical polymers
+        help.en: InChIKey identifier of the chemical. In case of chemical polymers
           please specify the InChIKey of the monomer and specify the specific type
           in the additional identifiers field (e.g. if PEG 3350 was employed, the
           InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)'
+          specified here)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2629,11 +2633,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: '[InChIKey]() identifier of the chemical. In case of chemical polymers
+        help.en: InChIKey identifier of the chemical. In case of chemical polymers
           please specify the InChIKey of the monomer and specify the specific type
           in the additional identifiers field (e.g. if PEG 3350 was employed, the
           InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)'
+          specified here)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2693,8 +2697,9 @@ $defs:
           copy_to: collected_default_search_fields
       sequence:
         type: keyword
-        help.en: Primary sequence of the polymer, using single letter codes, including
-          variant (e.g. SAGRELLE, AGTTA,). For non-natural see link for nomenclature
+        help.en: Primary sequence of the polymer, using single letter codes (e.g.
+          SAGRELLE, AGTTA). In case of non-natural amino acids or nucleotides, please
+          place the monomer in brackets
         mapping:
           copy_to: collected_default_search_fields
       molecular_weight:
@@ -2776,7 +2781,8 @@ $defs:
             origin, Complex substance of environmental origin, Complex substance of
             chemical origin, Complex substance of industrial production origin]
         help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substances which are not exactly specified by their exact chemical composition
           by the time measurement were performed, but e.g. blood, serum, plant extract
@@ -2787,11 +2793,11 @@ $defs:
     properties:
       inchikey:
         type: keyword
-        help.en: '[InChIKey]() identifier of the chemical. In case of chemical polymers
+        help.en: InChIKey identifier of the chemical. In case of chemical polymers
           please specify the InChIKey of the monomer and specify the specific type
           in the additional identifiers field (e.g. if PEG 3350 was employed, the
           InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)'
+          specified here)
         required: true
         mapping:
           copy_to: collected_default_search_fields
@@ -2838,7 +2844,8 @@ $defs:
             origin, Complex substance of environmental origin, Complex substance of
             chemical origin, Complex substance of industrial production origin]
         help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substances which are not exactly specified by their exact chemical composition
           by the time measurement were performed, but e.g. blood, serum, plant extract
@@ -2915,7 +2922,8 @@ $defs:
             origin, Complex substance of environmental origin, Complex substance of
             chemical origin, Complex substance of industrial production origin]
         help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substances which are not exactly specified by their exact chemical composition
           by the time measurement were performed, but e.g. blood, serum, plant extract
@@ -3004,7 +3012,8 @@ $defs:
             origin, Complex substance of environmental origin, Complex substance of
             chemical origin, Complex substance of industrial production origin]
         help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substances which are not exactly specified by their exact chemical composition
           by the time measurement were performed, but e.g. blood, serum, plant extract
@@ -3087,7 +3096,8 @@ $defs:
             origin, Complex substance of environmental origin, Complex substance of
             chemical origin, Complex substance of industrial production origin]
         help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substances which are not exactly specified by their exact chemical composition
           by the time measurement were performed, but e.g. blood, serum, plant extract
@@ -3170,7 +3180,8 @@ $defs:
             origin, Complex substance of environmental origin, Complex substance of
             chemical origin, Complex substance of industrial production origin]
         help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substances which are not exactly specified by their exact chemical composition
           by the time measurement were performed, but e.g. blood, serum, plant extract
@@ -3224,7 +3235,8 @@ $defs:
             origin, Complex substance of environmental origin, Complex substance of
             chemical origin, Complex substance of industrial production origin]
         help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substances which are not exactly specified by their exact chemical composition
           by the time measurement were performed, but e.g. blood, serum, plant extract
@@ -3274,7 +3286,8 @@ $defs:
             origin, Complex substance of environmental origin, Complex substance of
             chemical origin, Complex substance of industrial production origin]
         help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substances which are not exactly specified by their exact chemical composition
           by the time measurement were performed, but e.g. blood, serum, plant extract
@@ -3323,7 +3336,8 @@ $defs:
             origin, Complex substance of environmental origin, Complex substance of
             chemical origin, Complex substance of industrial production origin]
         help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly or Complex substance. Chemical polymers such
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
           as PEG 5000 should be described as being a Chemical. Complex substance refers
           to substances which are not exactly specified by their exact chemical composition
           by the time measurement were performed, but e.g. blood, serum, plant extract
