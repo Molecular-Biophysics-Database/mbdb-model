@@ -1,5 +1,5 @@
 general_parameters:
-    schema_version: '0.9.16'
+    schema_version: '0.9.17'
     record_information:
         publisher: 'MBDB'
         resource_type_general: 'Dataset'
@@ -7,29 +7,11 @@ general_parameters:
         access_rights: 'open access'
         metadata_access_rights: 'open access'
         title: 'SPR measurement of hemoglobin serum elements'
-        internal_id: "abc-de-efgh"
         identifier: 'doi:10.1234/foobar'
-        measurement_group_id: "G333-22-1111"
-        project:
-            id:  "Pxyz-fe-dcba"
-            title: 'Hemoglobin'
-            description: 'Everything else related to hemoglobin'
-            owner:
-                given_name: 'Josiah'
-                family_name: 'Carberry'
-                identifiers:
-                    - 'orcid:0000-0002-1825-0097'
-                affiliations:
-                    - id: 'ror:05gq02987'
-
         deposition_date: 2022-01-23
         date_available: 2023-01-23
         subject_category: 'Biophysics'
-        keywords:
-            - 'serum'
-            - 'blood'
-            - 'human'
-            - 'hemoglobin'
+
     depositors:
         depositor:
             given_name: 'Max'
@@ -68,13 +50,6 @@ general_parameters:
 
     collection_start_time: 2020-06-05
 
-    physical_conditions_prior_to_measurement:
-        temperature:
-            controlled: True
-            value: 298.15
-            unit: 'K'
-            obtained_by: "Measurement"
-
     chemical_information:
         chemical_environments:
             - id: 'chem-env-measurement-buffer'
@@ -92,11 +67,6 @@ general_parameters:
 
               ph:
                   value: 7.4
-                  obtained_by: 'Assumption'
-
-              ultrafiltration_method:
-                  pore_size: '0.2 µm'
-                  filter_material: 'Cellulose acetate (CA)'
 
               constituents:
                   - name: 'Tris:HCl'
@@ -136,7 +106,6 @@ general_parameters:
 
               ph:
                   value: 1
-                  obtained_by: 'Measurement'
 
               constituents:
                   - name: 'HCl'
@@ -247,10 +216,6 @@ general_parameters:
                                KGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEF\
                                TPPVQAAYQKVVAGVANALAHKYH"
                     expression_source_type: 'Recombinantly'
-                    supplier:
-                        name: 'Sigma aldrich'
-                        catalog_number: '1002032030'
-
                     external_databases:
                         - 'Uniprot:P68871'
 
@@ -321,14 +286,11 @@ general_parameters:
                                KGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEF\
                                TPPVQAAYQKVVAGVANALAHKYH"
                     expression_source_type: 'Recombinantly'
-                    supplier:
-                        name: 'Sigma aldrich'
-                        catalog_number: '1002032030'
 
                     external_databases:
                         - 'Uniprot:P68871'
 
-    derived_parameters:
+    results:
         - id: 'de-par-kd-hemo'
           name: 'KD of hemoglobin to unknown component in serum'
           type: 'Constant of dissociation (K_D)'
@@ -344,7 +306,7 @@ general_parameters:
           value: 10.3
           unit: 'nM'
 
-    raw_measurements: ['https://mbdb.eu/mst/files/foo.txt']
+    raw_measurement_files: ['https://mbdb.eu/mst/files/foo.txt']
 
 method_specific_parameters:
     schema_version: '0.9.2'
