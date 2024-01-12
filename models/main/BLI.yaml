@@ -90,19 +90,6 @@ BLI_Measurement:
                                       during the measurement', required=False)
         value           : include('Sample')
 
-    measured_data:
-        time:
-            description     : str(equals='Where the measured data time data is
-                                          stored along side an ID and the
-                                          unit', required=False)
-            value           : include('Measured_data_series')
-
-        response:
-            description     : str(equals='Where the measured response data is
-                                          stored along side an ID and the unit',
-                                          required=False)
-            value           : include('Measured_data_series')
-
 Sample:
     plate:
         description     : str(equals='link to one of the plates',

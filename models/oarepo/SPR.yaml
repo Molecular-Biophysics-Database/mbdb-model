@@ -326,7 +326,7 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.16]
+        enum: [0.9.17]
         help.en: The schema version used to annotate the general parameters
         required: true
       record_information:
@@ -338,9 +338,9 @@ $defs:
         use: '#/$defs/Depositors'
         required: true
         help.en: Information about the depositors (authors) of this record
-      associated_publications:
-        use: '#/$defs/Associated_publications'
-        help.en: If the data in this record occurs in published literature (article,
+      associated_publication:
+        use: '#/$defs/Publication'
+        help.en: If the data in this record is described in published literature (article,
           journal, thesis), information about the literature can be specified here
       funding_reference[]:
         ^minItems: 1
@@ -373,12 +373,6 @@ $defs:
         required: true
         help.en: Information about the instrument being used to collect (measure)
           the raw data annotated by this record
-      physical_conditions_prior_to_measurement:
-        use: '#/$defs/Physical_conditions'
-        help.en: Information about the physical conditions immediately before sample
-          handling. Especially relevant when the conditions differ from the measurement
-          conditions or where special precautions were taken (e.g. keeping samples
-          on ice until measured, or stored under Argon atmosphere until it was measured)
       chemical_information:
         use: '#/$defs/Chemical_information'
         required: true
@@ -386,13 +380,13 @@ $defs:
           Lysozyme) or used to alter the behaviour of the measured species (e.g. Peptidoglycan),
           and the chemical environments that was used in the measurement (e.g. buffers,
           cleaning solutions)
-      derived_parameters[]:
+      results[]:
         ^minItems: 1
-        ^help.en: List of the parameters (results) that were derived from analyzing
-          measured raw data, and which steps were taken to obtain them
+        ^help.en: List of the results (parameter) that were derived by analyzing the
+          raw data, and which steps were taken to obtain them
         use: '#/$defs/Derived_parameter'
         type: nested
-      raw_measurements[]:
+      raw_measurement_files[]:
         ^minItems: 1
         ^help.en: List of file(s) containing the raw measurements
         ^ui_file_context:
@@ -407,25 +401,6 @@ $defs:
         required: true
         mapping:
           copy_to: collected_default_search_fields
-      keywords[]:
-        ^minItems: 1
-        ^help.en: User chosen keywords describing the record content (e.g. antibody,
-          epitope, ligand optimization, SARS-CoV-2, agonist, antagonist, HIV, etc.)
-        ^required: true
-        type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
-      measurement_group_id:
-        type: keyword
-        help.en: Unique and persistent identifier which can be generated upon deposition
-          of the first if a group of data is deposited at the same time. These can
-          be used to specified records are closely connected e.g. one sample measured
-          with multiple techniques. For more loosely connected results the project
-          field should be used as sole link
-      project:
-        use: '#/$defs/Project'
-        help.en: Projects are typically longer running research projects that would
-          be expected to have several records associated with them over time
       access_rights:
         type: keyword
         enum: [open access, embargoed access, restricted access]
@@ -462,16 +437,10 @@ $defs:
         help.en: DataCite item which shows type of dataset the record is and corresponds
           directly to which kind of technique was used (MST/BLI/SPR)
         required: true
-      internal_id:
-        type: keyword
-        help.en: Unique and persistent internal identifier the record. This will automatically
-          be generated upon deposition
-        required: true
       identifier:
         type: keyword
         help.en: The (external) identifier of the record which is a DOI generated
           by Datacite. This will automatically be generated when the record is published
-        required: true
       subject_category:
         type: keyword
         enum: [Biophysics]
@@ -495,15 +464,6 @@ $defs:
         type: keyword
         help.en: The name of the instrument as provided by the manufacturer
         required: true
-      model:
-        type: keyword
-        help.en: Model number and/or setup details of instrument used for raw data
-          collection; include special instrument features (e.g. 10.1,RED/BLUE LASER,
-          backreflection optics)
-      performance_test:
-        use: '#/$defs/Performance_test'
-        help.en: If a performance test of the instrument that was carried out, the
-          details and results can be specified here
   Entity_base:
     properties:
       id:
@@ -604,23 +564,6 @@ $defs:
           through chemical, biochemical, or physical means
         use: '#/$defs/Modification'
         type: nested
-      supplier:
-        use: '#/$defs/Supplier'
-        help.en: If the molecular assembly was purchased from a supplier, the name
-          and catlog number can be specified here
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the molecular assembly was stored between being
-          acquired and measured, including temperature and duration
-      quality_controls[]:
-        ^minItems: 1
-        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
-        use: '#/$defs/Quality_control'
-        type: nested
-      preparation_protocol[]:
-        ^minItems: 1
-        ^help.en: The protocol used for preparing the molecular assembly
-        use: '#/$defs/Step'
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the macromolecular assembly can be
@@ -663,7 +606,7 @@ $defs:
         type: keyword
         enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
           polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
-          polyribonucleotide, Other]
+          polyribonucleotide]
         help.en: The type of polymer (e.g. polypeptide(L))
         required: true
         mapping:
@@ -720,19 +663,6 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
-      supplier:
-        use: '#/$defs/Supplier'
-        help.en: If the polymer was purchased from a supplier, the name and catalog
-          number can be specified here (Merck, SKU 10837059001)
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the polymer assembly between being acquired
-          and measured, including temperature and duration
-      quality_controls[]:
-        ^minItems: 1
-        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
-        use: '#/$defs/Quality_control'
-        type: nested
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
@@ -799,19 +729,11 @@ $defs:
       isotopic_labeling:
         type: keyword
         help.en: If the isotopic composition of the chemical was altered from the
-          naturally occurring one, it can be specified here (e.g. 15N, 13C)
+          naturally occurring abundances, it can be specified here (e.g. 15N, 13C)
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
         help.en: The molecular weight of the polymer
-      supplier:
-        use: '#/$defs/Supplier'
-        help.en: The name of the supplier and the catalog number of the chemical
-      quality_controls[]:
-        ^minItems: 1
-        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
-        use: '#/$defs/Quality_control'
-        type: nested
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the chemical can be specified here
@@ -851,21 +773,6 @@ $defs:
         use: '#/$defs/Ph'
         required: true
         help.en: The pH value of the chemical environment and how the value was determined
-      ionic_strength:
-        use: '#/$defs/Ionic_strength'
-        help.en: The ionic strength of the chemical environment
-      dynamic_viscosity:
-        use: '#/$defs/Dynamic_viscosity'
-        help.en: The dynamic viscosity of the chemical environment
-      degassing_method:
-        type: keyword
-        enum: [Low pressure, Heating, Sonication bath]
-        help.en: If chemical environments was degassed, the method can be specified
-          here
-      ultrafiltration_method:
-        use: '#/$defs/Ultrafiltration'
-        help.en: If the chemical environment was subjected to ultrafiltration, the
-          method method can be specified here
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the chemical environment can be specified
@@ -1012,8 +919,7 @@ $defs:
     properties:
       fluid:
         type: keyword
-        enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract,
-          Other]
+        enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract]
         help.en: The body fluid the complex substance is derived from
         required: true
         mapping:
@@ -1029,7 +935,7 @@ $defs:
         type: keyword
         enum: [Ribosome, Cell wall, VesicleCell lysate/Cytoplasm, Cell Membrane, Extracellular
             matrix, Lysosome, Golgi Apparatus, Mitochondrion, Nucleus, Rough Endoplasmic
-            Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast, Other]
+            Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast]
         help.en: The subcelluar component e.g. (Ribosome)
         required: true
         mapping:
@@ -1052,18 +958,18 @@ $defs:
     properties:
       genetic_material:
         type: keyword
-        enum: [No genetic material, Virus genome, Synthetic, Other]
+        enum: [No genetic material, Virus genome, Synthetic]
         help.en: The genetic material carried by the virions (None, virus genome,
           synthetic)
         required: true
       capsid_type:
         type: keyword
-        enum: [None, Native, Genetically Engineered, Synthetic, Other]
+        enum: [None, Native, Genetically Engineered, Synthetic]
         help.en: The type of virion capsid (e.g. genetically engineered, None
         required: true
       envelope_type:
         type: keyword
-        enum: [None, Native, Genetically Engineered, Synthetic, Other]
+        enum: [None, Native, Genetically Engineered, Synthetic]
         help.en: The type of virion envelope (e.g. genetically engineered, None
         required: true
       host_organism:
@@ -1077,7 +983,7 @@ $defs:
     properties:
       source:
         type: keyword
-        enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil, Other]
+        enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil]
         help.en: The environmental source where the complex substance was derived
           from
         required: true
@@ -1133,7 +1039,7 @@ $defs:
     properties:
       type:
         type: keyword
-        enum: [Micelle, Liposome, Nanodisc, Sheet, Other]
+        enum: [Micelle, Liposome, Nanodisc, Sheet]
         help.en: The type of lipid assembly
         required: true
       number_of_mono_layers:
@@ -1161,7 +1067,7 @@ $defs:
     properties:
       product:
         type: keyword
-        enum: [Beer, Cell medium, Whey, Other]
+        enum: [Beer, Cell medium, Whey]
         help.en: The type of product, byproduct, or waste product the complex substance
           was derived from
         required: true
@@ -1216,8 +1122,7 @@ $defs:
           copy_to: collected_default_search_fields
       identifiers[]:
         ^minItems: 1
-        ^help.en: Persistent identifier associated with the person, currently only
-          ORCIDs are allowed
+        ^help.en: Persistent personal identifiers, currently only ORCIDs are allowed
         type: keyword
         mapping:
           copy_to: collected_default_search_fields
@@ -1251,57 +1156,11 @@ $defs:
         help.en: The title of the publication
         mapping:
           copy_to: collected_default_search_fields
-      publication_year:
-        type: integer
-        minimum: 1900
-        help.en: The publication year
-        required: true
-      authors[]:
-        ^minItems: 1
-        ^help.en: Information about the authors of the publication
-        use: '#/$defs/Person'
-        type: nested
       resource_type:
         type: keyword
         enum: [Article, Book, Thesis]
         help.en: The type of publication
         required: true
-      publisher:
-        type: keyword
-        help.en: The name of the publisher or journal name in case of article
-  Project:
-    properties:
-      id:
-        type: keyword
-        help.en: Unique and persistent identifier which can be generated upon deposition
-          of the first member of the project, which can be used to show a relation
-          to other data within the MBDB
-      title:
-        type: keyword
-        help.en: Short title of the project
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      description:
-        type: keyword
-        help.en: Short description of what the project is about
-        required: true
-      owner:
-        use: '#/$defs/Person'
-        required: true
-        help.en: The person responsible for the project, typically a project leader,
-          principle investigator, or group leader
-  Associated_publications:
-    properties:
-      main:
-        use: '#/$defs/Publication'
-        help.en: Information about the publication where the raw data or derived parameters
-          first appeared
-      additional[]:
-        ^minItems: 1
-        ^help.en: Information about publications in addition to the main publication
-        use: '#/$defs/Publication'
-        type: nested
   Derived_parameter:
     properties:
       id:
@@ -1371,20 +1230,6 @@ $defs:
         ^minItems: 1
         ^help.en: List of steps that led to the modification taking place
         use: '#/$defs/Step'
-  Ultrafiltration:
-    properties:
-      pore_size:
-        type: keyword
-        enum: [0.2 µm, 0.22 µm, 0.45 µm, 0.5 µm, 1.2 µm, Other]
-        help.en: The pore size of the filter
-        required: true
-      filter_material:
-        type: keyword
-        enum: [Polyethersulfone (PES), Polyvinylidene flouride (PVDF), Cellulose acetate
-            (CA), Composite regenerated cellulose (CRC), Microporous Glass Fiber (MGF),
-          Nylon, Polytetrafluoroethylene (PTFE), Hydrophilic Polytetrafluoroethylene
-            (PTFE), Mixed cellulose ester (MCE), Polypropylene (PP)]
-        help.en: The material the filter was composed of
   Step:
     properties:
       name:
@@ -1395,30 +1240,6 @@ $defs:
         type: keyword
         help.en: Short description of the step
         required: true
-  Quality_control:
-    properties:
-      parameter:
-        type: keyword
-        enum: [aggregation state, homogeneity, identity, purity, stability, Other]
-        help.en: Which aspect was targeted by the quality control (e.g. purity, stability,
-          homogeneity, identity, aggregation state)
-        required: true
-      technique:
-        type: keyword
-        help.en: Which technique was used (e.g. SDS-PAGE MALDI-TOF, DLS, etc.)
-        required: true
-      storage_until_measurement:
-        use: '#/$defs/Storage'
-        required: true
-        help.en: How the sample was stored between the quality control was performed
-          until it was measured, including temperature and duration
-      report:
-        type: url
-        help.en: Report with the results of the quality control, as a pdf file
-        required: true
-        ui_file_context:
-          type: keyword
-          enum: [quality control report]
   Data_fitting:
     properties:
       model:
@@ -1456,74 +1277,32 @@ $defs:
       software_version:
         type: keyword
         help.en: The version of the software that was used for the step
-      software_tool:
-        type: keyword
-        help.en: The name of the tool within the specified software, i.e. a particular
-          method called or "button pressed" (e.g. equation solver, buffer subtraction)
       link_to_source_code:
         type: url
         help.en: If processing was performed with software where the source code is
           legally available a link can be specified here (e.g. self-written python
           script in a GitHub repository
-  Physical_conditions:
-    properties:
-      temperature:
-        use: '#/$defs/Temperature'
-        help.en: The storage temperature of the samples immediately prior to being
-          measured and whether the temperature was actively being controlled (e.g.
-          autosampler held at 15 degrees, stored on ice, room temperature)
-      pressure:
-        use: '#/$defs/Pressure'
-        help.en: The storage pressure of the samples immediately prior to being measured
-          and whether the pressure was actively being controlled, if applicable
-      humidity:
-        use: '#/$defs/Humidity'
-        help.en: The storage humidity of the samples immediately prior to being measured
-          and whether the humidity was actively being controlled, if applicable
-      atmosphere:
-        use: '#/$defs/Atmosphere'
-        help.en: The storage atmosphere of the samples immediately prior to being
-          measured and whether the atmosphere was actively being controlled, if applicable
   Value_error:
     properties:
       upper_error:
         type: double
         help.en: The upper error, i.e. the number that should be added the value to
-          get the upper bound
+          get the upper bound. The same unit as the value being described is assumed,
+          if relative errors are given please give it in fractional form (e.g. 0.01
+          for 1 %
         required: true
       lower_error:
         type: double
         help.en: The lower error, i.e. the number that should be subtracted from the
-          value to get the lower bound
+          value to get the lower bound. The same unit as the value being described
+          is assumed, if relative errors are given please give it in fractional form
+          (e.g. 0.01 for 1 %)
         required: true
-      errors_are_relative:
+      is_relative:
         type: boolean
-        help.en: Whether the errors should be interpreted as relative errors in percent
+        help.en: True if the error values given should be interpreted as relative
+          errors (fractional uncertainty)
         required: true
-      error_level:
-        type: double
-        minimum: 0.0
-        help.en: How many standard deviations the error corresponds to
-  Dynamic_viscosity:
-    properties:
-      value:
-        type: double
-        minimum: 0.0
-        help.en: Numerical value of the dynamic viscosity
-        required: true
-      value_error:
-        use: '#/$defs/Value_error'
-        help.en: The expected error of the dynamic viscosity (e.g. standard deviation,
-          % error)
-      unit:
-        type: keyword
-        enum: [Pa s]
-        help.en: The unit of the dynamic viscosity
-        required: true
-      obtained_by:
-        use: '#/$defs/OBTAINED_TYPES'
-        required: true
-        help.en: The means by which the dynamic viscosity was obtained
   Ph:
     properties:
       value:
@@ -1534,92 +1313,16 @@ $defs:
         use: '#/$defs/Value_error'
         help.en: The reported error of the value of pH (e.g. standard deviation, %
           error)
-      obtained_by:
-        use: '#/$defs/OBTAINED_TYPES'
-        required: true
-        help.en: The means through which the pH value was obtained
   Temperature:
     properties:
       value:
         type: double
         help.en: The numeric value of the temperature
         required: true
-      value_error:
-        use: '#/$defs/Value_error'
-        help.en: The reported error of the value of the temperature (e.g. standard
-          deviation, % error)
-      operational_value:
-        type: keyword
-        enum: [Room temperature, On Ice, Other]
-        help.en: If the temperature was defined by the procedure rather than the numerical
-          value the value can be specified here (e.g. Room temperature, on ice, etc.)
       unit:
         use: '#/$defs/TEMPERATURE_UNITS'
         required: true
         help.en: The unit of temperature
-      obtained_by:
-        use: '#/$defs/OBTAINED_TYPES'
-        required: true
-        help.en: The means through which the temperature value was obtained
-      controlled:
-        type: boolean
-        help.en: Whether the temperature was actively controlled
-        required: true
-  Pressure:
-    properties:
-      value:
-        type: double
-        help.en: The numeric value of the pressure
-        required: true
-      value_error:
-        use: '#/$defs/Value_error'
-        help.en: The reported error of the value of the pressure (e.g. standard deviation,
-          % error)
-      unit:
-        use: '#/$defs/PRESSURE_UNITS'
-        required: true
-        help.en: The unit of the pressure
-      obtained_by:
-        use: '#/$defs/OBTAINED_TYPES'
-        required: true
-        help.en: The means through which the pressure value was obtained
-      controlled:
-        type: boolean
-        help.en: Whether the pressure was actively controlled
-        required: true
-  Humidity:
-    properties:
-      value:
-        type: double
-        help.en: The numeric value of the humidity
-        required: true
-      value_error:
-        use: '#/$defs/Value_error'
-        help.en: The reported error of the value of the humidity (e.g. standard deviation,
-          % error)
-      unit:
-        use: '#/$defs/HUMIDITY_UNITS'
-        required: true
-        help.en: The unit of the humidity
-      obtained_by:
-        use: '#/$defs/OBTAINED_TYPES'
-        required: true
-        help.en: The means through which the humidity value was obtained
-      controlled:
-        type: boolean
-        help.en: Whether the humidity was actively controlled
-        required: true
-  Atmosphere:
-    properties:
-      composition[]:
-        ^minItems: 1
-        ^help.en: List of gases and their concentrations the atmosphere was composed
-          of
-        ^required: true
-        use: '#/$defs/Chemical_constituent'
-        type: polymorphic
-        mapping:
-          type: nested
   Time_duration:
     properties:
       value:
@@ -1627,10 +1330,6 @@ $defs:
         minimum: 0.0
         help.en: The numerical value of the time point or duration
         required: true
-      value_error:
-        use: '#/$defs/Value_error'
-        help.en: The reported error of the value of the time point or duration (e.g.
-          standard deviation, % error)
       unit:
         use: '#/$defs/TIME_UNITS'
         required: true
@@ -1642,43 +1341,16 @@ $defs:
         minimum: -1.0
         help.en: The numerical value of the concentration, -1 if unknown
         required: true
-      value_error:
-        use: '#/$defs/Value_error'
-        help.en: The expected error of the concentration (e.g. standard  deviation,
-          % error)
       unit:
         use: '#/$defs/CONCENTRATION_UNITS'
         required: true
         help.en: The unit of the concentration
-      obtained_by:
-        use: '#/$defs/OBTAINED_TYPES'
-        help.en: The means through which the concentration was obtained
-      obtained_protocol[]:
-        ^minItems: 1
-        ^help.en: Information of how the concentration was obtained (e.g, Absorbance
-          at 280 nm, buffer absorbance subtraction, extinction coefficient
-        use: '#/$defs/Step'
-  Ionic_strength:
-    properties:
-      value:
-        type: double
-        minimum: 0.0
-        help.en: The numerical value of the ionic strength (https://en.wikipedia.org/wiki/Ionic_strength)
-        required: true
-      unit:
-        use: '#/$defs/CONCENTRATION_UNITS'
-        required: true
-        help.en: The unit of the ionic strength
   Molecular_weight:
     properties:
       value:
         type: double
         help.en: The numerical value of the molecular weight
         required: true
-      value_error:
-        use: '#/$defs/Value_error'
-        help.en: The expected error of the molecular weight (e.g. standard  deviation,
-          % error)
       unit:
         use: '#/$defs/MOLECULAR_WEIGHT_UNITS'
         required: true
@@ -1687,7 +1359,7 @@ $defs:
     properties:
       type:
         type: keyword
-        enum: [radius, diameter, path length, Other]
+        enum: [radius, diameter, path length]
         help.en: The type of size (e.g. radius)
         required: true
       mean:
@@ -1709,36 +1381,6 @@ $defs:
       lower:
         type: double
         help.en: The lower bound of the size
-      distribution_type:
-        type: keyword
-        help.en: The distribution type of sizes (e.g. log-normal)
-  Performance_test:
-    properties:
-      sample_composition[]:
-        ^minItems: 1
-        ^help.en: The composition of the sample the performance test was carried out
-          on
-        ^required: true
-        use: '#/$defs/Constituent'
-        type: polymorphic
-        mapping:
-          type: nested
-      published_test_protocol:
-        use: '#/$defs/Publication'
-        help.en: If the protocol used for the performance test has been published,
-          the publication can be specified here
-      report:
-        type: url
-        help.en: The file containing the report of the performance test, preferably
-          in pdf
-        required: true
-        ui_file_context:
-          type: keyword
-          enum: [performance test report]
-      additional_information:
-        type: keyword
-        help.en: Additional information about the performance test can be specified
-          here
   Storage:
     properties:
       temperature:
@@ -1780,9 +1422,6 @@ $defs:
         maximum: 180.0
         help.en: The longitude, from west to east, in degrees (decimal notation)
         required: true
-  OBTAINED_TYPES:
-    type: keyword
-    enum: [Measurement, Calculation, Assumption, Other]
   CONCENTRATION_UNITS:
     type: keyword
     enum: [M, mM, µM, nM, pM, fM, aM, g/L, mg/mL, µg/mL, ng/mL, mol/kg, mmol/kg, v/v
@@ -1790,12 +1429,6 @@ $defs:
   FLOWRATE_UNITS:
     type: keyword
     enum: [mL/min, µl/s]
-  HUMIDITY_UNITS:
-    type: keyword
-    enum: ['%', g/m^3, oz/y^3]
-  PRESSURE_UNITS:
-    type: keyword
-    enum: [Pa, kPa, MPa, Bar, mBar, atm, Torr, PSI, mmHg, inchHg]
   TEMPERATURE_UNITS:
     type: keyword
     enum: [K, °C, °F]
@@ -1818,13 +1451,60 @@ $defs:
     type: keyword
     enum: [Bio-Rad, Bruker, Cytiva, Gatorbio, GE Healthcare, Nanotemper, Nicoya Life,
       Sartorius, Malvern Panalytical, Refeyn, TA Instruments]
+  Chemical_constituentChemicalPolymorphic:
+    properties:
+      inchikey:
+        type: keyword
+        help.en: InChIKey identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      additional_identifiers[]:
+        ^minItems: 1
+        ^help.en: Unique and persistent identifier from an external source; options
+          of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
+        type: keyword
+      isotopic_labeling:
+        type: keyword
+        help.en: If the isotopic composition of the chemical was altered from the
+          naturally occurring abundances, it can be specified here (e.g. 15N, 13C)
+      molecular_weight:
+        use: '#/$defs/Molecular_weight'
+        required: true
+        help.en: The molecular weight of the polymer
+      additional_specifications[]:
+        ^minItems: 1
+        ^help.en: Additional information about the chemical can be specified here
+          (e.g. RNase free water, recrystallization, desalting)
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the constituent, must be unique within
+          a record
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Chemical]
+        help.en: The type of the constituent, options are Chemical
+        required: true
+      concentration:
+        use: '#/$defs/Concentration'
+        required: true
+        help.en: Concentration of the constituent including its relative concentration
+          related to the collected sample or absolute concentration of the constituent
   ConstituentPolymerPolymorphic:
     properties:
       polymer_type:
         type: keyword
         enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
           polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
-          polyribonucleotide, Other]
+          polyribonucleotide]
         help.en: The type of polymer (e.g. polypeptide(L))
         required: true
         mapping:
@@ -1881,19 +1561,6 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
-      supplier:
-        use: '#/$defs/Supplier'
-        help.en: If the polymer was purchased from a supplier, the name and catalog
-          number can be specified here (Merck, SKU 10837059001)
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the polymer assembly between being acquired
-          and measured, including temperature and duration
-      quality_controls[]:
-        ^minItems: 1
-        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
-        use: '#/$defs/Quality_control'
-        type: nested
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
@@ -1938,19 +1605,11 @@ $defs:
       isotopic_labeling:
         type: keyword
         help.en: If the isotopic composition of the chemical was altered from the
-          naturally occurring one, it can be specified here (e.g. 15N, 13C)
+          naturally occurring abundances, it can be specified here (e.g. 15N, 13C)
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
         help.en: The molecular weight of the polymer
-      supplier:
-        use: '#/$defs/Supplier'
-        help.en: The name of the supplier and the catalog number of the chemical
-      quality_controls[]:
-        ^minItems: 1
-        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
-        use: '#/$defs/Quality_control'
-        type: nested
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the chemical can be specified here
@@ -2007,23 +1666,6 @@ $defs:
           through chemical, biochemical, or physical means
         use: '#/$defs/Modification'
         type: nested
-      supplier:
-        use: '#/$defs/Supplier'
-        help.en: If the molecular assembly was purchased from a supplier, the name
-          and catlog number can be specified here
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the molecular assembly was stored between being
-          acquired and measured, including temperature and duration
-      quality_controls[]:
-        ^minItems: 1
-        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
-        use: '#/$defs/Quality_control'
-        type: nested
-      preparation_protocol[]:
-        ^minItems: 1
-        ^help.en: The protocol used for preparing the molecular assembly
-        use: '#/$defs/Step'
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the macromolecular assembly can be
@@ -2055,7 +1697,7 @@ $defs:
         type: keyword
         enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
           polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
-          polyribonucleotide, Other]
+          polyribonucleotide]
         help.en: The type of polymer (e.g. polypeptide(L))
         required: true
         mapping:
@@ -2112,19 +1754,6 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
-      supplier:
-        use: '#/$defs/Supplier'
-        help.en: If the polymer was purchased from a supplier, the name and catalog
-          number can be specified here (Merck, SKU 10837059001)
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the polymer assembly between being acquired
-          and measured, including temperature and duration
-      quality_controls[]:
-        ^minItems: 1
-        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
-        use: '#/$defs/Quality_control'
-        type: nested
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
@@ -2166,19 +1795,11 @@ $defs:
       isotopic_labeling:
         type: keyword
         help.en: If the isotopic composition of the chemical was altered from the
-          naturally occurring one, it can be specified here (e.g. 15N, 13C)
+          naturally occurring abundances, it can be specified here (e.g. 15N, 13C)
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
         help.en: The molecular weight of the polymer
-      supplier:
-        use: '#/$defs/Supplier'
-        help.en: The name of the supplier and the catalog number of the chemical
-      quality_controls[]:
-        ^minItems: 1
-        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
-        use: '#/$defs/Quality_control'
-        type: nested
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the chemical can be specified here
@@ -2221,8 +1842,7 @@ $defs:
     properties:
       fluid:
         type: keyword
-        enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract,
-          Other]
+        enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract]
         help.en: The body fluid the complex substance is derived from
         required: true
         mapping:
@@ -2292,7 +1912,7 @@ $defs:
         type: keyword
         enum: [Ribosome, Cell wall, VesicleCell lysate/Cytoplasm, Cell Membrane, Extracellular
             matrix, Lysosome, Golgi Apparatus, Mitochondrion, Nucleus, Rough Endoplasmic
-            Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast, Other]
+            Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast]
         help.en: The subcelluar component e.g. (Ribosome)
         required: true
         mapping:
@@ -2369,18 +1989,18 @@ $defs:
     properties:
       genetic_material:
         type: keyword
-        enum: [No genetic material, Virus genome, Synthetic, Other]
+        enum: [No genetic material, Virus genome, Synthetic]
         help.en: The genetic material carried by the virions (None, virus genome,
           synthetic)
         required: true
       capsid_type:
         type: keyword
-        enum: [None, Native, Genetically Engineered, Synthetic, Other]
+        enum: [None, Native, Genetically Engineered, Synthetic]
         help.en: The type of virion capsid (e.g. genetically engineered, None
         required: true
       envelope_type:
         type: keyword
-        enum: [None, Native, Genetically Engineered, Synthetic, Other]
+        enum: [None, Native, Genetically Engineered, Synthetic]
         help.en: The type of virion envelope (e.g. genetically engineered, None
         required: true
       host_organism:
@@ -2448,7 +2068,7 @@ $defs:
     properties:
       source:
         type: keyword
-        enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil, Other]
+        enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil]
         help.en: The environmental source where the complex substance was derived
           from
         required: true
@@ -2544,7 +2164,7 @@ $defs:
     properties:
       product:
         type: keyword
-        enum: [Beer, Cell medium, Whey, Other]
+        enum: [Beer, Cell medium, Whey]
         help.en: The type of product, byproduct, or waste product the complex substance
           was derived from
         required: true
@@ -2585,68 +2205,13 @@ $defs:
         required: true
         help.en: Concentration of the constituent including its relative concentration
           related to the collected sample or absolute concentration of the constituent
-  Chemical_constituentChemicalPolymorphic:
-    properties:
-      inchikey:
-        type: keyword
-        help.en: InChIKey identifier of the chemical. In case of chemical polymers
-          please specify the InChIKey of the monomer and specify the specific type
-          in the additional identifiers field (e.g. if PEG 3350 was employed, the
-          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      additional_identifiers[]:
-        ^minItems: 1
-        ^help.en: Unique and persistent identifier from an external source; options
-          of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
-        type: keyword
-      isotopic_labeling:
-        type: keyword
-        help.en: If the isotopic composition of the chemical was altered from the
-          naturally occurring one, it can be specified here (e.g. 15N, 13C)
-      molecular_weight:
-        use: '#/$defs/Molecular_weight'
-        required: true
-        help.en: The molecular weight of the polymer
-      supplier:
-        use: '#/$defs/Supplier'
-        help.en: The name of the supplier and the catalog number of the chemical
-      quality_controls[]:
-        ^minItems: 1
-        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
-        use: '#/$defs/Quality_control'
-        type: nested
-      additional_specifications[]:
-        ^minItems: 1
-        ^help.en: Additional information about the chemical can be specified here
-          (e.g. RNase free water, recrystallization, desalting)
-        type: keyword
-      name:
-        type: keyword
-        help.en: Short descriptive name (id) of the constituent, must be unique within
-          a record
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      type:
-        type: keyword
-        enum: [Chemical]
-        help.en: The type of the constituent, options are Chemical
-        required: true
-      concentration:
-        use: '#/$defs/Concentration'
-        required: true
-        help.en: Concentration of the constituent including its relative concentration
-          related to the collected sample or absolute concentration of the constituent
   EntityPolymerPolymorphic:
     properties:
       polymer_type:
         type: keyword
         enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
           polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
-          polyribonucleotide, Other]
+          polyribonucleotide]
         help.en: The type of polymer (e.g. polypeptide(L))
         required: true
         mapping:
@@ -2703,19 +2268,6 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
-      supplier:
-        use: '#/$defs/Supplier'
-        help.en: If the polymer was purchased from a supplier, the name and catalog
-          number can be specified here (Merck, SKU 10837059001)
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the polymer assembly between being acquired
-          and measured, including temperature and duration
-      quality_controls[]:
-        ^minItems: 1
-        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
-        use: '#/$defs/Quality_control'
-        type: nested
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
@@ -2765,19 +2317,11 @@ $defs:
       isotopic_labeling:
         type: keyword
         help.en: If the isotopic composition of the chemical was altered from the
-          naturally occurring one, it can be specified here (e.g. 15N, 13C)
+          naturally occurring abundances, it can be specified here (e.g. 15N, 13C)
       molecular_weight:
         use: '#/$defs/Molecular_weight'
         required: true
         help.en: The molecular weight of the polymer
-      supplier:
-        use: '#/$defs/Supplier'
-        help.en: The name of the supplier and the catalog number of the chemical
-      quality_controls[]:
-        ^minItems: 1
-        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
-        use: '#/$defs/Quality_control'
-        type: nested
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the chemical can be specified here
@@ -2839,23 +2383,6 @@ $defs:
           through chemical, biochemical, or physical means
         use: '#/$defs/Modification'
         type: nested
-      supplier:
-        use: '#/$defs/Supplier'
-        help.en: If the molecular assembly was purchased from a supplier, the name
-          and catlog number can be specified here
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the molecular assembly was stored between being
-          acquired and measured, including temperature and duration
-      quality_controls[]:
-        ^minItems: 1
-        ^help.en: Quality controls performed e.g. purity, aggregation state etc.
-        use: '#/$defs/Quality_control'
-        type: nested
-      preparation_protocol[]:
-        ^minItems: 1
-        ^help.en: The protocol used for preparing the molecular assembly
-        use: '#/$defs/Step'
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the macromolecular assembly can be
@@ -2906,8 +2433,7 @@ $defs:
     properties:
       fluid:
         type: keyword
-        enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract,
-          Other]
+        enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract]
         help.en: The body fluid the complex substance is derived from
         required: true
         mapping:
@@ -2982,7 +2508,7 @@ $defs:
         type: keyword
         enum: [Ribosome, Cell wall, VesicleCell lysate/Cytoplasm, Cell Membrane, Extracellular
             matrix, Lysosome, Golgi Apparatus, Mitochondrion, Nucleus, Rough Endoplasmic
-            Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast, Other]
+            Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast]
         help.en: The subcelluar component e.g. (Ribosome)
         required: true
         mapping:
@@ -3064,18 +2590,18 @@ $defs:
     properties:
       genetic_material:
         type: keyword
-        enum: [No genetic material, Virus genome, Synthetic, Other]
+        enum: [No genetic material, Virus genome, Synthetic]
         help.en: The genetic material carried by the virions (None, virus genome,
           synthetic)
         required: true
       capsid_type:
         type: keyword
-        enum: [None, Native, Genetically Engineered, Synthetic, Other]
+        enum: [None, Native, Genetically Engineered, Synthetic]
         help.en: The type of virion capsid (e.g. genetically engineered, None
         required: true
       envelope_type:
         type: keyword
-        enum: [None, Native, Genetically Engineered, Synthetic, Other]
+        enum: [None, Native, Genetically Engineered, Synthetic]
         help.en: The type of virion envelope (e.g. genetically engineered, None
         required: true
       host_organism:
@@ -3148,7 +2674,7 @@ $defs:
     properties:
       source:
         type: keyword
-        enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil, Other]
+        enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil]
         help.en: The environmental source where the complex substance was derived
           from
         required: true
@@ -3254,7 +2780,7 @@ $defs:
     properties:
       product:
         type: keyword
-        enum: [Beer, Cell medium, Whey, Other]
+        enum: [Beer, Cell medium, Whey]
         help.en: The type of product, byproduct, or waste product the complex substance
           was derived from
         required: true

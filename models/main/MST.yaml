@@ -23,7 +23,7 @@ MST_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MST method specific parameters',
                               required=False)
-        value           : keyword(equals='0.9.7')
+        value           : keyword(equals='0.9.8')
 
     experiment_type:
         description     : str(equals='The type of physical parameter that was
@@ -69,6 +69,12 @@ MST_specific_parameters:
                                       Low = 20, Medium = 40, High = 60",
                               required=False)
         value           : num(min=0, max=100)
+
+    temperature:
+        description     : str(equals='The temperature of the sample chamber 
+                                      while the measurement was performed', 
+                              required=False)     
+        value           : include('Temperature', required=False)    
 
     measurements:
         description     : str(equals='List of the information about each
@@ -173,7 +179,7 @@ Measurement:
         description     : str(equals='Position where the container (capillary) of the
                                       measured sample within the instrument (e.g. 1, 2, 3)',
                                       required=False)
-        value           : keyword()
+        value           : keyword()    
 
     sample:
         description     : str(equals='Information about the sample including
@@ -182,37 +188,20 @@ Measurement:
                                       composed of', required=False)
         value           : include('Sample')
 
-    measured_data:
-        x_data:
-            description : str(equals='Values for the independent variable,
-                                      normally time, of the measured data',
-                                      required=False)
-            value       : include('Measured_data_series')
-
-        y_data:
-            description : str(equals='Values for the dependent variable,
-                                      normally fluorescence intensity, of the
-                                      measured data', required=False)
-            value       : include('Measured_data_series')
-
 Sample:
     targets:
         description     : str(equals='List of names (ids), from the entities of
                                       interest defined in the general
                                       parameters, of directly measured entities
-                                      and entities at constant concentration for
-                                      a series of measurements and their
-                                      concentration', required=False)
+                                      and entities', required=False)
         value           : list(include('Entity_constituent'), min=1)
 
-    ligands:
+    target_modifiers:
         description     : str(equals='List of names (ids) of entities (from the
                                       entities of interest defined in the
                                       general parameters) that were used to
-                                      alter the behavior of the target(s) or
-                                      entities present at varying concentrations
-                                      for a series of measurements and their
-                                      concentration', required=False)
+                                      alter the behavior of the target(s)',
+                                      required=False)
         value           : list(include('Entity_constituent'))
 
     chemical_environment:
@@ -222,9 +211,9 @@ Sample:
                                       required=False)
         value           : link(target='chemical-environment')
 
-    container:
-        description     : str(equals='The container the sample was in',
-                                      required=False)
+    measurement_container:
+        description     : str(equals='The container the sample was in during
+                                      the measurement', required=False)
         value           : enum('Monolith Standard Capillary',
                                'Monolith Premium Capillary',
                                'Monolith LabelFree Capillary',
@@ -239,5 +228,7 @@ Sample:
 
     preparation:
         description     : str(equals='List of steps taken to prepare the
-                                      sample', required=False)
-        value           : list(include('Step'),required=False)
+                                      sample, ending at the point where 
+                                      it was placed in the measurement 
+                                      container', required=False)
+        value           : list(include('Step'), required=False)

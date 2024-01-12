@@ -15,9 +15,6 @@ BLI_Measurement:
   sensor: link(target='bli-sensor')
   measurement_protocol_step: link(target='bli-protocol-step')
   sample: include('Sample')
-  measured_data:
-    time: include('Measured_data_series')
-    response: include('Measured_data_series')
 Sample:
   plate: link(target='plate')
   well_position: keyword()

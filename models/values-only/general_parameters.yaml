@@ -1,32 +1,27 @@
 general_parameters: include('General_parameters')
 ---
 General_parameters:
-  schema_version: keyword(equals='0.9.16')
+  schema_version: keyword(equals='0.9.17')
   record_information: include('Record_information')
   depositors: include('Depositors')
-  associated_publications: include('Associated_publications', required=False)
+  associated_publication: include('Publication', required=False)
   funding_reference: list(vocabulary(vocabulary='grants', fields='[id,title,props.funder_name]'),
     required=False)
   technique: include('SUPPORTED_TECHNIQUES')
   collection_start_time: day()
   instrument: include('Instrument')
-  physical_conditions_prior_to_measurement: include('Physical_conditions', required=False)
   chemical_information: include('Chemical_information')
-  derived_parameters: list(nested_include('Derived_parameter'), required=False)
-  raw_measurements: list(url(), required=False)
+  results: list(nested_include('Derived_parameter'), required=False)
+  raw_measurement_files: list(url(), required=False)
 ---
 Record_information:
   title: str()
-  keywords: list(keyword())
-  measurement_group_id: keyword(required=False)
-  project: include('Project', required=False)
   access_rights: enum('open access', 'embargoed access', 'restricted access')
   metadata_access_rights: enum('open access', 'embargoed access', 'restricted access')
   publisher: keyword(equals='MBDB')
   resource_type_general: keyword(equals='Dataset')
   resource_type: keyword()
-  internal_id: keyword()
-  identifier: database_id()
+  identifier: database_id(required=False)
   subject_category: keyword(equals='Biophysics')
   deposition_date: day()
   date_available: day(required=False)
@@ -34,8 +29,6 @@ Record_information:
 Instrument:
   manufacturer: include('COMPANIES')
   name: str()
-  model: str(required=False)
-  performance_test: include('Performance_test', required=False)
 ---
 Entity_base:
   id: link_target(name="entity")
@@ -58,10 +51,6 @@ Molecular_assembly:
   components: list(nested_include('Assembly_component'), min=1)
   molecular_weight: include('Molecular_weight')
   chemical_modifications: list(nested_include('Modification'), required=False)
-  supplier: include('Supplier', required=False)
-  storage: include('Storage', required=False)
-  quality_controls: list(nested_include('Quality_control'), required=False)
-  preparation_protocol: list(include('Step'), required=False)
   additional_specifications: list(str(), required=False)
 Assembly_component_base:
   name: str()
@@ -73,7 +62,7 @@ Assembly_component: choose(include('Assembly_component_base'), Polymer=include('
 Polymer:
   polymer_type: enum('cyclic-pseudo-peptide', 'peptide nucleic acid', 'polydeoxyribonucleotide',
     'polydeoxyribonucleotide/polyribonucleotide hybrid', 'polypeptide(D)', 'polypeptide(L)',
-    'polyribonucleotide', 'Other')
+    'polyribonucleotide')
   sequence: str(required=False)
   molecular_weight: include('Molecular_weight')
   external_databases: list(database_id(), required=False)
@@ -84,9 +73,6 @@ Polymer:
   expression_source_type: enum('Natively', 'Recombinantly', 'Synthetically')
   expression_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
     required=False)
-  supplier: include('Supplier', required=False)
-  storage: include('Storage', required=False)
-  quality_controls: list(nested_include('Quality_control'), required=False)
   additional_specifications: list(str(), required=False)
 Polymer_modifications:
   synthesis: list(nested_include('Modification'), required=False)
@@ -101,8 +87,6 @@ Chemical:
   additional_identifiers: list(chemical_id(), required=False)
   isotopic_labeling: keyword(required=False)
   molecular_weight: include('Molecular_weight')
-  supplier: include('Supplier', required=False)
-  quality_controls: list(nested_include('Quality_control'), required=False)
   additional_specifications: list(str(), required=False)
 Chemical_environment:
   id: link_target(name="chemical-environment")
@@ -110,10 +94,6 @@ Chemical_environment:
   solvent: list(nested_include('Chemical_constituent'))
   constituents: list(nested_include('Constituent'), required=False)
   ph: include('Ph')
-  ionic_strength: include('Ionic_strength', required=False)
-  dynamic_viscosity: include('Dynamic_viscosity', required=False)
-  degassing_method: enum('Low pressure', 'Heating', 'Sonication bath', required=False)
-  ultrafiltration_method: include('Ultrafiltration',required=False)
   additional_specifications: list(str(), required=False)
 Constituent_base:
   name: str()
@@ -148,27 +128,25 @@ Complex_substance_of_biological_origin_base:
   additional_specifications: list(str(), required=False)
 Body_fluid:
   fluid: enum('Blood', 'Fecal matter', 'Milk', 'Plasma', 'Saliva', 'Serum', 'Urine',
-    'Plant extract', 'Other')
+    'Plant extract')
   health_status: keyword()
 Cell_fraction:
   fraction: enum('Ribosome', 'Cell wall', 'Vesicle' 'Cell lysate/Cytoplasm', 'Cell
     Membrane', 'Extracellular matrix', 'Lysosome', 'Golgi Apparatus', 'Mitochondrion',
-    'Nucleus', 'Rough Endoplasmic Reticulum', 'Smooth Endoplasmic Reticulum', 'Vacuole','Chloroplast',
-    'Other')
+    'Nucleus', 'Rough Endoplasmic Reticulum', 'Smooth Endoplasmic Reticulum', 'Vacuole','Chloroplast')
   organ: keyword(required=False)
   tissue: str(required=False)
   cell_type: str(required=False)
   health_status: keyword()
 Virion:
-  genetic_material: enum('No genetic material', 'Virus genome', 'Synthetic', 'Other')
-  capsid_type: enum('None', 'Native', 'Genetically Engineered', 'Synthetic', 'Other')
-  envelope_type: enum('None', 'Native', 'Genetically Engineered', 'Synthetic', 'Other')
+  genetic_material: enum('No genetic material', 'Virus genome', 'Synthetic')
+  capsid_type: enum('None', 'Native', 'Genetically Engineered', 'Synthetic')
+  envelope_type: enum('None', 'Native', 'Genetically Engineered', 'Synthetic')
   host_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
     required=False)
   host_cell_type: str(required=False)
 Complex_substance_of_environmental_origin:
-  source: enum('Fresh water', 'Marine', 'Ice core', 'Sediment', 'Sewage', 'Soil',
-    'Other')
+  source: enum('Fresh water', 'Marine', 'Ice core', 'Sediment', 'Sewage', 'Soil')
   preparation_protocol: list(include('Step'))
   location: include('Coordinates')
   storage: include('Storage', required=False)
@@ -180,13 +158,13 @@ Complex_substance_of_chemical_origin:
   storage: include('Storage', required=False)
   additional_specifications: list(str(), required=False)
 Lipid_assembly:
-  type: enum('Micelle', 'Liposome', 'Nanodisc', 'Sheet', 'Other')
+  type: enum('Micelle', 'Liposome', 'Nanodisc', 'Sheet')
   number_of_mono_layers: int(min=-1)
   size: include('Size')
   components: list(nested_include('Assembly_component'))
   additional_specifications: list(include('Step'), required=False)
 Complex_substance_of_industrial_production_origin:
-  product: enum('Beer', 'Cell medium', 'Whey', 'Other')
+  product: enum('Beer', 'Cell medium', 'Whey')
   preparation_protocol: list(include('Step'))
   storage: include('Storage', required=False)
   additional_specifications: list(str(), required=False)
@@ -204,18 +182,7 @@ Person:
 Publication:
   pid: publication_id()
   title: str(required=False)
-  publication_year: int(min=1900)
-  authors: list(nested_include('Person'), required=False)
   resource_type: enum('Article', 'Book', 'Thesis')
-  publisher: str(required=False)
-Project:
-  id: keyword(required=False)
-  title: str()
-  description: str()
-  owner: include('Person')
-Associated_publications:
-  main: include('Publication', required=False)
-  additional: list(nested_include('Publication'), required=False)
 ---
 Derived_parameter:
   id: link_target(name="derived-parameter")
@@ -236,21 +203,9 @@ Modification:
   position: str(required=False)
   modification: str()
   protocol: list(include('Step'), required=False)
-Ultrafiltration:
-  pore_size: enum('0.2 µm', '0.22 µm', '0.45 µm', '0.5 µm', '1.2 µm','Other')
-  filter_material: enum('Polyethersulfone (PES)', 'Polyvinylidene flouride (PVDF)',
-    'Cellulose acetate (CA)', 'Composite regenerated cellulose (CRC)', 'Microporous
-    Glass Fiber (MGF)', 'Nylon', 'Polytetrafluoroethylene (PTFE)', 'Hydrophilic Polytetrafluoroethylene
-    (PTFE)', 'Mixed cellulose ester (MCE)', 'Polypropylene (PP)', required=False)
 Step:
   name: str()
   description: str()
-Quality_control:
-  parameter: enum('aggregation state','homogeneity', 'identity', 'purity', 'stability',
-    'Other')
-  technique: keyword()
-  storage_until_measurement: include('Storage')
-  report: url()
 Data_fitting:
   model: str()
   software_name: str(required=False)
@@ -263,86 +218,49 @@ Processing_step:
   description: str()
   software_name: str(required=False)
   software_version: keyword(required=False)
-  software_tool: str(required=False)
   link_to_source_code: url(required=False)
 ---
-Physical_conditions:
-  temperature: include('Temperature', required=False)
-  pressure: include('Pressure', required=False)
-  humidity: include('Humidity', required=False)
-  atmosphere: include('Atmosphere', required=False)
 Value_error:
   upper_error: num()
   lower_error: num()
-  errors_are_relative: bool()
-  error_level: num(min=0, required=False)
-Dynamic_viscosity:
-  value: num(min=0)
-  value_error: include('Value_error', required=False)
-  unit: enum('Pa s')
-  obtained_by: include('OBTAINED_TYPES')
+  is_relative: bool()
 Ph:
   value: num()
   value_error: include('Value_error', required=False)
-  obtained_by: include('OBTAINED_TYPES')
 Temperature:
   value: num()
-  value_error: include('Value_error', required=False)
-  operational_value: enum('Room temperature', 'On Ice', 'Other', required=False)
   unit: include('TEMPERATURE_UNITS')
-  obtained_by: include('OBTAINED_TYPES')
-  controlled: bool()
 Pressure:
   value: num()
   value_error: include('Value_error', required=False)
   unit: include('PRESSURE_UNITS')
   obtained_by: include('OBTAINED_TYPES')
-  controlled: bool()
+  is_controlled: bool()
 Humidity:
   value: num()
   value_error: include('Value_error', required=False)
   unit: include('HUMIDITY_UNITS')
   obtained_by: include('OBTAINED_TYPES')
-  controlled: bool()
+  is_controlled: bool()
 Atmosphere:
   composition: list(nested_include('Chemical_constituent'), min=1)
 Time_duration:
   value: num(min=0)
-  value_error: include('Value_error', required=False)
   unit: include('TIME_UNITS')
 Concentration:
   value: num(min=-1)
-  value_error: include('Value_error', required=False)
-  unit: include('CONCENTRATION_UNITS')
-  obtained_by: include('OBTAINED_TYPES', required=False)
-  obtained_protocol: list(include('Step'), required=False)
-Ionic_strength:
-  value: num(min=0)
   unit: include('CONCENTRATION_UNITS')
 Molecular_weight:
   value: num()
-  value_error: include('Value_error', required=False)
   unit: include('MOLECULAR_WEIGHT_UNITS')
 Size:
-  type: enum('radius', 'diameter', 'path length', 'Other')
+  type: enum('radius', 'diameter', 'path length')
   mean: num(min=0)
   unit: include('LENGTH_UNITS')
   median: num(min=0, required=False)
   upper: num(required=False)
   lower: num(required=False)
-  distribution_type: keyword(required=False)
 ---
-Measured_data_series:
-  id: uuid()
-  name: str(required=False)
-  values: list(num())
-  unit: keyword()
----
-Performance_test:
-  sample_composition: list(nested_include('Constituent'))
-  published_test_protocol: include('Publication', required=False)
-  report: url()
-  additional_information: str(required=False)
 Storage:
   temperature: include('Temperature')
   duration: include('Time_duration', required=False)
@@ -354,7 +272,7 @@ Supplier:
 Coordinates:
   latitude: num(min=-90, max=90)
   longitude: num(min=-180, max=180)
-OBTAINED_TYPES: enum('Measurement', 'Calculation', 'Assumption', 'Other', required=False)
+OBTAINED_TYPES: enum('Measurement', 'Calculation', 'Assumption', required=False)
 ---
 CONCENTRATION_UNITS: enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM', 'g/L', 'mg/mL',
   'µg/mL', 'ng/mL', 'mol/kg', 'mmol/kg', 'v/v %','w/w %', 'v/w %', 'w/v %', 'U/ml','%

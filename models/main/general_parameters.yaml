@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters', required=False)
-        value           : keyword(equals='0.9.16')
+        value           : keyword(equals='0.9.17')
 
     record_information:
         description     : str(equals='Information about the record itself,
@@ -25,20 +25,20 @@ General_parameters:
                                       of this record', required=False)
         value           : include('Depositors')
 
-    associated_publications:
-        description     : str(equals='If the data in this record occurs in published
-                                      literature (article, journal, thesis),
+    associated_publication:
+        description     : str(equals='If the data in this record is described in
+                                      published literature (article, journal, thesis),
                                       information about the literature 
                                       can be specified here',
                               required=False)
-        value           : include('Associated_publications', required=False)
+        value           : include('Publication', required=False)
 
     funding_reference:
         description     : str(equals='List of information about the grants that
                                       supported generation of the raw data
                                       annotated by this record. Note that this
-                                      information is based on OpenAire
-                              Projects', required=False)
+                                      information is based on OpenAire Projects',
+                                      required=False)
         default_search  : True
         value           : list(vocabulary(vocabulary='grants',
                                           fields='[id,title,props.funder_name]'),
@@ -61,18 +61,6 @@ General_parameters:
                                       annotated by this record', required=False)
         value           : include('Instrument')
 
-    physical_conditions_prior_to_measurement:
-        description     : str(equals='Information about the physical conditions
-                                      immediately before sample handling.
-                                      Especially relevant when the conditions
-                                      differ from the measurement conditions or
-                                      where special precautions were taken (e.g.
-                                      keeping samples on ice until measured, or
-                                      stored under Argon atmosphere until it was
-                                      measured)', required=False)
-        value           : include('Physical_conditions', required=False)
-
-
     chemical_information:
         description     : str(equals='Information about entities of interest
                                       that were being measured (e.g. Lysozyme)
@@ -83,16 +71,15 @@ General_parameters:
                                       solutions)', required=False)
         value           : include('Chemical_information')
 
-
-    derived_parameters:
-        description     : str(equals='List of the parameters (results) that were
-                                      derived from analyzing measured raw data,
+    results:
+        description     : str(equals='List of the results (parameter) that were
+                                      derived by analyzing the raw data,
                                       and which steps were taken to obtain
                                       them', required=False)
         default_search  : True
         value           : list(nested_include('Derived_parameter'),
                                required=False)
-    raw_measurements:
+    raw_measurement_files:
         description     : str(equals='List of file(s) containing the raw
                                       measurements', required=False)
         value           : list(url(), required=False)
@@ -107,36 +94,6 @@ Record_information:
                           required=False)
         default_search  : True
         value       : str()
-
-
-    keywords:
-        description : str(equals='User chosen keywords describing the record
-                                  content (e.g. antibody, epitope, ligand
-                                  optimization, SARS-CoV-2, agonist, antagonist,
-                                  HIV, etc.)', required=False)
-        default_search: True
-        value       : list(keyword())
-
-    measurement_group_id:
-        description : str(equals='Unique and persistent identifier which can
-                                  be generated upon deposition of the first
-                                  if a group of data is deposited at the
-                                  same time. These can be used to specified
-                                  records are closely connected e.g. one
-                                  sample measured with multiple techniques.
-                                  For more loosely connected results the
-                                  project field should be used as sole
-                                  link',
-                          required=False)
-        value       : keyword(required=False)
-
-
-    project:
-        description : str(equals='Projects are typically longer running research
-                                  projects that would be expected to have
-                                  several records associated with them over
-                                  time', required=False)
-        value       : include('Project', required=False)
 
     access_rights:
         description : str(equals='The access rights to the uploaded files.
@@ -187,19 +144,12 @@ Record_information:
                           required=False)
         value       : keyword()
 
-    internal_id:
-        description : str(equals='Unique and persistent internal identifier
-                                  the record. This will automatically be
-                                  generated upon deposition',
-                          required=False)
-        value       : keyword()
-
     identifier:
         description : str(equals='The (external) identifier of the record
                                   which is a DOI generated by Datacite. This
                                   will automatically be generated when the
                                   record is published', required=False)
-        value       : database_id()
+        value       : database_id(required=False)
 
     subject_category:
         description : str(equals='DataCite subject category the record data
@@ -211,7 +161,6 @@ Record_information:
         description : str(equals='The date when the data was deposited;
                                   automatically generated', required=False)
         value       : day()
-
 
     date_available:
         description : str(equals='The date when the data was/will be made
@@ -234,21 +183,6 @@ Instrument:
         description : str(equals='The name of the instrument as provided by the
                                   manufacturer', required=False)
         value       : str()
-
-    model:
-        description : str(equals='Model number and/or setup details of
-                                  instrument used for raw data collection;
-                                  include special instrument features
-                                  (e.g. 10.1,RED/BLUE LASER, backreflection
-                                  optics)', required=False)
-        value       : str(required=False)
-
-    performance_test:
-        description : str(equals='If a performance test of the instrument
-                                  that was carried out, the details and
-                                  results can be specified here',
-                                  required=False)
-        value       : include('Performance_test', required=False)
 
 ---
 # Entities and references to them
@@ -350,7 +284,6 @@ Molecular_assembly:
                                       assembly', required=False)
         value           : include('Molecular_weight')
 
-
     chemical_modifications:
         description     : str(equals='List describing deliberate modifications
                                       made to the molecular assembly
@@ -358,37 +291,11 @@ Molecular_assembly:
                                       means', required=False)
         value           : list(nested_include('Modification'), required=False)
 
-    supplier:
-        description     : str(equals='If the molecular assembly was
-                                      purchased from a supplier, the name and
-                                      catlog number can be specified here',
-                              required=False)
-        value           : include('Supplier', required=False)
-
-    storage:
-        description     : str(equals='Information about how the molecular
-                                      assembly was stored between being acquired
-                                      and measured, including temperature and
-                                      duration', required=False)
-        value           : include('Storage', required=False)
-
-    quality_controls:
-        description     : str(equals='Quality controls performed e.g. purity,
-                                      aggregation state etc.', required=False)
-        value           : list(nested_include('Quality_control'),
-                               required=False)
-
-    preparation_protocol:
-        description     : str(equals='The protocol used for preparing the
-                                      molecular assembly', required=False)
-        value           : list(include('Step'), required=False)
-
     additional_specifications:
         description     : str(equals='Additional information about the
                                       macromolecular assembly can be specified
                                       here', required=False)
         value           : list(str(), required=False)
-
 
 Assembly_component_base:
     name:
@@ -412,7 +319,6 @@ Assembly_component_base:
                               required=False)
         value           : num(min=-1)
 
-
 Assembly_component:
     description     : str(equals='Details about the assembly component',
                                       required=False)
@@ -435,8 +341,7 @@ Polymer:
                                 hybrid',
                                'polypeptide(D)',
                                'polypeptide(L)',
-                               'polyribonucleotide',
-                               'Other')
+                               'polyribonucleotide')
 # make annoying popup if users do not provide a sequence
     sequence:
         description     : str(equals='Primary sequence of the polymer, using
@@ -451,7 +356,6 @@ Polymer:
         description     : str(equals='The molecular weight of the polymer',
                               required=False)
         value           : include('Molecular_weight')
-
 
     external_databases:
         description     : str(equals='List of identifiers to records in
@@ -490,7 +394,6 @@ Polymer:
                                       specified here', required=False)
         value           : include('Polymer_modifications', required=False)
 
-
     expression_source_type:
         description     : str(equals='How the polymer was produced',
                               required=False)
@@ -503,27 +406,7 @@ Polymer:
         value           : vocabulary(vocabulary='organisms',
                                      fields='[id,title,props.rank]',
                                      required=False)
-
-    supplier:
-        description     : str(equals='If the polymer was purchased from a
-                                      supplier, the name and catalog number can
-                                      be specified here (Merck,
-                                      SKU 10837059001)', required=False)
-        value           : include('Supplier', required=False)
-
-    storage:
-        description     : str(equals='Information about how the polymer assembly
-                                      between being acquired and measured,
-                                      including temperature and
-                                      duration', required=False)
-        value           : include('Storage', required=False)
-
-    quality_controls:
-        description     : str(equals='Quality controls performed e.g. purity,
-                                      aggregation state etc. ', required=False)
-        value           : list(nested_include('Quality_control'),
-                               required=False)
-
+                                     
     additional_specifications:
         description     : str(equals='Additional information about the polymer
                                       can be specified here', required=False)
@@ -576,8 +459,6 @@ Chemical_information:
                                   NaCl)', required=False)
         value       : list(nested_include('Entity'), min=1)
 
-
-
 Chemical:
     inchikey:
         description     : str(equals='InChIKey identifier of the chemical.
@@ -602,7 +483,7 @@ Chemical:
     isotopic_labeling:
         description     : str(equals='If the isotopic composition of the
                                       chemical was altered from the naturally
-                                      occurring one, it can be specified here
+                                      occurring abundances, it can be specified here
                                       (e.g. 15N, 13C)', required=False)
         value           : keyword(required=False)
 
@@ -611,24 +492,12 @@ Chemical:
                               required=False)
         value           : include('Molecular_weight')
 
-    supplier:
-        description     : str(equals='The name of the supplier and the catalog
-                                      number of the chemical', required=False)
-        value           : include('Supplier', required=False)
-
-    quality_controls:
-        description     : str(equals='Quality controls performed e.g. purity,
-                                      aggregation state etc.', required=False)
-        value           : list(nested_include('Quality_control'),
-                                              required=False)
-
     additional_specifications:
         description      : str(equals='Additional information about the chemical
                                       can be specified here (e.g. RNase free
                                       water, recrystallization, desalting)',
                                required=False)
         value            : list(str(), required=False)
-
 
 Chemical_environment:
     id:
@@ -646,7 +515,7 @@ Chemical_environment:
                                       required=False)
         value           : str()
 
-    solvent:
+    solvent: 
         description     : str(equals='Information about the solvent component(s)
                                       of the chemical environment (e.g. water,
                                       D2O, DMSO, EtOH) can be specified here',
@@ -668,31 +537,6 @@ Chemical_environment:
                               required=False)
         value           : include('Ph')
 
-# preferably calculated from constituents rather than by the user
-    ionic_strength:
-        description     : str(equals='The ionic strength of the chemical
-                                      environment', required=False)
-        value           : include('Ionic_strength', required=False)
-
-    dynamic_viscosity:
-        description     : str(equals='The dynamic viscosity of the chemical
-                                      environment', required=False)
-        value           : include('Dynamic_viscosity', required=False)
-
-    degassing_method:
-        description     : str(equals='If chemical environments was degassed,
-                                      the method can be specified here',
-                              required=False)
-        value           : enum('Low pressure', 'Heating', 'Sonication bath',
-                                required=False)
-
-    ultrafiltration_method:
-        description     : str(equals='If the chemical environment was subjected
-                                      to ultrafiltration, the method method can
-                                      be specified here', required=False)
-        value           : include('Ultrafiltration',required=False)
-
-
     additional_specifications:
         description     : str(equals='Additional information about the chemical
                                       environment can be specified here (e.g.
@@ -703,7 +547,6 @@ Chemical_environment:
                                       the measurement etc.)',
                               required=False)
         value           : list(str(), required=False)
-
 
 Constituent_base:
     name:
@@ -734,7 +577,6 @@ Constituent_base:
                                       constituent', required=False)
         value           : include('Concentration')
 
-
 Chemical_constituent_base:
     name:
         description     : str(equals='Short descriptive name (id) of the
@@ -756,8 +598,6 @@ Chemical_constituent_base:
                                       of the constituent', required=False)
         value           : include('Concentration')
 
-
-
 Chemical_constituent:
     description         : str(equals='The details about the chemically defined
                                       constituent i.e. of type Polymer,
@@ -765,8 +605,6 @@ Chemical_constituent:
                               required=False)
     value               : choose(include('Chemical_constituent_base'),
                                  Chemical=include('Chemical'))
-
-
 
 Chemically_defined_constituent_base:
     name:
@@ -791,8 +629,6 @@ Chemically_defined_constituent_base:
                                       absolute concentration of the
                                       constituent', required=False)
         value           : include('Concentration')
-
-
 
 Chemically_defined_constituent:
     description         : str(equals='The details about the chemically defined
@@ -825,7 +661,6 @@ Constituent:
                                  Complex_substance_of_chemical_origin=include('Complex_substance_of_chemical_origin'),
                                  Complex_substance_of_industrial_production_origin=include('Complex_substance_of_industrial_production_origin'))
 
-
 Complex_substance_of_biological_origin:
     description         : str(equals='Information about the biological substance
                                       the complex substance is derived from',
@@ -835,7 +670,6 @@ Complex_substance_of_biological_origin:
                                  Body_fluid=include('Body_fluid'),
                                  Cell_fraction=include('Cell_fraction'),
                                  Virion=include('Virion'))
-
 
 Complex_substance_of_biological_origin_base:
     derived_from:
@@ -872,7 +706,6 @@ Complex_substance_of_biological_origin_base:
                               required=False)
         value           : list(str(), required=False)
 
-
 Body_fluid:
     fluid:
         description     : str(equals='The body fluid the complex
@@ -881,7 +714,7 @@ Body_fluid:
         default_search  : True
         value           : enum('Blood', 'Fecal matter', 'Milk',
                                'Plasma', 'Saliva', 'Serum', 'Urine',
-                               'Plant extract', 'Other')
+                               'Plant extract')
     health_status:
         description     : str(equals='Health status of the donor organism where
                                       the body fluid was derived from
@@ -901,7 +734,7 @@ Cell_fraction:
                                'Golgi Apparatus', 'Mitochondrion', 'Nucleus',
                                'Rough Endoplasmic Reticulum',
                                'Smooth Endoplasmic Reticulum',
-                               'Vacuole','Chloroplast', 'Other')
+                               'Vacuole','Chloroplast')
 
     organ:
         description     : str(equals='The organ the cell fraction was
@@ -926,28 +759,27 @@ Cell_fraction:
                                       Diabetes type 2)', required=False)
         value           : keyword()
 
-
 Virion:
     genetic_material:
         description     : str(equals='The genetic material carried by the
                                       virions (None, virus genome, synthetic)',
                               required=False)
         value           : enum('No genetic material', 'Virus genome',
-                               'Synthetic', 'Other')
+                               'Synthetic')
 
     capsid_type:
         description     : str(equals='The type of virion capsid (e.g.
                                       genetically engineered, None',
                                       required=False)
         value           : enum('None', 'Native', 'Genetically Engineered',
-                               'Synthetic', 'Other')
+                               'Synthetic')
 
     envelope_type:
         description     : str(equals='The type of virion envelope (e.g.
                                       genetically engineered, None',
                               required=False)
         value           : enum('None', 'Native', 'Genetically Engineered',
-                               'Synthetic', 'Other')
+                               'Synthetic')
     host_organism:
         description     : str(equals='The host organism the virion was produced
                                       in. Note that information is based on the
@@ -960,6 +792,7 @@ Virion:
         description     : str(equals='The host cell type the virion was
                                       produced in', required=False)
         value           : str(required=False)
+        
 
 
 Complex_substance_of_environmental_origin:
@@ -969,7 +802,7 @@ Complex_substance_of_environmental_origin:
                               required=False)
         default_search  : True
         value           : enum('Fresh water', 'Marine', 'Ice core', 'Sediment',
-                               'Sewage', 'Soil', 'Other')
+                               'Sewage', 'Soil')
 
     preparation_protocol:
         description     : str(equals='List of the steps performed during the
@@ -977,13 +810,11 @@ Complex_substance_of_environmental_origin:
                               required=False)
         value           : list(include('Step'))
 
-
     location:
         description     : str(equals='The coordinates, in decimal notation,
                                       where the complex substance was
                                       collected', required=False)
         value           : include('Coordinates')
-
 
     storage:
         description     : str(equals='Information about how the complex
@@ -1018,7 +849,6 @@ Complex_substance_of_chemical_origin:
                               required=False)
         value           : list(include('Step'))
 
-
     storage:
         description     : str(equals='Information about how the complex
                                       substance was stored between being
@@ -1037,8 +867,7 @@ Lipid_assembly:
     type:
         description     : str(equals='The type of lipid assembly',
                               required=False)
-        value           : enum('Micelle', 'Liposome', 'Nanodisc', 'Sheet',
-                               'Other')
+        value           : enum('Micelle', 'Liposome', 'Nanodisc', 'Sheet')
 
     number_of_mono_layers:
         description     : str(equals='The number of lipid mono layers in the
@@ -1066,7 +895,7 @@ Complex_substance_of_industrial_production_origin:
                                       product the complex substance was derived
                                       from', required=False)
         default_search  : True
-        value           : enum('Beer', 'Cell medium', 'Whey', 'Other')
+        value           : enum('Beer', 'Cell medium', 'Whey')
 
     preparation_protocol:
         description     : str(equals='List of the steps performed during the
@@ -1111,7 +940,6 @@ Depositors:
                                   itself', required=False)
         value       : list(nested_include('Person'), required=False)
 
-
 Person:
     given_name:
         description     : str(equals='The given name(s), including
@@ -1127,9 +955,9 @@ Person:
         value           : str()
 
     identifiers:
-        description     : str(equals='Persistent identifier associated with the
-                                      person, currently only ORCIDs are
-                                      allowed', required=False)
+        description     : str(equals='Persistent personal identifiers,
+                                      currently only ORCIDs are allowed',
+                              required=False)
         default_search  : True
         value           : list(person_id(), required=False)
 
@@ -1141,7 +969,6 @@ Person:
         value           : list(vocabulary(vocabulary='affiliations',
                                fields='[id, title, props.city, props.state, props.country]'),
                                required=False)
-
 
 Publication:
     pid:
@@ -1157,64 +984,9 @@ Publication:
         default_search  : True
         value           : str(required=False)
 
-    publication_year:
-        description     : str(equals='The publication year', required=False)
-        value           : int(min=1900)
-
-    authors:
-        description     : str(equals='Information about the authors of the
-                                      publication', required=False)
-        value           : list(nested_include('Person'), required=False)
-
     resource_type:
         description     : str(equals='The type of publication', required=False)
         value           : enum('Article', 'Book', 'Thesis')
-
-    publisher:
-        description     : str(equals='The name of the publisher or journal name
-                                      in case of article',
-                              required=False)
-        value           : str(required=False)
-
-Project:
-    id:
-        description     : str(equals='Unique and persistent identifier which can
-                                      be generated upon deposition of the first
-                                      member of the project, which can be used
-                                      to show a relation to other data within
-                                      the MBDB', required=False)
-        value           : keyword(required=False)
-
-    title:
-        description     : str(equals='Short title of the project',
-                              required=False)
-        default_search  : True
-        value           : str()
-
-    description:
-        description     : str(equals='Short description of what the project is
-                                      about', required=False)
-        value           : str()
-
-    owner:
-        description     : str(equals='The person responsible for the project,
-                                      typically a project leader, principle
-                                      investigator, or group leader',
-                              required=False)
-        value           : include('Person')
-
-
-Associated_publications:
-    main:
-        description     : str(equals='Information about the publication where
-                                      the raw data or derived parameters first
-                                      appeared', required=False)
-        value           : include('Publication', required=False)
-
-    additional:
-        description     : str(equals='Information about publications in addition
-                                      to the main publication', required=False)
-        value           : list(nested_include('Publication'), required=False)
 
 ---
 # Derived parameters definitions
@@ -1273,7 +1045,6 @@ Derived_parameter:
                               required=False)
         value           : keyword()
 
-
 Entity_and_stoichiometry:
     entity:
         description     : str(equals='Name (ids) of the entity (from the
@@ -1310,29 +1081,6 @@ Modification:
                                       taking place', required=False)
         value           : list(include('Step'), required=False)
 
-Ultrafiltration:
-    pore_size:
-        description     : str(equals='The pore size of the filter',
-                                      required=False)
-        value           : enum('0.2 µm', '0.22 µm', '0.45 µm', '0.5 µm',
-                               '1.2 µm','Other')
-
-    filter_material:
-        description     : str(equals='The material the filter was composed of',
-                              required=False)
-        value           : enum('Polyethersulfone (PES)',
-                               'Polyvinylidene flouride (PVDF)',
-                               'Cellulose acetate (CA)',
-                               'Composite regenerated cellulose (CRC)',
-                               'Microporous Glass Fiber (MGF)',
-                               'Nylon',
-                               'Polytetrafluoroethylene (PTFE)',
-                               'Hydrophilic Polytetrafluoroethylene
-                               (PTFE)',
-                               'Mixed cellulose ester (MCE)',
-                               'Polypropylene (PP)',
-                                required=False)
-
 Step:
     name:
         description     : str(equals='Descriptive name of the step',
@@ -1343,36 +1091,6 @@ Step:
         description     : str(equals='Short description of the step',
                               required=False)
         value           : str()
-
-
-Quality_control:
-    parameter:
-        description     : str(equals='Which aspect was targeted by the quality
-                                      control (e.g. purity, stability,
-                                      homogeneity, identity, aggregation
-                                      state)',
-                              required=False)
-        value           : enum('aggregation state','homogeneity', 'identity',
-                               'purity', 'stability', 'Other')
-
-    technique:
-        description     : str(equals='Which technique was used (e.g. SDS-PAGE
-                                      MALDI-TOF, DLS, etc.)')
-        value           : keyword()
-
-    storage_until_measurement:
-        description     : str(equals='How the sample was stored between the
-                                      quality control was performed until it was
-                                      measured, including temperature and
-                                      duration', required=False)
-        value           : include('Storage')
-
-    report:
-        description     : str(equals='Report with the results of the quality
-                                      control, as a pdf file',
-                              required=False)
-        value           : url()
-        ui_file_context : str(equals='quality control report')
 
 Data_fitting:
     model:
@@ -1425,13 +1143,6 @@ Processing_step:
                                       used for the step', required=False)
         value           : keyword(required=False)
 
-    software_tool:
-        description     : str(equals='The name of the tool within the specified
-                                      software, i.e. a particular method called
-                                      or "button pressed" (e.g. equation solver,
-                                      buffer subtraction)', required=False)
-        value           : str(required=False)
-
     link_to_source_code:
         description     : str(equals='If processing was performed with software
                                       where the source code is legally available
@@ -1443,84 +1154,31 @@ Processing_step:
 ---
 # Physical and chemical parameter objects
 
-Physical_conditions:
-    temperature:
-        description     : str(equals='The storage temperature of the samples
-                                      immediately prior to being measured and
-                                      whether the temperature was actively being
-                                      controlled (e.g. autosampler held at 15
-                                      degrees, stored on ice, room
-                                      temperature)', required=False)
-        value           : include('Temperature', required=False)
-
-    pressure:
-        description     : str(equals='The storage pressure of the samples
-                                      immediately prior to being measured and
-                                      whether the pressure was actively being
-                                      controlled, if applicable',
-                              required=False)
-        value           : include('Pressure', required=False)
-
-    humidity:
-        description     : str(equals='The storage humidity of the samples
-                                      immediately prior to being measured and
-                                      whether the humidity was actively being
-                                      controlled, if applicable',
-                             required=False)
-        value           : include('Humidity', required=False)
-
-    atmosphere:
-        description     : str(equals='The storage atmosphere of the samples
-                                      immediately prior to being measured and
-                                      whether the atmosphere was actively being
-                                      controlled, if applicable',
-                              required=False)
-        value           : include('Atmosphere', required=False)
-
 Value_error:
     upper_error:
         description     : str(equals='The upper error, i.e. the number that
                                       should be added the value to get the
-                                      upper bound', required=False)
+                                      upper bound. The same unit as the value
+                                      being described is assumed, if relative errors 
+                                      are given please give it in fractional form (e.g. 
+                                      0.01 for 1 %', required=False)
         value           : num()
 
     lower_error:
         description     : str(equals='The lower error, i.e. the number that
                                       should be subtracted from the value to get
-                                      the lower bound', required=False)
+                                      the lower bound. The same unit as the value
+                                      being described is assumed, if relative errors 
+                                      are given please give it in fractional form (e.g. 
+                                      0.01 for 1 %)', required=False)
         value           : num()
-    errors_are_relative:
-        description     : str(equals='Whether the errors should be interpreted
-                                      as relative errors in percent',
+
+    is_relative:
+        description     : str(equals='True if the error values given should be 
+                                      interpreted as relative errors (fractional 
+                                      uncertainty) ',
                               required=False)
         value           : bool()
-
-    error_level:
-        description     : str(equals='How many standard deviations the error
-                                      corresponds to', required=False)
-        value           : num(min=0, required=False)
-
-Dynamic_viscosity:
-    value:
-        description     : str(equals='Numerical value of the dynamic viscosity',
-                              required=False)
-        value           : num(min=0)
-
-    value_error:
-        description     : str(equals='The expected error of the dynamic
-                                      viscosity (e.g. standard deviation, %
-                                      error)', required=False)
-        value           : include('Value_error', required=False)
-
-    unit:
-        description     : str(equals='The unit of the dynamic viscosity',
-                              required=False)
-        value           : enum('Pa s')
-
-    obtained_by:
-        description     : str(equals='The means by which the dynamic viscosity
-                                      was obtained', required=False)
-        value           : include('OBTAINED_TYPES')
 
 Ph:
     value:
@@ -1534,46 +1192,16 @@ Ph:
                               required=False)
         value           : include('Value_error', required=False)
 
-    obtained_by:
-        description     : str(equals='The means through which the pH value was
-                                      obtained', required=False)
-        value           : include('OBTAINED_TYPES')
-
 Temperature:
     value:
         description     : str(equals='The numeric value of the temperature',
                               required=False)
         value           : num()
 
-    value_error:
-        description     : str(equals='The reported error of the value of the
-                                      temperature (e.g. standard deviation, %
-                                      error)', required=False)
-        value           : include('Value_error', required=False)
-
-    operational_value:
-        description     : str(equals='If the temperature was defined by the
-                                      procedure rather than the numerical value
-                                      the value can be specified here (e.g. Room
-                                      temperature, on ice, etc.)',
-                              required=False)
-        value           : enum('Room temperature', 'On Ice', 'Other',
-                                required=False)
-
     unit:
         description     : str(equals='The unit of temperature',
                               required=False)
         value           : include('TEMPERATURE_UNITS')
-
-    obtained_by:
-        description     : str(equals='The means through which the temperature
-                                      value was obtained', required=False)
-        value           : include('OBTAINED_TYPES')
-
-    controlled:
-        description     : str(equals='Whether the temperature was actively
-                                      controlled', required=False)
-        value           : bool()
 
 Pressure:
     value:
@@ -1596,7 +1224,7 @@ Pressure:
                                       was obtained', required=False)
         value           : include('OBTAINED_TYPES')
 
-    controlled:
+    is_controlled:
         description     : str(equals='Whether the pressure was actively
                                       controlled', required=False)
         value           : bool()
@@ -1623,7 +1251,7 @@ Humidity:
                                       was obtained', required=False)
         value           : include('OBTAINED_TYPES')
 
-    controlled:
+    is_controlled:
         description     : str(equals='Whether the humidity was actively
                                       controlled', required=False)
         value           : bool()
@@ -1641,12 +1269,6 @@ Time_duration:
                                       duration', required=False)
         value           : num(min=0)
 
-    value_error:
-        description     : str(equals='The reported error of the value of the
-                                      time point or duration (e.g. standard
-                                      deviation, % error)', required=False)
-        value           : include('Value_error', required=False)
-
     unit:
         description     : str(equals='The unit of the time duration',
                               required=False)
@@ -1658,53 +1280,16 @@ Concentration:
                                       -1 if unknown', required=False)
         value           : num(min=-1)
 
-    value_error:
-        description     : str(equals='The expected error of the concentration
-                                      (e.g. standard  deviation, % error)',
-                              required=False)
-        value           : include('Value_error', required=False)
-
     unit:
         description     : str(equals='The unit of the concentration',
                               required=False)
         value           : include('CONCENTRATION_UNITS')
-
-    obtained_by:
-        description     : str(equals='The means through which the concentration
-                                      was obtained', required=False)
-        value           : include('OBTAINED_TYPES', required=False)
-
-    obtained_protocol:
-        description     : str(equals='Information of how the concentration was
-                                      obtained (e.g, Absorbance at 280 nm,
-                                      buffer absorbance subtraction,
-                                      extinction coefficient', required=False)
-        value           : list(include('Step'), required=False)
-
-Ionic_strength:
-    value:
-        description     : str(equals='The numerical value of the ionic strength
-                                      (https://en.wikipedia.org/wiki/Ionic_strength)',
-                              required=False)
-        value           : num(min=0)
-
-    unit:
-        description     : str(equals='The unit of the ionic strength',
-                             required=False)
-        value           : include('CONCENTRATION_UNITS')
-
 
 Molecular_weight:
     value:
         description     : str(equals='The numerical value of the molecular
                                       weight', required=False)
         value           : num()
-
-    value_error:
-        description     : str(equals='The expected error of the molecular weight
-                                      (e.g. standard  deviation, % error)',
-                              required=False)
-        value           : include('Value_error', required=False)
 
     unit:
         description     : str(equals='The unit of the molecular weight',
@@ -1715,7 +1300,7 @@ Size:
     type:
         description     : str(equals='The type of size (e.g. radius)',
                               required=False)
-        value           : enum('radius', 'diameter', 'path length', 'Other')
+        value           : enum('radius', 'diameter', 'path length')
 
     mean:
         description     : str(equals='The mean of the size', required=False)
@@ -1739,63 +1324,9 @@ Size:
                               required=False)
         value           : num(required=False)
 
-    distribution_type:
-        description     : str(equals='The distribution type of sizes (e.g.
-                                      log-normal)', required=False)
-        value           : keyword(required=False)
-
----
-# Raw data objects
-
-Measured_data_series:
-    id:
-        description     : str(equals='Unique ID for the measured data to be
-                                      used as a link', required=False)
-        value           : uuid()
-
-    name:
-        description     : str(equals='Short descriptive name of the data
-                                      series', required=False)
-        value           : str(required=False)
-
-    values:
-        description     : str(equals='The numerical values of the data series',
-                              required=False)
-        value           : list(num())
-
-    unit:
-        description     : str(equals='The numerical values of the data series',
-                              required=False)
-        value           : keyword()
 
 ---
 # Additional objects
-
-Performance_test:
-    sample_composition:
-        description     : str(equals='The composition of the sample the
-                                      performance test was carried out on',
-                              required=False)
-        value           : list(nested_include('Constituent'))
-
-    published_test_protocol:
-        description     : str(equals='If the protocol used for the performance
-                                      test has been published, the publication
-                                      can be specified here', required=False)
-        value           : include('Publication', required=False)
-
-    report:
-        description     : str(equals='The file containing the report of the
-                                      performance test, preferably in pdf',
-                              required=False)
-        value           : url()
-        ui_file_context : str(equals='performance test report')
-
-    additional_information:
-        description     : str(equals='Additional information about the
-                                      performance test can be specified here',
-                              required=False)
-        value           : str(required=False)
 
 Storage:
     temperature:
@@ -1843,8 +1374,8 @@ Coordinates:
                               required=False)
         value           : num(min=-180, max=180)
 
-OBTAINED_TYPES          : enum('Measurement', 'Calculation', 'Assumption',
-                               'Other', required=False)
+OBTAINED_TYPES          : enum('Measurement', 'Calculation', 'Assumption', 
+                               required=False)
 ---
 # Unit definitions
 
