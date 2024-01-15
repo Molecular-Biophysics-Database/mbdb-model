@@ -13,14 +13,7 @@ from ruamel.yaml import YAML as ruamel_YAML
 from yamale.schema import Schema
 from yamale2oarepo_config import (
     PRIMITIVES_MAPPING,
-    QUERY_STRING_FIELD,
-    PROFILES,
-    PLUGINS,
-    MODEL_SETTINGS,
-    QUERY_STRING_FIELD_SETTINGS,
-    RECORD_MAPPING,
     VOCABULARY_MAPPING,
-    FILE_RESOURCE,
 )
 from yamale.validators import (
     Boolean,
@@ -624,42 +617,17 @@ class ModelVocabulary(ModelLink):
 class Model:
     includes: Dict[str, ModelBase]
     model: ModelBase
-    files_meta: Dict = None
     package: str = None
-
+    
     def to_json(self):
-        return {
-            "profiles": PROFILES,
-            "record": self._to_record(),
-            "plugins": PLUGINS,
-            "$defs": self._to_defs(),
-            "settings": MODEL_SETTINGS,
-        }
+        return self.model.to_json()["properties"]
 
-    def _to_defs(self):
+    def to_defs(self):
         return {k: v.to_json() for k, v in self.includes.items()}
 
-    def _to_record(self):
-        return {
-            "use": ["invenio"],
-            "module": {"qualified": f"mbdb_{self.package}"},
-            "properties": {
-                "id": {"mapping": PRIMITIVES_MAPPING},  # add record id field to default search
-                "metadata": self.model.to_json(),
-                QUERY_STRING_FIELD: QUERY_STRING_FIELD_SETTINGS,
-            },
-            "files": {
-                **self.files_meta,
-                "use": ["invenio_files"],
-                "resource": FILE_RESOURCE,
-            },
-            "draft": {},
-            "draft-files": {
-                "resource": FILE_RESOURCE,
-            },
-            "mapping": RECORD_MAPPING,
-            "resource-config": {"base-html-url": f"/{self.package}/"},
-        }
+    @staticmethod
+    def to_files_meta(filename):
+        return parse_file(filename, modelbase_only=True).to_json()
 
     def set_links(self):
         links = {}
@@ -682,8 +650,6 @@ class Model:
     def propagate_polymorphic_base_schemas(self):
         self.model.propagate_polymorphic_base_schemas(self.includes, [])
 
-    def add_files_meta(self, files_meta: Dict):
-        self.files_meta = files_meta
 
 
 def parse_described_value(d, path, includes):
@@ -850,43 +816,14 @@ def set_flow_style(d):
             set_flow_style(v)
 
 
-@click.command()
-@click.argument(
-    "input_file",
-    default=Path(__file__).parent.parent / "models" / "main" / "MST.yaml",
-    required=True,
-)
-@click.argument("output_file", required=False)
-@click.option("--debug", type=bool)
-@click.option(
-    "--include",
-    default=Path(__file__).parent.parent
-    / "models"
-    / "main"
-    / "general_parameters.yaml",
-    required=False,
-)
-def run(input_file, output_file, debug, include):
-    if debug:
-        logging.basicConfig(level=logging.DEBUG)
-    ym_file = input_file
-    attachment = (
-        Path(__file__).parent.parent / "models" / "main" / "file_attachment.yaml"
-    )
-    model = parse_file(ym_file)
-    if include:
-        model.add_includes_from(include)
-    model.remove_unused_includes()
-    model.set_links()
-    model.propagate_polymorphic_base_schemas()
-    model.add_files_meta(parse_file(attachment, modelbase_only=True).to_json())
+def json_to_yaml(json_dict, output_file):
     yaml = ruamel_YAML()
     yaml.default_flow_style = False
     yaml.allow_unicode = True
     yaml.sort_base_mapping_type_on_output = True
     yaml.Representer = NonAliasingRTRepresenter
     io = StringIO()
-    yaml.dump(model.to_json(), io)
+    yaml.dump(json_dict, io)
     io.seek(0)
     loaded = yaml.load(io)
     set_flow_style(loaded)
@@ -899,6 +836,51 @@ def run(input_file, output_file, debug, include):
         Path(output_file).write_text(model_yaml)
     else:
         print(model_yaml)
+
+
+@click.command()
+@click.argument(
+    "input_file",
+    default=Path(__file__).parent.parent / "models" / "main" / "MST.yaml",
+    required=True,
+)
+@click.option("--debug", type=bool)
+@click.option("--only_defs", type=bool)
+@click.option(
+    "--include",
+    default=Path(__file__).parent.parent
+    / "models"
+    / "main"
+    / "general_parameters.yaml",
+    required=False,
+)
+def run(input_file, debug, only_defs, include):
+    if debug:
+        logging.basicConfig(level=logging.DEBUG)
+    ym_file = input_file
+    attachment = (
+        Path(__file__).parent.parent / "models" / "main" / "file_attachment.yaml"
+    )
+    model = parse_file(ym_file)
+    if include:
+        model.add_includes_from(include)
+    model.remove_unused_includes()
+    model.set_links()
+    model.propagate_polymorphic_base_schemas()
+    
+    out_dir = Path(__file__).parent.parent / "models" / "oarepo"
+
+    out = [
+        (out_dir / f"{model.package}-metadata.yaml", model.to_json()),
+        (out_dir / f"{model.package}-definitions.yaml", model.to_defs()),
+        (out_dir / f"file_attachment.yaml", model.to_files_meta(filename=attachment)),
+    ]
+
+    if only_defs:
+        out = [out[1]]
+
+    for (path, json_dict) in out:
+        json_to_yaml(json_dict, path)
 
 
 if __name__ == "__main__":
