@@ -1,0 +1,8 @@
+general_parameters:
+  use: '#/$defs/General_parameters'
+  required: true
+  help.en: The general information of the measurements
+method_specific_parameters:
+  use: '#/$defs/BLI_specific_parameters'
+  required: true
+  help.en: The parameters of the experiment that is specific to BLI
