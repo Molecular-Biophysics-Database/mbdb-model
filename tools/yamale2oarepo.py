@@ -161,9 +161,7 @@ class ModelBase:
 
 
 class ModelObject(ModelBase):
-    def __init__(
-        self, data: Any, path: str, includes, default_search
-    ) -> None:
+    def __init__(self, data: Any, path: str, includes, default_search) -> None:
         super().__init__(
             path=path,
             required=data.is_required if not isinstance(data, dict) else False,
@@ -175,9 +173,7 @@ class ModelObject(ModelBase):
     def parse(self, data, includes):
         super().parse(data)
         self.children = {
-            k: parse(
-                v, f"{self.path}/{k}", includes, self.default_search
-            )
+            k: parse(v, f"{self.path}/{k}", includes, self.default_search)
             for k, v in data.items()
         }
 
@@ -231,9 +227,7 @@ class ModelObject(ModelBase):
 
 
 class ModelArray(ModelBase):
-    def __init__(
-        self, data: Any, path: str, includes, default_search
-    ) -> None:
+    def __init__(self, data: Any, path: str, includes, default_search) -> None:
         super().__init__(path, data.is_required, default_search)
         self.item = None
         self.parse(data, includes)
@@ -296,9 +290,7 @@ class ModelArray(ModelBase):
 
 
 class ModelPrimitive(ModelBase):
-    def __init__(
-        self, data: Any, type: str, path: str, default_search
-    ) -> None:
+    def __init__(self, data: Any, type: str, path: str, default_search) -> None:
         is_required = False
         if data is not None:
             is_required = data.is_required
@@ -342,8 +334,8 @@ class ModelPrimitive(ModelBase):
 
 
 class ModelEnum(ModelPrimitive):
-    def __init__(self, data, path: str,  default_search) -> None:
-        super().__init__(data, "keyword", path,  default_search)
+    def __init__(self, data, path: str, default_search) -> None:
+        super().__init__(data, "keyword", path, default_search)
         if hasattr(data, "enums"):
             self.constraints["enum"] = data.enums
 
@@ -353,14 +345,14 @@ class ModelEnum(ModelPrimitive):
 
 
 class ModelRegex(ModelPrimitive):
-    def __init__(self, data, path: str,  default_search) -> None:
-        super().__init__(data, "keyword", path,  default_search)
+    def __init__(self, data, path: str, default_search) -> None:
+        super().__init__(data, "keyword", path, default_search)
         self.constraints["regex"] = data.args[0]
 
 
 class ModelInclude(ModelBase):
-    def __init__(self, data, path: str,  default_search) -> None:
-        super().__init__(path, data.is_required,  default_search)
+    def __init__(self, data, path: str, default_search) -> None:
+        super().__init__(path, data.is_required, default_search)
         self.include = data.include_name
 
     def to_json(self):
@@ -408,9 +400,7 @@ class ModelNestedInclude(ModelInclude):
 class ModelChoose(ModelBase):
     def __init__(self, data, path: str, default_search) -> None:
         super().__init__(path, data.is_required, default_search)
-        self.base_schema = ModelInclude(
-            data.base_schema, path, default_search
-        )
+        self.base_schema = ModelInclude(data.base_schema, path, default_search)
         self.type_field = data.type_field
         self.subschemas = {
             k.replace("_", " "): ModelInclude(v, path, default_search)
@@ -537,7 +527,7 @@ class ModelChoose(ModelBase):
 
 class ModelLinkTarget(ModelBase):
     def __init__(self, data, path: str, default_search) -> None:
-        super().__init__(path, data.is_required,  default_search)
+        super().__init__(path, data.is_required, default_search)
         self.name = data.name
 
     def to_json(self):
@@ -618,7 +608,7 @@ class Model:
     includes: Dict[str, ModelBase]
     model: ModelBase
     package: str = None
-    
+
     def to_json(self):
         return self.model.to_json()["properties"]
 
@@ -649,7 +639,6 @@ class Model:
 
     def propagate_polymorphic_base_schemas(self):
         self.model.propagate_polymorphic_base_schemas(self.includes, [])
-
 
 
 def parse_described_value(d, path, includes):
@@ -699,7 +688,7 @@ def parse(d, path, includes, default_search=False):
     elif clz is Url:
         return ModelPrimitive(d, "url", path, default_search)
     elif clz is Day:
-        return ModelPrimitive(d, "date", path,  default_search)
+        return ModelPrimitive(d, "date", path, default_search)
     elif clz is Boolean:
         return ModelPrimitive(d, "boolean", path, default_search)
     elif clz is Number:
@@ -816,7 +805,7 @@ def set_flow_style(d):
             set_flow_style(v)
 
 
-def json_to_yaml(json_dict, output_file):
+def json_to_yaml(json_dict):
     yaml = ruamel_YAML()
     yaml.default_flow_style = False
     yaml.allow_unicode = True
@@ -829,13 +818,14 @@ def json_to_yaml(json_dict, output_file):
     set_flow_style(loaded)
     io = StringIO()
     yaml.dump(loaded, io)
-    model_yaml = io.getvalue()
-    if output_file:
-        output_file = Path(output_file)
-        output_file.parent.mkdir(parents=True, exist_ok=True)
-        Path(output_file).write_text(model_yaml)
-    else:
-        print(model_yaml)
+    return io.getvalue()
+
+
+def get_filename(name: str, out_dir: Path, model_package: str) -> Path:
+    if model_package:
+        model_package = f"{model_package}-"
+
+    return out_dir / f"{model_package}{name}.yaml"
 
 
 @click.command()
@@ -846,6 +836,7 @@ def json_to_yaml(json_dict, output_file):
 )
 @click.option("--debug", type=bool)
 @click.option("--only_defs", type=bool)
+@click.option("--out_dir", type=Path)
 @click.option(
     "--include",
     default=Path(__file__).parent.parent
@@ -854,7 +845,7 @@ def json_to_yaml(json_dict, output_file):
     / "general_parameters.yaml",
     required=False,
 )
-def run(input_file, debug, only_defs, include):
+def run(input_file, debug, out_dir, only_defs, include):
     if debug:
         logging.basicConfig(level=logging.DEBUG)
     ym_file = input_file
@@ -867,20 +858,25 @@ def run(input_file, debug, only_defs, include):
     model.remove_unused_includes()
     model.set_links()
     model.propagate_polymorphic_base_schemas()
-    
-    out_dir = Path(__file__).parent.parent / "models" / "oarepo"
 
-    out = [
-        (out_dir / f"{model.package}-metadata.yaml", model.to_json()),
-        (out_dir / f"{model.package}-definitions.yaml", model.to_defs()),
-        (out_dir / f"file_attachment.yaml", model.to_files_meta(filename=attachment)),
-    ]
+    out = [(model.to_defs(), "definitions", model.package)]
 
-    if only_defs:
-        out = [out[1]]
+    if not only_defs:
+        out += [
+            (model.to_json(), "metadata", model.package),
+            (model.to_files_meta(filename=attachment), "files", ""),
+        ]
 
-    for (path, json_dict) in out:
-        json_to_yaml(json_dict, path)
+    for json_dict, name, model_package in out:
+        yaml_text = json_to_yaml(json_dict)
+
+        if out_dir:
+            output_file = get_filename(name, out_dir, model_package)
+            output_file.parent.mkdir(parents=True, exist_ok=True)
+            output_file.write_text(yaml_text)
+
+        else:
+            print(yaml_text)
 
 
 if __name__ == "__main__":
