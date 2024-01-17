@@ -1,5 +1,5 @@
 general_parameters:
-    schema_version: '0.9.16'
+    schema_version: '0.9.17'
     record_information:
         publisher: 'MBDB'
         resource_type_general: 'Dataset'
@@ -254,7 +254,7 @@ general_parameters:
     derived_parameters:
         - id: 'de-par-kd-hemo'
           name: 'KD of hemoglobin to unknown component in serum'
-          type: 'Constant of dissociation (K_D)'
+          type: 'Constant of dissociation (KD)'
           entities_involved:
               - entity:
                     $ref: 'eoi-human-hemoglobin'
