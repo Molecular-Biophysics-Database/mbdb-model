@@ -238,14 +238,15 @@ DP_concentration:
 DP_stoichiometry:
   unit: enum('per complex')
 DP_KA:
-  unit: enum('M^-1', 'M^-2', 'M^-3')
+  unit: enum('M^-1', 'M^-2', 'mM^-1', 'mM^-2', 'µM^-1', 'µM^-2', 'nM^-1', 'nM^-2'
+    )
 DP_KD:
-  unit: enum('M', 'M^2', 'M^3' 'mM', 'mM^2', 'mM^3', 'µM', 'µM^2', 'µM^3', 'nM', 'nM^2',
-    'nM^3', )
+  unit: enum('M', 'M^2', 'mM', 'mM^2', 'µM', 'µM^2', 'nM', 'nM^2' )
 DP_kOn:
-  unit: enum('1/Ms')
+  unit: enum('M^-1 s^-1', 'M^-2 s^-1', 'mM^-1 s^-1', 'mM^-2 s^-1', 'µM^-1 s^-1', 'µM^-2
+    s^-1', 'nM^-1 s^-1', 'nM^-2 s^-1' )
 DP_kOff:
-  unit: enum('1/s')
+  unit: enum('s^-1')
 DP_deltaH:
   unit: include('ENERGY_UNITS')
 DP_deltaS:

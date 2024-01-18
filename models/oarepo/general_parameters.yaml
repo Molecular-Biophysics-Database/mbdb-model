@@ -1145,28 +1145,29 @@ $defs:
     properties:
       unit:
         type: keyword
-        enum: [M^-1, M^-2, M^-3]
+        enum: [M^-1, M^-2, mM^-1, mM^-2, µM^-1, µM^-2, nM^-1, nM^-2]
         help.en: Unit of the constant of association
         required: true
   DP_KD:
     properties:
       unit:
         type: keyword
-        enum: [M, M^2, M^3mM, mM^2, mM^3, µM, µM^2, µM^3, nM, nM^2, nM^3]
+        enum: [M, M^2, mM, mM^2, µM, µM^2, nM, nM^2]
         help.en: Unit of the constant of dissociation
         required: true
   DP_kOn:
     properties:
       unit:
         type: keyword
-        enum: [1/Ms]
+        enum: [M^-1 s^-1, M^-2 s^-1, mM^-1 s^-1, mM^-2 s^-1, µM^-1 s^-1, µM^-2 s^-1,
+          nM^-1 s^-1, nM^-2 s^-1]
         help.en: Unit of the association rate constant
         required: true
   DP_kOff:
     properties:
       unit:
         type: keyword
-        enum: [1/s]
+        enum: [s^-1]
         help.en: Unit of the dissociation rate constant
         required: true
   DP_deltaH:
@@ -3189,7 +3190,7 @@ $defs:
     properties:
       unit:
         type: keyword
-        enum: [M^-1, M^-2, M^-3]
+        enum: [M^-1, M^-2, mM^-1, mM^-2, µM^-1, µM^-2, nM^-1, nM^-2]
         help.en: Unit of the constant of association
         required: true
       id:
@@ -3230,7 +3231,7 @@ $defs:
     properties:
       unit:
         type: keyword
-        enum: [M, M^2, M^3mM, mM^2, mM^3, µM, µM^2, µM^3, nM, nM^2, nM^3]
+        enum: [M, M^2, mM, mM^2, µM, µM^2, nM, nM^2]
         help.en: Unit of the constant of dissociation
         required: true
       id:
@@ -3271,7 +3272,8 @@ $defs:
     properties:
       unit:
         type: keyword
-        enum: [1/Ms]
+        enum: [M^-1 s^-1, M^-2 s^-1, mM^-1 s^-1, mM^-2 s^-1, µM^-1 s^-1, µM^-2 s^-1,
+          nM^-1 s^-1, nM^-2 s^-1]
         help.en: Unit of the association rate constant
         required: true
       id:
@@ -3312,7 +3314,7 @@ $defs:
     properties:
       unit:
         type: keyword
-        enum: [1/s]
+        enum: [s^-1]
         help.en: Unit of the dissociation rate constant
         required: true
       id:
