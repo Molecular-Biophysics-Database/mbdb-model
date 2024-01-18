@@ -229,10 +229,10 @@ $defs:
       targets[]:
         ^minItems: 1
         ^help.en: List of names (ids), from the entities of interest defined in the
-          general parameters, of directly measured entities and entities
+          general parameters, of directly measured entities
         ^required: true
         use: '#/$defs/Entity_constituent'
-      target_modifiers[]:
+      ligands[]:
         ^minItems: 1
         ^help.en: List of names (ids) of entities (from the entities of interest defined
           in the general parameters) that were used to alter the behavior of the target(s)
@@ -252,10 +252,12 @@ $defs:
             Premium Capillary Chip, 384-well plate, other]
         help.en: The container the sample was in during the measurement
         required: true
-      preparation[]:
+      preparation_protocol[]:
         ^minItems: 1
         ^help.en: List of steps taken to prepare the sample, ending at the point where
-          it was placed in the measurement container
+          it was placed in the measurement container. Information include operations
+          like filtration and which filter material and pore-size was used should
+          be added
         use: '#/$defs/Step'
   General_parameters:
     properties:
@@ -1219,19 +1221,12 @@ $defs:
           script in a GitHub repository
   Value_error:
     properties:
-      upper_error:
-        type: double
-        help.en: The upper error, i.e. the number that should be added the value to
-          get the upper bound. The same unit as the value being described is assumed,
-          if relative errors are given please give it in fractional form (e.g. 0.01
-          for 1 %
-        required: true
       lower_error:
         type: double
         help.en: The lower error, i.e. the number that should be subtracted from the
           value to get the lower bound. The same unit as the value being described
-          is assumed, if relative errors are given please give it in fractional form
-          (e.g. 0.01 for 1 %)
+          is assumed, if relative errors are provided, please provide it in fractional
+          form (e.g.  0.01 for 1 %)
         required: true
       is_relative:
         type: boolean

@@ -33,11 +33,11 @@ Measurement:
   sample: include('Sample')
 Sample:
   targets: list(include('Entity_constituent'), min=1)
-  target_modifiers: list(include('Entity_constituent'))
+  ligands: list(include('Entity_constituent'))
   chemical_environment: link(target='chemical-environment')
   measurement_container: enum('Monolith Standard Capillary', 'Monolith Premium Capillary',
     'Monolith LabelFree Capillary', 'Monolith LabelFree Premium Capillary', 'Monolith
     NT.Automated Capillary Chip', 'Monolith NT.Automated Premium Capillary Chip',
     'Monolith NT.Automated LabelFree Capillary Chip', 'Monolith NT.Automated LabelFree
     Premium Capillary Chip', '384-well plate', 'other')
-  preparation: list(include('Step'), required=False)
+  preparation_protocol: list(include('Step'), required=False)

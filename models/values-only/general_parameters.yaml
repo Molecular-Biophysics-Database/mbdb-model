@@ -221,7 +221,6 @@ Processing_step:
   link_to_source_code: url(required=False)
 ---
 Value_error:
-  upper_error: num()
   lower_error: num()
   is_relative: bool()
 Ph:

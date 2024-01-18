@@ -27,7 +27,7 @@ Sample:
   chemical_environment: link(target='chemical-environment')
   analytes: list(include('Entity_constituent'))
   temperature: include('Temperature', required=False)
-  preparation: list(include('Step'), required=False)
+  preparation_protocol: list(include('Step'), required=False)
 Measurement_step:
   id: link_target(name="spr-measurement-step")
   name: str()

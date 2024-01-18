@@ -269,7 +269,7 @@ method_specific_parameters:
                     concentration:
                         value: 1
                         unit: 'nM'
-              target_modifiers:
+              ligands:
                   - entity:
                       $ref: 'eoi-human-serum'
                       name: 'Human serum'
@@ -292,7 +292,7 @@ method_specific_parameters:
                     concentration:
                         value: 1
                         unit: 'nM'
-              target_modifiers:
+              ligands:
                   - entity:
                       $ref: 'eoi-human-serum'
                       name: 'Human serum'
@@ -315,7 +315,7 @@ method_specific_parameters:
                     concentration:
                         value: 1
                         unit: 'nM'
-              target_modifiers:
+              ligands:
                   - entity:
                       $ref: 'eoi-human-serum'
                       name: 'Human serum'
