@@ -371,7 +371,7 @@
           {
             "id": "de-par-kd-hemo",
             "name": "KD of hemoglobin to unknown component in serum",
-            "type": "Constant of dissociation (K_D)",
+            "type": "Constant of dissociation (KD)",
             "entities_involved": [
               {
                 "entity": {

@@ -184,17 +184,44 @@ Publication:
   title: str(required=False)
   resource_type: enum('Article', 'Book', 'Thesis')
 ---
-Derived_parameter:
+Derived_parameter_base:
   id: link_target(name="derived-parameter")
   name: str()
-  type: enum('Concentration', 'Stoichiometry', 'Constant of association (K_A)', 'Constant
-    of dissociation (K_D)', 'Association rate (k_on)', 'Dissociation rate (k_off)',
-    'Change in enthalpy (delta H)', 'Change in entropy (delta S)', 'Change in Gibbs
-    free energy (delta G)', 'Molecular weight (MW)')
+  type: enum('Concentration', 'Stoichiometry', 'Constant of association (KA)', 'Constant
+    of dissociation (KD)', 'Association rate (kOn)', 'Dissociation rate (kOff)', 'Change
+    in enthalpy (deltaH)', 'Change in entropy (deltaS)', 'Change in Gibbs free energy
+    (deltaG)', 'Molecular weight (MW)')
   entities_involved: list(nested_include('Entity_and_stoichiometry'), min=1)
   value: num()
   value_error: include('Value_error', required=False)
-  unit: keyword()
+Derived_parameter: choose(include('Derived_parameter_base'), Concentration=include('DP_concentration'),
+  Stoichiometry=include('DP_stoichiometry'), Constant_of_association_KA=include('DP_KA'),
+  Constant_of_dissociation_KD=include('DP_KD'), Association_rate_kOn=include('DP_kOn'),
+  Dissociation_rate_kOff=include('DP_kOff'), Change_in_enthalpy_deltaH=include('DP_deltaH'),
+  Change_in_entropy_deltaS=include('DP_deltaS'), Change_in_Gibbs_free_energy_deltaG=include('DP_deltaG'),
+  Molecular_weight_MW=include('DP_MW') )
+DP_concentration:
+  unit: include('CONCENTRATION_UNITS')
+DP_stoichiometry:
+  unit: enum('per complex')
+DP_KA:
+  unit: enum('M^-1', 'M^-2', 'mM^-1', 'mM^-2', 'µM^-1', 'µM^-2', 'nM^-1', 'nM^-2'
+    )
+DP_KD:
+  unit: enum('M', 'M^2', 'mM', 'mM^2', 'µM', 'µM^2', 'nM', 'nM^2' )
+DP_kOn:
+  unit: enum('M^-1 s^-1', 'M^-2 s^-1', 'mM^-1 s^-1', 'mM^-2 s^-1', 'µM^-1 s^-1', 'µM^-2
+    s^-1', 'nM^-1 s^-1', 'nM^-2 s^-1' )
+DP_kOff:
+  unit: enum('s^-1')
+DP_deltaH:
+  unit: include('ENERGY_UNITS')
+DP_deltaS:
+  unit: enum('kcal/molK','kJ/molK' )
+DP_deltaG:
+  unit: include('ENERGY_UNITS')
+DP_MW:
+  unit: include('MOLECULAR_WEIGHT_UNITS')
 Entity_and_stoichiometry:
   entity: link(target='entity')
   copy_number: num(min=-1)
