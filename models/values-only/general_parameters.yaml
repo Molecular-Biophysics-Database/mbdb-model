@@ -11,7 +11,7 @@ General_parameters:
   collection_start_time: day()
   instrument: include('Instrument')
   chemical_information: include('Chemical_information')
-  results: list(nested_include('Derived_parameter'), required=False)
+  results: list(nested_include('Result'), required=False)
   raw_measurement_files: list(url(), required=False)
 ---
 Record_information:
@@ -184,44 +184,50 @@ Publication:
   title: str(required=False)
   resource_type: enum('Article', 'Book', 'Thesis')
 ---
-Derived_parameter_base:
-  id: link_target(name="derived-parameter")
+Result_base:
+  id: link_target(name="result")
   name: str()
   type: enum('Concentration', 'Stoichiometry', 'Constant of association (KA)', 'Constant
-    of dissociation (KD)', 'Association rate (kOn)', 'Dissociation rate (kOff)', 'Change
-    in enthalpy (deltaH)', 'Change in entropy (deltaS)', 'Change in Gibbs free energy
-    (deltaG)', 'Molecular weight (MW)')
+    of dissociation (KD)', 'Half maximal effective concentration (EC50)', 'Hill coefficient',
+    'Association rate (kOn)', 'Dissociation rate (kOff)', 'Change in enthalpy (deltaH)',
+    'Change in entropy (deltaS)', 'Change in Gibbs free energy (deltaG)', 'Molecular
+    weight (MW)')
   entities_involved: list(nested_include('Entity_and_stoichiometry'), min=1)
   value: num()
   value_error: include('Value_error', required=False)
-Derived_parameter: choose(include('Derived_parameter_base'), Concentration=include('DP_concentration'),
-  Stoichiometry=include('DP_stoichiometry'), Constant_of_association_KA=include('DP_KA'),
-  Constant_of_dissociation_KD=include('DP_KD'), Association_rate_kOn=include('DP_kOn'),
-  Dissociation_rate_kOff=include('DP_kOff'), Change_in_enthalpy_deltaH=include('DP_deltaH'),
-  Change_in_entropy_deltaS=include('DP_deltaS'), Change_in_Gibbs_free_energy_deltaG=include('DP_deltaG'),
-  Molecular_weight_MW=include('DP_MW') )
-DP_concentration:
+Result: choose(include('Result_base'), Concentration=include('Result_concentration'),
+  Stoichiometry=include('Result_stoichiometry'), Constant_of_association_KA=include('Result_KA'),
+  Constant_of_dissociation_KD=include('Result_KD'), Association_rate_kOn=include('Result_kOn'),
+  Dissociation_rate_kOff=include('Result_kOff'), Change_in_enthalpy_deltaH=include('Result_deltaH'),
+  Change_in_entropy_deltaS=include('Result_deltaS'), Change_in_Gibbs_free_energy_deltaG=include('Result_deltaG'),
+  Molecular_weight_MW=include('Result_MW'), Half_maximal_effective_concentration_EC50=include('Result_EC50'),
+  Hill_coefficient=include('Result_hill_coeff'), )
+Result_concentration:
   unit: include('CONCENTRATION_UNITS')
-DP_stoichiometry:
+Result_stoichiometry:
   unit: enum('per complex')
-DP_KA:
+Result_KA:
   unit: enum('M^-1', 'M^-2', 'mM^-1', 'mM^-2', 'µM^-1', 'µM^-2', 'nM^-1', 'nM^-2'
     )
-DP_KD:
+Result_KD:
   unit: enum('M', 'M^2', 'mM', 'mM^2', 'µM', 'µM^2', 'nM', 'nM^2' )
-DP_kOn:
+Result_kOn:
   unit: enum('M^-1 s^-1', 'M^-2 s^-1', 'mM^-1 s^-1', 'mM^-2 s^-1', 'µM^-1 s^-1', 'µM^-2
     s^-1', 'nM^-1 s^-1', 'nM^-2 s^-1' )
-DP_kOff:
+Result_kOff:
   unit: enum('s^-1')
-DP_deltaH:
+Result_deltaH:
   unit: include('ENERGY_UNITS')
-DP_deltaS:
+Result_deltaS:
   unit: enum('kcal/molK','kJ/molK' )
-DP_deltaG:
+Result_deltaG:
   unit: include('ENERGY_UNITS')
-DP_MW:
+Result_MW:
   unit: include('MOLECULAR_WEIGHT_UNITS')
+Result_EC50:
+  unit: include('CONCENTRATION_UNITS')
+Result_hill_coeff:
+  unit: enum("unitless")
 Entity_and_stoichiometry:
   entity: link(target='entity')
   copy_number: num(min=-1)

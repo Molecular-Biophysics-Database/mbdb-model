@@ -243,7 +243,7 @@ method_specific_parameters:
     excitation_led_power: 40
     ir_mst_laser_power: 20
     data_analysis:
-        - derived_parameter:
+        - result:
               $ref: 'de-par-kd-hemo'
               name: 'KD of hemoglobin to unknown component in serum'
           data_fitting:

@@ -15,7 +15,7 @@ MST_specific_parameters:
   measurements: list(include('Measurement'), min=1)
   data_analysis: list(include('MST_data_analysis'), required=False)
 MST_data_analysis:
-  derived_parameter: link(target='derived-parameter', required=False)
+  result: link(target='result', required=False)
   measurements: list(link(target='mst-measurement'), required=False)
   f_cold_and_hot: include('F_cold_and_hot', required=False)
   data_processing_steps: list(include('Processing_step'), required=False)

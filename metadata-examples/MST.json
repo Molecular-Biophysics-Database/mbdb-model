@@ -312,7 +312,7 @@
         "ir_mst_laser_power": 20,
         "data_analysis": [
           {
-            "derived_parameter": {
+            "result": {
               "id": "de-par-kd-hemo",
               "name": "KD of hemoglobin to unknown component in serum"
             },

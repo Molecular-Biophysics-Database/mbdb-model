@@ -143,7 +143,7 @@ $defs:
         ^minItems: 1
         ^help.en: List of the results (parameter) that were derived by analyzing the
           raw data, and which steps were taken to obtain them
-        use: '#/$defs/Derived_parameter'
+        use: '#/$defs/Result'
         type: polymorphic
         mapping:
           type: nested
@@ -853,7 +853,7 @@ $defs:
       contributors[]:
         ^minItems: 1
         ^help.en: List of other people who contributed to generating the deposited
-          data, metadata, derived parameters, or the deposition itself
+          data, metadata, results , or the deposition itself
         use: '#/$defs/Person'
         type: nested
   Person:
@@ -911,109 +911,116 @@ $defs:
         enum: [Article, Book, Thesis]
         help.en: The type of publication
         required: true
-  Derived_parameter_base:
+  Result_base:
     properties:
       id:
         type: keyword
         required: true
       name:
         type: keyword
-        help.en: Descriptive name (id) of the derived parameter (e.g. Kd of Lysozyme
-          and VHH2). Must be unique within a record
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
         required: true
         mapping:
           copy_to: collected_default_search_fields
       type:
         type: keyword
         enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Association rate (kOn), Dissociation rate (kOff),
-          Change in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs
-            free energy (deltaG), Molecular weight (MW)]
-        help.en: The type of physical parameter the derived parameter represents
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
         required: true
         mapping:
           copy_to: collected_default_search_fields
       entities_involved[]:
         ^minItems: 1
-        ^help.en: List of chemical or molecular assemblies the derived parameter describes
-          and how many copies of each are involved
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
         ^required: true
         use: '#/$defs/Entity_and_stoichiometry'
         type: nested
       value:
         type: double
-        help.en: Numerical value of the derived parameter
+        help.en: Numerical value of the result
         required: true
       value_error:
         use: '#/$defs/Value_error'
-        help.en: The expected error of the derived parameter (e.g. in terms of standard
-          deviations, or relative error)
-    id: derived-parameter
-  Derived_parameter:
-    help.en: Details of the derived parameter
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
+    id: result
+  Result:
+    help.en: Details of the result
     required: true
     schemas:
       Concentration:
-        use: '#/$defs/Derived_parameterDP_concentrationPolymorphic'
+        use: '#/$defs/ResultResult_concentrationPolymorphic'
         required: true
       Stoichiometry:
-        use: '#/$defs/Derived_parameterDP_stoichiometryPolymorphic'
+        use: '#/$defs/ResultResult_stoichiometryPolymorphic'
         required: true
       Constant of association KA:
-        use: '#/$defs/Derived_parameterDP_KAPolymorphic'
+        use: '#/$defs/ResultResult_KAPolymorphic'
         required: true
       Constant of dissociation KD:
-        use: '#/$defs/Derived_parameterDP_KDPolymorphic'
+        use: '#/$defs/ResultResult_KDPolymorphic'
         required: true
       Association rate kOn:
-        use: '#/$defs/Derived_parameterDP_kOnPolymorphic'
+        use: '#/$defs/ResultResult_kOnPolymorphic'
         required: true
       Dissociation rate kOff:
-        use: '#/$defs/Derived_parameterDP_kOffPolymorphic'
+        use: '#/$defs/ResultResult_kOffPolymorphic'
         required: true
       Change in enthalpy deltaH:
-        use: '#/$defs/Derived_parameterDP_deltaHPolymorphic'
+        use: '#/$defs/ResultResult_deltaHPolymorphic'
         required: true
       Change in entropy deltaS:
-        use: '#/$defs/Derived_parameterDP_deltaSPolymorphic'
+        use: '#/$defs/ResultResult_deltaSPolymorphic'
         required: true
       Change in Gibbs free energy deltaG:
-        use: '#/$defs/Derived_parameterDP_deltaGPolymorphic'
+        use: '#/$defs/ResultResult_deltaGPolymorphic'
         required: true
       Molecular weight MW:
-        use: '#/$defs/Derived_parameterDP_MWPolymorphic'
+        use: '#/$defs/ResultResult_MWPolymorphic'
+        required: true
+      Half maximal effective concentration EC50:
+        use: '#/$defs/ResultResult_EC50Polymorphic'
+        required: true
+      Hill coefficient:
+        use: '#/$defs/ResultResult_hill_coeffPolymorphic'
         required: true
     type: polymorphic
     discriminator: type
-    id: derived-parameter
-  DP_concentration:
+    id: result
+  Result_concentration:
     properties:
       unit:
         use: '#/$defs/CONCENTRATION_UNITS'
         required: true
         help.en: Unit of the concentration
-  DP_stoichiometry:
+  Result_stoichiometry:
     properties:
       unit:
         type: keyword
         enum: [per complex]
         help.en: Unit of the stoichiometry
         required: true
-  DP_KA:
+  Result_KA:
     properties:
       unit:
         type: keyword
         enum: [M^-1, M^-2, mM^-1, mM^-2, µM^-1, µM^-2, nM^-1, nM^-2]
         help.en: Unit of the constant of association
         required: true
-  DP_KD:
+  Result_KD:
     properties:
       unit:
         type: keyword
         enum: [M, M^2, mM, mM^2, µM, µM^2, nM, nM^2]
         help.en: Unit of the constant of dissociation
         required: true
-  DP_kOn:
+  Result_kOn:
     properties:
       unit:
         type: keyword
@@ -1021,38 +1028,51 @@ $defs:
           nM^-1 s^-1, nM^-2 s^-1]
         help.en: Unit of the association rate constant
         required: true
-  DP_kOff:
+  Result_kOff:
     properties:
       unit:
         type: keyword
         enum: [s^-1]
         help.en: Unit of the dissociation rate constant
         required: true
-  DP_deltaH:
+  Result_deltaH:
     properties:
       unit:
         use: '#/$defs/ENERGY_UNITS'
         required: true
         help.en: Unit of the change in enthalpy rate constant
-  DP_deltaS:
+  Result_deltaS:
     properties:
       unit:
         type: keyword
         enum: [kcal/molK, kJ/molK]
         help.en: Unit of the change in enthalpy rate constant
         required: true
-  DP_deltaG:
+  Result_deltaG:
     properties:
       unit:
         use: '#/$defs/ENERGY_UNITS'
         required: true
         help.en: Unit of the change in enthalpy rate constant
-  DP_MW:
+  Result_MW:
     properties:
       unit:
         use: '#/$defs/MOLECULAR_WEIGHT_UNITS'
         required: true
         help.en: Unit of the change in enthalpy rate constant
+  Result_EC50:
+    properties:
+      unit:
+        use: '#/$defs/CONCENTRATION_UNITS'
+        required: true
+        help.en: Unit of the half maximal effective concentration
+  Result_hill_coeff:
+    properties:
+      unit:
+        type: keyword
+        enum: [unitless]
+        help.en: Unit of the Hill coefficient
+        required: true
   Entity_and_stoichiometry:
     properties:
       entity:
@@ -1063,8 +1083,8 @@ $defs:
       copy_number:
         type: double
         minimum: -1.0
-        help.en: Number of copies of the entity that contribute to the derived parameter,
-          -1 if unknown (e.g. if two individual copies of a polymer binds to another,
+        help.en: Number of copies of the entity that contribute to the result, -1
+          if unknown (e.g. if two individual copies of a polymer binds to another,
           the copy number would be 2)
         required: true
   Modification:
@@ -2614,7 +2634,7 @@ $defs:
         required: true
         mapping:
           copy_to: collected_default_search_fields
-  Derived_parameterDP_concentrationPolymorphic:
+  ResultResult_concentrationPolymorphic:
     properties:
       unit:
         use: '#/$defs/CONCENTRATION_UNITS'
@@ -2624,37 +2644,38 @@ $defs:
         type: keyword
       name:
         type: keyword
-        help.en: Descriptive name (id) of the derived parameter (e.g. Kd of Lysozyme
-          and VHH2). Must be unique within a record
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
         required: true
         mapping:
           copy_to: collected_default_search_fields
       type:
         type: keyword
         enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Association rate (kOn), Dissociation rate (kOff),
-          Change in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs
-            free energy (deltaG), Molecular weight (MW)]
-        help.en: The type of physical parameter the derived parameter represents
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
         required: true
         mapping:
           copy_to: collected_default_search_fields
       entities_involved[]:
         ^minItems: 1
-        ^help.en: List of chemical or molecular assemblies the derived parameter describes
-          and how many copies of each are involved
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
         ^required: true
         use: '#/$defs/Entity_and_stoichiometry'
         type: nested
       value:
         type: double
-        help.en: Numerical value of the derived parameter
+        help.en: Numerical value of the result
         required: true
       value_error:
         use: '#/$defs/Value_error'
-        help.en: The expected error of the derived parameter (e.g. in terms of standard
-          deviations, or relative error)
-  Derived_parameterDP_stoichiometryPolymorphic:
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
+  ResultResult_stoichiometryPolymorphic:
     properties:
       unit:
         type: keyword
@@ -2665,37 +2686,38 @@ $defs:
         type: keyword
       name:
         type: keyword
-        help.en: Descriptive name (id) of the derived parameter (e.g. Kd of Lysozyme
-          and VHH2). Must be unique within a record
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
         required: true
         mapping:
           copy_to: collected_default_search_fields
       type:
         type: keyword
         enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Association rate (kOn), Dissociation rate (kOff),
-          Change in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs
-            free energy (deltaG), Molecular weight (MW)]
-        help.en: The type of physical parameter the derived parameter represents
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
         required: true
         mapping:
           copy_to: collected_default_search_fields
       entities_involved[]:
         ^minItems: 1
-        ^help.en: List of chemical or molecular assemblies the derived parameter describes
-          and how many copies of each are involved
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
         ^required: true
         use: '#/$defs/Entity_and_stoichiometry'
         type: nested
       value:
         type: double
-        help.en: Numerical value of the derived parameter
+        help.en: Numerical value of the result
         required: true
       value_error:
         use: '#/$defs/Value_error'
-        help.en: The expected error of the derived parameter (e.g. in terms of standard
-          deviations, or relative error)
-  Derived_parameterDP_KAPolymorphic:
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
+  ResultResult_KAPolymorphic:
     properties:
       unit:
         type: keyword
@@ -2706,37 +2728,38 @@ $defs:
         type: keyword
       name:
         type: keyword
-        help.en: Descriptive name (id) of the derived parameter (e.g. Kd of Lysozyme
-          and VHH2). Must be unique within a record
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
         required: true
         mapping:
           copy_to: collected_default_search_fields
       type:
         type: keyword
         enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Association rate (kOn), Dissociation rate (kOff),
-          Change in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs
-            free energy (deltaG), Molecular weight (MW)]
-        help.en: The type of physical parameter the derived parameter represents
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
         required: true
         mapping:
           copy_to: collected_default_search_fields
       entities_involved[]:
         ^minItems: 1
-        ^help.en: List of chemical or molecular assemblies the derived parameter describes
-          and how many copies of each are involved
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
         ^required: true
         use: '#/$defs/Entity_and_stoichiometry'
         type: nested
       value:
         type: double
-        help.en: Numerical value of the derived parameter
+        help.en: Numerical value of the result
         required: true
       value_error:
         use: '#/$defs/Value_error'
-        help.en: The expected error of the derived parameter (e.g. in terms of standard
-          deviations, or relative error)
-  Derived_parameterDP_KDPolymorphic:
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
+  ResultResult_KDPolymorphic:
     properties:
       unit:
         type: keyword
@@ -2747,37 +2770,38 @@ $defs:
         type: keyword
       name:
         type: keyword
-        help.en: Descriptive name (id) of the derived parameter (e.g. Kd of Lysozyme
-          and VHH2). Must be unique within a record
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
         required: true
         mapping:
           copy_to: collected_default_search_fields
       type:
         type: keyword
         enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Association rate (kOn), Dissociation rate (kOff),
-          Change in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs
-            free energy (deltaG), Molecular weight (MW)]
-        help.en: The type of physical parameter the derived parameter represents
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
         required: true
         mapping:
           copy_to: collected_default_search_fields
       entities_involved[]:
         ^minItems: 1
-        ^help.en: List of chemical or molecular assemblies the derived parameter describes
-          and how many copies of each are involved
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
         ^required: true
         use: '#/$defs/Entity_and_stoichiometry'
         type: nested
       value:
         type: double
-        help.en: Numerical value of the derived parameter
+        help.en: Numerical value of the result
         required: true
       value_error:
         use: '#/$defs/Value_error'
-        help.en: The expected error of the derived parameter (e.g. in terms of standard
-          deviations, or relative error)
-  Derived_parameterDP_kOnPolymorphic:
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
+  ResultResult_kOnPolymorphic:
     properties:
       unit:
         type: keyword
@@ -2789,37 +2813,38 @@ $defs:
         type: keyword
       name:
         type: keyword
-        help.en: Descriptive name (id) of the derived parameter (e.g. Kd of Lysozyme
-          and VHH2). Must be unique within a record
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
         required: true
         mapping:
           copy_to: collected_default_search_fields
       type:
         type: keyword
         enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Association rate (kOn), Dissociation rate (kOff),
-          Change in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs
-            free energy (deltaG), Molecular weight (MW)]
-        help.en: The type of physical parameter the derived parameter represents
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
         required: true
         mapping:
           copy_to: collected_default_search_fields
       entities_involved[]:
         ^minItems: 1
-        ^help.en: List of chemical or molecular assemblies the derived parameter describes
-          and how many copies of each are involved
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
         ^required: true
         use: '#/$defs/Entity_and_stoichiometry'
         type: nested
       value:
         type: double
-        help.en: Numerical value of the derived parameter
+        help.en: Numerical value of the result
         required: true
       value_error:
         use: '#/$defs/Value_error'
-        help.en: The expected error of the derived parameter (e.g. in terms of standard
-          deviations, or relative error)
-  Derived_parameterDP_kOffPolymorphic:
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
+  ResultResult_kOffPolymorphic:
     properties:
       unit:
         type: keyword
@@ -2830,37 +2855,38 @@ $defs:
         type: keyword
       name:
         type: keyword
-        help.en: Descriptive name (id) of the derived parameter (e.g. Kd of Lysozyme
-          and VHH2). Must be unique within a record
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
         required: true
         mapping:
           copy_to: collected_default_search_fields
       type:
         type: keyword
         enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Association rate (kOn), Dissociation rate (kOff),
-          Change in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs
-            free energy (deltaG), Molecular weight (MW)]
-        help.en: The type of physical parameter the derived parameter represents
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
         required: true
         mapping:
           copy_to: collected_default_search_fields
       entities_involved[]:
         ^minItems: 1
-        ^help.en: List of chemical or molecular assemblies the derived parameter describes
-          and how many copies of each are involved
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
         ^required: true
         use: '#/$defs/Entity_and_stoichiometry'
         type: nested
       value:
         type: double
-        help.en: Numerical value of the derived parameter
+        help.en: Numerical value of the result
         required: true
       value_error:
         use: '#/$defs/Value_error'
-        help.en: The expected error of the derived parameter (e.g. in terms of standard
-          deviations, or relative error)
-  Derived_parameterDP_deltaHPolymorphic:
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
+  ResultResult_deltaHPolymorphic:
     properties:
       unit:
         use: '#/$defs/ENERGY_UNITS'
@@ -2870,37 +2896,38 @@ $defs:
         type: keyword
       name:
         type: keyword
-        help.en: Descriptive name (id) of the derived parameter (e.g. Kd of Lysozyme
-          and VHH2). Must be unique within a record
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
         required: true
         mapping:
           copy_to: collected_default_search_fields
       type:
         type: keyword
         enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Association rate (kOn), Dissociation rate (kOff),
-          Change in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs
-            free energy (deltaG), Molecular weight (MW)]
-        help.en: The type of physical parameter the derived parameter represents
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
         required: true
         mapping:
           copy_to: collected_default_search_fields
       entities_involved[]:
         ^minItems: 1
-        ^help.en: List of chemical or molecular assemblies the derived parameter describes
-          and how many copies of each are involved
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
         ^required: true
         use: '#/$defs/Entity_and_stoichiometry'
         type: nested
       value:
         type: double
-        help.en: Numerical value of the derived parameter
+        help.en: Numerical value of the result
         required: true
       value_error:
         use: '#/$defs/Value_error'
-        help.en: The expected error of the derived parameter (e.g. in terms of standard
-          deviations, or relative error)
-  Derived_parameterDP_deltaSPolymorphic:
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
+  ResultResult_deltaSPolymorphic:
     properties:
       unit:
         type: keyword
@@ -2911,37 +2938,38 @@ $defs:
         type: keyword
       name:
         type: keyword
-        help.en: Descriptive name (id) of the derived parameter (e.g. Kd of Lysozyme
-          and VHH2). Must be unique within a record
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
         required: true
         mapping:
           copy_to: collected_default_search_fields
       type:
         type: keyword
         enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Association rate (kOn), Dissociation rate (kOff),
-          Change in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs
-            free energy (deltaG), Molecular weight (MW)]
-        help.en: The type of physical parameter the derived parameter represents
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
         required: true
         mapping:
           copy_to: collected_default_search_fields
       entities_involved[]:
         ^minItems: 1
-        ^help.en: List of chemical or molecular assemblies the derived parameter describes
-          and how many copies of each are involved
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
         ^required: true
         use: '#/$defs/Entity_and_stoichiometry'
         type: nested
       value:
         type: double
-        help.en: Numerical value of the derived parameter
+        help.en: Numerical value of the result
         required: true
       value_error:
         use: '#/$defs/Value_error'
-        help.en: The expected error of the derived parameter (e.g. in terms of standard
-          deviations, or relative error)
-  Derived_parameterDP_deltaGPolymorphic:
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
+  ResultResult_deltaGPolymorphic:
     properties:
       unit:
         use: '#/$defs/ENERGY_UNITS'
@@ -2951,37 +2979,38 @@ $defs:
         type: keyword
       name:
         type: keyword
-        help.en: Descriptive name (id) of the derived parameter (e.g. Kd of Lysozyme
-          and VHH2). Must be unique within a record
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
         required: true
         mapping:
           copy_to: collected_default_search_fields
       type:
         type: keyword
         enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Association rate (kOn), Dissociation rate (kOff),
-          Change in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs
-            free energy (deltaG), Molecular weight (MW)]
-        help.en: The type of physical parameter the derived parameter represents
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
         required: true
         mapping:
           copy_to: collected_default_search_fields
       entities_involved[]:
         ^minItems: 1
-        ^help.en: List of chemical or molecular assemblies the derived parameter describes
-          and how many copies of each are involved
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
         ^required: true
         use: '#/$defs/Entity_and_stoichiometry'
         type: nested
       value:
         type: double
-        help.en: Numerical value of the derived parameter
+        help.en: Numerical value of the result
         required: true
       value_error:
         use: '#/$defs/Value_error'
-        help.en: The expected error of the derived parameter (e.g. in terms of standard
-          deviations, or relative error)
-  Derived_parameterDP_MWPolymorphic:
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
+  ResultResult_MWPolymorphic:
     properties:
       unit:
         use: '#/$defs/MOLECULAR_WEIGHT_UNITS'
@@ -2991,36 +3020,120 @@ $defs:
         type: keyword
       name:
         type: keyword
-        help.en: Descriptive name (id) of the derived parameter (e.g. Kd of Lysozyme
-          and VHH2). Must be unique within a record
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
         required: true
         mapping:
           copy_to: collected_default_search_fields
       type:
         type: keyword
         enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Association rate (kOn), Dissociation rate (kOff),
-          Change in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs
-            free energy (deltaG), Molecular weight (MW)]
-        help.en: The type of physical parameter the derived parameter represents
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
         required: true
         mapping:
           copy_to: collected_default_search_fields
       entities_involved[]:
         ^minItems: 1
-        ^help.en: List of chemical or molecular assemblies the derived parameter describes
-          and how many copies of each are involved
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
         ^required: true
         use: '#/$defs/Entity_and_stoichiometry'
         type: nested
       value:
         type: double
-        help.en: Numerical value of the derived parameter
+        help.en: Numerical value of the result
         required: true
       value_error:
         use: '#/$defs/Value_error'
-        help.en: The expected error of the derived parameter (e.g. in terms of standard
-          deviations, or relative error)
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
+  ResultResult_EC50Polymorphic:
+    properties:
+      unit:
+        use: '#/$defs/CONCENTRATION_UNITS'
+        required: true
+        help.en: Unit of the half maximal effective concentration
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      entities_involved[]:
+        ^minItems: 1
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
+        ^required: true
+        use: '#/$defs/Entity_and_stoichiometry'
+        type: nested
+      value:
+        type: double
+        help.en: Numerical value of the result
+        required: true
+      value_error:
+        use: '#/$defs/Value_error'
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
+  ResultResult_hill_coeffPolymorphic:
+    properties:
+      unit:
+        type: keyword
+        enum: [unitless]
+        help.en: Unit of the Hill coefficient
+        required: true
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+          Must be unique within a record
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
+            of dissociation (KD), Half maximal effective concentration (EC50), Hill
+            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
+            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
+            energy (deltaG), Molecular weight (MW)]
+        help.en: The type of physical parameter the result represents
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      entities_involved[]:
+        ^minItems: 1
+        ^help.en: List of chemical or molecular assemblies the result describes and
+          how many copies of each are involved
+        ^required: true
+        use: '#/$defs/Entity_and_stoichiometry'
+        type: nested
+      value:
+        type: double
+        help.en: Numerical value of the result
+        required: true
+      value_error:
+        use: '#/$defs/Value_error'
+        help.en: The expected error of the result (e.g. in terms of standard deviations,
+          or relative error)
 settings:
   i18n-languages: [en]
   extension-elements: [ui_file_context]
