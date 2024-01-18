@@ -85,18 +85,18 @@ MST_specific_parameters:
         value           : list(include('Measurement'), min=1)
 
     data_analysis:
-        description     : str(equals='Details of how the data was processed and
-                                      modelled in order to derive parameters
-                                      from it', required=False)
+        description     : str(equals='The details of how data analysis
+                                      was performed to obtain the result', 
+                              required=False)
         value           : list(include('MST_data_analysis'), required=False)
 
 MST_data_analysis:
-    derived_parameter:
-        description     : str(equals='Link to a derived parameter that was
+    result:
+        description     : str(equals='Link to a result that was
                                       defined in the general parameters',
                                       required=False)
 
-        value           : link(target='derived-parameter', required=False)
+        value           : link(target='result', required=False)
 
     measurements:
         description     : str(equals='List of the measurements that was
@@ -122,9 +122,9 @@ MST_data_analysis:
         value           : list(include('Processing_step'), required=False)
 
     data_fitting:
-        description     : str(equals='The details of how data fitting of the
-                                      data to obtain the derived parameter was
-                                      performed', required=False)
+        description     : str(equals='The details of how data fitting
+                                      was performed to obtain the result', 
+                              required=False)
         value           : include('Data_fitting', required=False)
 
 F_cold_and_hot:

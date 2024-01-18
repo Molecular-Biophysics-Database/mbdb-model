@@ -77,7 +77,7 @@ General_parameters:
                                       and which steps were taken to obtain
                                       them', required=False)
         default_search  : True
-        value           : list(nested_include('Derived_parameter'),
+        value           : list(nested_include('Result'),
                                required=False)
     raw_measurement_files:
         description     : str(equals='List of file(s) containing the raw
@@ -936,7 +936,7 @@ Depositors:
     contributors:
         description : str(equals='List of other people who contributed to
                                   generating the deposited data, metadata,
-                                  derived parameters, or the deposition
+                                  results , or the deposition
                                   itself', required=False)
         value       : list(nested_include('Person'), required=False)
 
@@ -989,30 +989,32 @@ Publication:
         value           : enum('Article', 'Book', 'Thesis')
 
 ---
-# Derived parameters definitions
+# Result definitions
 
-Derived_parameter_base:
+Result_base:
     id:
-        description     : str(equals='Unique ID for the derived parameter to be
+        description     : str(equals='Unique ID for the result to be
                                       used as a link', required=False)
-        value           : link_target(name="derived-parameter")
+        value           : link_target(name="result")
 
     name:
-        description     : str(equals='Descriptive name (id) of the derived
-                                      parameter (e.g. Kd of Lysozyme and VHH2).
+        description     : str(equals='Descriptive name (id) of the result 
+                                      (e.g. Kd of Lysozyme and VHH2).
                                       Must be unique within a record',
                               required=False)
         default_search  : True
         value           : str()
 
     type:
-        description     : str(equals='The type of physical parameter the derived
-                                      parameter represents', required=False)
+        description     : str(equals='The type of physical parameter the 
+                                      result represents', required=False)
         default_search  : True
         value           : enum('Concentration',
                                'Stoichiometry',
                                'Constant of association (KA)',
                                'Constant of dissociation (KD)',
+                               'Half maximal effective concentration (EC50)',
+                               'Hill coefficient',
                                'Association rate (kOn)',
                                'Dissociation rate (kOff)',
                                'Change in enthalpy (deltaH)',
@@ -1022,52 +1024,53 @@ Derived_parameter_base:
 
     entities_involved:
         description     : str(equals='List of chemical or molecular assemblies
-                                      the derived parameter describes and how
+                                      the result describes and how
                                       many copies of each are involved',
                               required=False)
         value           : list(nested_include('Entity_and_stoichiometry'),
                                min=1)
 
     value:
-        description     : str(equals='Numerical value of the derived parameter',
+        description     : str(equals='Numerical value of the result',
                               required=False)
         value           : num()
 
     value_error:
-        description     : str(equals='The expected error of the derived
-                                      parameter (e.g. in terms of
+        description     : str(equals='The expected error of the result (e.g. in terms of
                                       standard deviations, or relative error)',
                               required=False)
         value           : include('Value_error', required=False)
 
-Derived_parameter:
-    description         : str(equals='Details of the derived parameter', required=False)
-    value               : choose(include('Derived_parameter_base'),
-                                 Concentration=include('DP_concentration'),
-                                 Stoichiometry=include('DP_stoichiometry'),
-                                 Constant_of_association_KA=include('DP_KA'),
-                                 Constant_of_dissociation_KD=include('DP_KD'),
-                                 Association_rate_kOn=include('DP_kOn'),
-                                 Dissociation_rate_kOff=include('DP_kOff'),
-                                 Change_in_enthalpy_deltaH=include('DP_deltaH'),
-                                 Change_in_entropy_deltaS=include('DP_deltaS'),
-                                 Change_in_Gibbs_free_energy_deltaG=include('DP_deltaG'),
-                                 Molecular_weight_MW=include('DP_MW')
+Result:
+    description         : str(equals='Details of the result', required=False)
+    value               : choose(include('Result_base'),
+                                 Concentration=include('Result_concentration'),
+                                 Stoichiometry=include('Result_stoichiometry'),
+                                 Constant_of_association_KA=include('Result_KA'),
+                                 Constant_of_dissociation_KD=include('Result_KD'),
+                                 Association_rate_kOn=include('Result_kOn'),
+                                 Dissociation_rate_kOff=include('Result_kOff'),
+                                 Change_in_enthalpy_deltaH=include('Result_deltaH'),
+                                 Change_in_entropy_deltaS=include('Result_deltaS'),
+                                 Change_in_Gibbs_free_energy_deltaG=include('Result_deltaG'),
+                                 Molecular_weight_MW=include('Result_MW'),
+                                 Half_maximal_effective_concentration_EC50=include('Result_EC50'),
+                                 Hill_coefficient=include('Result_hill_coeff'),
                                 )    
 
-DP_concentration:
+Result_concentration:
     unit:
         description     : str(equals='Unit of the concentration',
                               required=False)
         value           : include('CONCENTRATION_UNITS')
 
-DP_stoichiometry:
+Result_stoichiometry:
     unit:
         description     : str(equals='Unit of the stoichiometry',
                               required=False)
         value           : enum('per complex')
 
-DP_KA:
+Result_KA:
     unit:
         description     : str(equals='Unit of the constant of association',
                               required=False)
@@ -1077,7 +1080,7 @@ DP_KA:
                                'nM^-1', 'nM^-2'
                                )
 
-DP_KD:
+Result_KD:
     unit:
         description     : str(equals='Unit of the constant of dissociation',
                               required=False)
@@ -1087,7 +1090,7 @@ DP_KD:
                                'nM', 'nM^2'
                                )
 
-DP_kOn:
+Result_kOn:
     unit:
         description     : str(equals='Unit of the association rate constant',
                               required=False)
@@ -1096,35 +1099,47 @@ DP_kOn:
                                'µM^-1 s^-1', 'µM^-2 s^-1', 
                                'nM^-1 s^-1', 'nM^-2 s^-1'
                                )
-DP_kOff:
+Result_kOff:
     unit:
         description     : str(equals='Unit of the dissociation rate constant',
                               required=False)
         value           : enum('s^-1')
 
-DP_deltaH:
+Result_deltaH:
     unit:
         description     : str(equals='Unit of the change in enthalpy rate constant',
                               required=False)
         value           : include('ENERGY_UNITS')
 
-DP_deltaS:
+Result_deltaS:
     unit:
         description     : str(equals='Unit of the change in enthalpy rate constant',
                               required=False)
         value           : enum('kcal/molK','kJ/molK' )
 
-DP_deltaG:
+Result_deltaG:
     unit:
         description     : str(equals='Unit of the change in enthalpy rate constant',
                               required=False)
         value           : include('ENERGY_UNITS')
 
-DP_MW:
+Result_MW:
     unit:
         description     : str(equals='Unit of the change in enthalpy rate constant',
                               required=False)
         value           : include('MOLECULAR_WEIGHT_UNITS')    
+
+Result_EC50:
+    unit:
+        description     : str(equals='Unit of the half maximal effective concentration',
+                              required=False)
+        value           : include('CONCENTRATION_UNITS')    
+        
+Result_hill_coeff:
+    unit:
+        description     : str(equals='Unit of the Hill coefficient',
+                              required=False)
+        value           : enum("unitless")    
 
 Entity_and_stoichiometry:
     entity:
@@ -1136,7 +1151,7 @@ Entity_and_stoichiometry:
 
     copy_number:
         description     : str(equals='Number of copies of the entity that
-                                      contribute to the derived parameter, -1
+                                      contribute to the result, -1
                                       if unknown (e.g. if two individual copies
                                       of a polymer binds to another, the copy
                                       number would be 2)',
@@ -1192,7 +1207,7 @@ Data_fitting:
 
     quality:
         description     : str(equals='Numerical value representing the quality
-                                      estimate of the derived parameter',
+                                      estimate of the result',
                               required=False)
         value           : num(required=False)
 
