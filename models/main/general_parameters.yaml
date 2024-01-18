@@ -1155,13 +1155,13 @@ Processing_step:
 # Physical and chemical parameter objects
 
 Value_error:
-    upper_error:
+    lower_error:
         description     : str(equals='The upper error, i.e. the number that
-                                      should be added the value to get the
-                                      upper bound. The same unit as the value
+                                      should be added to the value to get
+                                      the upper bound. The same unit as the value
                                       being described is assumed, if relative errors 
-                                      are given please give it in fractional form (e.g. 
-                                      0.01 for 1 %', required=False)
+                                      are provided, please provide it in fractional 
+                                      form (e.g.  0.01 for 1 %)', required=False)
         value           : num()
 
     lower_error:
@@ -1169,8 +1169,8 @@ Value_error:
                                       should be subtracted from the value to get
                                       the lower bound. The same unit as the value
                                       being described is assumed, if relative errors 
-                                      are given please give it in fractional form (e.g. 
-                                      0.01 for 1 %)', required=False)
+                                      are provided, please provide it in fractional 
+                                      form (e.g.  0.01 for 1 %)', required=False)
         value           : num()
 
     is_relative:
@@ -1324,7 +1324,6 @@ Size:
                               required=False)
         value           : num(required=False)
 
-
 ---
 # Additional objects
 
@@ -1400,7 +1399,6 @@ ENERGY_UNITS            : enum('kcal/mol','kJ/mol', required=False)
 POWER_UNITS             : enum('µcal/s','µJ/s', required=False)
 LENGTH_UNITS            : enum('Å', 'nm', 'μm', 'mm', 'cm', 'm', required=False)
 MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
-
 
 ---
 # Techniques and company definitions

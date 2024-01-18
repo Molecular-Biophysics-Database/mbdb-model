@@ -192,11 +192,11 @@ Sample:
     targets:
         description     : str(equals='List of names (ids), from the entities of
                                       interest defined in the general
-                                      parameters, of directly measured entities
-                                      and entities', required=False)
+                                      parameters, of directly measured entities',
+                                      required=False)
         value           : list(include('Entity_constituent'), min=1)
 
-    target_modifiers:
+    ligands:
         description     : str(equals='List of names (ids) of entities (from the
                                       entities of interest defined in the
                                       general parameters) that were used to
@@ -226,9 +226,12 @@ Sample:
                                '384-well plate',
                                'other')
 
-    preparation:
+    preparation_protocol:
         description     : str(equals='List of steps taken to prepare the
                                       sample, ending at the point where 
                                       it was placed in the measurement 
-                                      container', required=False)
+                                      container. Information include 
+                                      operations like filtration and which 
+                                      filter material and pore-size was used
+                                      should be added', required=False)
         value           : list(include('Step'), required=False)

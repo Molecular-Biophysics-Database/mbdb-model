@@ -162,7 +162,7 @@ Sample:
                                       measured', required=False)
         value           : include('Temperature', required=False)
 
-    preparation:
+    preparation_protocol:
         description     : str(equals='List of steps taken to prepare the
                                       sample', required=False)
         value           : list(include('Step'), required=False)
