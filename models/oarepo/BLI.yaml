@@ -388,13 +388,25 @@ $defs:
         required: true
         help.en: Information about the instrument being used to collect (measure)
           the raw data annotated by this record
-      chemical_information:
-        use: '#/$defs/Chemical_information'
-        required: true
-        help.en: Information about entities of interest that were being measured (e.g.
-          Lysozyme) or used to alter the behaviour of the measured species (e.g. Peptidoglycan),
-          and the chemical environments that was used in the measurement (e.g. buffers,
-          cleaning solutions)
+      entities_of_interest[]:
+        ^minItems: 1
+        ^help.en: List of the entities that are being directly measured, as well as
+          the entities that are being used as a variable to influence the behavior
+          of the directly measured entities (e.g. lysozyme, NAG3, NaCl). IMPORTANT!
+          If the pH was varied by individually prepared chemical environments these
+          should be specified individually in chemical environments
+        ^required: true
+        use: '#/$defs/Entity'
+        type: polymorphic
+        mapping:
+          type: nested
+      chemical_environments[]:
+        ^minItems: 1
+        ^help.en: Composition of the chemical environment (colloquially known as the
+          buffer).
+        ^required: true
+        use: '#/$defs/Chemical_environment'
+        type: nested
       results[]:
         ^minItems: 1
         ^help.en: List of the results (parameter) that were derived by analyzing the
@@ -706,26 +718,6 @@ $defs:
           labeling, deglycosylation, covalent fluorescent labeling)
         use: '#/$defs/Modification'
         type: nested
-  Chemical_information:
-    properties:
-      chemical_environments[]:
-        ^minItems: 1
-        ^help.en: Composition of the chemical environment (colloquially known as buffer)
-          which are not being directly used to affect the behavior of the directly
-          measured entities during the measurement
-        ^required: true
-        use: '#/$defs/Chemical_environment'
-        type: nested
-      entities_of_interest[]:
-        ^minItems: 1
-        ^help.en: List of the entities that are being directly measured, as well as
-          the entities that are being used as a variable to influence the behavior
-          of the directly measured entities (e.g. lysozyme, NAG3, NaCl)
-        ^required: true
-        use: '#/$defs/Entity'
-        type: polymorphic
-        mapping:
-          type: nested
   Chemical:
     properties:
       inchikey:
@@ -1580,6 +1572,758 @@ $defs:
     type: keyword
     enum: [Bio-Rad, Bruker, Cytiva, Gatorbio, GE Healthcare, Nanotemper, Nicoya Life,
       Sartorius, Malvern Panalytical, Refeyn, TA Instruments]
+  EntityPolymerPolymorphic:
+    properties:
+      polymer_type:
+        type: keyword
+        enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
+          polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
+          polyribonucleotide]
+        help.en: The type of polymer (e.g. polypeptide(L))
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      sequence:
+        type: keyword
+        help.en: Primary sequence of the polymer, using single letter codes (e.g.
+          SAGRELLE, AGTTA). In case of non-natural amino acids or nucleotides, please
+          place the monomer in brackets
+        mapping:
+          copy_to: collected_default_search_fields
+      molecular_weight:
+        use: '#/$defs/Molecular_weight'
+        required: true
+        help.en: The molecular weight of the polymer
+      external_databases[]:
+        ^minItems: 1
+        ^help.en: List of identifiers to records in external databases containing
+          information about the polymer can be specified here (e.g UNIPROT:Q8KRF6)
+        type: keyword
+        mapping:
+          copy_to: collected_default_search_fields
+      variant:
+        type: keyword
+        help.en: Descriptive name indicating differences of primary sequence of the
+          polymer as compared to the most common form, or wildtype, including mutations,
+          purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
+        mapping:
+          copy_to: collected_default_search_fields
+      source_organism:
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
+      modifications:
+        use: '#/$defs/Polymer_modifications'
+        help.en: If the polymer contains modifications such as non-natural aminoacids,
+          post translational modification, or chemically modifications like labeling,
+          it can be specified here
+      expression_source_type:
+        type: keyword
+        enum: [Natively, Recombinantly, Synthetically]
+        help.en: How the polymer was produced
+        required: true
+      expression_organism:
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
+      additional_specifications[]:
+        ^minItems: 1
+        ^help.en: Additional information about the polymer can be specified here
+        type: keyword
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+  EntityChemicalPolymorphic:
+    properties:
+      inchikey:
+        type: keyword
+        help.en: InChIKey identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      additional_identifiers[]:
+        ^minItems: 1
+        ^help.en: Unique and persistent identifier from an external source; options
+          of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
+        type: keyword
+      isotopic_labeling:
+        type: keyword
+        help.en: If the isotopic composition of the chemical was altered from the
+          naturally occurring abundances, it can be specified here (e.g. 15N, 13C)
+      molecular_weight:
+        use: '#/$defs/Molecular_weight'
+        required: true
+        help.en: The molecular weight of the polymer
+      additional_specifications[]:
+        ^minItems: 1
+        ^help.en: Additional information about the chemical can be specified here
+          (e.g. RNase free water, recrystallization, desalting)
+        type: keyword
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+  EntityMolecular_assemblyPolymorphic:
+    properties:
+      external_databases[]:
+        ^minItems: 1
+        ^help.en: List of identifiers to records in external databases containing
+          information about the molecular assembly as a whole can be specified here
+          (e.g. PDB:1YQ2 ); information about the individual components should be
+          specified in the details of the individual components
+        type: keyword
+        mapping:
+          copy_to: collected_default_search_fields
+      components[]:
+        ^minItems: 1
+        ^help.en: Description of the individual components (e.g. polypeptide, heme,
+          lipids, metal ions etc.) the molecular assembly is composed of (e.g. Hemoglobin
+          alpha) and how many copies of each component were present
+        ^required: true
+        use: '#/$defs/Assembly_component'
+        type: polymorphic
+        mapping:
+          type: nested
+      molecular_weight:
+        use: '#/$defs/Molecular_weight'
+        required: true
+        help.en: The molecular weight of the molecular assembly
+      chemical_modifications[]:
+        ^minItems: 1
+        ^help.en: List describing deliberate modifications made to the molecular assembly
+          through chemical, biochemical, or physical means
+        use: '#/$defs/Modification'
+        type: nested
+      additional_specifications[]:
+        ^minItems: 1
+        ^help.en: Additional information about the macromolecular assembly can be
+          specified here
+        type: keyword
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+  Assembly_componentPolymerPolymorphic:
+    properties:
+      polymer_type:
+        type: keyword
+        enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
+          polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
+          polyribonucleotide]
+        help.en: The type of polymer (e.g. polypeptide(L))
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      sequence:
+        type: keyword
+        help.en: Primary sequence of the polymer, using single letter codes (e.g.
+          SAGRELLE, AGTTA). In case of non-natural amino acids or nucleotides, please
+          place the monomer in brackets
+        mapping:
+          copy_to: collected_default_search_fields
+      molecular_weight:
+        use: '#/$defs/Molecular_weight'
+        required: true
+        help.en: The molecular weight of the polymer
+      external_databases[]:
+        ^minItems: 1
+        ^help.en: List of identifiers to records in external databases containing
+          information about the polymer can be specified here (e.g UNIPROT:Q8KRF6)
+        type: keyword
+        mapping:
+          copy_to: collected_default_search_fields
+      variant:
+        type: keyword
+        help.en: Descriptive name indicating differences of primary sequence of the
+          polymer as compared to the most common form, or wildtype, including mutations,
+          purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
+        mapping:
+          copy_to: collected_default_search_fields
+      source_organism:
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
+      modifications:
+        use: '#/$defs/Polymer_modifications'
+        help.en: If the polymer contains modifications such as non-natural aminoacids,
+          post translational modification, or chemically modifications like labeling,
+          it can be specified here
+      expression_source_type:
+        type: keyword
+        enum: [Natively, Recombinantly, Synthetically]
+        help.en: How the polymer was produced
+        required: true
+      expression_organism:
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
+      additional_specifications[]:
+        ^minItems: 1
+        ^help.en: Additional information about the polymer can be specified here
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) given to the assembly component. The
+          name must be unique within a record
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Polymer, Chemical]
+        help.en: The type of component, options are (biological) Polymer and Chemical
+        required: true
+      copy_number:
+        type: double
+        minimum: -1.0
+        help.en: Number of molecules of the component within the assembly, -1 if unknown
+        required: true
+  Assembly_componentChemicalPolymorphic:
+    properties:
+      inchikey:
+        type: keyword
+        help.en: InChIKey identifier of the chemical. In case of chemical polymers
+          please specify the InChIKey of the monomer and specify the specific type
+          in the additional identifiers field (e.g. if PEG 3350 was employed, the
+          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
+          specified here)
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      additional_identifiers[]:
+        ^minItems: 1
+        ^help.en: Unique and persistent identifier from an external source; options
+          of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
+        type: keyword
+      isotopic_labeling:
+        type: keyword
+        help.en: If the isotopic composition of the chemical was altered from the
+          naturally occurring abundances, it can be specified here (e.g. 15N, 13C)
+      molecular_weight:
+        use: '#/$defs/Molecular_weight'
+        required: true
+        help.en: The molecular weight of the polymer
+      additional_specifications[]:
+        ^minItems: 1
+        ^help.en: Additional information about the chemical can be specified here
+          (e.g. RNase free water, recrystallization, desalting)
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) given to the assembly component. The
+          name must be unique within a record
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Polymer, Chemical]
+        help.en: The type of component, options are (biological) Polymer and Chemical
+        required: true
+      copy_number:
+        type: double
+        minimum: -1.0
+        help.en: Number of molecules of the component within the assembly, -1 if unknown
+        required: true
+  EntityComplex_substance_of_biological_originPolymorphic:
+    help.en: Information about the biological substance the complex substance is derived
+      from
+    required: true
+    schemas:
+      Body fluid:
+        use: '#/$defs/Complex_substance_of_biological_originBody_fluidPolymorphic'
+        required: true
+      Cell fraction:
+        use: '#/$defs/Complex_substance_of_biological_originCell_fractionPolymorphic'
+        required: true
+      Virion:
+        use: '#/$defs/Complex_substance_of_biological_originVirionPolymorphic'
+        required: true
+    type: polymorphic
+    discriminator: derived_from
+  Complex_substance_of_biological_originBody_fluidPolymorphic:
+    properties:
+      fluid:
+        type: keyword
+        enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract]
+        help.en: The body fluid the complex substance is derived from
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      health_status:
+        type: keyword
+        help.en: Health status of the donor organism where the body fluid was derived
+          from (e.g. healthy, sick, patient with Diabetes type 2)
+        required: true
+      derived_from:
+        type: keyword
+        enum: [Body fluid, Cell fraction, Virion]
+        help.en: The biological substance the complex substance is derived from
+        required: true
+      source_organism:
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
+        required: true
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
+      preparation_protocol[]:
+        ^minItems: 1
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        ^required: true
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
+      additional_specifications[]:
+        ^minItems: 1
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+  Complex_substance_of_biological_originCell_fractionPolymorphic:
+    properties:
+      fraction:
+        type: keyword
+        enum: [Ribosome, Cell wall, VesicleCell lysate/Cytoplasm, Cell Membrane, Extracellular
+            matrix, Lysosome, Golgi Apparatus, Mitochondrion, Nucleus, Rough Endoplasmic
+            Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast]
+        help.en: The subcelluar component e.g. (Ribosome)
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      organ:
+        type: keyword
+        help.en: The organ the cell fraction was derived from (e.g. heart)
+      tissue:
+        type: keyword
+        help.en: The tissue type the cell fraction was derived from
+      cell_type:
+        type: keyword
+        help.en: The cell type the cell fraction was derived from
+      health_status:
+        type: keyword
+        help.en: Health status of the donor organism where the cell fraction was derived
+          from (e.g. healthy, sick, patient with Diabetes type 2)
+        required: true
+      derived_from:
+        type: keyword
+        enum: [Body fluid, Cell fraction, Virion]
+        help.en: The biological substance the complex substance is derived from
+        required: true
+      source_organism:
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
+        required: true
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
+      preparation_protocol[]:
+        ^minItems: 1
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        ^required: true
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
+      additional_specifications[]:
+        ^minItems: 1
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+  Complex_substance_of_biological_originVirionPolymorphic:
+    properties:
+      genetic_material:
+        type: keyword
+        enum: [No genetic material, Virus genome, Synthetic]
+        help.en: The genetic material carried by the virions (None, virus genome,
+          synthetic)
+        required: true
+      capsid_type:
+        type: keyword
+        enum: [None, Native, Genetically Engineered, Synthetic]
+        help.en: The type of virion capsid (e.g. genetically engineered, None
+        required: true
+      envelope_type:
+        type: keyword
+        enum: [None, Native, Genetically Engineered, Synthetic]
+        help.en: The type of virion envelope (e.g. genetically engineered, None
+        required: true
+      host_organism:
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
+      host_cell_type:
+        type: keyword
+        help.en: The host cell type the virion was produced in
+      derived_from:
+        type: keyword
+        enum: [Body fluid, Cell fraction, Virion]
+        help.en: The biological substance the complex substance is derived from
+        required: true
+      source_organism:
+        keys: [id, title, props.rank]
+        vocabulary-type: organisms
+        type: vocabulary
+        required: true
+        extras:
+          title:
+            mapping:
+              properties:
+                en:
+                  copy_to: collected_default_search_fields
+          id:
+            mapping:
+              copy_to: collected_default_search_fields
+      preparation_protocol[]:
+        ^minItems: 1
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        ^required: true
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
+      additional_specifications[]:
+        ^minItems: 1
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+  EntityComplex_substance_of_environmental_originPolymorphic:
+    properties:
+      source:
+        type: keyword
+        enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil]
+        help.en: The environmental source where the complex substance was derived
+          from
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      preparation_protocol[]:
+        ^minItems: 1
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        ^required: true
+        use: '#/$defs/Step'
+      location:
+        use: '#/$defs/Coordinates'
+        required: true
+        help.en: The coordinates, in decimal notation, where the complex substance
+          was collected
+      storage:
+        use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
+      additional_specifications[]:
+        ^minItems: 1
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+  EntityComplex_substance_of_chemical_originPolymorphic:
+    properties:
+      class:
+        type: keyword
+        enum: [Lipid_assembly]
+        help.en: The chemical origin where the complex substance was derived from
+        required: true
+      details:
+        use: '#/$defs/Lipid_assembly'
+        required: true
+        help.en: The chemical origin where the complex substance was derived from
+      preparation_protocol[]:
+        ^minItems: 1
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        ^required: true
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
+      additional_specifications[]:
+        ^minItems: 1
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+  EntityComplex_substance_of_industrial_production_originPolymorphic:
+    properties:
+      product:
+        type: keyword
+        enum: [Beer, Cell medium, Whey]
+        help.en: The type of product, byproduct, or waste product the complex substance
+          was derived from
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      preparation_protocol[]:
+        ^minItems: 1
+        ^help.en: List of the steps performed during the preparation of the complex
+          substance
+        ^required: true
+        use: '#/$defs/Step'
+      storage:
+        use: '#/$defs/Storage'
+        help.en: Information about how the complex substance was stored between being
+          acquired and measured, including temperature and duration
+      additional_specifications[]:
+        ^minItems: 1
+        ^help.en: Additional information about the complex substance can be specified
+          here
+        type: keyword
+      id:
+        type: keyword
+      name:
+        type: keyword
+        help.en: Short descriptive name (id) of the entity; must be unique within
+          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
+          in the measurement description to identify the entities present in measured
+          sample
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
+            origin, Complex substance of environmental origin, Complex substance of
+            chemical origin, Complex substance of industrial production origin]
+        help.en: The type of the entity, where the options are (biological) Polymer,
+          Chemical, Molecular assembly (also includes all proteins composed of more
+          than one polypeptide chain) or Complex substance. Chemical polymers such
+          as PEG 5000 should be described as being a Chemical. Complex substance refers
+          to substances which are not exactly specified by their exact chemical composition
+          by the time measurement were performed, but e.g. blood, serum, plant extract
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
   Chemical_constituentChemicalPolymorphic:
     properties:
       inchikey:
@@ -1820,154 +2564,23 @@ $defs:
         required: true
         help.en: Concentration of the constituent including its relative concentration
           related to the collected sample or absolute concentration of the constituent
-  Assembly_componentPolymerPolymorphic:
-    properties:
-      polymer_type:
-        type: keyword
-        enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
-          polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
-          polyribonucleotide]
-        help.en: The type of polymer (e.g. polypeptide(L))
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      sequence:
-        type: keyword
-        help.en: Primary sequence of the polymer, using single letter codes (e.g.
-          SAGRELLE, AGTTA). In case of non-natural amino acids or nucleotides, please
-          place the monomer in brackets
-        mapping:
-          copy_to: collected_default_search_fields
-      molecular_weight:
-        use: '#/$defs/Molecular_weight'
-        required: true
-        help.en: The molecular weight of the polymer
-      external_databases[]:
-        ^minItems: 1
-        ^help.en: List of identifiers to records in external databases containing
-          information about the polymer can be specified here (e.g UNIPROT:Q8KRF6)
-        type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
-      variant:
-        type: keyword
-        help.en: Descriptive name indicating differences of primary sequence of the
-          polymer as compared to the most common form, or wildtype, including mutations,
-          purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
-        mapping:
-          copy_to: collected_default_search_fields
-      source_organism:
-        keys: [id, title, props.rank]
-        vocabulary-type: organisms
-        type: vocabulary
-        extras:
-          title:
-            mapping:
-              properties:
-                en:
-                  copy_to: collected_default_search_fields
-          id:
-            mapping:
-              copy_to: collected_default_search_fields
-      modifications:
-        use: '#/$defs/Polymer_modifications'
-        help.en: If the polymer contains modifications such as non-natural aminoacids,
-          post translational modification, or chemically modifications like labeling,
-          it can be specified here
-      expression_source_type:
-        type: keyword
-        enum: [Natively, Recombinantly, Synthetically]
-        help.en: How the polymer was produced
-        required: true
-      expression_organism:
-        keys: [id, title, props.rank]
-        vocabulary-type: organisms
-        type: vocabulary
-      additional_specifications[]:
-        ^minItems: 1
-        ^help.en: Additional information about the polymer can be specified here
-        type: keyword
-      name:
-        type: keyword
-        help.en: Short descriptive name (id) given to the assembly component. The
-          name must be unique within a record
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      type:
-        type: keyword
-        enum: [Polymer, Chemical]
-        help.en: The type of component, options are (biological) Polymer and Chemical
-        required: true
-      copy_number:
-        type: double
-        minimum: -1.0
-        help.en: Number of molecules of the component within the assembly, -1 if unknown
-        required: true
-  Assembly_componentChemicalPolymorphic:
-    properties:
-      inchikey:
-        type: keyword
-        help.en: InChIKey identifier of the chemical. In case of chemical polymers
-          please specify the InChIKey of the monomer and specify the specific type
-          in the additional identifiers field (e.g. if PEG 3350 was employed, the
-          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      additional_identifiers[]:
-        ^minItems: 1
-        ^help.en: Unique and persistent identifier from an external source; options
-          of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
-        type: keyword
-      isotopic_labeling:
-        type: keyword
-        help.en: If the isotopic composition of the chemical was altered from the
-          naturally occurring abundances, it can be specified here (e.g. 15N, 13C)
-      molecular_weight:
-        use: '#/$defs/Molecular_weight'
-        required: true
-        help.en: The molecular weight of the polymer
-      additional_specifications[]:
-        ^minItems: 1
-        ^help.en: Additional information about the chemical can be specified here
-          (e.g. RNase free water, recrystallization, desalting)
-        type: keyword
-      name:
-        type: keyword
-        help.en: Short descriptive name (id) given to the assembly component. The
-          name must be unique within a record
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      type:
-        type: keyword
-        enum: [Polymer, Chemical]
-        help.en: The type of component, options are (biological) Polymer and Chemical
-        required: true
-      copy_number:
-        type: double
-        minimum: -1.0
-        help.en: Number of molecules of the component within the assembly, -1 if unknown
-        required: true
   ConstituentComplex_substance_of_biological_originPolymorphic:
     help.en: Information about the biological substance the complex substance is derived
       from
     required: true
     schemas:
       Body fluid:
-        use: '#/$defs/Complex_substance_of_biological_originBody_fluidPolymorphic'
+        use: '#/$defs/constituent_Complex_substance_of_biological_originBody_fluidPolymorphic'
         required: true
       Cell fraction:
-        use: '#/$defs/Complex_substance_of_biological_originCell_fractionPolymorphic'
+        use: '#/$defs/constituent_Complex_substance_of_biological_originCell_fractionPolymorphic'
         required: true
       Virion:
-        use: '#/$defs/Complex_substance_of_biological_originVirionPolymorphic'
+        use: '#/$defs/constituent_Complex_substance_of_biological_originVirionPolymorphic'
         required: true
     type: polymorphic
     discriminator: derived_from
-  Complex_substance_of_biological_originBody_fluidPolymorphic:
+  constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
     properties:
       fluid:
         type: keyword
@@ -2035,7 +2648,7 @@ $defs:
         required: true
         help.en: Concentration of the constituent including its relative concentration
           related to the collected sample or absolute concentration of the constituent
-  Complex_substance_of_biological_originCell_fractionPolymorphic:
+  constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
     properties:
       fraction:
         type: keyword
@@ -2114,7 +2727,7 @@ $defs:
         required: true
         help.en: Concentration of the constituent including its relative concentration
           related to the collected sample or absolute concentration of the constituent
-  Complex_substance_of_biological_originVirionPolymorphic:
+  constituent_Complex_substance_of_biological_originVirionPolymorphic:
     properties:
       genetic_material:
         type: keyword
@@ -2334,627 +2947,6 @@ $defs:
         required: true
         help.en: Concentration of the constituent including its relative concentration
           related to the collected sample or absolute concentration of the constituent
-  EntityPolymerPolymorphic:
-    properties:
-      polymer_type:
-        type: keyword
-        enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
-          polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
-          polyribonucleotide]
-        help.en: The type of polymer (e.g. polypeptide(L))
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      sequence:
-        type: keyword
-        help.en: Primary sequence of the polymer, using single letter codes (e.g.
-          SAGRELLE, AGTTA). In case of non-natural amino acids or nucleotides, please
-          place the monomer in brackets
-        mapping:
-          copy_to: collected_default_search_fields
-      molecular_weight:
-        use: '#/$defs/Molecular_weight'
-        required: true
-        help.en: The molecular weight of the polymer
-      external_databases[]:
-        ^minItems: 1
-        ^help.en: List of identifiers to records in external databases containing
-          information about the polymer can be specified here (e.g UNIPROT:Q8KRF6)
-        type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
-      variant:
-        type: keyword
-        help.en: Descriptive name indicating differences of primary sequence of the
-          polymer as compared to the most common form, or wildtype, including mutations,
-          purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
-        mapping:
-          copy_to: collected_default_search_fields
-      source_organism:
-        keys: [id, title, props.rank]
-        vocabulary-type: organisms
-        type: vocabulary
-        extras:
-          title:
-            mapping:
-              properties:
-                en:
-                  copy_to: collected_default_search_fields
-          id:
-            mapping:
-              copy_to: collected_default_search_fields
-      modifications:
-        use: '#/$defs/Polymer_modifications'
-        help.en: If the polymer contains modifications such as non-natural aminoacids,
-          post translational modification, or chemically modifications like labeling,
-          it can be specified here
-      expression_source_type:
-        type: keyword
-        enum: [Natively, Recombinantly, Synthetically]
-        help.en: How the polymer was produced
-        required: true
-      expression_organism:
-        keys: [id, title, props.rank]
-        vocabulary-type: organisms
-        type: vocabulary
-      additional_specifications[]:
-        ^minItems: 1
-        ^help.en: Additional information about the polymer can be specified here
-        type: keyword
-      id:
-        type: keyword
-      name:
-        type: keyword
-        help.en: Short descriptive name (id) of the entity; must be unique within
-          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
-          in the measurement description to identify the entities present in measured
-          sample
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      type:
-        type: keyword
-        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-            origin, Complex substance of environmental origin, Complex substance of
-            chemical origin, Complex substance of industrial production origin]
-        help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly (also includes all proteins composed of more
-          than one polypeptide chain) or Complex substance. Chemical polymers such
-          as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substances which are not exactly specified by their exact chemical composition
-          by the time measurement were performed, but e.g. blood, serum, plant extract
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-  EntityChemicalPolymorphic:
-    properties:
-      inchikey:
-        type: keyword
-        help.en: InChIKey identifier of the chemical. In case of chemical polymers
-          please specify the InChIKey of the monomer and specify the specific type
-          in the additional identifiers field (e.g. if PEG 3350 was employed, the
-          InChiKey of ethylene glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-          specified here)
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      additional_identifiers[]:
-        ^minItems: 1
-        ^help.en: Unique and persistent identifier from an external source; options
-          of sources are CAS number, Pubchem Compound ID, and Pubchem Substance ID
-        type: keyword
-      isotopic_labeling:
-        type: keyword
-        help.en: If the isotopic composition of the chemical was altered from the
-          naturally occurring abundances, it can be specified here (e.g. 15N, 13C)
-      molecular_weight:
-        use: '#/$defs/Molecular_weight'
-        required: true
-        help.en: The molecular weight of the polymer
-      additional_specifications[]:
-        ^minItems: 1
-        ^help.en: Additional information about the chemical can be specified here
-          (e.g. RNase free water, recrystallization, desalting)
-        type: keyword
-      id:
-        type: keyword
-      name:
-        type: keyword
-        help.en: Short descriptive name (id) of the entity; must be unique within
-          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
-          in the measurement description to identify the entities present in measured
-          sample
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      type:
-        type: keyword
-        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-            origin, Complex substance of environmental origin, Complex substance of
-            chemical origin, Complex substance of industrial production origin]
-        help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly (also includes all proteins composed of more
-          than one polypeptide chain) or Complex substance. Chemical polymers such
-          as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substances which are not exactly specified by their exact chemical composition
-          by the time measurement were performed, but e.g. blood, serum, plant extract
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-  EntityMolecular_assemblyPolymorphic:
-    properties:
-      external_databases[]:
-        ^minItems: 1
-        ^help.en: List of identifiers to records in external databases containing
-          information about the molecular assembly as a whole can be specified here
-          (e.g. PDB:1YQ2 ); information about the individual components should be
-          specified in the details of the individual components
-        type: keyword
-        mapping:
-          copy_to: collected_default_search_fields
-      components[]:
-        ^minItems: 1
-        ^help.en: Description of the individual components (e.g. polypeptide, heme,
-          lipids, metal ions etc.) the molecular assembly is composed of (e.g. Hemoglobin
-          alpha) and how many copies of each component were present
-        ^required: true
-        use: '#/$defs/Assembly_component'
-        type: polymorphic
-        mapping:
-          type: nested
-      molecular_weight:
-        use: '#/$defs/Molecular_weight'
-        required: true
-        help.en: The molecular weight of the molecular assembly
-      chemical_modifications[]:
-        ^minItems: 1
-        ^help.en: List describing deliberate modifications made to the molecular assembly
-          through chemical, biochemical, or physical means
-        use: '#/$defs/Modification'
-        type: nested
-      additional_specifications[]:
-        ^minItems: 1
-        ^help.en: Additional information about the macromolecular assembly can be
-          specified here
-        type: keyword
-      id:
-        type: keyword
-      name:
-        type: keyword
-        help.en: Short descriptive name (id) of the entity; must be unique within
-          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
-          in the measurement description to identify the entities present in measured
-          sample
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      type:
-        type: keyword
-        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-            origin, Complex substance of environmental origin, Complex substance of
-            chemical origin, Complex substance of industrial production origin]
-        help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly (also includes all proteins composed of more
-          than one polypeptide chain) or Complex substance. Chemical polymers such
-          as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substances which are not exactly specified by their exact chemical composition
-          by the time measurement were performed, but e.g. blood, serum, plant extract
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-  EntityComplex_substance_of_biological_originPolymorphic:
-    help.en: Information about the biological substance the complex substance is derived
-      from
-    required: true
-    schemas:
-      Body fluid:
-        use: '#/$defs/entity_Complex_substance_of_biological_originBody_fluidPolymorphic'
-        required: true
-      Cell fraction:
-        use: '#/$defs/entity_Complex_substance_of_biological_originCell_fractionPolymorphic'
-        required: true
-      Virion:
-        use: '#/$defs/entity_Complex_substance_of_biological_originVirionPolymorphic'
-        required: true
-    type: polymorphic
-    discriminator: derived_from
-  entity_Complex_substance_of_biological_originBody_fluidPolymorphic:
-    properties:
-      fluid:
-        type: keyword
-        enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract]
-        help.en: The body fluid the complex substance is derived from
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      health_status:
-        type: keyword
-        help.en: Health status of the donor organism where the body fluid was derived
-          from (e.g. healthy, sick, patient with Diabetes type 2)
-        required: true
-      derived_from:
-        type: keyword
-        enum: [Body fluid, Cell fraction, Virion]
-        help.en: The biological substance the complex substance is derived from
-        required: true
-      source_organism:
-        keys: [id, title, props.rank]
-        vocabulary-type: organisms
-        type: vocabulary
-        required: true
-        extras:
-          title:
-            mapping:
-              properties:
-                en:
-                  copy_to: collected_default_search_fields
-          id:
-            mapping:
-              copy_to: collected_default_search_fields
-      preparation_protocol[]:
-        ^minItems: 1
-        ^help.en: List of the steps performed during the preparation of the complex
-          substance
-        ^required: true
-        use: '#/$defs/Step'
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the complex substance was stored between being
-          acquired and measured, including temperature and duration
-      additional_specifications[]:
-        ^minItems: 1
-        ^help.en: Additional information about the complex substance can be specified
-          here
-        type: keyword
-      id:
-        type: keyword
-      name:
-        type: keyword
-        help.en: Short descriptive name (id) of the entity; must be unique within
-          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
-          in the measurement description to identify the entities present in measured
-          sample
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      type:
-        type: keyword
-        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-            origin, Complex substance of environmental origin, Complex substance of
-            chemical origin, Complex substance of industrial production origin]
-        help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly (also includes all proteins composed of more
-          than one polypeptide chain) or Complex substance. Chemical polymers such
-          as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substances which are not exactly specified by their exact chemical composition
-          by the time measurement were performed, but e.g. blood, serum, plant extract
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-  entity_Complex_substance_of_biological_originCell_fractionPolymorphic:
-    properties:
-      fraction:
-        type: keyword
-        enum: [Ribosome, Cell wall, VesicleCell lysate/Cytoplasm, Cell Membrane, Extracellular
-            matrix, Lysosome, Golgi Apparatus, Mitochondrion, Nucleus, Rough Endoplasmic
-            Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast]
-        help.en: The subcelluar component e.g. (Ribosome)
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      organ:
-        type: keyword
-        help.en: The organ the cell fraction was derived from (e.g. heart)
-      tissue:
-        type: keyword
-        help.en: The tissue type the cell fraction was derived from
-      cell_type:
-        type: keyword
-        help.en: The cell type the cell fraction was derived from
-      health_status:
-        type: keyword
-        help.en: Health status of the donor organism where the cell fraction was derived
-          from (e.g. healthy, sick, patient with Diabetes type 2)
-        required: true
-      derived_from:
-        type: keyword
-        enum: [Body fluid, Cell fraction, Virion]
-        help.en: The biological substance the complex substance is derived from
-        required: true
-      source_organism:
-        keys: [id, title, props.rank]
-        vocabulary-type: organisms
-        type: vocabulary
-        required: true
-        extras:
-          title:
-            mapping:
-              properties:
-                en:
-                  copy_to: collected_default_search_fields
-          id:
-            mapping:
-              copy_to: collected_default_search_fields
-      preparation_protocol[]:
-        ^minItems: 1
-        ^help.en: List of the steps performed during the preparation of the complex
-          substance
-        ^required: true
-        use: '#/$defs/Step'
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the complex substance was stored between being
-          acquired and measured, including temperature and duration
-      additional_specifications[]:
-        ^minItems: 1
-        ^help.en: Additional information about the complex substance can be specified
-          here
-        type: keyword
-      id:
-        type: keyword
-      name:
-        type: keyword
-        help.en: Short descriptive name (id) of the entity; must be unique within
-          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
-          in the measurement description to identify the entities present in measured
-          sample
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      type:
-        type: keyword
-        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-            origin, Complex substance of environmental origin, Complex substance of
-            chemical origin, Complex substance of industrial production origin]
-        help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly (also includes all proteins composed of more
-          than one polypeptide chain) or Complex substance. Chemical polymers such
-          as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substances which are not exactly specified by their exact chemical composition
-          by the time measurement were performed, but e.g. blood, serum, plant extract
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-  entity_Complex_substance_of_biological_originVirionPolymorphic:
-    properties:
-      genetic_material:
-        type: keyword
-        enum: [No genetic material, Virus genome, Synthetic]
-        help.en: The genetic material carried by the virions (None, virus genome,
-          synthetic)
-        required: true
-      capsid_type:
-        type: keyword
-        enum: [None, Native, Genetically Engineered, Synthetic]
-        help.en: The type of virion capsid (e.g. genetically engineered, None
-        required: true
-      envelope_type:
-        type: keyword
-        enum: [None, Native, Genetically Engineered, Synthetic]
-        help.en: The type of virion envelope (e.g. genetically engineered, None
-        required: true
-      host_organism:
-        keys: [id, title, props.rank]
-        vocabulary-type: organisms
-        type: vocabulary
-      host_cell_type:
-        type: keyword
-        help.en: The host cell type the virion was produced in
-      derived_from:
-        type: keyword
-        enum: [Body fluid, Cell fraction, Virion]
-        help.en: The biological substance the complex substance is derived from
-        required: true
-      source_organism:
-        keys: [id, title, props.rank]
-        vocabulary-type: organisms
-        type: vocabulary
-        required: true
-        extras:
-          title:
-            mapping:
-              properties:
-                en:
-                  copy_to: collected_default_search_fields
-          id:
-            mapping:
-              copy_to: collected_default_search_fields
-      preparation_protocol[]:
-        ^minItems: 1
-        ^help.en: List of the steps performed during the preparation of the complex
-          substance
-        ^required: true
-        use: '#/$defs/Step'
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the complex substance was stored between being
-          acquired and measured, including temperature and duration
-      additional_specifications[]:
-        ^minItems: 1
-        ^help.en: Additional information about the complex substance can be specified
-          here
-        type: keyword
-      id:
-        type: keyword
-      name:
-        type: keyword
-        help.en: Short descriptive name (id) of the entity; must be unique within
-          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
-          in the measurement description to identify the entities present in measured
-          sample
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      type:
-        type: keyword
-        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-            origin, Complex substance of environmental origin, Complex substance of
-            chemical origin, Complex substance of industrial production origin]
-        help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly (also includes all proteins composed of more
-          than one polypeptide chain) or Complex substance. Chemical polymers such
-          as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substances which are not exactly specified by their exact chemical composition
-          by the time measurement were performed, but e.g. blood, serum, plant extract
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-  EntityComplex_substance_of_environmental_originPolymorphic:
-    properties:
-      source:
-        type: keyword
-        enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil]
-        help.en: The environmental source where the complex substance was derived
-          from
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      preparation_protocol[]:
-        ^minItems: 1
-        ^help.en: List of the steps performed during the preparation of the complex
-          substance
-        ^required: true
-        use: '#/$defs/Step'
-      location:
-        use: '#/$defs/Coordinates'
-        required: true
-        help.en: The coordinates, in decimal notation, where the complex substance
-          was collected
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the complex substance was stored between being
-          acquired and measured, including temperature and duration
-      additional_specifications[]:
-        ^minItems: 1
-        ^help.en: Additional information about the complex substance can be specified
-          here
-        type: keyword
-      id:
-        type: keyword
-      name:
-        type: keyword
-        help.en: Short descriptive name (id) of the entity; must be unique within
-          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
-          in the measurement description to identify the entities present in measured
-          sample
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      type:
-        type: keyword
-        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-            origin, Complex substance of environmental origin, Complex substance of
-            chemical origin, Complex substance of industrial production origin]
-        help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly (also includes all proteins composed of more
-          than one polypeptide chain) or Complex substance. Chemical polymers such
-          as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substances which are not exactly specified by their exact chemical composition
-          by the time measurement were performed, but e.g. blood, serum, plant extract
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-  EntityComplex_substance_of_chemical_originPolymorphic:
-    properties:
-      class:
-        type: keyword
-        enum: [Lipid_assembly]
-        help.en: The chemical origin where the complex substance was derived from
-        required: true
-      details:
-        use: '#/$defs/Lipid_assembly'
-        required: true
-        help.en: The chemical origin where the complex substance was derived from
-      preparation_protocol[]:
-        ^minItems: 1
-        ^help.en: List of the steps performed during the preparation of the complex
-          substance
-        ^required: true
-        use: '#/$defs/Step'
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the complex substance was stored between being
-          acquired and measured, including temperature and duration
-      additional_specifications[]:
-        ^minItems: 1
-        ^help.en: Additional information about the complex substance can be specified
-          here
-        type: keyword
-      id:
-        type: keyword
-      name:
-        type: keyword
-        help.en: Short descriptive name (id) of the entity; must be unique within
-          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
-          in the measurement description to identify the entities present in measured
-          sample
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      type:
-        type: keyword
-        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-            origin, Complex substance of environmental origin, Complex substance of
-            chemical origin, Complex substance of industrial production origin]
-        help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly (also includes all proteins composed of more
-          than one polypeptide chain) or Complex substance. Chemical polymers such
-          as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substances which are not exactly specified by their exact chemical composition
-          by the time measurement were performed, but e.g. blood, serum, plant extract
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-  EntityComplex_substance_of_industrial_production_originPolymorphic:
-    properties:
-      product:
-        type: keyword
-        enum: [Beer, Cell medium, Whey]
-        help.en: The type of product, byproduct, or waste product the complex substance
-          was derived from
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      preparation_protocol[]:
-        ^minItems: 1
-        ^help.en: List of the steps performed during the preparation of the complex
-          substance
-        ^required: true
-        use: '#/$defs/Step'
-      storage:
-        use: '#/$defs/Storage'
-        help.en: Information about how the complex substance was stored between being
-          acquired and measured, including temperature and duration
-      additional_specifications[]:
-        ^minItems: 1
-        ^help.en: Additional information about the complex substance can be specified
-          here
-        type: keyword
-      id:
-        type: keyword
-      name:
-        type: keyword
-        help.en: Short descriptive name (id) of the entity; must be unique within
-          a record (e.g. Lysozyme, Serum from Patient 1). This name is referenced
-          in the measurement description to identify the entities present in measured
-          sample
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
-      type:
-        type: keyword
-        enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-            origin, Complex substance of environmental origin, Complex substance of
-            chemical origin, Complex substance of industrial production origin]
-        help.en: The type of the entity, where the options are (biological) Polymer,
-          Chemical, Molecular assembly (also includes all proteins composed of more
-          than one polypeptide chain) or Complex substance. Chemical polymers such
-          as PEG 5000 should be described as being a Chemical. Complex substance refers
-          to substances which are not exactly specified by their exact chemical composition
-          by the time measurement were performed, but e.g. blood, serum, plant extract
-        required: true
-        mapping:
-          copy_to: collected_default_search_fields
   ResultResult_concentrationPolymorphic:
     properties:
       unit:

@@ -50,245 +50,244 @@ general_parameters:
 
     collection_start_time: 2020-06-05
 
-    chemical_information:
-        chemical_environments:
-            - id: 'chem-env-measurement-buffer'
-              name: 'Measurement buffer'
-              solvent:
-                  -  name: 'Water'
-                     type: 'Chemical'
-                     molecular_weight:
-                        value: 18.02
-                        unit: 'g/mol'
-                     concentration:
-                        value: 50
-                        unit: 'w/w %'
-                     inchikey: 'XLYOFNOQVPJJNP-UHFFFAOYSA-N'
+    chemical_environments:
+        - id: 'chem-env-measurement-buffer'
+          name: 'Measurement buffer'
+          solvent:
+              -  name: 'Water'
+                 type: 'Chemical'
+                 molecular_weight:
+                    value: 18.02
+                    unit: 'g/mol'
+                 concentration:
+                    value: 50
+                    unit: 'w/w %'
+                 inchikey: 'XLYOFNOQVPJJNP-UHFFFAOYSA-N'
 
-              ph:
-                  value: 7.4
+          ph:
+              value: 7.4
 
-              constituents:
-                  - name: 'Tris:HCl'
-                    type: 'Chemical'
-                    molecular_weight:
-                        value: 121.136
-                        unit: 'Da'
-                    concentration:
-                        value: 50
-                        unit: 'mM'
+          constituents:
+              - name: 'Tris:HCl'
+                type: 'Chemical'
+                molecular_weight:
+                    value: 121.136
+                    unit: 'Da'
+                concentration:
+                    value: 50
+                    unit: 'mM'
 
-                    inchikey: 'QKNYBSVHEMOAJP-UHFFFAOYSA-N'
+                inchikey: 'QKNYBSVHEMOAJP-UHFFFAOYSA-N'
 
-                  - name: 'Sodium chhhhride'
-                    type: 'Chemical'
-                    molecular_weight:
-                        value: 58.44
-                        unit: 'Da'
-                    concentration:
-                        value: 150
-                        unit: 'mM'
+              - name: 'Sodium chhhhride'
+                type: 'Chemical'
+                molecular_weight:
+                    value: 58.44
+                    unit: 'Da'
+                concentration:
+                    value: 150
+                    unit: 'mM'
 
-                    inchikey: 'FAPWRFPIFSIZLT-UHFFFAOYSA-M'
+                inchikey: 'FAPWRFPIFSIZLT-UHFFFAOYSA-M'
 
-            - id: 'chem-env-regeneration-buffer'
-              name: 'Regeneration buffer'
-              solvent:
-                  -  name: 'Water'
-                     type: 'Chemical'
-                     molecular_weight:
-                        value: 18.02
-                        unit: 'g/mol'
-                     concentration:
-                        value: 50
-                        unit: 'w/w %'
-                     inchikey: 'XLYOFNOQVPJJNP-UHFFFAOYSA-N'
+        - id: 'chem-env-regeneration-buffer'
+          name: 'Regeneration buffer'
+          solvent:
+              -  name: 'Water'
+                 type: 'Chemical'
+                 molecular_weight:
+                    value: 18.02
+                    unit: 'g/mol'
+                 concentration:
+                    value: 50
+                    unit: 'w/w %'
+                 inchikey: 'XLYOFNOQVPJJNP-UHFFFAOYSA-N'
 
-              ph:
-                  value: 1
+          ph:
+              value: 1
 
-              constituents:
-                  - name: 'HCl'
-                    molecular_weight:
-                        value: 36.46
-                        unit: 'g/mol'
-                    type: 'Chemical'
-                    concentration:
-                        value: 100
-                        unit: 'mM'
-                    inchikey: 'VEXZGXHMUGYJMC-UHFFFAOYSA-N'
+          constituents:
+              - name: 'HCl'
+                molecular_weight:
+                    value: 36.46
+                    unit: 'g/mol'
+                type: 'Chemical'
+                concentration:
+                    value: 100
+                    unit: 'mM'
+                inchikey: 'VEXZGXHMUGYJMC-UHFFFAOYSA-N'
 
-        entities_of_interest:
-            - id: 'eoi-human-serum'
-              name: 'Human serum'
-              type: 'Complex substance of biological origin'
-              derived_from: 'Body fluid'
-              fluid: 'Serum'
-              health_status: 'Healthy'
-              source_organism:
-                  id: 'taxid:12374'
-              additional_specifications:
-                - "Blood was drawn after 12 hours of fasting"
-              preparation_protocol:
-                  - name: 'Centrifugation'
-                    description: 'Tubes were centrifuged for 10 min at
-                                  1,300g at 4°C within 2 hours of collection'
+    entities_of_interest:
+        - id: 'eoi-human-serum'
+          name: 'Human serum'
+          type: 'Complex substance of biological origin'
+          derived_from: 'Body fluid'
+          fluid: 'Serum'
+          health_status: 'Healthy'
+          source_organism:
+              id: 'taxid:12374'
+          additional_specifications:
+            - "Blood was drawn after 12 hours of fasting"
+          preparation_protocol:
+              - name: 'Centrifugation'
+                description: 'Tubes were centrifuged for 10 min at
+                              1,300g at 4°C within 2 hours of collection'
 
-                  - name: 'Aliquotation'
-                    description: 'The supernatant was distributed among
-                                  0.5mL cryostorage tubes that were
-                                  maintained at 4°C'
-              storage:
-                  temperature:
-                      value: -80
-                      unit: '°C'
-                      obtained_by: 'Measurement'
-                      controlled: True
-                  storage_preparation:
-                      - name: "Flash freezing in liquid nitrogen"
-                        description: 'Aliquotes were placed in liquid
-                                      nitrogen for 5 min'
+              - name: 'Aliquotation'
+                description: 'The supernatant was distributed among
+                              0.5mL cryostorage tubes that were
+                              maintained at 4°C'
+          storage:
+              temperature:
+                  value: -80
+                  unit: '°C'
+                  obtained_by: 'Measurement'
+                  controlled: True
+              storage_preparation:
+                  - name: "Flash freezing in liquid nitrogen"
+                    description: 'Aliquotes were placed in liquid
+                                  nitrogen for 5 min'
 
-            - id: 'eoi-human-hemoglobin'
-              name: 'human Hemoglobin'
-              type: 'Molecular assembly'
-              external_databases:
-                  - 'pdb:2HCO'
+        - id: 'eoi-human-hemoglobin'
+          name: 'human Hemoglobin'
+          type: 'Molecular assembly'
+          external_databases:
+              - 'pdb:2HCO'
 
-              molecular_weight:
-                  value: 64.5
-                  unit: 'kDa'
-              components:
-                  - name: 'Hemoglobin subunit alpha'
-                    type: 'Polymer'
-                    molecular_weight:
-                        value: 16
-                        unit: 'kDa'
-                    copy_number: 2
-                    polymer_type: 'polypeptide(L)'
-                    source_organism:
-                        id: 'taxid:12374'
-                    variant: 'WT'
-                    expression_source_type: 'Natively'
-                    external_databases:
-                        - 'Uniprot:P69905'
-
-
-                  - name: 'Hemoglobin subunit beta'
-                    type: 'Polymer'
-                    molecular_weight:
-                        value: 16
-                        unit: 'kDa'
-                    copy_number: 2
-                    polymer_type: 'polypeptide(L)'
-                    source_organism:
-                        id: 'taxid:12374'
-                    variant:  'V2A'
-                    modifications:
-                        biological_postprocessing:
-                            - position: 'S10'
-                              modification: 'Phosphorylation'
-                        chemical:
-                            - modification: 'FITC labelling'
-                              protocol:
-                                  - name: 'Make the solution more alkaline'
-                                    description : 'Addition of 10 ul 1 M
-                                                   bicarbonate to 90 ul
-                                                   protein solution'
-
-                                  - name: 'Solubilise NHS-FITC'
-                                    description: '100 % DMSO was added to
-                                              make a 2 mM concentrated
-                                              stock of NHS-FITC'
-
-                                  - name: 'Labelling reaction'
-                                    description: 'Added NHS-FITC stock to
-                                                  protein in a 5:1 molar
-                                                  ratio and incubated sample
-                                                  for 15 min.'
-
-                                  - name: 'Removal of unconjugated dye'
-                                    description: 'Using a 2 ml PD10 column,
-                                                  the unconjugated dye was removed'
-
-                    sequence: "MAHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQR\
-                               FFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNL\
-                               KGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEF\
-                               TPPVQAAYQKVVAGVANALAHKYH"
-                    expression_source_type: 'Recombinantly'
-                    external_databases:
-                        - 'Uniprot:P68871'
-
-            - id: 'eoi-hemoglobin-antibody'
-              name: 'Hemoglobin antibody'
-              type: 'Molecular assembly'
-              external_databases:
-                  - 'pdb:2HCO'
-
-              molecular_weight:
-                  value: 64.5
-                  unit: 'kDa'
-              components:
-                  - name: 'Hemoglobin subunit alpha'
-                    type: 'Polymer'
-                    molecular_weight:
-                        value: 16
-                        unit: 'kDa'
-                    copy_number: 2
-                    polymer_type: 'polypeptide(L)'
-                    source_organism:
-                        id: 'taxid:12374'
-                    variant: 'WT'
-                    expression_source_type: 'Natively'
-                    external_databases:
-                        - 'Uniprot:P69905'
+          molecular_weight:
+              value: 64.5
+              unit: 'kDa'
+          components:
+              - name: 'Hemoglobin subunit alpha'
+                type: 'Polymer'
+                molecular_weight:
+                    value: 16
+                    unit: 'kDa'
+                copy_number: 2
+                polymer_type: 'polypeptide(L)'
+                source_organism:
+                    id: 'taxid:12374'
+                variant: 'WT'
+                expression_source_type: 'Natively'
+                external_databases:
+                    - 'Uniprot:P69905'
 
 
-                  - name: 'Hemoglobin subunit beta'
-                    type: 'Polymer'
-                    molecular_weight:
-                        value: 16
-                        unit: 'kDa'
-                    copy_number: 2
-                    polymer_type: 'polypeptide(L)'
-                    source_organism:
-                        id: 'taxid:12374'
-                    variant:  'V2A'
-                    modifications:
-                        biological_postprocessing:
-                            - position: 'S10'
-                              modification: 'Phosphorylation'
-                        chemical:
-                            - modification: 'FITC labelling'
-                              protocol:
-                                  - name: 'Make the solution more alkaline'
-                                    description : 'Addition of 10 ul 1 M
-                                                   bicarbonate to 90 ul
-                                                   protein solution'
+              - name: 'Hemoglobin subunit beta'
+                type: 'Polymer'
+                molecular_weight:
+                    value: 16
+                    unit: 'kDa'
+                copy_number: 2
+                polymer_type: 'polypeptide(L)'
+                source_organism:
+                    id: 'taxid:12374'
+                variant:  'V2A'
+                modifications:
+                    biological_postprocessing:
+                        - position: 'S10'
+                          modification: 'Phosphorylation'
+                    chemical:
+                        - modification: 'FITC labelling'
+                          protocol:
+                              - name: 'Make the solution more alkaline'
+                                description : 'Addition of 10 ul 1 M
+                                               bicarbonate to 90 ul
+                                               protein solution'
 
-                                  - name: 'Solubilise NHS-FITC'
-                                    description: '100 % DMSO was added to
-                                              make a 2 mM concentrated
-                                              stock of NHS-FITC'
+                              - name: 'Solubilise NHS-FITC'
+                                description: '100 % DMSO was added to
+                                          make a 2 mM concentrated
+                                          stock of NHS-FITC'
 
-                                  - name: 'Labelling reaction'
-                                    description: 'Added NHS-FITC stock to
-                                                  protein in a 5:1 molar
-                                                  ratio and incubated sample
-                                                  for 15 min.'
+                              - name: 'Labelling reaction'
+                                description: 'Added NHS-FITC stock to
+                                              protein in a 5:1 molar
+                                              ratio and incubated sample
+                                              for 15 min.'
 
-                                  - name: 'Removal of unconjugated dye'
-                                    description: 'Using a 2 ml PD10 column,
-                                                  the unconjugated dye was removed'
+                              - name: 'Removal of unconjugated dye'
+                                description: 'Using a 2 ml PD10 column,
+                                              the unconjugated dye was removed'
 
-                    sequence: "MAHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQR\
-                               FFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNL\
-                               KGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEF\
-                               TPPVQAAYQKVVAGVANALAHKYH"
-                    expression_source_type: 'Recombinantly'
+                sequence: "MAHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQR\
+                           FFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNL\
+                           KGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEF\
+                           TPPVQAAYQKVVAGVANALAHKYH"
+                expression_source_type: 'Recombinantly'
+                external_databases:
+                    - 'Uniprot:P68871'
 
-                    external_databases:
-                        - 'Uniprot:P68871'
+        - id: 'eoi-hemoglobin-antibody'
+          name: 'Hemoglobin antibody'
+          type: 'Molecular assembly'
+          external_databases:
+              - 'pdb:2HCO'
+
+          molecular_weight:
+              value: 64.5
+              unit: 'kDa'
+          components:
+              - name: 'Hemoglobin subunit alpha'
+                type: 'Polymer'
+                molecular_weight:
+                    value: 16
+                    unit: 'kDa'
+                copy_number: 2
+                polymer_type: 'polypeptide(L)'
+                source_organism:
+                    id: 'taxid:12374'
+                variant: 'WT'
+                expression_source_type: 'Natively'
+                external_databases:
+                    - 'Uniprot:P69905'
+
+
+              - name: 'Hemoglobin subunit beta'
+                type: 'Polymer'
+                molecular_weight:
+                    value: 16
+                    unit: 'kDa'
+                copy_number: 2
+                polymer_type: 'polypeptide(L)'
+                source_organism:
+                    id: 'taxid:12374'
+                variant:  'V2A'
+                modifications:
+                    biological_postprocessing:
+                        - position: 'S10'
+                          modification: 'Phosphorylation'
+                    chemical:
+                        - modification: 'FITC labelling'
+                          protocol:
+                              - name: 'Make the solution more alkaline'
+                                description : 'Addition of 10 ul 1 M
+                                               bicarbonate to 90 ul
+                                               protein solution'
+
+                              - name: 'Solubilise NHS-FITC'
+                                description: '100 % DMSO was added to
+                                          make a 2 mM concentrated
+                                          stock of NHS-FITC'
+
+                              - name: 'Labelling reaction'
+                                description: 'Added NHS-FITC stock to
+                                              protein in a 5:1 molar
+                                              ratio and incubated sample
+                                              for 15 min.'
+
+                              - name: 'Removal of unconjugated dye'
+                                description: 'Using a 2 ml PD10 column,
+                                              the unconjugated dye was removed'
+
+                sequence: "MAHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQR\
+                           FFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNL\
+                           KGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEF\
+                           TPPVQAAYQKVVAGVANALAHKYH"
+                expression_source_type: 'Recombinantly'
+
+                external_databases:
+                    - 'Uniprot:P68871'
 
     results:
         - id: 'de-par-kd-hemo'

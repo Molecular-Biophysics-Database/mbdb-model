@@ -10,7 +10,8 @@ General_parameters:
   technique: include('SUPPORTED_TECHNIQUES')
   collection_start_time: day()
   instrument: include('Instrument')
-  chemical_information: include('Chemical_information')
+  entities_of_interest: list(nested_include('Entity'), min=1)
+  chemical_environments: list(nested_include('Chemical_environment'), min=1)
   results: list(nested_include('Result'), required=False)
   raw_measurement_files: list(url(), required=False)
 ---
@@ -79,9 +80,6 @@ Polymer_modifications:
   biological_postprocessing: list(nested_include('Modification'), required=False)
   chemical: list(nested_include('Modification'), required=False)
 ---
-Chemical_information:
-  chemical_environments: list(nested_include('Chemical_environment'), min=1)
-  entities_of_interest: list(nested_include('Entity'), min=1)
 Chemical:
   inchikey: keyword()
   additional_identifiers: list(chemical_id(), required=False)
