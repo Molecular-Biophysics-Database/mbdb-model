@@ -959,7 +959,7 @@ Person:
                                fields='[id, title, props.city, props.state, props.country]'),
                                required=False)
 
-Publication:
+Publication_base:
     pid:
         description     : str(equals='Persistent identifier associated with the
                                       publication (e.g. DOI, ISBN, URN)',
@@ -973,9 +973,44 @@ Publication:
         default_search  : True
         value           : str(required=False)
 
-    resource_type:
+    type:
         description     : str(equals='The type of publication', required=False)
         value           : enum('Article', 'Book', 'Thesis')
+
+Publication:
+    description         : str(equals='Information about the publication. 
+                                      peer-reviewed articles, books, 
+                                      and theses (dissertations) can 
+                                      be annotated', 
+                              required=False)
+    value               : choose(include("Publication_base"),
+                                 Article=include("Article"),
+                                 Book=include("Book"),
+                                 Thesis=include("Thesis")
+                                )
+
+Article:
+    journal: 
+        description     : str(equals='The full name of the journal of 
+                                       article appears in', required=False)
+        default_search  : True
+        value           : keyword()        
+
+Book:
+    publisher:
+        description     : str(equals='The full name of the publisher of the 
+                                      book', required=False)
+        default_search  : True
+        value           : keyword()  
+
+Thesis:
+    degree_type:
+        description     : str(equals='The type of degree (equivalent) the 
+                                      thesis was submitted to attain', 
+                              required=False)
+        default_search  : True
+        value           : enum("PhD", "Habilitation", "Master", "Bachelor")
+ 
 
 ---
 # Result definitions
