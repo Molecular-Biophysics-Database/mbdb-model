@@ -61,15 +61,23 @@ General_parameters:
                                       annotated by this record', required=False)
         value           : include('Instrument')
 
-    chemical_information:
-        description     : str(equals='Information about entities of interest
-                                      that were being measured (e.g. Lysozyme)
-                                      or used to alter the behaviour of the
-                                      measured species (e.g. Peptidoglycan), and
-                                      the chemical environments that was used in
-                                      the measurement (e.g. buffers, cleaning
-                                      solutions)', required=False)
-        value           : include('Chemical_information')
+    entities_of_interest:
+        description : str(equals='List of the entities that are being
+                                  directly measured, as well as the entities
+                                  that are being used as a variable to
+                                  influence the behavior of the directly
+                                  measured entities (e.g. lysozyme, NAG3,
+                                  NaCl). IMPORTANT! If the pH was varied 
+                                  by individually prepared chemical 
+                                  environments these should be specified 
+                                  individually in chemical environments', required=False)
+        value       : list(nested_include('Entity'), min=1)
+
+    chemical_environments:
+        description : str(equals='Composition of the chemical environment
+                                  (colloquially known as the buffer).',      
+                          required=False)
+        value       : list(nested_include('Chemical_environment'), min=1)
 
     results:
         description     : str(equals='List of the results (parameter) that were
@@ -87,7 +95,6 @@ General_parameters:
 
 ---
 # Record metadata
-
 Record_information:
     title:
         description : str(equals='Short descriptive title of the record',
@@ -440,24 +447,6 @@ Polymer_modifications:
 
 ---
 # Entities and constituents
-Chemical_information:
-    chemical_environments:
-        description : str(equals='Composition of the chemical environment
-                                  (colloquially known as buffer) which are
-                                  not being directly used to affect the
-                                  behavior of the directly measured
-                                  entities during the measurement',
-                          required=False)
-        value       : list(nested_include('Chemical_environment'), min=1)
-
-    entities_of_interest:
-        description : str(equals='List of the entities that are being
-                                  directly measured, as well as the entities
-                                  that are being used as a variable to
-                                  influence the behavior of the directly
-                                  measured entities (e.g. lysozyme, NAG3,
-                                  NaCl)', required=False)
-        value       : list(nested_include('Entity'), min=1)
 
 Chemical:
     inchikey:
