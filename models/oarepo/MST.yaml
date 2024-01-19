@@ -1071,7 +1071,7 @@ $defs:
           id:
             mapping:
               copy_to: collected_default_search_fields
-  Publication:
+  Publication_base:
     properties:
       pid:
         type: keyword
@@ -1085,11 +1085,52 @@ $defs:
         help.en: The title of the publication
         mapping:
           copy_to: collected_default_search_fields
-      resource_type:
+      type:
         type: keyword
         enum: [Article, Book, Thesis]
         help.en: The type of publication
         required: true
+  Publication:
+    help.en: Information about the publication. peer-reviewed articles, books, and
+      theses (dissertations) can be annotated
+    required: true
+    schemas:
+      Article:
+        use: '#/$defs/PublicationArticlePolymorphic'
+        required: true
+      Book:
+        use: '#/$defs/PublicationBookPolymorphic'
+        required: true
+      Thesis:
+        use: '#/$defs/PublicationThesisPolymorphic'
+        required: true
+    type: polymorphic
+    discriminator: type
+  Article:
+    properties:
+      journal:
+        type: keyword
+        help.en: The full name of the journal of article appears in
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+  Book:
+    properties:
+      publisher:
+        type: keyword
+        help.en: The full name of the publisher of the book
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+  Thesis:
+    properties:
+      degree_type:
+        type: keyword
+        enum: [PhD, Habilitation, Master, Bachelor]
+        help.en: The type of degree (equivalent) the thesis was submitted to attain
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
   Result_base:
     properties:
       id:
@@ -1479,6 +1520,82 @@ $defs:
     type: keyword
     enum: [Bio-Rad, Bruker, Cytiva, Gatorbio, GE Healthcare, Nanotemper, Nicoya Life,
       Sartorius, Malvern Panalytical, Refeyn, TA Instruments]
+  PublicationArticlePolymorphic:
+    properties:
+      journal:
+        type: keyword
+        help.en: The full name of the journal of article appears in
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      pid:
+        type: keyword
+        help.en: Persistent identifier associated with the publication (e.g. DOI,
+          ISBN, URN)
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      title:
+        type: keyword
+        help.en: The title of the publication
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Article, Book, Thesis]
+        help.en: The type of publication
+        required: true
+  PublicationBookPolymorphic:
+    properties:
+      publisher:
+        type: keyword
+        help.en: The full name of the publisher of the book
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      pid:
+        type: keyword
+        help.en: Persistent identifier associated with the publication (e.g. DOI,
+          ISBN, URN)
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      title:
+        type: keyword
+        help.en: The title of the publication
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Article, Book, Thesis]
+        help.en: The type of publication
+        required: true
+  PublicationThesisPolymorphic:
+    properties:
+      degree_type:
+        type: keyword
+        enum: [PhD, Habilitation, Master, Bachelor]
+        help.en: The type of degree (equivalent) the thesis was submitted to attain
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      pid:
+        type: keyword
+        help.en: Persistent identifier associated with the publication (e.g. DOI,
+          ISBN, URN)
+        required: true
+        mapping:
+          copy_to: collected_default_search_fields
+      title:
+        type: keyword
+        help.en: The title of the publication
+        mapping:
+          copy_to: collected_default_search_fields
+      type:
+        type: keyword
+        enum: [Article, Book, Thesis]
+        help.en: The type of publication
+        required: true
   EntityPolymerPolymorphic:
     properties:
       polymer_type:

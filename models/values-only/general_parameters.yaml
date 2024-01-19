@@ -177,10 +177,18 @@ Person:
   identifiers: list(person_id(), required=False)
   affiliations: list(vocabulary(vocabulary='affiliations', fields='[id, title, props.city,
     props.state, props.country]'), required=False)
-Publication:
+Publication_base:
   pid: publication_id()
   title: str(required=False)
-  resource_type: enum('Article', 'Book', 'Thesis')
+  type: enum('Article', 'Book', 'Thesis')
+Publication: choose(include("Publication_base"), Article=include("Article"), Book=include("Book"),
+  Thesis=include("Thesis") )
+Article:
+  journal: keyword()
+Book:
+  publisher: keyword()
+Thesis:
+  degree_type: enum("PhD", "Habilitation", "Master", "Bachelor")
 ---
 Result_base:
   id: link_target(name="result")
