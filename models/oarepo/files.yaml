@@ -11,8 +11,7 @@ properties:
     required: true
   context:
     type: keyword
-    enum: [raw measurement data, derived measurement data, quality control report,
-      performance test report]
+    enum: [raw measurement data, derived measurement data, quality control report]
     help.en: The context the file should be understood within (e.g. raw measurement
       data)
     required: true

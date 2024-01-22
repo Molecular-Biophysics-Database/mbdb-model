@@ -1,7 +1,7 @@
 name: keyword()
 content_type: enum('text', 'binary','text and binary')
 context: enum('raw measurement data', 'derived measurement data', 'quality control
-  report', 'performance test report')
+  report')
 originates_from: enum('Instrument software', 'User', 'MBDB')
 size: int(min=0)
 description: str(required=False)

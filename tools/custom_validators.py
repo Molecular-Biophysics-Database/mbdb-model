@@ -131,7 +131,9 @@ class Choose(Validator):
 
     def get_detailed_type(self, value):
         if self.type_field in value.keys():
-            return value[self.type_field].replace(" ", "_")
+            ret = value[self.type_field].replace("(", "")
+            ret = ret.replace(")", "")
+            return ret.replace(" ", "_")
 
     def remove_validated_items(self, value):
         base_schema = current_schema.schema.includes[self.base_schema.include_name]
