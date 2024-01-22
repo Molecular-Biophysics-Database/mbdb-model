@@ -22,7 +22,7 @@ BLI_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       BLI method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.9.3')
+        value           : keyword(equals='0.9.4')
 
     experiment_type:
         description     : str(equals='Which type of parameter is sought with the
@@ -52,9 +52,8 @@ BLI_specific_parameters:
         value           : list(include('BLI_Measurement'), min=1)
 
     data_analysis:
-        description     : str(equals='Details of how the data was processed and
-                                      model in order to derive parameters
-                                      from it', required=False)
+        description     : str(equals='The details of how data fitting
+                                      was performed to obtain the result', required=False)
         value           : list(include('BLI_data_analysis'), required=False)
 
 
@@ -89,19 +88,6 @@ BLI_Measurement:
         description     : str(equals='Sample the sensor was in contact with
                                       during the measurement', required=False)
         value           : include('Sample')
-
-    measured_data:
-        time:
-            description     : str(equals='Where the measured data time data is
-                                          stored along side an ID and the
-                                          unit', required=False)
-            value           : include('Measured_data_series')
-
-        response:
-            description     : str(equals='Where the measured response data is
-                                          stored along side an ID and the unit',
-                                          required=False)
-            value           : include('Measured_data_series')
 
 Sample:
     plate:
@@ -316,12 +302,12 @@ Shaking_speed:
         value           : enum('RPM')
 
 BLI_data_analysis:
-    derived_parameter:
-        description     : str(equals='Link to a derived parameter that was
+    result:
+        description     : str(equals='Link to a result that was
                                       defined in the general parameters',
                                       required=False)
 
-        value           : link(target='derived-parameter', required=False)
+        value           : link(target='result', required=False)
 
     measurements:
         description     : str(equals='List of measurement links that was
@@ -341,6 +327,6 @@ BLI_data_analysis:
 
     data_fitting:
         description     : str(equals='The details of how data fitting of the
-                                      data to obtain the derived parameter was
+                                      data to obtain the result was
                                       performed', required=False)
         value           : include('Data_fitting', required=False)

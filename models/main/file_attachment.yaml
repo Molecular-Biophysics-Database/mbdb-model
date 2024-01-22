@@ -14,8 +14,7 @@ context:
                                   required=False)
     value           : enum('raw measurement data',
                            'derived measurement data',
-                           'quality control report',
-                           'performance test report')
+                           'quality control report')
 
 originates_from:
     description     : str(equals='What is the source of the file')
