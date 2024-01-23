@@ -1,0 +1,85 @@
+{
+  "data": {
+    "type": "dois",
+    "attributes": {
+      "creators": [
+        {
+          "name": "Carberry, Josiah",
+          "givenName": "Josiah",
+          "familyName": "Carberry",
+          "affiliation": [
+            {
+              "schemeUri": "https://ror.org/",
+              "affiliationIdentifier": "https://ror.org/05gq02987",
+              "affiliationIdentifierScheme": "ROR",
+              "name": "Brown University"
+            }
+          ],
+          "nameIdentifiers": [
+            {
+              "schemeUri": "https://orcid.org",
+              "nameIdentifier": "https://orcid.org/0000-0002-1825-0097",
+              "nameIdentifierScheme": "ORCID"
+            }
+          ]
+        },
+        {
+          "name": "Mustermann, Max",
+          "givenName": "Max",
+          "familyName": "Mustermann",
+          "affiliation": [
+            {
+              "schemeUri": "https://ror.org/",
+              "affiliationIdentifier": "https://ror.org/02hpadn98",
+              "affiliationIdentifierScheme": "ROR",
+              "name": "Bielefeld University"
+            }
+          ]
+        },
+        {
+          "name": "Doe, Jane",
+          "givenName": "Jane",
+          "familyName": "Doe",
+          "affiliation": [
+            {
+              "schemeUri": "https://ror.org/",
+              "affiliationIdentifier": "https://ror.org/02hpadn98",
+              "affiliationIdentifierScheme": "ROR",
+              "name": "Bielefeld University"
+            }
+          ]
+        },
+        {
+          "name": "Doe, John",
+          "givenName": "John",
+          "familyName": "Doe",
+          "affiliation": [
+            {
+              "schemeUri": "https://ror.org/",
+              "affiliationIdentifier": "https://ror.org/02hpadn98",
+              "affiliationIdentifierScheme": "ROR",
+              "name": "Bielefeld University"
+            }
+          ]
+        }
+      ],
+      "titles": [
+        {
+          "title": "MST measurement of hemoglobin serum elements"
+        }
+      ],
+      "types": {
+        "resourceTypeGeneral": "Dataset",
+        "resourceType": "MST"
+      },
+      "publisher": "MBDB",
+      "publicationYear": 2023,
+      "subjects": [
+        {
+          "subject": "Biophysics"
+        }
+      ],
+      "prefix": "10.82657"
+    }
+  }
+}
