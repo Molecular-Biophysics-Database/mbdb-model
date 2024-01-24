@@ -494,7 +494,7 @@ def changes_to_general_schema(schema: yamale.schema.Schema, input_file: Path):
     # derived parameters optional, however as a derived parameter is also optional in later if it's not set to be
     # required it can lead to links pointing to nowhere which is an error, so derived parameters is changed to required
     schema.includes["General_parameters"]._schema[
-        "derived_parameters"
+        "results"
     ].is_required = True
 
     # make sure that supported technique is fixed to the technique of the input file
