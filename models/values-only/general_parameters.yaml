@@ -1,7 +1,7 @@
 general_parameters: include('General_parameters')
 ---
 General_parameters:
-  schema_version: keyword(equals='0.9.17')
+  schema_version: keyword(equals='0.9.18')
   record_information: include('Record_information')
   depositors: include('Depositors')
   associated_publication: include('Publication', required=False)
@@ -193,11 +193,10 @@ Thesis:
 Result_base:
   id: link_target(name="result")
   name: str()
-  type: enum('Concentration', 'Stoichiometry', 'Constant of association (KA)', 'Constant
-    of dissociation (KD)', 'Half maximal effective concentration (EC50)', 'Hill coefficient',
-    'Association rate (kOn)', 'Dissociation rate (kOff)', 'Change in enthalpy (deltaH)',
-    'Change in entropy (deltaS)', 'Change in Gibbs free energy (deltaG)', 'Molecular
-    weight (MW)')
+  type: enum('Concentration', 'Stoichiometry', 'Constant of association KA', 'Constant
+    of dissociation KD', 'Half maximal effective concentration EC50', 'Hill coefficient',
+    'Association rate kOn', 'Dissociation rate kOff', 'Change in enthalpy deltaH',
+    'Change in entropy deltaS', 'Change in Gibbs free energy deltaG', 'Molecular weight')
   entities_involved: list(nested_include('Entity_and_stoichiometry'), min=1)
   value: num()
   value_error: include('Value_error', required=False)
@@ -206,7 +205,7 @@ Result: choose(include('Result_base'), Concentration=include('Result_concentrati
   Constant_of_dissociation_KD=include('Result_KD'), Association_rate_kOn=include('Result_kOn'),
   Dissociation_rate_kOff=include('Result_kOff'), Change_in_enthalpy_deltaH=include('Result_deltaH'),
   Change_in_entropy_deltaS=include('Result_deltaS'), Change_in_Gibbs_free_energy_deltaG=include('Result_deltaG'),
-  Molecular_weight_MW=include('Result_MW'), Half_maximal_effective_concentration_EC50=include('Result_EC50'),
+  Molecular_weight=include('Result_MW'), Half_maximal_effective_concentration_EC50=include('Result_EC50'),
   Hill_coefficient=include('Result_hill_coeff'), )
 Result_concentration:
   unit: include('CONCENTRATION_UNITS')

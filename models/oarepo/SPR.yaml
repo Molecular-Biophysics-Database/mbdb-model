@@ -324,7 +324,7 @@ $defs:
     properties:
       schema_version:
         type: keyword
-        enum: [0.9.17]
+        enum: [0.9.18]
         help.en: The schema version used to annotate the general parameters
         required: true
       record_information:
@@ -1208,11 +1208,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
@@ -1264,7 +1264,7 @@ $defs:
       Change in Gibbs free energy deltaG:
         use: '#/$defs/ResultResult_deltaGPolymorphic'
         required: true
-      Molecular weight MW:
+      Molecular weight:
         use: '#/$defs/ResultResult_MWPolymorphic'
         required: true
       Half maximal effective concentration EC50:
@@ -3067,11 +3067,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
@@ -3109,11 +3109,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
@@ -3151,11 +3151,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
@@ -3193,11 +3193,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
@@ -3236,11 +3236,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
@@ -3278,11 +3278,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
@@ -3319,11 +3319,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
@@ -3361,11 +3361,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
@@ -3402,11 +3402,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
@@ -3443,11 +3443,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
@@ -3484,11 +3484,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
@@ -3526,11 +3526,11 @@ $defs:
           copy_to: collected_default_search_fields
       type:
         type: keyword
-        enum: [Concentration, Stoichiometry, Constant of association (KA), Constant
-            of dissociation (KD), Half maximal effective concentration (EC50), Hill
-            coefficient, Association rate (kOn), Dissociation rate (kOff), Change
-            in enthalpy (deltaH), Change in entropy (deltaS), Change in Gibbs free
-            energy (deltaG), Molecular weight (MW)]
+        enum: [Concentration, Stoichiometry, Constant of association KA, Constant
+            of dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
+          Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH,
+          Change in entropy deltaS, Change in Gibbs free energy deltaG, Molecular
+            weight]
         help.en: The type of physical parameter the result represents
         required: true
         mapping:
