@@ -3,6 +3,8 @@ from pathlib import Path
 import json
 from typing import List
 from datetime import datetime
+from datacite import DataCiteRESTClient
+import jsonschema
 
 ####### <creators_functions>
 def add_optional_fields_creator(field: str, person: dict, creator: dict) -> None:
@@ -97,6 +99,10 @@ def to_subjects(record_info: dict) -> List[dict]:
     return [{"subject": record_info["subject_category"]}]
 
 
+def add_schema_version(datacite_version):
+    return datacite_version
+
+
 def get_doi_dict(record):
     gp = record["metadata"]["general_parameters"]
     record_info = gp["record_information"]
@@ -108,44 +114,94 @@ def get_doi_dict(record):
         ("publisher", to_publisher, record_info),
         ("publicationYear", to_publication_year, record_info),
         ("subjects", to_subjects, record_info),
+        ("schemaVersion", add_schema_version, "http://datacite.org/schema/kernel-4")
     )
 
     return {field: func(data) for field, func, data in fields}
 
 
-def to_payload(doi_dict, publish=False):
-    payload = {
-        "data": {
-            "type": "dois",
-            "attributes": doi_dict}}
+class DOIClient(DataCiteRESTClient):
+    """DOIClient takes care of communication with the Datacite REST API.
+    extends the datacite.DataCiteRESTClient with increased validation.
 
-    atts = payload["data"]["attributes"]
+    usage:
 
-    # add the MBDB doi prefix
-    atts["prefix"] = "10.82657"
+    """
+    def __init__(self, username, password, prefix, record=None, test_mode=True):
+        super().__init__(username, password, prefix, test_mode)
+        self.record = record
+        with open("schema43.json") as f:
+            self.schema = json.load(f)
 
-    # if publish is False a draft is made
-    if publish:
-        atts["event"] = "publish"
+    def fetch_record(self, doi):
+        """Fetches the record at doi and loads it into self.record"""
+        if self.record:
+            Warning("self.record was not empty but was overwritten!")
+        self.record = self.get_metadata(doi)
 
-    return json.dumps(payload, indent=2, ensure_ascii=False)
+    def create_draft(self):
+        """create a Datacite entry in draft state and return the created DOI"""
+        self._validate_record(msg_obj="Draft", msg_opr="created")
+        return self.draft_doi(self.record)
+
+    def update_record(self, doi):
+        """updates the datacite record at the url doi with the content of self.doi_dict, note"""
+        self._validate_record(msg_obj="Record", msg_opr="updated")
+        self.put_doi(doi, self.record)
+
+    def publish_draft(self, doi):
+        # no local data
+        if self.record is None:
+            self.record = self.get_metadata(doi)  # does it exist online ?
+        self.record["event"] = "publish"
+        self._validate_record(msg_obj="Draft", msg_opr="published")
+        self.put_doi(doi, self.record())
+
+    def _validate_record(self, msg_obj: str, msg_opr: str):
+        """Returns None if self.data_doi is a valid datacite record else it raises ValidationError"""
+        try:
+            jsonschema.validate(instance=self.record, schema=self.schema)
+        except jsonschema.ValidationError as e:
+            errmsg = f"{msg_obj} did not pass validation so it was not {msg_opr}. " \
+                     f"The validation error was due to {e} "
+            raise jsonschema.ValidationError(errmsg)
 
 
 @click.command()
-@click.argument("input_file", required=True, default=Path(__file__).parent / "test_record.json")
-@click.option("--output_file", type=Path)
+@click.argument("input_file", type=Path)
+@click.option("--doi", type=str, default=None)
+@click.option("--make_draft", default=True)
 @click.option("--publish", default=False)
-def main(input_file, output_file, publish):
-    with open(input_file) as f:
-        record = json.load(f)
-    doi_dict = get_doi_dict(record)
-    payload = to_payload(doi_dict, publish)
+def main(input_file, doi, make_draft, publish):
+    if not input_file or doi:
+        raise TypeError('either input_file (as argument) or --doi must be specified')
 
-    if output_file:
-        with open(output_file, "w") as out:
-            out.write(payload)
-    else:
-        print(payload)
+    doi_dict = None
+    if input_file:
+        with open(input_file) as f:
+            record = json.load(f)
+        doi_dict = get_doi_dict(record)
+
+    dc = DOIClient(
+        record=doi_dict,
+        username="",
+        password="",
+        prefix="10.82657",
+    )
+
+    if make_draft:
+        # update existing draft
+        if doi:
+            dc.update_record(doi)
+        # create a new one and use it's doi if we want to publish
+        else:
+            doi = dc.create_draft()
+
+    if publish:
+        dc.publish_draft(doi)
+
+    print(json.dumps(dc.record, indent=2, ensure_ascii=False))
+
 
 if __name__ == "__main__":
     main()
