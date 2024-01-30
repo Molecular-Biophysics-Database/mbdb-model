@@ -52,6 +52,7 @@ Molecular_assembly:
   components: list(nested_include('Assembly_component'), min=1)
   molecular_weight: include('Molecular_weight')
   chemical_modifications: list(nested_include('Modification'), required=False)
+  quality_controls: include('Quality_controls', required=False)
   additional_specifications: list(str(), required=False)
 Assembly_component_base:
   name: str()
@@ -70,10 +71,11 @@ Polymer:
   variant: str(required=False)
   source_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
     required=False)
-  modifications: include('Polymer_modifications', required=False)
   expression_source_type: enum('Natively', 'Recombinantly', 'Synthetically')
   expression_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
     required=False)
+  modifications: include('Polymer_modifications', required=False)
+  quality_controls: include('Quality_controls', required=False)
   additional_specifications: list(str(), required=False)
 Polymer_modifications:
   synthesis: list(nested_include('Modification'), required=False)
@@ -297,6 +299,42 @@ Size:
   median: num(min=0, required=False)
   upper: num(required=False)
   lower: num(required=False)
+Quality_controls:
+  purity: include('Purity', required=False)
+  identity: include('Identity', required=False)
+  homogeneity: include("Homogeneity", required=False)
+Purity_base:
+  checked: enum("Yes", "No")
+Purity: choose(include('Purity_base'), type_field='checked', Yes=include('Yes_purity'),
+  No=include('Empty_object'))
+Empty_object: {}
+Yes_purity:
+  method: enum("SDS-PAGE", "Capillary Electrophoresis", "Agarose Gel electrophoresis")
+  purity_percentage: enum('<90 %', '>90 %', '>95 %', '>99 %')
+Identity:
+  checked: enum("Yes", "No")
+  by_intact_mass: include('By_intact_mass', required=False)
+  by_sequencing: include('By_sequencing', required=False)
+  by_fingerprinting: include('By_fingerprinting', required=False)
+By_intact_mass:
+  method: enum("Mass spectrometry", "SDS-PAGE")
+  deviation_from_expected_mass: include('Molecular_weight')
+By_sequencing:
+  method: enum("Mass spectrometry-Mass spectrometry", "Edman degradation", "Sanger
+    sequencing", "Next generation sequencing")
+  coverage: int(min=0, max=100)
+By_fingerprinting:
+  method: enum("Protease digest + Mass spectrometry", "Restriction enzyme digest +
+    Gel electrophoresis")
+Homogeneity_base:
+  checked: enum("Yes", "No")
+Homogeneity: choose(include('Homogeneity_base'), type_field='checked', Yes=include('Yes_homogeneity'),
+  No=include('Empty_object'))
+Yes_homogeneity:
+  method: enum("Dynamic light scattering", "Size exclusion chromatography", "Native
+    Gel Electrophoresis", "Mass photometry")
+  expected number_of_species: int(min=1)
+  number_of_species_observed: int(min=1)
 ---
 Storage:
   temperature: include('Temperature')

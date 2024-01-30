@@ -513,6 +513,10 @@ $defs:
           through chemical, biochemical, or physical means
         use: '#/$defs/Modification'
         type: nested
+      quality_controls:
+        use: '#/$defs/Quality_controls'
+        help.en: Information about if and how quality control of the molecular assembly
+          was performed
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the macromolecular assembly can be
@@ -598,11 +602,6 @@ $defs:
           id:
             mapping:
               copy_to: collected_default_search_fields
-      modifications:
-        use: '#/$defs/Polymer_modifications'
-        help.en: If the polymer contains modifications such as non-natural aminoacids,
-          post translational modification, or chemically modifications like labeling,
-          it can be specified here
       expression_source_type:
         type: keyword
         enum: [Natively, Recombinantly, Synthetically]
@@ -612,6 +611,14 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+      modifications:
+        use: '#/$defs/Polymer_modifications'
+        help.en: If the polymer contains modifications such as non-natural aminoacids,
+          post translational modification, or chemically modifications like labeling,
+          it can be specified here
+      quality_controls:
+        use: '#/$defs/Quality_controls'
+        help.en: Information about if and how quality control of the polymer was performed
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
@@ -1463,6 +1470,139 @@ $defs:
       lower:
         type: double
         help.en: The lower bound of the size
+  Quality_controls:
+    properties:
+      purity:
+        use: '#/$defs/Purity'
+        help.en: Information about if, and how purity was assessed
+      identity:
+        use: '#/$defs/Identity'
+        help.en: Information about if, and how identity was assessed
+      homogeneity:
+        use: '#/$defs/Homogeneity'
+        help.en: Information about if, and how homogeneity was assessed
+  Purity_base:
+    properties:
+      checked:
+        type: keyword
+        enum: [Yes, No]
+        help.en: Information about if and how the purity was obtained
+        required: true
+  Purity:
+    help.en: Information about if and how the purity was obtained
+    required: true
+    schemas:
+      Yes:
+        use: '#/$defs/PurityYes_purityPolymorphic'
+        required: true
+      No:
+        use: '#/$defs/PurityEmpty_objectPolymorphic'
+        required: true
+    type: polymorphic
+    discriminator: checked
+  Empty_object:
+    properties: {}
+  Yes_purity:
+    properties:
+      method:
+        type: keyword
+        enum: [SDS-PAGE, Capillary Electrophoresis, Agarose Gel electrophoresis]
+        help.en: The method that was used to determine the purity
+        required: true
+      purity_percentage:
+        type: keyword
+        enum: [<90 %, '>90 %', '>95 %', '>99 %']
+        help.en: The obtained purity (in percent)
+        required: true
+  Identity:
+    properties:
+      checked:
+        type: keyword
+        enum: [Yes, No]
+        help.en: Wether the identity was confirmed experimentally
+        required: true
+      by_intact_mass:
+        use: '#/$defs/By_intact_mass'
+        help.en: How identity was determined by intact mass, if applicable
+      by_sequencing:
+        use: '#/$defs/By_sequencing'
+        help.en: How identity was determined by sequencing, if applicable
+      by_fingerprinting:
+        use: '#/$defs/By_fingerprinting'
+        help.en: How identity was determined by fingerprinting, if applicable
+  By_intact_mass:
+    properties:
+      method:
+        type: keyword
+        enum: [Mass spectrometry, SDS-PAGE]
+        help.en: The method used to determine the intact mass
+        required: true
+      deviation_from_expected_mass:
+        use: '#/$defs/Molecular_weight'
+        required: true
+        help.en: The amount, including unit, the obtained intact mass deviated from
+          the expected intact mass
+  By_sequencing:
+    properties:
+      method:
+        type: keyword
+        enum: [Mass spectrometry-Mass spectrometry, Edman degradation, Sanger sequencing,
+          Next generation sequencing]
+        help.en: The method that was used for sequencing
+        required: true
+      coverage:
+        type: integer
+        minimum: 0
+        maximum: 100
+        help.en: The amount of the total (expected) sequence that was actually observed
+          by sequencing in percent
+        required: true
+  By_fingerprinting:
+    properties:
+      method:
+        type: keyword
+        enum: [Protease digest + Mass spectrometry, Restriction enzyme digest + Gel
+            electrophoresis]
+        help.en: The method used for fingerprinting
+        required: true
+  Homogeneity_base:
+    properties:
+      checked:
+        type: keyword
+        enum: [Yes, No]
+        help.en: Whether the homogeneity was checked
+        required: true
+  Homogeneity:
+    help.en: Whether the homogeneity was tested and whether the expected number of
+      species were present
+    required: true
+    schemas:
+      Yes:
+        use: '#/$defs/HomogeneityYes_homogeneityPolymorphic'
+        required: true
+      No:
+        use: '#/$defs/HomogeneityEmpty_objectPolymorphic'
+        required: true
+    type: polymorphic
+    discriminator: checked
+  Yes_homogeneity:
+    properties:
+      method:
+        type: keyword
+        enum: [Dynamic light scattering, Size exclusion chromatography, Native Gel
+            Electrophoresis, Mass photometry]
+        help.en: The method used to evaluate the homogeneity
+        required: true
+      expected number_of_species:
+        type: integer
+        minimum: 1
+        help.en: The number of species that were expected to be present
+        required: true
+      number_of_species_observed:
+        type: integer
+        minimum: 1
+        help.en: The number of species that was observed to be present
+        required: true
   Storage:
     properties:
       temperature:
@@ -1645,11 +1785,6 @@ $defs:
           id:
             mapping:
               copy_to: collected_default_search_fields
-      modifications:
-        use: '#/$defs/Polymer_modifications'
-        help.en: If the polymer contains modifications such as non-natural aminoacids,
-          post translational modification, or chemically modifications like labeling,
-          it can be specified here
       expression_source_type:
         type: keyword
         enum: [Natively, Recombinantly, Synthetically]
@@ -1659,6 +1794,14 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+      modifications:
+        use: '#/$defs/Polymer_modifications'
+        help.en: If the polymer contains modifications such as non-natural aminoacids,
+          post translational modification, or chemically modifications like labeling,
+          it can be specified here
+      quality_controls:
+        use: '#/$defs/Quality_controls'
+        help.en: Information about if and how quality control of the polymer was performed
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
@@ -1688,6 +1831,60 @@ $defs:
         required: true
         mapping:
           copy_to: collected_default_search_fields
+  PurityYes_purityPolymorphic:
+    properties:
+      method:
+        type: keyword
+        enum: [SDS-PAGE, Capillary Electrophoresis, Agarose Gel electrophoresis]
+        help.en: The method that was used to determine the purity
+        required: true
+      purity_percentage:
+        type: keyword
+        enum: [<90 %, '>90 %', '>95 %', '>99 %']
+        help.en: The obtained purity (in percent)
+        required: true
+      checked:
+        type: keyword
+        enum: [Yes, No]
+        help.en: Information about if and how the purity was obtained
+        required: true
+  PurityEmpty_objectPolymorphic:
+    properties:
+      checked:
+        type: keyword
+        enum: [Yes, No]
+        help.en: Information about if and how the purity was obtained
+        required: true
+  HomogeneityYes_homogeneityPolymorphic:
+    properties:
+      method:
+        type: keyword
+        enum: [Dynamic light scattering, Size exclusion chromatography, Native Gel
+            Electrophoresis, Mass photometry]
+        help.en: The method used to evaluate the homogeneity
+        required: true
+      expected number_of_species:
+        type: integer
+        minimum: 1
+        help.en: The number of species that were expected to be present
+        required: true
+      number_of_species_observed:
+        type: integer
+        minimum: 1
+        help.en: The number of species that was observed to be present
+        required: true
+      checked:
+        type: keyword
+        enum: [Yes, No]
+        help.en: Whether the homogeneity was checked
+        required: true
+  HomogeneityEmpty_objectPolymorphic:
+    properties:
+      checked:
+        type: keyword
+        enum: [Yes, No]
+        help.en: Whether the homogeneity was checked
+        required: true
   EntityChemicalPolymorphic:
     properties:
       inchikey:
@@ -1774,6 +1971,10 @@ $defs:
           through chemical, biochemical, or physical means
         use: '#/$defs/Modification'
         type: nested
+      quality_controls:
+        use: '#/$defs/Quality_controls'
+        help.en: Information about if and how quality control of the molecular assembly
+          was performed
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the macromolecular assembly can be
@@ -1853,11 +2054,6 @@ $defs:
           id:
             mapping:
               copy_to: collected_default_search_fields
-      modifications:
-        use: '#/$defs/Polymer_modifications'
-        help.en: If the polymer contains modifications such as non-natural aminoacids,
-          post translational modification, or chemically modifications like labeling,
-          it can be specified here
       expression_source_type:
         type: keyword
         enum: [Natively, Recombinantly, Synthetically]
@@ -1867,6 +2063,14 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+      modifications:
+        use: '#/$defs/Polymer_modifications'
+        help.en: If the polymer contains modifications such as non-natural aminoacids,
+          post translational modification, or chemically modifications like labeling,
+          it can be specified here
+      quality_controls:
+        use: '#/$defs/Quality_controls'
+        help.en: Information about if and how quality control of the polymer was performed
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
@@ -2444,11 +2648,6 @@ $defs:
           id:
             mapping:
               copy_to: collected_default_search_fields
-      modifications:
-        use: '#/$defs/Polymer_modifications'
-        help.en: If the polymer contains modifications such as non-natural aminoacids,
-          post translational modification, or chemically modifications like labeling,
-          it can be specified here
       expression_source_type:
         type: keyword
         enum: [Natively, Recombinantly, Synthetically]
@@ -2458,6 +2657,14 @@ $defs:
         keys: [id, title, props.rank]
         vocabulary-type: organisms
         type: vocabulary
+      modifications:
+        use: '#/$defs/Polymer_modifications'
+        help.en: If the polymer contains modifications such as non-natural aminoacids,
+          post translational modification, or chemically modifications like labeling,
+          it can be specified here
+      quality_controls:
+        use: '#/$defs/Quality_controls'
+        help.en: Information about if and how quality control of the polymer was performed
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the polymer can be specified here
@@ -2563,6 +2770,10 @@ $defs:
           through chemical, biochemical, or physical means
         use: '#/$defs/Modification'
         type: nested
+      quality_controls:
+        use: '#/$defs/Quality_controls'
+        help.en: Information about if and how quality control of the molecular assembly
+          was performed
       additional_specifications[]:
         ^minItems: 1
         ^help.en: Additional information about the macromolecular assembly can be

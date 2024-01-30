@@ -152,6 +152,15 @@ general_parameters:
           external_databases:
               - 'pdb:2HCO'
 
+          quality_controls:
+            purity:
+                checked: "Yes"
+                method: "SDS-PAGE" 
+                purity_percentage: '>99 %'   
+
+            homogeneity:
+                checked: "No"
+
           molecular_weight:
               value: 64.5
               unit: 'kDa'
