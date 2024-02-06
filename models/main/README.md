@@ -188,11 +188,6 @@ expression_organism: vocabulary(vocabulary='organisms',
 ```
 ### Special item values
 
-#### `'other'` in `enum`:
-
-If the string `'other'` is present in an `enum` it should trigger a request for
-extending the enumerator. *i.e.* the value 'other' should **never** be stored.
-
 #### -1:
 
 Unless -1 is an allowed value, it indicates that the value is unknown, it should
@@ -252,28 +247,28 @@ The overall structure of `General_parameters` is:
 ```yaml
 General_parameters:
   record_information
-  associated_publications
+  associated_publication
   depositors
   funding
   technique
   instrument
-  physical_conditions_at_sample_handling
-  chemical_information
-  derived_parameters
+  entities_of_interest
+  chemical_environments
+  results 
 ```
 ### `record_information`
 
 Namespace item containing the metadata of the record itself *i.e.* the unique
 identifier of the records and which version of the schema the record was recorded in.
 
-### `associated_publications`
+### `associated_publication`
 
 If the data was produced and disseminated as part of a scientific publication,
 the details of the associated publication(s) can be specified here.
 
 ### `depositors`
 
-Information about the people involved in making the deposition.
+Information about the people involved in making the deposition (authors).
 
 ### `funding`
 
@@ -295,23 +290,6 @@ shift)
 
 Information about the instrument used to perform the measurement, including
 test of instrument performance.
-
-### `physical_conditions_at_sample_handling`
-
-Information about the physical state of the sample immediately prior
-to being measured.
-
-### `chemical_information`
-
-This namespace item contains the detailed information about the molecular
-entities of interest that as well as the chemical environment
-(buffer components). Searches to establish the absence, presence,
-or concentration of specific molecules is believed be a central
-component that of MBDB, as well as for interoperability with other
-online resources.
-
-Due to their importance more information about chemical object is
-supplied below:
 
 #### `chemical_environments`
 
@@ -348,19 +326,6 @@ how data analysis is performed. This does not only hold true for different
 techniques, but even within single technique there are sometimes large variation
 in how measurements and data analysis is performed.
 
-# Relations among records
-
-## Measurement groups
-
-If several measurements series closely related (*e.g.* identical samples
-measured with different techniques, all measurement from a single publication
-*etc.*) this can be annotated by placing the records in the same group.
-
-## Projects
-
-If measurements that are part of more loosely connected (*e.g.* part of the
-long-running research from a research group or long-running collaborations) this
-can be annotated by placing the records in within the same project.
 
 
 [yamale]: https://github.com/23andMe/Yamale
