@@ -52,6 +52,9 @@ from custom_validators import (
     Vocabulary,
 )
 
+from ruamel.yaml.scalarstring import DoubleQuotedScalarString
+
+
 log = logging.getLogger("yamale2oarepo")
 
 
@@ -168,9 +171,7 @@ class ModelBase:
 
 
 class ModelObject(ModelBase):
-    def __init__(
-        self, data: Any, path: str, includes, default_search
-    ) -> None:
+    def __init__(self, data: Any, path: str, includes, default_search) -> None:
         super().__init__(
             path=path,
             required=data.is_required if not isinstance(data, dict) else False,
@@ -182,9 +183,7 @@ class ModelObject(ModelBase):
     def parse(self, data, includes):
         super().parse(data)
         self.children = {
-            k: parse(
-                v, f"{self.path}/{k}", includes, self.default_search
-            )
+            k: parse(v, f"{self.path}/{k}", includes, self.default_search)
             for k, v in data.items()
         }
 
@@ -238,9 +237,7 @@ class ModelObject(ModelBase):
 
 
 class ModelArray(ModelBase):
-    def __init__(
-        self, data: Any, path: str, includes, default_search
-    ) -> None:
+    def __init__(self, data: Any, path: str, includes, default_search) -> None:
         super().__init__(path, data.is_required, default_search)
         self.item = None
         self.parse(data, includes)
@@ -303,9 +300,7 @@ class ModelArray(ModelBase):
 
 
 class ModelPrimitive(ModelBase):
-    def __init__(
-        self, data: Any, type: str, path: str, default_search
-    ) -> None:
+    def __init__(self, data: Any, type: str, path: str, default_search) -> None:
         is_required = False
         if data is not None:
             is_required = data.is_required
@@ -349,8 +344,8 @@ class ModelPrimitive(ModelBase):
 
 
 class ModelEnum(ModelPrimitive):
-    def __init__(self, data, path: str,  default_search) -> None:
-        super().__init__(data, "keyword", path,  default_search)
+    def __init__(self, data, path: str, default_search) -> None:
+        super().__init__(data, "keyword", path, default_search)
         if hasattr(data, "enums"):
             self.constraints["enum"] = data.enums
 
@@ -360,14 +355,14 @@ class ModelEnum(ModelPrimitive):
 
 
 class ModelRegex(ModelPrimitive):
-    def __init__(self, data, path: str,  default_search) -> None:
-        super().__init__(data, "keyword", path,  default_search)
+    def __init__(self, data, path: str, default_search) -> None:
+        super().__init__(data, "keyword", path, default_search)
         self.constraints["regex"] = data.args[0]
 
 
 class ModelInclude(ModelBase):
-    def __init__(self, data, path: str,  default_search) -> None:
-        super().__init__(path, data.is_required,  default_search)
+    def __init__(self, data, path: str, default_search) -> None:
+        super().__init__(path, data.is_required, default_search)
         self.include = data.include_name
 
     def to_json(self):
@@ -415,9 +410,7 @@ class ModelNestedInclude(ModelInclude):
 class ModelChoose(ModelBase):
     def __init__(self, data, path: str, default_search) -> None:
         super().__init__(path, data.is_required, default_search)
-        self.base_schema = ModelInclude(
-            data.base_schema, path, default_search
-        )
+        self.base_schema = ModelInclude(data.base_schema, path, default_search)
         self.type_field = data.type_field
         self.subschemas = {
             k.replace("_", " "): ModelInclude(v, path, default_search)
@@ -544,7 +537,7 @@ class ModelChoose(ModelBase):
 
 class ModelLinkTarget(ModelBase):
     def __init__(self, data, path: str, default_search) -> None:
-        super().__init__(path, data.is_required,  default_search)
+        super().__init__(path, data.is_required, default_search)
         self.name = data.name
 
     def to_json(self):
@@ -644,7 +637,9 @@ class Model:
             "use": ["invenio"],
             "module": {"qualified": f"mbdb_{self.package}"},
             "properties": {
-                "id": {"mapping": PRIMITIVES_MAPPING},  # add record id field to default search
+                "id": {
+                    "mapping": PRIMITIVES_MAPPING
+                },  # add record id field to default search
                 "metadata": self.model.to_json(),
                 QUERY_STRING_FIELD: QUERY_STRING_FIELD_SETTINGS,
             },
@@ -733,7 +728,7 @@ def parse(d, path, includes, default_search=False):
     elif clz is Url:
         return ModelPrimitive(d, "url", path, default_search)
     elif clz is Day:
-        return ModelPrimitive(d, "date", path,  default_search)
+        return ModelPrimitive(d, "date", path, default_search)
     elif clz is Boolean:
         return ModelPrimitive(d, "boolean", path, default_search)
     elif clz is Number:
@@ -850,6 +845,19 @@ def set_flow_style(d):
             set_flow_style(v)
 
 
+def ruamel_quote_booleans(d):
+    if isinstance(d, (list, tuple)):
+        return [ruamel_quote_booleans(x) for x in d]
+    elif isinstance(d, dict):
+        return {
+            ruamel_quote_booleans(k): ruamel_quote_booleans(v) for k, v in d.items()
+        }
+    elif d in ("Yes", "No", "On", "Off"):
+        return DoubleQuotedScalarString(d)
+    else:
+        return d
+
+
 @click.command()
 @click.argument(
     "input_file",
@@ -882,11 +890,12 @@ def run(input_file, output_file, debug, include):
     model.add_files_meta(parse_file(attachment, modelbase_only=True).to_json())
     yaml = ruamel_YAML()
     yaml.default_flow_style = False
+    yaml.preserve_quotes = True
     yaml.allow_unicode = True
     yaml.sort_base_mapping_type_on_output = True
     yaml.Representer = NonAliasingRTRepresenter
     io = StringIO()
-    yaml.dump(model.to_json(), io)
+    yaml.dump(ruamel_quote_booleans(model.to_json()), io)
     io.seek(0)
     loaded = yaml.load(io)
     set_flow_style(loaded)

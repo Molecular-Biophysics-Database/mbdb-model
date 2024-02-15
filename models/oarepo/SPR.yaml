@@ -1548,17 +1548,17 @@ $defs:
     properties:
       checked:
         type: keyword
-        enum: [Yes, No]
+        enum: ["Yes", "No"]
         help.en: Information about if and how the purity was obtained
         required: true
   Purity:
     help.en: Information about if and how the purity was obtained
     required: true
     schemas:
-      Yes:
+      "Yes":
         use: '#/$defs/PurityYes_purityPolymorphic'
         required: true
-      No:
+      "No":
         use: '#/$defs/PurityEmpty_objectPolymorphic'
         required: true
     type: polymorphic
@@ -1581,7 +1581,7 @@ $defs:
     properties:
       checked:
         type: keyword
-        enum: [Yes, No]
+        enum: ["Yes", "No"]
         help.en: Wether the identity was confirmed experimentally
         required: true
       by_intact_mass:
@@ -1632,7 +1632,7 @@ $defs:
     properties:
       checked:
         type: keyword
-        enum: [Yes, No]
+        enum: ["Yes", "No"]
         help.en: Whether the homogeneity was checked
         required: true
   Homogeneity:
@@ -1640,10 +1640,10 @@ $defs:
       species were present
     required: true
     schemas:
-      Yes:
+      "Yes":
         use: '#/$defs/HomogeneityYes_homogeneityPolymorphic'
         required: true
-      No:
+      "No":
         use: '#/$defs/HomogeneityEmpty_objectPolymorphic'
         required: true
     type: polymorphic
@@ -1924,14 +1924,14 @@ $defs:
         required: true
       checked:
         type: keyword
-        enum: [Yes, No]
+        enum: ["Yes", "No"]
         help.en: Information about if and how the purity was obtained
         required: true
   PurityEmpty_objectPolymorphic:
     properties:
       checked:
         type: keyword
-        enum: [Yes, No]
+        enum: ["Yes", "No"]
         help.en: Information about if and how the purity was obtained
         required: true
   HomogeneityYes_homogeneityPolymorphic:
@@ -1954,14 +1954,14 @@ $defs:
         required: true
       checked:
         type: keyword
-        enum: [Yes, No]
+        enum: ["Yes", "No"]
         help.en: Whether the homogeneity was checked
         required: true
   HomogeneityEmpty_objectPolymorphic:
     properties:
       checked:
         type: keyword
-        enum: [Yes, No]
+        enum: ["Yes", "No"]
         help.en: Whether the homogeneity was checked
         required: true
   EntityChemicalPolymorphic:
