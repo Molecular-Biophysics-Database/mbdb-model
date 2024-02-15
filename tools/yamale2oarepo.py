@@ -2,19 +2,16 @@ import copy
 import dataclasses
 import logging
 import re
-import click
-import ruamel
-import yamale
 from collections import namedtuple
 from io import StringIO
 from pathlib import Path
 from typing import Any, Dict, Union
+
+import click
+import ruamel
+import yamale
 from ruamel.yaml import YAML as ruamel_YAML
 from yamale.schema import Schema
-from yamale2oarepo_config import (
-    PRIMITIVES_MAPPING,
-    VOCABULARY_MAPPING,
-)
 from yamale.validators import (
     Boolean,
     Day,
@@ -44,6 +41,7 @@ from custom_validators import (
     Uuid,
     Vocabulary,
 )
+from yamale2oarepo_config import PRIMITIVES_MAPPING, VOCABULARY_MAPPING
 
 log = logging.getLogger("yamale2oarepo")
 

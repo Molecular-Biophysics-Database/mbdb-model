@@ -16,7 +16,9 @@ class YamaleTree:
     """Class for building and storing unrolled yaml tree"""
 
     def __init__(self, schema_file: Path):
-        self.schema = yamale.make_schema(schema_file, validators=custom_validators.extend_validators)
+        self.schema = yamale.make_schema(
+            schema_file, validators=custom_validators.extend_validators
+        )
         self.includes = self.schema.includes
         self.tree = deepcopy(self.schema._schema)
 
@@ -117,9 +119,10 @@ class YamaleTree:
     def _from_choose(self, value, tree=None):
         if tree is None:
             tree = {}
-        value = yamale.make_schema(content=f"tmp: {value}",
-                                   validators=custom_validators.extend_validators)
-        value = value.dict['tmp']
+        value = yamale.make_schema(
+            content=f"tmp: {value}", validators=custom_validators.extend_validators
+        )
+        value = value.dict["tmp"]
         tree.update(deepcopy(self.includes[value.base_schema.include_name].dict))
         for v in value.detailed_schemas.values():
             inc = self.includes[v.include_name].dict
@@ -144,7 +147,7 @@ class YamaleTree:
 
             elif isinstance(value, validators.Include):
                 ## debugging
-                #print(f'direct: {key}')
+                # print(f'direct: {key}')
                 include = self._get_include(value)
                 if isinstance(include, str):
                     include = self._get_include(value, "_schema")
@@ -157,7 +160,7 @@ class YamaleTree:
                     include = arg
                     if isinstance(arg, validators.Include):
                         ## debugging
-                        #print(f'list: {key}')
+                        # print(f'list: {key}')
                         include = self._get_include(arg)
                     elif isinstance(arg, dict):
                         self._construct_tree(arg)
@@ -198,7 +201,12 @@ def _mk_arg_parser() -> ArgumentParser:
         nargs="+",
         type=Path,
         help="Additional Yamale schema input files without descriptions to be used as includes",
-        default=[Path(__file__).parent.parent / "models" / "values-only" / "general_parameters.yaml"],
+        default=[
+            Path(__file__).parent.parent
+            / "models"
+            / "values-only"
+            / "general_parameters.yaml"
+        ],
     )
     return parser
 

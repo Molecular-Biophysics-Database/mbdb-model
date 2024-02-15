@@ -69,7 +69,9 @@ class SimplifiedSchema:
             else:
                 self._remove_description((doc[key]))
 
-    def _remove_extension_elements(self, doc: dict, extension_elements=("ui_file_context",)) -> None:
+    def _remove_extension_elements(
+        self, doc: dict, extension_elements=("ui_file_context",)
+    ) -> None:
         """
         Recursively remove extension elements from the schema
         """

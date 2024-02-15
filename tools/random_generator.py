@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
-import os
-import click
-import custom_validators
 import json
-import numpy as np
+import os
 import random
 import string
 import uuid
+from copy import deepcopy
+from glob import glob
+from pathlib import Path
+
+import click
+import numpy as np
 import ruamel.yaml
 import yamale.schema
 import yamale.validators as validators
-from copy import deepcopy
-from pathlib import Path
-from glob import glob
+
+import custom_validators
 from validate_examples import merged_schema
 
 
@@ -565,7 +567,6 @@ def write_file(document_list, output_folder, as_fixture):
     default=25,
     required=False,
     show_default=True,
-
 )
 @click.option(
     "--as_fixture",
