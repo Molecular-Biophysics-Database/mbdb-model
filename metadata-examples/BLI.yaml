@@ -7,7 +7,6 @@ general_parameters:
         access_rights: 'open access'
         metadata_access_rights: 'open access'
         title: 'BLI measurement of hemoglobin serum elements'
-        identifier: "doi:10.1234/bar"
         deposition_date: 2022-01-23
         date_available: 2023-01-23
         subject_category: 'Biophysics'
@@ -38,7 +37,7 @@ general_parameters:
               affiliations:
                 - id: 'ror:02hpadn98'
 
-    funding_reference:
+    funding_references:
         - id: "oa:aka_________::0138cbca472312ad7dd56c2cdb8a55c2"
         - id: "oa:aka_________::05f51e273cb679ac343eb5be8ecbd9b5"
 
@@ -64,8 +63,7 @@ general_parameters:
                     unit: 'w/w %'
                  inchikey: 'XLYOFNOQVPJJNP-UHFFFAOYSA-N'
 
-          ph:
-              value: 7.4
+          ph: 7.4
 
           constituents:
               - name: 'Tris:HCl'
@@ -103,8 +101,7 @@ general_parameters:
                     unit: 'w/w %'
                  inchikey: 'XLYOFNOQVPJJNP-UHFFFAOYSA-N'
 
-          ph:
-              value: 1
+          ph: 1
 
           constituents:
               - name: 'HCl'
@@ -172,7 +169,6 @@ general_parameters:
                 external_databases:
                     - 'Uniprot:P69905'
 
-
               - name: 'Hemoglobin subunit beta'
                 type: 'Polymer'
                 molecular_weight:
@@ -186,12 +182,12 @@ general_parameters:
                 modifications:
                     biological_postprocessing:
                         - position: 'S10'
-                          modification: 'Phosphorylation'
+                          type: 'Phosphorylation'
                     chemical:
-                        - modification: 'FITC labelling'
+                        - type: 'FITC labelling'
                           protocol:
                               - name: 'Make the solution more alkaline'
-                                description : 'Addition of 10 ul 1 M
+                                description: 'Addition of 10 ul 1 M
                                                bicarbonate to 90 ul
                                                protein solution'
 
@@ -242,7 +238,6 @@ general_parameters:
                 external_databases:
                     - 'Uniprot:P69905'
 
-
               - name: 'Hemoglobin subunit beta'
                 type: 'Polymer'
                 molecular_weight:
@@ -256,9 +251,9 @@ general_parameters:
                 modifications:
                     biological_postprocessing:
                         - position: 'S10'
-                          modification: 'Phosphorylation'
+                          type: 'Phosphorylation'
                     chemical:
-                        - modification: 'FITC labelling'
+                        - type: 'FITC labelling'
                           protocol:
                               - name: 'Make the solution more alkaline'
                                 description : 'Addition of 10 ul 1 M
@@ -401,7 +396,6 @@ method_specific_parameters:
           data_fitting:
             model: '1:1'
             software_name: 'Octet analysis software'
-
 
     measurements:
         - id: "a1-baseline"

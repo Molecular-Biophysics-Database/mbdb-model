@@ -10,7 +10,6 @@
           "access_rights": "open access",
           "metadata_access_rights": "open access",
           "title": "SPR measurement of hemoglobin serum elements",
-          "identifier": "doi:10.1234/foobar",
           "deposition_date": "2022-01-23",
           "date_available": "2023-01-23",
           "subject_category": "Biophysics"
@@ -58,7 +57,7 @@
             }
           ]
         },
-        "funding_reference": [
+        "funding_references": [
           {
             "id": "oa:aka_________::0138cbca472312ad7dd56c2cdb8a55c2"
           },
@@ -91,9 +90,7 @@
                 "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
               }
             ],
-            "ph": {
-              "value": 7.4
-            },
+            "ph": 7.4,
             "constituents": [
               {
                 "name": "Tris:HCl",
@@ -141,9 +138,7 @@
                 "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
               }
             ],
-            "ph": {
-              "value": 1
-            },
+            "ph": 1,
             "constituents": [
               {
                 "name": "HCl",
@@ -227,7 +222,7 @@
                 "variant": "WT",
                 "expression_source_type": "Natively",
                 "external_databases": [
-                  "Uniprot:P69905"
+                  "uniprot:P69905"
                 ]
               },
               {
@@ -247,12 +242,12 @@
                   "biological_postprocessing": [
                     {
                       "position": "S10",
-                      "modification": "Phosphorylation"
+                      "type": "Phosphorylation"
                     }
                   ],
                   "chemical": [
                     {
-                      "modification": "FITC labelling",
+                      "type": "FITC labelling",
                       "protocol": [
                         {
                           "name": "Make the solution more alkaline",
@@ -309,7 +304,7 @@
                 "variant": "WT",
                 "expression_source_type": "Natively",
                 "external_databases": [
-                  "Uniprot:P69905"
+                  "uniprot:P69905"
                 ]
               },
               {
@@ -329,12 +324,12 @@
                   "biological_postprocessing": [
                     {
                       "position": "S10",
-                      "modification": "Phosphorylation"
+                      "type": "Phosphorylation"
                     }
                   ],
                   "chemical": [
                     {
-                      "modification": "FITC labelling",
+                      "type": "FITC labelling",
                       "protocol": [
                         {
                           "name": "Make the solution more alkaline",
@@ -359,7 +354,7 @@
                 "sequence": "MAHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVANALAHKYH",
                 "expression_source_type": "Recombinantly",
                 "external_databases": [
-                  "Uniprot:P68871"
+                  "uniprot:P68871"
                 ]
               }
             ]

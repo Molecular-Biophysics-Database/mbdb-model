@@ -7,7 +7,6 @@ general_parameters:
         access_rights: 'open access'
         metadata_access_rights: 'open access'
         title: 'MST measurement of hemoglobin serum elements'
-        identifier: 'doi:10.1234/foo'
         deposition_date: 2022-01-23
         date_available: 2023-01-23
         subject_category: 'Biophysics'
@@ -38,7 +37,7 @@ general_parameters:
               affiliations:
                 - id: 'ror:02hpadn98'
 
-    funding_reference:
+    funding_references:
         - id: "oa:aka_________::0138cbca472312ad7dd56c2cdb8a55c2"
         - id: "oa:aka_________::05f51e273cb679ac343eb5be8ecbd9b5"
 
@@ -50,7 +49,6 @@ general_parameters:
         name: 'Monolith NT.115'
 
     collection_start_time: 2022-01-02
-
 
     chemical_environments:
         - id: 'chem-env-measurement-buffer'
@@ -77,8 +75,7 @@ general_parameters:
 
                  inchikey: 'LFQSCWFLJHTTHZ-UHFFFAOYSA-N'
 
-          ph:
-              value: 7.4
+          ph: 7.4
 
 
           constituents:
@@ -184,9 +181,9 @@ general_parameters:
                 modifications:
                     biological_postprocessing:
                         - position: 'S10'
-                          modification: 'Phosphorylation'
+                          type: 'Phosphorylation'
                     chemical:
-                        - modification: 'FITC labelling'
+                        - type: 'FITC labelling'
                           protocol:
                               - name: 'Make the solution more alkaline'
                                 description : 'Addition of 10 ul 1 M
