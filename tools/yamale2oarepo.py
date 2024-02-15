@@ -11,6 +11,7 @@ import click
 import ruamel
 import yamale
 from ruamel.yaml import YAML as ruamel_YAML
+from ruamel.yaml.scalarstring import DoubleQuotedScalarString
 from yamale.schema import Schema
 from yamale.validators import (
     Boolean,
@@ -806,11 +807,12 @@ def set_flow_style(d):
 def json_to_yaml(json_dict):
     yaml = ruamel_YAML()
     yaml.default_flow_style = False
+    yaml.preserve_quotes = True
     yaml.allow_unicode = True
     yaml.sort_base_mapping_type_on_output = True
     yaml.Representer = NonAliasingRTRepresenter
     io = StringIO()
-    yaml.dump(json_dict, io)
+    yaml.dump(ruamel_quote_booleans(json_dict), io)
     io.seek(0)
     loaded = yaml.load(io)
     set_flow_style(loaded)
@@ -824,6 +826,19 @@ def get_filename(name: str, out_dir: Path, model_package: str) -> Path:
         model_package = f"{model_package}-"
 
     return out_dir / f"{model_package}{name}.yaml"
+
+
+def ruamel_quote_booleans(d):
+    if isinstance(d, (list, tuple)):
+        return [ruamel_quote_booleans(x) for x in d]
+    elif isinstance(d, dict):
+        return {
+            ruamel_quote_booleans(k): ruamel_quote_booleans(v) for k, v in d.items()
+        }
+    elif d in ("Yes", "No", "On", "Off"):
+        return DoubleQuotedScalarString(d)
+    else:
+        return d
 
 
 @click.command()
