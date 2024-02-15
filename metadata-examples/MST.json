@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.17",
+        "schema_version": "0.9.18",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -10,7 +10,6 @@
           "access_rights": "open access",
           "metadata_access_rights": "open access",
           "title": "MST measurement of hemoglobin serum elements",
-          "identifier": "doi:10.1234/foo",
           "deposition_date": "2022-01-23",
           "date_available": "2023-01-23",
           "subject_category": "Biophysics"
@@ -58,7 +57,7 @@
             }
           ]
         },
-        "funding_reference": [
+        "funding_references": [
           {
             "id": "oa:aka_________::0138cbca472312ad7dd56c2cdb8a55c2"
           },
@@ -104,9 +103,7 @@
                 "inchikey": "LFQSCWFLJHTTHZ-UHFFFAOYSA-N"
               }
             ],
-            "ph": {
-              "value": 7.4
-            },
+            "ph": 7.4,
             "constituents": [
               {
                 "name": "Tris:HCl",
@@ -196,6 +193,16 @@
             "external_databases": [
               "pdb:2HCO"
             ],
+            "quality_controls": {
+              "purity": {
+                "checked": "Yes",
+                "method": "SDS-PAGE",
+                "purity_percentage": ">99 %"
+              },
+              "homogeneity": {
+                "checked": "No"
+              }
+            },
             "molecular_weight": {
               "value": 64.5,
               "unit": "kDa"
@@ -236,12 +243,12 @@
                   "biological_postprocessing": [
                     {
                       "position": "S10",
-                      "modification": "Phosphorylation"
+                      "type": "Phosphorylation"
                     }
                   ],
                   "chemical": [
                     {
-                      "modification": "FITC labelling",
+                      "type": "FITC labelling",
                       "protocol": [
                         {
                           "name": "Make the solution more alkaline",
@@ -276,7 +283,7 @@
           {
             "id": "de-par-kd-hemo",
             "name": "KD of hemoglobin to unknown component in serum",
-            "type": "Constant of dissociation (KD)",
+            "type": "Constant of dissociation KD",
             "entities_involved": [
               {
                 "entity": {

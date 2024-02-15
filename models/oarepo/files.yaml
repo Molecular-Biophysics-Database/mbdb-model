@@ -23,7 +23,7 @@ properties:
   size:
     type: integer
     minimum: 0
-    help.en: Size of the file
+    help.en: Size of the file in bytes
     required: true
   description:
     type: keyword

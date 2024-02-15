@@ -1,11 +1,11 @@
 general_parameters: include('General_parameters')
 ---
 General_parameters:
-  schema_version: keyword(equals='0.9.17')
+  schema_version: keyword(equals='0.9.18')
   record_information: include('Record_information')
   depositors: include('Depositors')
   associated_publication: include('Publication', required=False)
-  funding_reference: list(vocabulary(vocabulary='grants', fields='[id,title,props.funder_name]'),
+  funding_references: list(vocabulary(vocabulary='grants', fields='[id,title,props.funder_name]'),
     required=False)
   technique: include('SUPPORTED_TECHNIQUES')
   collection_start_time: day()
@@ -22,7 +22,7 @@ Record_information:
   publisher: keyword(equals='MBDB')
   resource_type_general: keyword(equals='Dataset')
   resource_type: keyword()
-  identifier: database_id(required=False)
+  external_identifier: database_id(required=False)
   subject_category: keyword(equals='Biophysics')
   deposition_date: day()
   date_available: day(required=False)
@@ -36,12 +36,12 @@ Entity_base:
   name: str()
   type: enum('Polymer', 'Chemical', 'Molecular assembly', 'Complex substance of biological
     origin', 'Complex substance of environmental origin', 'Complex substance of chemical
-    origin', 'Complex substance of industrial production origin')
+    origin', 'Complex substance of industrial origin')
 Entity: choose(include('Entity_base'), Polymer=include('Polymer'), Chemical=include('Chemical'),
   Molecular_assembly=include('Molecular_assembly'), Complex_substance_of_biological_origin=include('Complex_substance_of_biological_origin'),
   Complex_substance_of_environmental_origin=include('Complex_substance_of_environmental_origin'),
   Complex_substance_of_chemical_origin=include('Complex_substance_of_chemical_origin'),
-  Complex_substance_of_industrial_production_origin=include('Complex_substance_of_industrial_production_origin')
+  Complex_substance_of_industrial_origin=include('Complex_substance_of_industrial_origin')
   )
 Entity_constituent:
   entity: link(target='entity')
@@ -52,6 +52,7 @@ Molecular_assembly:
   components: list(nested_include('Assembly_component'), min=1)
   molecular_weight: include('Molecular_weight')
   chemical_modifications: list(nested_include('Modification'), required=False)
+  quality_controls: include('Quality_controls', required=False)
   additional_specifications: list(str(), required=False)
 Assembly_component_base:
   name: str()
@@ -70,10 +71,11 @@ Polymer:
   variant: str(required=False)
   source_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
     required=False)
-  modifications: include('Polymer_modifications', required=False)
   expression_source_type: enum('Natively', 'Recombinantly', 'Synthetically')
   expression_organism: vocabulary(vocabulary='organisms', fields='[id,title,props.rank]',
     required=False)
+  modifications: include('Polymer_modifications', required=False)
+  quality_controls: include('Quality_controls', required=False)
   additional_specifications: list(str(), required=False)
 Polymer_modifications:
   synthesis: list(nested_include('Modification'), required=False)
@@ -91,13 +93,13 @@ Chemical_environment:
   name: str()
   solvent: list(nested_include('Chemical_constituent'))
   constituents: list(nested_include('Constituent'), required=False)
-  ph: include('Ph')
+  ph: num()
   additional_specifications: list(str(), required=False)
 Constituent_base:
   name: str()
   type: enum('Polymer', 'Chemical', 'Molecular assembly', 'Complex substance of biological
     origin', 'Complex substance of environmental origin', 'Complex substance of chemical
-    origin', 'Complex substance of industrial production origin')
+    origin', 'Complex substance of industrial origin')
   concentration: include('Concentration')
 Chemical_constituent_base:
   name: str()
@@ -114,7 +116,7 @@ Constituent: choose(include('Constituent_base'), Polymer=include('Polymer'), Che
   Molecular_assembly=include('Molecular_assembly'), Complex_substance_of_biological_origin=include('Complex_substance_of_biological_origin'),
   Complex_substance_of_environmental_origin=include('Complex_substance_of_environmental_origin'),
   Complex_substance_of_chemical_origin=include('Complex_substance_of_chemical_origin'),
-  Complex_substance_of_industrial_production_origin=include('Complex_substance_of_industrial_production_origin'))
+  Complex_substance_of_industrial_origin=include('Complex_substance_of_industrial_origin'))
 Complex_substance_of_biological_origin: choose(include('Complex_substance_of_biological_origin_base'),
   type_field='derived_from', Body_fluid=include('Body_fluid'), Cell_fraction=include('Cell_fraction'),
   Virion=include('Virion'))
@@ -149,19 +151,19 @@ Complex_substance_of_environmental_origin:
   location: include('Coordinates')
   storage: include('Storage', required=False)
   additional_specifications: list(str(), required=False)
-Complex_substance_of_chemical_origin:
-  class: enum('Lipid_assembly')
-  details: include('Lipid_assembly')
+Complex_substance_of_chemical_origin_base:
+  class: enum('Lipid assembly')
   preparation_protocol: list(include('Step'))
   storage: include('Storage', required=False)
   additional_specifications: list(str(), required=False)
+Complex_substance_of_chemical_origin: choose(include('Complex_substance_of_chemical_origin_base'),
+  type_field='class', Lipid_assembly=include('Lipid_assembly'))
 Lipid_assembly:
-  type: enum('Micelle', 'Liposome', 'Nanodisc', 'Sheet')
-  number_of_mono_layers: int(min=-1)
-  size: include('Size')
+  assembly_type: enum('Micelle', 'Liposome', 'Nanodisc', 'Sheet')
   components: list(nested_include('Assembly_component'))
-  additional_specifications: list(include('Step'), required=False)
-Complex_substance_of_industrial_production_origin:
+  number_of_mono_layers: int(min=-1, required=False)
+  size: include('Size', required=False)
+Complex_substance_of_industrial_origin:
   product: enum('Beer', 'Cell medium', 'Whey')
   preparation_protocol: list(include('Step'))
   storage: include('Storage', required=False)
@@ -184,20 +186,19 @@ Publication_base:
 Publication: choose(include("Publication_base"), Article=include("Article"), Book=include("Book"),
   Thesis=include("Thesis") )
 Article:
-  journal: keyword()
+  journal: str()
 Book:
-  publisher: keyword()
+  publisher: str()
 Thesis:
   degree_type: enum("PhD", "Habilitation", "Master", "Bachelor")
 ---
 Result_base:
   id: link_target(name="result")
   name: str()
-  type: enum('Concentration', 'Stoichiometry', 'Constant of association (KA)', 'Constant
-    of dissociation (KD)', 'Half maximal effective concentration (EC50)', 'Hill coefficient',
-    'Association rate (kOn)', 'Dissociation rate (kOff)', 'Change in enthalpy (deltaH)',
-    'Change in entropy (deltaS)', 'Change in Gibbs free energy (deltaG)', 'Molecular
-    weight (MW)')
+  type: enum('Concentration', 'Stoichiometry', 'Constant of association KA', 'Constant
+    of dissociation KD', 'Half maximal effective concentration EC50', 'Hill coefficient',
+    'Association rate kOn', 'Dissociation rate kOff', 'Change in enthalpy deltaH',
+    'Change in entropy deltaS', 'Change in Gibbs free energy deltaG', 'Molecular weight')
   entities_involved: list(nested_include('Entity_and_stoichiometry'), min=1)
   value: num()
   value_error: include('Value_error', required=False)
@@ -206,7 +207,7 @@ Result: choose(include('Result_base'), Concentration=include('Result_concentrati
   Constant_of_dissociation_KD=include('Result_KD'), Association_rate_kOn=include('Result_kOn'),
   Dissociation_rate_kOff=include('Result_kOff'), Change_in_enthalpy_deltaH=include('Result_deltaH'),
   Change_in_entropy_deltaS=include('Result_deltaS'), Change_in_Gibbs_free_energy_deltaG=include('Result_deltaG'),
-  Molecular_weight_MW=include('Result_MW'), Half_maximal_effective_concentration_EC50=include('Result_EC50'),
+  Molecular_weight=include('Result_MW'), Half_maximal_effective_concentration_EC50=include('Result_EC50'),
   Hill_coefficient=include('Result_hill_coeff'), )
 Result_concentration:
   unit: include('CONCENTRATION_UNITS')
@@ -240,7 +241,7 @@ Entity_and_stoichiometry:
 ---
 Modification:
   position: str(required=False)
-  modification: str()
+  type: str()
   protocol: list(include('Step'), required=False)
 Step:
   name: str()
@@ -260,11 +261,9 @@ Processing_step:
   link_to_source_code: url(required=False)
 ---
 Value_error:
-  lower_error: num()
+  lower: num()
+  upper: num()
   is_relative: bool()
-Ph:
-  value: num()
-  value_error: include('Value_error', required=False)
 Temperature:
   value: num()
   unit: include('TEMPERATURE_UNITS')
@@ -289,15 +288,51 @@ Concentration:
   value: num(min=-1)
   unit: include('CONCENTRATION_UNITS')
 Molecular_weight:
-  value: num()
+  value: num(min=-1)
   unit: include('MOLECULAR_WEIGHT_UNITS')
 Size:
   type: enum('radius', 'diameter', 'path length')
   mean: num(min=0)
   unit: include('LENGTH_UNITS')
   median: num(min=0, required=False)
-  upper: num(required=False)
-  lower: num(required=False)
+  upper: num(required=False, min=0)
+  lower: num(required=False, min=0)
+Quality_controls:
+  purity: include('Purity', required=False)
+  identity: include('Identity', required=False)
+  homogeneity: include("Homogeneity", required=False)
+Purity_base:
+  checked: enum("Yes", "No")
+Purity: choose(include('Purity_base'), type_field='checked', Yes=include('Yes_purity'),
+  No=include('Empty_object'))
+Empty_object: {}
+Yes_purity:
+  method: enum("SDS-PAGE", "Capillary Electrophoresis", "Agarose Gel electrophoresis")
+  purity_percentage: enum('<90 %', '>90 %', '>95 %', '>99 %')
+Identity:
+  checked: enum("Yes", "No")
+  by_intact_mass: include('By_intact_mass', required=False)
+  by_sequencing: include('By_sequencing', required=False)
+  by_fingerprinting: include('By_fingerprinting', required=False)
+By_intact_mass:
+  method: enum("Mass spectrometry", "SDS-PAGE")
+  deviation_from_expected_mass: include('Molecular_weight')
+By_sequencing:
+  method: enum("Mass spectrometry-Mass spectrometry", "Edman degradation", "Sanger
+    sequencing", "Next generation sequencing")
+  coverage: int(min=0, max=100)
+By_fingerprinting:
+  method: enum("Protease digest + Mass spectrometry", "Restriction enzyme digest +
+    Gel electrophoresis")
+Homogeneity_base:
+  checked: enum("Yes", "No")
+Homogeneity: choose(include('Homogeneity_base'), type_field='checked', Yes=include('Yes_homogeneity'),
+  No=include('Empty_object'))
+Yes_homogeneity:
+  method: enum("Dynamic light scattering", "Size exclusion chromatography", "Native
+    Gel Electrophoresis", "Mass photometry")
+  expected number_of_species: int(min=1)
+  number_of_species_observed: int(min=1)
 ---
 Storage:
   temperature: include('Temperature')
@@ -310,7 +345,6 @@ Supplier:
 Coordinates:
   latitude: num(min=-90, max=90)
   longitude: num(min=-180, max=180)
-OBTAINED_TYPES: enum('Measurement', 'Calculation', 'Assumption', required=False)
 ---
 CONCENTRATION_UNITS: enum('M', 'mM', 'µM', 'nM', 'pM', 'fM', 'aM', 'g/L', 'mg/mL',
   'µg/mL', 'ng/mL', 'mol/kg', 'mmol/kg', 'v/v %','w/w %', 'v/w %', 'w/v %', 'U/ml','%

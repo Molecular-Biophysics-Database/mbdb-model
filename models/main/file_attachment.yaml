@@ -21,7 +21,7 @@ originates_from:
     value           : enum('Instrument software', 'User', 'MBDB')
 
 size:
-    description     : str(equals='Size of the file', required=False)
+    description     : str(equals='Size of the file in bytes', required=False)
     value           : int(min=0)
 
 
