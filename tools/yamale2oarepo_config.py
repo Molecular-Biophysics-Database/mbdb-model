@@ -27,9 +27,7 @@ PLUGINS = {
 }
 
 FILE_RESOURCE = {
-    "base-classes": [
-        "oarepo_ui.resources.file_resource.S3RedirectFileResource"
-    ]
+    "base-classes": ["oarepo_ui.resources.file_resource.S3RedirectFileResource"]
 }
 
 # Mapping related constants

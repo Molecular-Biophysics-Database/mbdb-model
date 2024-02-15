@@ -2,26 +2,17 @@ import copy
 import dataclasses
 import logging
 import re
-import click
-import ruamel
-import yamale
 from collections import namedtuple
 from io import StringIO
 from pathlib import Path
 from typing import Any, Dict, Union
+
+import click
+import ruamel
+import yamale
 from ruamel.yaml import YAML as ruamel_YAML
+from ruamel.yaml.scalarstring import DoubleQuotedScalarString
 from yamale.schema import Schema
-from yamale2oarepo_config import (
-    PRIMITIVES_MAPPING,
-    QUERY_STRING_FIELD,
-    PROFILES,
-    PLUGINS,
-    MODEL_SETTINGS,
-    QUERY_STRING_FIELD_SETTINGS,
-    RECORD_MAPPING,
-    VOCABULARY_MAPPING,
-    FILE_RESOURCE,
-)
 from yamale.validators import (
     Boolean,
     Day,
@@ -51,9 +42,17 @@ from custom_validators import (
     Uuid,
     Vocabulary,
 )
-
-from ruamel.yaml.scalarstring import DoubleQuotedScalarString
-
+from yamale2oarepo_config import (
+    FILE_RESOURCE,
+    MODEL_SETTINGS,
+    PLUGINS,
+    PRIMITIVES_MAPPING,
+    PROFILES,
+    QUERY_STRING_FIELD,
+    QUERY_STRING_FIELD_SETTINGS,
+    RECORD_MAPPING,
+    VOCABULARY_MAPPING,
+)
 
 log = logging.getLogger("yamale2oarepo")
 

@@ -243,6 +243,5 @@ for val in (
     Choose,
     Nested_include,
     Vocabulary,
-
 ):
     extend_validators[val.tag] = val

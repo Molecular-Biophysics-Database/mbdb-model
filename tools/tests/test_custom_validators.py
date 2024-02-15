@@ -1,12 +1,13 @@
 import yamale
-from tools.custom_validators import extend_validators
+
 from tools.custom_validators import (
+    Choose,
     Link,
     LinkTarget,
-    Vocabulary,
-    Uuid,
     Url,
-    Choose
+    Uuid,
+    Vocabulary,
+    extend_validators,
 )
 
 
@@ -74,6 +75,7 @@ class TestLinkTarget:
         {},
         [],
     ]
+
     def test_valid_linktargets(self):
         for valid in self.valid_linktargets:
             assert self.linktarget.is_valid(valid)
@@ -188,7 +190,9 @@ Case_1:
 Case_2:
     test_2: num()   
 """
-    test_schema = yamale.make_schema(validators=extend_validators, content=yamale_schema)
+    test_schema = yamale.make_schema(
+        validators=extend_validators, content=yamale_schema
+    )
 
     base_schema = test_schema.dict["Base_test"]
     case_1 = test_schema.dict["Case_1"]
@@ -200,11 +204,14 @@ Case_2:
         {"name": "test 2", "type": "Case 2", "test_2": 2.2},
     ]
     invalid_choose = [
-        {"type": "Case 2", "test_2": 1},                     # missing name field
-        {"type": "Case 2", "test_1": 1},                     # Case 2 should have the test_2 field, not test_1
-        {"name": "test 2", "test_1": 1},                     # missing type field
-        {"name": "test", "type": "Case 1", "test_1": 1.1},   # wrong type of test_1
-        {},                                                  # empty object no allowed
+        {"type": "Case 2", "test_2": 1},  # missing name field
+        {
+            "type": "Case 2",
+            "test_1": 1,
+        },  # Case 2 should have the test_2 field, not test_1
+        {"name": "test 2", "test_1": 1},  # missing type field
+        {"name": "test", "type": "Case 1", "test_1": 1.1},  # wrong type of test_1
+        {},  # empty object no allowed
     ]
 
     def test_valid_choose(self):
