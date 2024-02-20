@@ -23,7 +23,7 @@ MST_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MST method specific parameters',
                               required=False)
-        value           : keyword(equals='0.9.8')
+        value           : keyword(equals='0.9.9')
 
     experiment_type:
         description     : str(equals='The type of physical parameter that was
@@ -92,11 +92,12 @@ MST_specific_parameters:
 
 MST_data_analysis:
     result:
-        description     : str(equals='Link to a result that was
-                                      defined in the general parameters',
+        description     : str(equals='Link to the result(s) that was obtained 
+                                      by the data analysis. The link is to the 
+                                      results defined in the general parameters',
                                       required=False)
 
-        value           : link(target='result', required=False)
+        value           : list(link(target='result'), required=False)
 
     measurements:
         description     : str(equals='List of the measurements that was
