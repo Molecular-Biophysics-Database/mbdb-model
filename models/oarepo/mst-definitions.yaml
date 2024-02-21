@@ -2,7 +2,7 @@ MST_specific_parameters:
   properties:
     schema_version:
       type: keyword
-      enum: [0.9.8]
+      enum: [0.9.9]
       help.en: The schema version used to annotate the MST method specific parameters
       required: true
     experiment_type:
@@ -56,7 +56,10 @@ MST_specific_parameters:
       use: '#/$defs/MST_data_analysis'
 MST_data_analysis:
   properties:
-    result:
+    result[]:
+      ^minItems: 1
+      ^help.en: Link to the result(s) that was obtained by the data analysis. The
+        link is to the results defined in the general parameters
       type: relation
       model: '#result'
       keys: [id, name]
