@@ -42,7 +42,17 @@ from custom_validators import (
     Uuid,
     Vocabulary,
 )
-from yamale2oarepo_config import PRIMITIVES_MAPPING, VOCABULARY_MAPPING
+from yamale2oarepo_config import (
+    FILE_RESOURCE,
+    MODEL_SETTINGS,
+    PLUGINS,
+    PRIMITIVES_MAPPING,
+    PROFILES,
+    QUERY_STRING_FIELD,
+    QUERY_STRING_FIELD_SETTINGS,
+    RECORD_MAPPING,
+    VOCABULARY_MAPPING,
+)
 
 log = logging.getLogger("yamale2oarepo")
 
@@ -606,17 +616,44 @@ class ModelVocabulary(ModelLink):
 class Model:
     includes: Dict[str, ModelBase]
     model: ModelBase
+    files_meta: Dict = None
     package: str = None
 
     def to_json(self):
-        return self.model.to_json()["properties"]
+        return {
+            "profiles": PROFILES,
+            "record": self._to_record(),
+            "plugins": PLUGINS,
+            "$defs": self._to_defs(),
+            "settings": MODEL_SETTINGS,
+        }
 
-    def to_defs(self):
+    def _to_defs(self):
         return {k: v.to_json() for k, v in self.includes.items()}
 
-    @staticmethod
-    def to_files_meta(filename):
-        return parse_file(filename, modelbase_only=True).to_json()
+    def _to_record(self):
+        return {
+            "use": ["invenio"],
+            "module": {"qualified": f"mbdb_{self.package}"},
+            "properties": {
+                "id": {
+                    "mapping": PRIMITIVES_MAPPING
+                },  # add record id field to default search
+                "metadata": self.model.to_json(),
+                QUERY_STRING_FIELD: QUERY_STRING_FIELD_SETTINGS,
+            },
+            "files": {
+                **self.files_meta,
+                "use": ["invenio_files"],
+                "resource": FILE_RESOURCE,
+            },
+            "draft": {},
+            "draft-files": {
+                "resource": FILE_RESOURCE,
+            },
+            "mapping": RECORD_MAPPING,
+            "resource-config": {"base-html-url": f"/{self.package}/"},
+        }
 
     def set_links(self):
         links = {}
@@ -638,6 +675,9 @@ class Model:
 
     def propagate_polymorphic_base_schemas(self):
         self.model.propagate_polymorphic_base_schemas(self.includes, [])
+
+    def add_files_meta(self, files_meta: Dict):
+        self.files_meta = files_meta
 
 
 def parse_described_value(d, path, includes):
@@ -804,30 +844,6 @@ def set_flow_style(d):
             set_flow_style(v)
 
 
-def json_to_yaml(json_dict):
-    yaml = ruamel_YAML()
-    yaml.default_flow_style = False
-    yaml.preserve_quotes = True
-    yaml.allow_unicode = True
-    yaml.sort_base_mapping_type_on_output = True
-    yaml.Representer = NonAliasingRTRepresenter
-    io = StringIO()
-    yaml.dump(ruamel_quote_booleans(json_dict), io)
-    io.seek(0)
-    loaded = yaml.load(io)
-    set_flow_style(loaded)
-    io = StringIO()
-    yaml.dump(loaded, io)
-    return io.getvalue()
-
-
-def get_filename(name: str, out_dir: Path, model_package: str) -> Path:
-    if model_package:
-        model_package = f"{model_package}-"
-
-    return out_dir / f"{model_package}{name}.yaml"
-
-
 def ruamel_quote_booleans(d):
     if isinstance(d, (list, tuple)):
         return [ruamel_quote_booleans(x) for x in d]
@@ -847,9 +863,8 @@ def ruamel_quote_booleans(d):
     default=Path(__file__).parent.parent / "models" / "main" / "MST.yaml",
     required=True,
 )
+@click.argument("output_file", required=False)
 @click.option("--debug", type=bool)
-@click.option("--only_defs", type=bool)
-@click.option("--out_dir", type=Path)
 @click.option(
     "--include",
     default=Path(__file__).parent.parent
@@ -858,7 +873,7 @@ def ruamel_quote_booleans(d):
     / "general_parameters.yaml",
     required=False,
 )
-def run(input_file, debug, out_dir, only_defs, include):
+def run(input_file, output_file, debug, include):
     if debug:
         logging.basicConfig(level=logging.DEBUG)
     ym_file = input_file
@@ -871,25 +886,27 @@ def run(input_file, debug, out_dir, only_defs, include):
     model.remove_unused_includes()
     model.set_links()
     model.propagate_polymorphic_base_schemas()
-
-    out = [(model.to_defs(), "definitions", model.package)]
-
-    if not only_defs:
-        out += [
-            (model.to_json(), "metadata", model.package),
-            (model.to_files_meta(filename=attachment), "files", ""),
-        ]
-
-    for json_dict, name, model_package in out:
-        yaml_text = json_to_yaml(json_dict)
-
-        if out_dir:
-            output_file = get_filename(name, out_dir, model_package)
-            output_file.parent.mkdir(parents=True, exist_ok=True)
-            output_file.write_text(yaml_text)
-
-        else:
-            print(yaml_text)
+    model.add_files_meta(parse_file(attachment, modelbase_only=True).to_json())
+    yaml = ruamel_YAML()
+    yaml.default_flow_style = False
+    yaml.preserve_quotes = True
+    yaml.allow_unicode = True
+    yaml.sort_base_mapping_type_on_output = True
+    yaml.Representer = NonAliasingRTRepresenter
+    io = StringIO()
+    yaml.dump(ruamel_quote_booleans(model.to_json()), io)
+    io.seek(0)
+    loaded = yaml.load(io)
+    set_flow_style(loaded)
+    io = StringIO()
+    yaml.dump(loaded, io)
+    model_yaml = io.getvalue()
+    if output_file:
+        output_file = Path(output_file)
+        output_file.parent.mkdir(parents=True, exist_ok=True)
+        Path(output_file).write_text(model_yaml)
+    else:
+        print(model_yaml)
 
 
 if __name__ == "__main__":
