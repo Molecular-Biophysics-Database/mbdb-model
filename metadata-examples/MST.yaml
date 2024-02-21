@@ -242,7 +242,7 @@ general_parameters:
     raw_measurement_files: ['https://mbdb.eu/mst/files/foo.txt']
 
 method_specific_parameters:
-    schema_version: '0.9.8'
+    schema_version: '0.9.9'
     experiment_type: 'Affinity'
     signal_type: 'TRIC/MST'
     excitation_led_color: 'RED (ex 605-645nm, em 660-720nm)'
@@ -250,7 +250,7 @@ method_specific_parameters:
     ir_mst_laser_power: 20
     data_analysis:
         - result:
-              $ref: 'de-par-kd-hemo'
+            - $ref: 'de-par-kd-hemo'
               name: 'KD of hemoglobin to unknown component in serum'
           data_fitting:
             model: '1:1'
