@@ -5,16 +5,19 @@ MST_specific_parameters:
       enum: [0.9.9]
       help.en: The schema version used to annotate the MST method specific parameters
       required: true
+      label.en: Schema version
     experiment_type:
       type: keyword
       enum: [Affinity, Concentration, Other]
       help.en: The type of physical parameter that was sought
       required: true
+      label.en: Experiment type
     signal_type:
       type: keyword
       enum: [Initial intensity, TRIC/MST, Spectral shift]
       help.en: The type of signal that was being measured
       required: true
+      label.en: Signal type
     excitation_led_color:
       type: keyword
       enum: ['RED (ex 605-645nm, em 660-720nm)', 'RED (ex 610-645nm, em 680-720nm)',
@@ -25,12 +28,14 @@ MST_specific_parameters:
         colors are specific to the combination in which it occurs, e.g. the GREEN
         in a BLUE/GREEN instrument, is not the same as the GREEN in a GREEN/RED instrument
       required: true
+      label.en: Excitation led color
     excitation_led_power:
       type: double
       minimum: 0.0
       maximum: 100.0
       help.en: The power, in percentage, of the excitation LED used in experiment
       required: true
+      label.en: Excitation led power
     ir_mst_laser_power:
       type: double
       minimum: 0.0
@@ -40,26 +45,32 @@ MST_specific_parameters:
         the underlying data is still stored in percentages. Use the following conversion;
         Low = 20, Medium = 40, High = 60
       required: true
+      label.en: Ir mst laser power
     temperature:
       use: '#/$defs/Temperature'
       help.en: The temperature of the sample chamber while the measurement was performed
+      label.en: Temperature
     measurements[]:
       ^minItems: 1
       ^help.en: List of the information about each measurement. This includes target(s),
         ligand(s), chemical environment, and the position of the sample within the
         instrument
       ^required: true
+      ^label.en: Measurements
       use: '#/$defs/Measurement'
     data_analysis[]:
       ^minItems: 1
       ^help.en: The details of how data analysis was performed to obtain the result
+      ^label.en: Data analysis
       use: '#/$defs/MST_data_analysis'
+  label.en: Mst specific parameters
 MST_data_analysis:
   properties:
     result[]:
       ^minItems: 1
       ^help.en: Link to the result(s) that was obtained by the data analysis. The
         link is to the results defined in the general parameters
+      ^label.en: Result
       type: relation
       model: '#result'
       keys: [id, name]
@@ -67,6 +78,7 @@ MST_data_analysis:
       ^minItems: 1
       ^help.en: List of the measurements that was analyzed together for a specific
         parameter
+      ^label.en: Measurements
       type: relation
       model: '#mst-measurement'
       keys: [id, name]
@@ -75,44 +87,54 @@ MST_data_analysis:
       help.en: If the data was analyzed with time windows corresponding to fluorescence
         before and after an IR laser was heating the sample the edges of the time
         windows can be specified here
+      label.en: F cold and hot
     data_processing_steps[]:
       ^minItems: 1
       ^help.en: Describe the steps in the data analysis prior to fitting (removing
         outliers in the raw data, applying smoothing filters, etc.)
+      ^label.en: Data processing steps
       use: '#/$defs/Processing_step'
     data_fitting:
       use: '#/$defs/Data_fitting'
       help.en: The details of how data fitting was performed to obtain the result
+      label.en: Data fitting
+  label.en: Mst data analysis
 F_cold_and_hot:
   properties:
     time_unit:
       use: '#/$defs/TIME_UNITS'
       required: true
       help.en: The unit of time used for reporting measurement data
+      label.en: Time unit
     f_cold_start:
       type: double
       minimum: -100.0
       help.en: Numerical value of the start-point of time interval used to establish
         the initial fluorescence, F_cold
       required: true
+      label.en: F cold start
     f_cold_end:
       type: double
       minimum: -100.0
       help.en: Numerical value of the end-point of time interval used to establish
         the initial fluorescence, F_cold
       required: true
+      label.en: F cold end
     f_hot_start:
       type: double
       minimum: 0.0
       help.en: Numerical value of the start-point of time interval used to establish
         the fluorescence temperature induced change in fluorescence, F_hot
       required: true
+      label.en: F hot start
     f_hot_end:
       type: double
       minimum: 0.0
       help.en: Numerical value of the end-point of time interval used to establish
         the fluorescence temperature induced change in fluorescence, F_hot
       required: true
+      label.en: F hot end
+  label.en: F cold and hot
 Measurement:
   properties:
     id:
@@ -125,17 +147,21 @@ Measurement:
         allow location of the measurement data within the raw data file as well as
         processed data files if these are present
       required: true
+      label.en: Name
     position:
       type: keyword
       help.en: Position where the container (capillary) of the measured sample within
         the instrument (e.g. 1, 2, 3)
       required: true
+      label.en: Position
     sample:
       use: '#/$defs/Sample'
       required: true
       help.en: Information about the sample including concentrations of ligands and
         targets, and which chemical environment the sample was composed of
+      label.en: Sample
   id: mst-measurement
+  label.en: Measurement
 Sample:
   properties:
     targets[]:
@@ -143,12 +169,14 @@ Sample:
       ^help.en: List of names (ids), from the entities of interest defined in the
         general parameters, of directly measured entities
       ^required: true
+      ^label.en: Targets
       use: '#/$defs/Entity_constituent'
     ligands[]:
       ^minItems: 1
       ^help.en: List of names (ids) of entities (from the entities of interest defined
         in the general parameters) that were used to alter the behavior of the target(s)
       ^required: true
+      ^label.en: Ligands
       use: '#/$defs/Entity_constituent'
     chemical_environment:
       type: relation
@@ -164,13 +192,16 @@ Sample:
           Chip, 384-well plate, other]
       help.en: The container the sample was in during the measurement
       required: true
+      label.en: Measurement container
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of steps taken to prepare the sample, ending at the point where
         it was placed in the measurement container. Information include operations
         like filtration and which filter material and pore-size was used should be
         added
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
+  label.en: Sample
 General_parameters:
   properties:
     schema_version:
@@ -178,24 +209,29 @@ General_parameters:
       enum: [0.9.18]
       help.en: The schema version used to annotate the general parameters of the record
       required: true
+      label.en: Schema version
     record_information:
       use: '#/$defs/Record_information'
       required: true
       help.en: Information about the record itself, including whether this particular
         record is associated with other records
+      label.en: Record information
     depositors:
       use: '#/$defs/Depositors'
       required: true
       help.en: Information about the depositors (authors) of this record
+      label.en: Depositors
     associated_publication:
       use: '#/$defs/Publication'
       help.en: If the data in this record is described in published literature (article,
         journal, thesis), information about the literature can be specified here
+      label.en: Associated publication
     funding_references[]:
       ^minItems: 1
       ^help.en: List of information about the grants that supported generation of
         the raw data annotated by this record. Note that this information is based
         on OpenAire Projects
+      ^label.en: Funding references
       keys: [id, title, props.funder_name]
       vocabulary-type: grants
       type: vocabulary
@@ -213,15 +249,18 @@ General_parameters:
       required: true
       help.en: The type of experimental technique used for collecting the raw data
         annotated by this record
+      label.en: Technique
     collection_start_time:
       type: date
       help.en: The date when collection of the raw data began
       required: true
+      label.en: Collection start time
     instrument:
       use: '#/$defs/Instrument'
       required: true
       help.en: Information about the instrument being used to collect (measure) the
         raw data annotated by this record
+      label.en: Instrument
     entities_of_interest[]:
       ^minItems: 1
       ^help.en: List of the entities that are being directly measured, as well as
@@ -230,6 +269,7 @@ General_parameters:
         the pH was varied by individually prepared chemical environments these should
         be specified individually in chemical environments
       ^required: true
+      ^label.en: Entities of interest
       use: '#/$defs/Entity'
       type: polymorphic
       mapping:
@@ -239,12 +279,14 @@ General_parameters:
       ^help.en: Composition of the chemical environment (colloquially known as the
         buffer).
       ^required: true
+      ^label.en: Chemical environments
       use: '#/$defs/Chemical_environment'
       type: nested
     results[]:
       ^minItems: 1
       ^help.en: List of the results (parameter) that were derived by analyzing the
         raw data, and which steps were taken to obtain them
+      ^label.en: Results
       use: '#/$defs/Result'
       type: polymorphic
       mapping:
@@ -255,7 +297,10 @@ General_parameters:
       ^ui_file_context:
         type: keyword
         enum: [raw measurement data]
+        label.en: Ui file context
+      ^label.en: Raw measurement files
       type: url
+  label.en: General parameters
 Record_information:
   properties:
     title:
@@ -264,6 +309,7 @@ Record_information:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Title
     access_rights:
       type: keyword
       enum: [open access, embargoed access, restricted access]
@@ -273,6 +319,7 @@ Record_information:
         after a specified date, 3) "restricted access" where depositors are of the
         record are the only ones who has access
       required: true
+      label.en: Access rights
     metadata_access_rights:
       type: keyword
       enum: [open access, embargoed access, restricted access]
@@ -284,49 +331,61 @@ Record_information:
         3) "restricted access" where depositors are of the record are the only ones
         who has access
       required: true
+      label.en: Metadata access rights
     publisher:
       type: keyword
       enum: [MBDB]
       help.en: When made available MBDB is to be considered the publisher, however,
         the depositors are still the owners
       required: true
+      label.en: Publisher
     resource_type_general:
       type: keyword
       enum: [Dataset]
       help.en: All records are considered to be datasets
       required: true
+      label.en: Resource type general
     resource_type:
       type: keyword
       help.en: DataCite item which shows type of dataset the record is and corresponds
         directly to which kind of technique was used (MST/BLI/SPR)
       required: true
+      label.en: Resource type
     external_identifier:
       type: keyword
       help.en: The external identifier of the record which is a DOI generated by Datacite.
         This will automatically be generated when the record is published
+      label.en: External identifier
     subject_category:
       type: keyword
       enum: [Biophysics]
       help.en: DataCite subject category the record data belongs to default is Biophysics
       required: true
+      label.en: Subject category
     deposition_date:
       type: date
       help.en: The date when the data was deposited; automatically generated
       required: true
+      label.en: Deposition date
     date_available:
       type: date
       help.en: The date when the data was/will be made publicly available. Will be
         automatically generated
+      label.en: Date available
+  label.en: Record information
 Instrument:
   properties:
     manufacturer:
       use: '#/$defs/COMPANIES'
       required: true
       help.en: Name of the manufacturer of the instrument used for raw data collection
+      label.en: Manufacturer
     name:
       type: keyword
       help.en: The name of the instrument as provided by the manufacturer
       required: true
+      label.en: Name
+  label.en: Instrument
 Entity_base:
   properties:
     id:
@@ -340,6 +399,7 @@ Entity_base:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -354,33 +414,42 @@ Entity_base:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
   id: entity
+  label.en: Entity base
 Entity:
   help.en: Details of the entity including identifiers and protocols used to obtain
     the entity. Which information is required, varies depending the type of entity
-  required: true
+  label.en: Entity
   schemas:
     Polymer:
       use: '#/$defs/EntityPolymerPolymorphic'
       required: true
+      label.en: Entity
     Chemical:
       use: '#/$defs/EntityChemicalPolymorphic'
       required: true
+      label.en: Entity
     Molecular assembly:
       use: '#/$defs/EntityMolecular_assemblyPolymorphic'
       required: true
+      label.en: Entity
     Complex substance of biological origin:
       use: '#/$defs/EntityComplex_substance_of_biological_originPolymorphic'
       required: true
+      label.en: Entity
     Complex substance of environmental origin:
       use: '#/$defs/EntityComplex_substance_of_environmental_originPolymorphic'
       required: true
+      label.en: Entity
     Complex substance of chemical origin:
       use: '#/$defs/EntityComplex_substance_of_chemical_originPolymorphic'
       required: true
+      label.en: Entity
     Complex substance of industrial origin:
       use: '#/$defs/EntityComplex_substance_of_industrial_originPolymorphic'
       required: true
+      label.en: Entity
   type: polymorphic
   discriminator: type
   id: entity
@@ -395,6 +464,8 @@ Entity_constituent:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the entity
+      label.en: Concentration
+  label.en: Entity constituent
 Molecular_assembly:
   properties:
     external_databases[]:
@@ -403,6 +474,7 @@ Molecular_assembly:
         about the molecular assembly as a whole can be specified here (e.g. PDB:1YQ2
         ); information about the individual components should be specified in the
         details of the individual components
+      ^label.en: External databases
       type: keyword
       mapping:
         copy_to: collected_default_search_fields
@@ -412,6 +484,7 @@ Molecular_assembly:
         lipids, metal ions etc.) the molecular assembly is composed of (e.g. Hemoglobin
         alpha) and how many copies of each component were present
       ^required: true
+      ^label.en: Components
       use: '#/$defs/Assembly_component'
       type: polymorphic
       mapping:
@@ -420,21 +493,26 @@ Molecular_assembly:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The molecular weight of the molecular assembly
+      label.en: Molecular weight
     chemical_modifications[]:
       ^minItems: 1
       ^help.en: List describing deliberate modifications made to the molecular assembly
         through chemical, biochemical, or physical means
+      ^label.en: Chemical modifications
       use: '#/$defs/Modification'
       type: nested
     quality_controls:
       use: '#/$defs/Quality_controls'
       help.en: Information about if and how quality control of the molecular assembly
         was performed
+      label.en: Quality controls
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the macromolecular assembly can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
+  label.en: Molecular assembly
 Assembly_component_base:
   properties:
     name:
@@ -444,26 +522,32 @@ Assembly_component_base:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical]
       help.en: The type of component, options are (biological) Polymer and Chemical
       required: true
+      label.en: Type
     copy_number:
       type: double
       minimum: -1.0
       help.en: Number of copies of the component within the assembly, -1 if unknown
       required: true
+      label.en: Copy number
+  label.en: Assembly component base
 Assembly_component:
   help.en: Details about the assembly component
-  required: true
+  label.en: Assembly component
   schemas:
     Polymer:
       use: '#/$defs/Assembly_componentPolymerPolymorphic'
       required: true
+      label.en: Assembly component
     Chemical:
       use: '#/$defs/Assembly_componentChemicalPolymorphic'
       required: true
+      label.en: Assembly component
   type: polymorphic
   discriminator: type
 Polymer:
@@ -477,6 +561,7 @@ Polymer:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Polymer type
     sequence:
       type: keyword
       help.en: Primary sequence of the polymer, using single letter codes (e.g. SAGRELLE,
@@ -484,14 +569,17 @@ Polymer:
         monomer in brackets
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Sequence
     molecular_weight:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The molecular weight of the polymer
+      label.en: Molecular weight
     external_databases[]:
       ^minItems: 1
       ^help.en: List of identifiers to records in external databases containing information
         about the polymer can be specified here (e.g uniprot:Q8KRF6)
+      ^label.en: External databases
       type: keyword
       mapping:
         copy_to: collected_default_search_fields
@@ -502,6 +590,7 @@ Polymer:
         purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Variant
     source_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -520,6 +609,7 @@ Polymer:
       enum: [Natively, Recombinantly, Synthetically]
       help.en: How the polymer was produced
       required: true
+      label.en: Expression source type
     expression_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -529,19 +619,24 @@ Polymer:
       help.en: If the polymer contains modifications such as non-natural aminoacids,
         post translational modification, or chemically modifications like labeling,
         it can be specified here
+      label.en: Modifications
     quality_controls:
       use: '#/$defs/Quality_controls'
       help.en: Information about if and how quality control of the polymer was performed
+      label.en: Quality controls
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the polymer can be specified here
+      ^label.en: Additional specifications
       type: keyword
+  label.en: Polymer
 Polymer_modifications:
   properties:
     synthesis[]:
       ^minItems: 1
       ^help.en: Modifications (e.g. non-natural amino acids) of the polymer made during
         synthesis (e.g. translation) of the polymer
+      ^label.en: Synthesis
       use: '#/$defs/Modification'
       type: nested
     biological_postprocessing[]:
@@ -549,6 +644,7 @@ Polymer_modifications:
       ^help.en: Modifications of the polymer made after synthesis (e.g. posttranslational
         modifications, DNA methylation) by the organism where synthesis occurred (e.g.
         glycosylation)
+      ^label.en: Biological postprocessing
       use: '#/$defs/Modification'
       type: nested
     chemical[]:
@@ -556,8 +652,10 @@ Polymer_modifications:
       ^help.en: Modifications of the polymer introduced by chemical, biochemical,
         or physical means in vitro (e.g. lysine methylation, cysteine iodoacetamide
         labeling, deglycosylation, covalent fluorescent labeling)
+      ^label.en: Chemical
       use: '#/$defs/Modification'
       type: nested
+  label.en: Polymer modifications
 Chemical:
   properties:
     inchikey:
@@ -569,25 +667,31 @@ Chemical:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Inchikey
     additional_identifiers[]:
       ^minItems: 1
       ^help.en: Unique and persistent identifier from an external source; options
         of sources are CAS number, ChEMBL ID, Pubchem Compound ID, and Pubchem Substance
         ID
+      ^label.en: Additional identifiers
       type: keyword
     isotopic_labeling:
       type: keyword
       help.en: If the isotopic composition of the chemical was altered from the naturally
         occurring abundances, it can be specified here (e.g. 15N, 13C)
+      label.en: Isotopic labeling
     molecular_weight:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The molecular weight of the chemical
+      label.en: Molecular weight
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
         RNase free water, recrystallization, desalting)
+      ^label.en: Additional specifications
       type: keyword
+  label.en: Chemical
 Chemical_environment:
   properties:
     id:
@@ -600,11 +704,13 @@ Chemical_environment:
         section in when describing the composition of the individual samples or measurement
         steps
       required: true
+      label.en: Name
     solvent[]:
       ^minItems: 1
       ^help.en: Information about the solvent component(s) of the chemical environment
         (e.g. water, D2O, DMSO, EtOH) can be specified here
       ^required: true
+      ^label.en: Solvent
       use: '#/$defs/Chemical_constituent'
       type: polymorphic
       mapping:
@@ -614,6 +720,7 @@ Chemical_environment:
       ^help.en: List of the constituents, excluding solvent components, that made
         up the chemical environment (i.e. buffer system, salts, surfactants, crowding
         agents, serum, etc.)
+      ^label.en: Constituents
       use: '#/$defs/Constituent'
       type: polymorphic
       mapping:
@@ -622,14 +729,17 @@ Chemical_environment:
       type: double
       help.en: The pH value of the chemical environment
       required: true
+      label.en: Ph
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical environment can be specified
         here (e.g. prepared just prior to conducting the measurement, additional treatments
         like UV irradiation, specific storage container of chemical environment if
         that influenced the measurement etc.)
+      ^label.en: Additional specifications
       type: keyword
   id: chemical-environment
+  label.en: Chemical environment
 Constituent_base:
   properties:
     name:
@@ -639,6 +749,7 @@ Constituent_base:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -647,11 +758,14 @@ Constituent_base:
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
+      label.en: Type
     concentration:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the constituent including its relative concentration
         related to the collected sample or absolute concentration of the constituent
+      label.en: Concentration
+  label.en: Constituent base
 Chemical_constituent_base:
   properties:
     name:
@@ -661,24 +775,29 @@ Chemical_constituent_base:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Chemical]
       help.en: The type of the constituent, options are Chemical
       required: true
+      label.en: Type
     concentration:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the constituent including its relative concentration
         related to the collected sample or absolute concentration of the constituent
+      label.en: Concentration
+  label.en: Chemical constituent base
 Chemical_constituent:
   help.en: The details about the chemically defined constituent i.e. of type Polymer,
     Chemical, and Molecular assembly
-  required: true
+  label.en: Chemical constituent
   schemas:
     Chemical:
       use: '#/$defs/Chemical_constituentChemicalPolymorphic'
       required: true
+      label.en: Chemical constituent
   type: polymorphic
   discriminator: type
 Constituent:
@@ -687,45 +806,55 @@ Constituent:
     can only be defined in terms of a preparation protocol it should be described
     as a Complex substance of biological, environmental, chemical, or industrial production
     origin
-  required: true
+  label.en: Constituent
   schemas:
     Polymer:
       use: '#/$defs/ConstituentPolymerPolymorphic'
       required: true
+      label.en: Constituent
     Chemical:
       use: '#/$defs/ConstituentChemicalPolymorphic'
       required: true
+      label.en: Constituent
     Molecular assembly:
       use: '#/$defs/ConstituentMolecular_assemblyPolymorphic'
       required: true
+      label.en: Constituent
     Complex substance of biological origin:
       use: '#/$defs/ConstituentComplex_substance_of_biological_originPolymorphic'
       required: true
+      label.en: Constituent
     Complex substance of environmental origin:
       use: '#/$defs/ConstituentComplex_substance_of_environmental_originPolymorphic'
       required: true
+      label.en: Constituent
     Complex substance of chemical origin:
       use: '#/$defs/ConstituentComplex_substance_of_chemical_originPolymorphic'
       required: true
+      label.en: Constituent
     Complex substance of industrial origin:
       use: '#/$defs/ConstituentComplex_substance_of_industrial_originPolymorphic'
       required: true
+      label.en: Constituent
   type: polymorphic
   discriminator: type
 Complex_substance_of_biological_origin:
   help.en: Information about what the biological substance is derived from and how
     it collected and prepared
-  required: true
+  label.en: Complex substance of biological origin
   schemas:
     Body fluid:
       use: '#/$defs/Body_fluid'
       required: true
+      label.en: Complex substance of biological origin
     Cell fraction:
       use: '#/$defs/Cell_fraction'
       required: true
+      label.en: Complex substance of biological origin
     Virion:
       use: '#/$defs/Virion'
       required: true
+      label.en: Complex substance of biological origin
   type: polymorphic
   discriminator: derived_from
 Complex_substance_of_biological_origin_base:
@@ -735,6 +864,7 @@ Complex_substance_of_biological_origin_base:
       enum: [Body fluid, Cell fraction, Virion]
       help.en: The biological substance the complex substance is derived from
       required: true
+      label.en: Derived from
     source_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -754,16 +884,20 @@ Complex_substance_of_biological_origin_base:
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
+  label.en: Complex substance of biological origin base
 Body_fluid:
   properties:
     fluid:
@@ -773,11 +907,14 @@ Body_fluid:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Fluid
     health_status:
       type: keyword
       help.en: Health status of the donor organism where the body fluid was derived
         from (e.g. healthy, sick, patient with Diabetes type 2)
       required: true
+      label.en: Health status
+  label.en: Body fluid
 Cell_fraction:
   properties:
     fraction:
@@ -789,20 +926,26 @@ Cell_fraction:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Fraction
     organ:
       type: keyword
       help.en: The organ the cell fraction was derived from (e.g. heart)
+      label.en: Organ
     tissue:
       type: keyword
       help.en: The tissue type the cell fraction was derived from
+      label.en: Tissue
     cell_type:
       type: keyword
       help.en: The cell type the cell fraction was derived from
+      label.en: Cell type
     health_status:
       type: keyword
       help.en: Health status of the donor organism where the cell fraction was derived
         from (e.g. healthy, sick, patient with Diabetes type 2)
       required: true
+      label.en: Health status
+  label.en: Cell fraction
 Virion:
   properties:
     genetic_material:
@@ -810,16 +953,19 @@ Virion:
       enum: [No genetic material, Virus genome, Synthetic]
       help.en: The genetic material carried by the virions (None, virus genome, synthetic)
       required: true
+      label.en: Genetic material
     capsid_type:
       type: keyword
       enum: [None, Native, Genetically Engineered, Synthetic]
       help.en: The type of virion capsid
       required: true
+      label.en: Capsid type
     envelope_type:
       type: keyword
       enum: [None, Native, Genetically Engineered, Synthetic]
       help.en: The type of virion envelope
       required: true
+      label.en: Envelope type
     host_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -827,6 +973,8 @@ Virion:
     host_cell_type:
       type: keyword
       help.en: The host cell type the virion was produced in
+      label.en: Host cell type
+  label.en: Virion
 Complex_substance_of_environmental_origin:
   properties:
     source:
@@ -836,26 +984,32 @@ Complex_substance_of_environmental_origin:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Source
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     location:
       use: '#/$defs/Coordinates'
       required: true
       help.en: The coordinates, in decimal notation, where the complex substance was
         collected
+      label.en: Location
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
+  label.en: Complex substance of environmental origin
 Complex_substance_of_chemical_origin_base:
   properties:
     class:
@@ -863,29 +1017,35 @@ Complex_substance_of_chemical_origin_base:
       enum: [Lipid assembly]
       help.en: The chemical origin where the complex substance was derived from
       required: true
+      label.en: Class
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
+  label.en: Complex substance of chemical origin base
 Complex_substance_of_chemical_origin:
   help.en: Information about what the chemical substance is derived from and how it
     was prepared
-  required: true
+  label.en: Complex substance of chemical origin
   schemas:
     Lipid assembly:
       use: '#/$defs/Lipid_assembly'
       required: true
+      label.en: Complex substance of chemical origin
   type: polymorphic
   discriminator: class
 Lipid_assembly:
@@ -895,10 +1055,12 @@ Lipid_assembly:
       enum: [Micelle, Liposome, Nanodisc, Sheet]
       help.en: The type of lipid assembly
       required: true
+      label.en: Assembly type
     components[]:
       ^minItems: 1
       ^help.en: The components of the lipid assembly
       ^required: true
+      ^label.en: Components
       use: '#/$defs/Assembly_component'
       type: polymorphic
       mapping:
@@ -907,9 +1069,12 @@ Lipid_assembly:
       type: integer
       minimum: -1
       help.en: The number of lipid mono layers in the lipid assembly, -1 if unknown
+      label.en: Number of mono layers
     size:
       use: '#/$defs/Size'
       help.en: The size of the lipid assembly
+      label.en: Size
+  label.en: Lipid assembly
 Complex_substance_of_industrial_origin:
   properties:
     product:
@@ -920,39 +1085,48 @@ Complex_substance_of_industrial_origin:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Product
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
+  label.en: Complex substance of industrial origin
 Depositors:
   properties:
     depositor:
       use: '#/$defs/Person'
       required: true
       help.en: The person who made the deposition to MBDB
+      label.en: Depositor
     principal_contact:
       use: '#/$defs/Person'
       required: true
       help.en: The person responsible for the record and the one to contact for inquiries,
         would typically be the principle investigator group leader, or laboratory
         head
+      label.en: Principal contact
     contributors[]:
       ^minItems: 1
       ^help.en: List of other people who contributed to generating the deposited data,
         metadata, results , or the deposition itself
+      ^label.en: Contributors
       use: '#/$defs/Person'
       type: nested
+  label.en: Depositors
 Person:
   properties:
     given_name:
@@ -961,15 +1135,18 @@ Person:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Given name
     family_name:
       type: keyword
       help.en: The family name(s) the person
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Family name
     identifiers[]:
       ^minItems: 1
       ^help.en: Persistent personal identifiers, currently only ORCIDs are allowed
+      ^label.en: Identifiers
       type: keyword
       mapping:
         copy_to: collected_default_search_fields
@@ -977,6 +1154,7 @@ Person:
       ^minItems: 1
       ^help.en: The affiliation of the person. Note that this is based on the Research
         Organization Registry (ROR)
+      ^label.en: Affiliations
       keys: [id, title, props.city, props.state, props.country]
       vocabulary-type: affiliations
       type: vocabulary
@@ -989,6 +1167,7 @@ Person:
         id:
           mapping:
             copy_to: collected_default_search_fields
+  label.en: Person
 Publication_base:
   properties:
     pid:
@@ -998,30 +1177,37 @@ Publication_base:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Pid
     title:
       type: keyword
       help.en: The title of the publication
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Title
     type:
       type: keyword
       enum: [Article, Book, Thesis]
       help.en: The type of the publication
       required: true
+      label.en: Type
+  label.en: Publication base
 Publication:
   help.en: Information about the publication. peer-reviewed articles, books, and theses
     (dissertations) can be annotated
-  required: true
+  label.en: Publication
   schemas:
     Article:
       use: '#/$defs/PublicationArticlePolymorphic'
       required: true
+      label.en: Publication
     Book:
       use: '#/$defs/PublicationBookPolymorphic'
       required: true
+      label.en: Publication
     Thesis:
       use: '#/$defs/PublicationThesisPolymorphic'
       required: true
+      label.en: Publication
   type: polymorphic
   discriminator: type
 Article:
@@ -1032,6 +1218,8 @@ Article:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Journal
+  label.en: Article
 Book:
   properties:
     publisher:
@@ -1040,6 +1228,8 @@ Book:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Publisher
+  label.en: Book
 Thesis:
   properties:
     degree_type:
@@ -1049,6 +1239,8 @@ Thesis:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Degree type
+  label.en: Thesis
 Result_base:
   properties:
     id:
@@ -1061,6 +1253,7 @@ Result_base:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -1071,61 +1264,78 @@ Result_base:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
   id: result
+  label.en: Result base
 Result:
   help.en: Details of the result
-  required: true
+  label.en: Result
   schemas:
     Concentration:
       use: '#/$defs/ResultResult_concentrationPolymorphic'
       required: true
+      label.en: Result
     Stoichiometry:
       use: '#/$defs/ResultResult_stoichiometryPolymorphic'
       required: true
+      label.en: Result
     Constant of association KA:
       use: '#/$defs/ResultResult_KAPolymorphic'
       required: true
+      label.en: Result
     Constant of dissociation KD:
       use: '#/$defs/ResultResult_KDPolymorphic'
       required: true
+      label.en: Result
     Association rate kOn:
       use: '#/$defs/ResultResult_kOnPolymorphic'
       required: true
+      label.en: Result
     Dissociation rate kOff:
       use: '#/$defs/ResultResult_kOffPolymorphic'
       required: true
+      label.en: Result
     Change in enthalpy deltaH:
       use: '#/$defs/ResultResult_deltaHPolymorphic'
       required: true
+      label.en: Result
     Change in entropy deltaS:
       use: '#/$defs/ResultResult_deltaSPolymorphic'
       required: true
+      label.en: Result
     Change in Gibbs free energy deltaG:
       use: '#/$defs/ResultResult_deltaGPolymorphic'
       required: true
+      label.en: Result
     Molecular weight:
       use: '#/$defs/ResultResult_MWPolymorphic'
       required: true
+      label.en: Result
     Half maximal effective concentration EC50:
       use: '#/$defs/ResultResult_EC50Polymorphic'
       required: true
+      label.en: Result
     Hill coefficient:
       use: '#/$defs/ResultResult_hill_coeffPolymorphic'
       required: true
+      label.en: Result
   type: polymorphic
   discriminator: type
   id: result
@@ -1135,6 +1345,8 @@ Result_concentration:
       use: '#/$defs/CONCENTRATION_UNITS'
       required: true
       help.en: Unit of the concentration
+      label.en: Unit
+  label.en: Result concentration
 Result_stoichiometry:
   properties:
     unit:
@@ -1142,6 +1354,8 @@ Result_stoichiometry:
       enum: [per complex]
       help.en: Unit of the stoichiometry
       required: true
+      label.en: Unit
+  label.en: Result stoichiometry
 Result_KA:
   properties:
     unit:
@@ -1149,6 +1363,8 @@ Result_KA:
       enum: [M^-1, M^-2, mM^-1, mM^-2, µM^-1, µM^-2, nM^-1, nM^-2]
       help.en: Unit of the constant of association
       required: true
+      label.en: Unit
+  label.en: Result ka
 Result_KD:
   properties:
     unit:
@@ -1156,6 +1372,8 @@ Result_KD:
       enum: [M, M^2, mM, mM^2, µM, µM^2, nM, nM^2]
       help.en: Unit of the constant of dissociation
       required: true
+      label.en: Unit
+  label.en: Result kd
 Result_kOn:
   properties:
     unit:
@@ -1164,6 +1382,8 @@ Result_kOn:
         nM^-1 s^-1, nM^-2 s^-1]
       help.en: Unit of the association rate constant
       required: true
+      label.en: Unit
+  label.en: Result kon
 Result_kOff:
   properties:
     unit:
@@ -1171,12 +1391,16 @@ Result_kOff:
       enum: [s^-1]
       help.en: Unit of the dissociation rate constant
       required: true
+      label.en: Unit
+  label.en: Result koff
 Result_deltaH:
   properties:
     unit:
       use: '#/$defs/ENERGY_UNITS'
       required: true
       help.en: Unit of the change in enthalpy
+      label.en: Unit
+  label.en: Result deltah
 Result_deltaS:
   properties:
     unit:
@@ -1184,24 +1408,32 @@ Result_deltaS:
       enum: [kcal/molK, kJ/molK]
       help.en: Unit of the change in entropy
       required: true
+      label.en: Unit
+  label.en: Result deltas
 Result_deltaG:
   properties:
     unit:
       use: '#/$defs/ENERGY_UNITS'
       required: true
       help.en: Unit of the change in Gibbs free energy
+      label.en: Unit
+  label.en: Result deltag
 Result_MW:
   properties:
     unit:
       use: '#/$defs/MOLECULAR_WEIGHT_UNITS'
       required: true
       help.en: Unit of the molecular weight
+      label.en: Unit
+  label.en: Result mw
 Result_EC50:
   properties:
     unit:
       use: '#/$defs/CONCENTRATION_UNITS'
       required: true
       help.en: Unit of the half maximal effective concentration
+      label.en: Unit
+  label.en: Result ec50
 Result_hill_coeff:
   properties:
     unit:
@@ -1209,6 +1441,8 @@ Result_hill_coeff:
       enum: [unitless]
       help.en: Unit of the Hill coefficient
       required: true
+      label.en: Unit
+  label.en: Result hill coeff
 Entity_and_stoichiometry:
   properties:
     entity:
@@ -1223,70 +1457,91 @@ Entity_and_stoichiometry:
         unknown (e.g. if two individual copies of a polymer binds to another, the
         copy number would be 2)
       required: true
+      label.en: Copy number
+  label.en: Entity and stoichiometry
 Modification:
   properties:
     position:
       type: keyword
       help.en: The position where the modification occurs
+      label.en: Position
     type:
       type: keyword
       help.en: The common name/type of the modification
       required: true
+      label.en: Type
     protocol[]:
       ^minItems: 1
       ^help.en: List of steps that led to the modification taking place
+      ^label.en: Protocol
       use: '#/$defs/Step'
+  label.en: Modification
 Step:
   properties:
     name:
       type: keyword
       help.en: Descriptive name of the step
       required: true
+      label.en: Name
     description:
       type: keyword
       help.en: Short description of the step
       required: true
+      label.en: Description
+  label.en: Step
 Data_fitting:
   properties:
     model:
       type: keyword
       help.en: Description of the model (e.g. 1:1 binding)
       required: true
+      label.en: Model
     software_name:
       type: keyword
       help.en: The name of the software that was used for doing the data fitting (e.g.
         Excel)
+      label.en: Software name
     software_version:
       type: keyword
       help.en: The version of the software that was used for the step
+      label.en: Software version
     quality:
       type: double
       help.en: Numerical value representing the quality estimate of the result
+      label.en: Quality
     quality_type:
       type: keyword
       enum: [R^2, SEM, red. Chi^2, 1sigma, 2sigma, 3sigma, 5sigma, Skewness]
       help.en: Type of the quality estimate
+      label.en: Quality type
+  label.en: Data fitting
 Processing_step:
   properties:
     name:
       type: keyword
       help.en: Short descriptive name of the processing step
       required: true
+      label.en: Name
     description:
       type: keyword
       help.en: Description of what the processing step was
       required: true
+      label.en: Description
     software_name:
       type: keyword
       help.en: The name of the software that was used for the step (e.g. Excel)
+      label.en: Software name
     software_version:
       type: keyword
       help.en: The version of the software that was used for the step
+      label.en: Software version
     link_to_source_code:
       type: url
       help.en: If processing was performed with software where the source code is
         freely available a link can be specified here (e.g. self-written python script
         in a GitHub repository
+      label.en: Link to source code
+  label.en: Processing step
 Value_error:
   properties:
     lower:
@@ -1296,6 +1551,7 @@ Value_error:
         value being described is assumed. If relative errors are provided, please
         provide it in fractional form (e.g.  0.01 for 1 %)
       required: true
+      label.en: Lower
     upper:
       type: double
       help.en: The upper error, i.e. the number that should be added to the value
@@ -1303,21 +1559,27 @@ Value_error:
         value being described is assumed. If relative errors are provided, please
         provide it in fractional form (e.g.  0.01 for 1 %)
       required: true
+      label.en: Upper
     is_relative:
       type: boolean
       help.en: True if the error values should be interpreted as relative errors (fractional
         uncertainty)
       required: true
+      label.en: Is relative
+  label.en: Value error
 Temperature:
   properties:
     value:
       type: double
       help.en: The numeric value of the temperature
       required: true
+      label.en: Value
     unit:
       use: '#/$defs/TEMPERATURE_UNITS'
       required: true
       help.en: The unit of temperature
+      label.en: Unit
+  label.en: Temperature
 Time_duration:
   properties:
     value:
@@ -1325,10 +1587,13 @@ Time_duration:
       minimum: 0.0
       help.en: The numerical value of the time point or duration
       required: true
+      label.en: Value
     unit:
       use: '#/$defs/TIME_UNITS'
       required: true
       help.en: The unit of the time duration
+      label.en: Unit
+  label.en: Time duration
 Concentration:
   properties:
     value:
@@ -1336,10 +1601,13 @@ Concentration:
       minimum: -1.0
       help.en: The numerical value of the concentration, -1 if unknown
       required: true
+      label.en: Value
     unit:
       use: '#/$defs/CONCENTRATION_UNITS'
       required: true
       help.en: The unit of the concentration
+      label.en: Unit
+  label.en: Concentration
 Molecular_weight:
   properties:
     value:
@@ -1347,10 +1615,13 @@ Molecular_weight:
       minimum: -1.0
       help.en: The numerical value of the molecular weight, -1 if unknown
       required: true
+      label.en: Value
     unit:
       use: '#/$defs/MOLECULAR_WEIGHT_UNITS'
       required: true
       help.en: The unit of the molecular weight
+      label.en: Unit
+  label.en: Molecular weight
 Size:
   properties:
     type:
@@ -1358,38 +1629,49 @@ Size:
       enum: [radius, diameter, path length]
       help.en: The type of size (e.g. radius)
       required: true
+      label.en: Type
     mean:
       type: double
       minimum: 0.0
       help.en: The mean of the size
       required: true
+      label.en: Mean
     unit:
       use: '#/$defs/LENGTH_UNITS'
       required: true
       help.en: The unit of the size
+      label.en: Unit
     median:
       type: double
       minimum: 0.0
       help.en: The median of the size
+      label.en: Median
     upper:
       type: double
       minimum: 0.0
       help.en: The upper bound of the size
+      label.en: Upper
     lower:
       type: double
       minimum: 0.0
       help.en: The lower bound of the size
+      label.en: Lower
+  label.en: Size
 Quality_controls:
   properties:
     purity:
       use: '#/$defs/Purity'
       help.en: Information about if, and how purity was assessed
+      label.en: Purity
     identity:
       use: '#/$defs/Identity'
       help.en: Information about if, and how identity was assessed
+      label.en: Identity
     homogeneity:
       use: '#/$defs/Homogeneity'
       help.en: Information about if, and how homogeneity was assessed
+      label.en: Homogeneity
+  label.en: Quality controls
 Purity_base:
   properties:
     checked:
@@ -1397,20 +1679,25 @@ Purity_base:
       enum: ["Yes", "No"]
       help.en: Information about if and how the purity was obtained
       required: true
+      label.en: Checked
+  label.en: Purity base
 Purity:
   help.en: Information about if and how the purity was obtained
-  required: true
+  label.en: Purity
   schemas:
     "Yes":
       use: '#/$defs/PurityYes_purityPolymorphic'
       required: true
+      label.en: Purity
     "No":
       use: '#/$defs/PurityEmpty_objectPolymorphic'
       required: true
+      label.en: Purity
   type: polymorphic
   discriminator: checked
 Empty_object:
   properties: {}
+  label.en: Empty object
 Yes_purity:
   properties:
     method:
@@ -1418,11 +1705,14 @@ Yes_purity:
       enum: [SDS-PAGE, Capillary Electrophoresis, Agarose Gel electrophoresis]
       help.en: The method that was used to determine the purity
       required: true
+      label.en: Method
     purity_percentage:
       type: keyword
       enum: [<90 %, '>90 %', '>95 %', '>99 %']
       help.en: The obtained purity (in percent)
       required: true
+      label.en: Purity percentage
+  label.en: Yes purity
 Identity:
   properties:
     checked:
@@ -1430,15 +1720,20 @@ Identity:
       enum: ["Yes", "No"]
       help.en: Wether the identity was confirmed experimentally
       required: true
+      label.en: Checked
     by_intact_mass:
       use: '#/$defs/By_intact_mass'
       help.en: How identity was determined by intact mass, if applicable
+      label.en: By intact mass
     by_sequencing:
       use: '#/$defs/By_sequencing'
       help.en: How identity was determined by sequencing, if applicable
+      label.en: By sequencing
     by_fingerprinting:
       use: '#/$defs/By_fingerprinting'
       help.en: How identity was determined by fingerprinting, if applicable
+      label.en: By fingerprinting
+  label.en: Identity
 By_intact_mass:
   properties:
     method:
@@ -1446,11 +1741,14 @@ By_intact_mass:
       enum: [Mass spectrometry, SDS-PAGE]
       help.en: The method used to determine the intact mass
       required: true
+      label.en: Method
     deviation_from_expected_mass:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The amount, including unit, the obtained intact mass deviated from
         the expected intact mass
+      label.en: Deviation from expected mass
+  label.en: By intact mass
 By_sequencing:
   properties:
     method:
@@ -1459,6 +1757,7 @@ By_sequencing:
         Next generation sequencing]
       help.en: The method that was used for sequencing
       required: true
+      label.en: Method
     coverage:
       type: integer
       minimum: 0
@@ -1466,6 +1765,8 @@ By_sequencing:
       help.en: The amount of the total (expected) sequence that was actually observed
         by sequencing in percent
       required: true
+      label.en: Coverage
+  label.en: By sequencing
 By_fingerprinting:
   properties:
     method:
@@ -1474,6 +1775,8 @@ By_fingerprinting:
           electrophoresis]
       help.en: The method used for fingerprinting
       required: true
+      label.en: Method
+  label.en: By fingerprinting
 Homogeneity_base:
   properties:
     checked:
@@ -1481,17 +1784,21 @@ Homogeneity_base:
       enum: ["Yes", "No"]
       help.en: Whether the homogeneity was checked
       required: true
+      label.en: Checked
+  label.en: Homogeneity base
 Homogeneity:
   help.en: Whether the homogeneity was tested and whether the expected number of species
     were present
-  required: true
+  label.en: Homogeneity
   schemas:
     "Yes":
       use: '#/$defs/HomogeneityYes_homogeneityPolymorphic'
       required: true
+      label.en: Homogeneity
     "No":
       use: '#/$defs/HomogeneityEmpty_objectPolymorphic'
       required: true
+      label.en: Homogeneity
   type: polymorphic
   discriminator: checked
 Yes_homogeneity:
@@ -1502,30 +1809,38 @@ Yes_homogeneity:
         Mass photometry]
       help.en: The method used to evaluate the homogeneity
       required: true
+      label.en: Method
     expected number_of_species:
       type: integer
       minimum: 1
       help.en: The number of species that were expected to be present
       required: true
+      label.en: Expected number of species
     number_of_species_observed:
       type: integer
       minimum: 1
       help.en: The number of species that was observed to be present
       required: true
+      label.en: Number of species observed
+  label.en: Yes homogeneity
 Storage:
   properties:
     temperature:
       use: '#/$defs/Temperature'
       required: true
       help.en: The temperature the sample was stored at
+      label.en: Temperature
     duration:
       use: '#/$defs/Time_duration'
       help.en: Length of time the sample was stored before being measured
+      label.en: Duration
     storage_preparation[]:
       ^minItems: 1
       ^help.en: The specific steps that were taken to prepare the samples for storage
         (e.g. flash freezing in liquid nitrogen), if applicable
+      ^label.en: Storage preparation
       use: '#/$defs/Step'
+  label.en: Storage
 Coordinates:
   properties:
     latitude:
@@ -1534,41 +1849,52 @@ Coordinates:
       maximum: 90.0
       help.en: The latitude, from south to north, in degrees (decimal notation)
       required: true
+      label.en: Latitude
     longitude:
       type: double
       minimum: -180.0
       maximum: 180.0
       help.en: The longitude, from west to east, in degrees (decimal notation)
       required: true
+      label.en: Longitude
+  label.en: Coordinates
 CONCENTRATION_UNITS:
   type: keyword
   enum: [M, mM, µM, nM, pM, fM, aM, g/L, mg/mL, µg/mL, ng/mL, mol/kg, mmol/kg, v/v
       %, w/w %, v/w %, w/v %, U/ml, '% saturated']
+  label.en: Concentration units
 TEMPERATURE_UNITS:
   type: keyword
   enum: [K, °C, °F]
   required: true
+  label.en: Temperature units
 TIME_UNITS:
   type: keyword
   enum: [nanoseconds, microseconds, milliseconds, seconds, minutes, hours, days, months,
     years]
+  label.en: Time units
 ENERGY_UNITS:
   type: keyword
   enum: [kcal/mol, kJ/mol]
+  label.en: Energy units
 LENGTH_UNITS:
   type: keyword
   enum: [Å, nm, μm, mm, cm, m]
+  label.en: Length units
 MOLECULAR_WEIGHT_UNITS:
   type: keyword
   enum: [g/mol, Da, kDa, MDa]
+  label.en: Molecular weight units
 SUPPORTED_TECHNIQUES:
   type: keyword
   enum: [Bio-layer interferometry (BLI), Microscale thermophoresis/Temperature related
       intensity change (MST/TRIC), Surface plasmon resonance (SPR)]
+  label.en: Supported techniques
 COMPANIES:
   type: keyword
   enum: [Bio-Rad, Bruker, Cytiva, Gatorbio, GE Healthcare, Nanotemper, Nicoya Life,
     Sartorius, Malvern Panalytical, Refeyn, TA Instruments]
+  label.en: Companies
 PublicationArticlePolymorphic:
   properties:
     journal:
@@ -1577,6 +1903,7 @@ PublicationArticlePolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Journal
     pid:
       type: keyword
       help.en: Persistent identifier associated with the publication (e.g. DOI, ISBN,
@@ -1584,16 +1911,20 @@ PublicationArticlePolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Pid
     title:
       type: keyword
       help.en: The title of the publication
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Title
     type:
       type: keyword
       enum: [Article, Book, Thesis]
       help.en: The type of the publication
       required: true
+      label.en: Type
+  label.en: Article
 PublicationBookPolymorphic:
   properties:
     publisher:
@@ -1602,6 +1933,7 @@ PublicationBookPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Publisher
     pid:
       type: keyword
       help.en: Persistent identifier associated with the publication (e.g. DOI, ISBN,
@@ -1609,16 +1941,20 @@ PublicationBookPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Pid
     title:
       type: keyword
       help.en: The title of the publication
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Title
     type:
       type: keyword
       enum: [Article, Book, Thesis]
       help.en: The type of the publication
       required: true
+      label.en: Type
+  label.en: Book
 PublicationThesisPolymorphic:
   properties:
     degree_type:
@@ -1628,6 +1964,7 @@ PublicationThesisPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Degree type
     pid:
       type: keyword
       help.en: Persistent identifier associated with the publication (e.g. DOI, ISBN,
@@ -1635,16 +1972,20 @@ PublicationThesisPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Pid
     title:
       type: keyword
       help.en: The title of the publication
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Title
     type:
       type: keyword
       enum: [Article, Book, Thesis]
       help.en: The type of the publication
       required: true
+      label.en: Type
+  label.en: Thesis
 EntityPolymerPolymorphic:
   properties:
     polymer_type:
@@ -1656,6 +1997,7 @@ EntityPolymerPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Polymer type
     sequence:
       type: keyword
       help.en: Primary sequence of the polymer, using single letter codes (e.g. SAGRELLE,
@@ -1663,14 +2005,17 @@ EntityPolymerPolymorphic:
         monomer in brackets
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Sequence
     molecular_weight:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The molecular weight of the polymer
+      label.en: Molecular weight
     external_databases[]:
       ^minItems: 1
       ^help.en: List of identifiers to records in external databases containing information
         about the polymer can be specified here (e.g uniprot:Q8KRF6)
+      ^label.en: External databases
       type: keyword
       mapping:
         copy_to: collected_default_search_fields
@@ -1681,6 +2026,7 @@ EntityPolymerPolymorphic:
         purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Variant
     source_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -1699,6 +2045,7 @@ EntityPolymerPolymorphic:
       enum: [Natively, Recombinantly, Synthetically]
       help.en: How the polymer was produced
       required: true
+      label.en: Expression source type
     expression_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -1708,15 +2055,19 @@ EntityPolymerPolymorphic:
       help.en: If the polymer contains modifications such as non-natural aminoacids,
         post translational modification, or chemically modifications like labeling,
         it can be specified here
+      label.en: Modifications
     quality_controls:
       use: '#/$defs/Quality_controls'
       help.en: Information about if and how quality control of the polymer was performed
+      label.en: Quality controls
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the polymer can be specified here
+      ^label.en: Additional specifications
       type: keyword
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
@@ -1725,6 +2076,7 @@ EntityPolymerPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -1739,6 +2091,8 @@ EntityPolymerPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
+  label.en: Polymer
 PurityYes_purityPolymorphic:
   properties:
     method:
@@ -1746,16 +2100,20 @@ PurityYes_purityPolymorphic:
       enum: [SDS-PAGE, Capillary Electrophoresis, Agarose Gel electrophoresis]
       help.en: The method that was used to determine the purity
       required: true
+      label.en: Method
     purity_percentage:
       type: keyword
       enum: [<90 %, '>90 %', '>95 %', '>99 %']
       help.en: The obtained purity (in percent)
       required: true
+      label.en: Purity percentage
     checked:
       type: keyword
       enum: ["Yes", "No"]
       help.en: Information about if and how the purity was obtained
       required: true
+      label.en: Checked
+  label.en: Yes purity
 PurityEmpty_objectPolymorphic:
   properties:
     checked:
@@ -1763,6 +2121,8 @@ PurityEmpty_objectPolymorphic:
       enum: ["Yes", "No"]
       help.en: Information about if and how the purity was obtained
       required: true
+      label.en: Checked
+  label.en: Empty object
 HomogeneityYes_homogeneityPolymorphic:
   properties:
     method:
@@ -1771,21 +2131,26 @@ HomogeneityYes_homogeneityPolymorphic:
         Mass photometry]
       help.en: The method used to evaluate the homogeneity
       required: true
+      label.en: Method
     expected number_of_species:
       type: integer
       minimum: 1
       help.en: The number of species that were expected to be present
       required: true
+      label.en: Expected number of species
     number_of_species_observed:
       type: integer
       minimum: 1
       help.en: The number of species that was observed to be present
       required: true
+      label.en: Number of species observed
     checked:
       type: keyword
       enum: ["Yes", "No"]
       help.en: Whether the homogeneity was checked
       required: true
+      label.en: Checked
+  label.en: Yes homogeneity
 HomogeneityEmpty_objectPolymorphic:
   properties:
     checked:
@@ -1793,6 +2158,8 @@ HomogeneityEmpty_objectPolymorphic:
       enum: ["Yes", "No"]
       help.en: Whether the homogeneity was checked
       required: true
+      label.en: Checked
+  label.en: Empty object
 EntityChemicalPolymorphic:
   properties:
     inchikey:
@@ -1804,27 +2171,33 @@ EntityChemicalPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Inchikey
     additional_identifiers[]:
       ^minItems: 1
       ^help.en: Unique and persistent identifier from an external source; options
         of sources are CAS number, ChEMBL ID, Pubchem Compound ID, and Pubchem Substance
         ID
+      ^label.en: Additional identifiers
       type: keyword
     isotopic_labeling:
       type: keyword
       help.en: If the isotopic composition of the chemical was altered from the naturally
         occurring abundances, it can be specified here (e.g. 15N, 13C)
+      label.en: Isotopic labeling
     molecular_weight:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The molecular weight of the chemical
+      label.en: Molecular weight
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
         RNase free water, recrystallization, desalting)
+      ^label.en: Additional specifications
       type: keyword
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
@@ -1833,6 +2206,7 @@ EntityChemicalPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -1847,6 +2221,8 @@ EntityChemicalPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
+  label.en: Chemical
 EntityMolecular_assemblyPolymorphic:
   properties:
     external_databases[]:
@@ -1855,6 +2231,7 @@ EntityMolecular_assemblyPolymorphic:
         about the molecular assembly as a whole can be specified here (e.g. PDB:1YQ2
         ); information about the individual components should be specified in the
         details of the individual components
+      ^label.en: External databases
       type: keyword
       mapping:
         copy_to: collected_default_search_fields
@@ -1864,6 +2241,7 @@ EntityMolecular_assemblyPolymorphic:
         lipids, metal ions etc.) the molecular assembly is composed of (e.g. Hemoglobin
         alpha) and how many copies of each component were present
       ^required: true
+      ^label.en: Components
       use: '#/$defs/Assembly_component'
       type: polymorphic
       mapping:
@@ -1872,23 +2250,28 @@ EntityMolecular_assemblyPolymorphic:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The molecular weight of the molecular assembly
+      label.en: Molecular weight
     chemical_modifications[]:
       ^minItems: 1
       ^help.en: List describing deliberate modifications made to the molecular assembly
         through chemical, biochemical, or physical means
+      ^label.en: Chemical modifications
       use: '#/$defs/Modification'
       type: nested
     quality_controls:
       use: '#/$defs/Quality_controls'
       help.en: Information about if and how quality control of the molecular assembly
         was performed
+      label.en: Quality controls
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the macromolecular assembly can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
@@ -1897,6 +2280,7 @@ EntityMolecular_assemblyPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -1911,6 +2295,8 @@ EntityMolecular_assemblyPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
+  label.en: Molecular assembly
 Assembly_componentPolymerPolymorphic:
   properties:
     polymer_type:
@@ -1922,6 +2308,7 @@ Assembly_componentPolymerPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Polymer type
     sequence:
       type: keyword
       help.en: Primary sequence of the polymer, using single letter codes (e.g. SAGRELLE,
@@ -1929,14 +2316,17 @@ Assembly_componentPolymerPolymorphic:
         monomer in brackets
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Sequence
     molecular_weight:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The molecular weight of the polymer
+      label.en: Molecular weight
     external_databases[]:
       ^minItems: 1
       ^help.en: List of identifiers to records in external databases containing information
         about the polymer can be specified here (e.g uniprot:Q8KRF6)
+      ^label.en: External databases
       type: keyword
       mapping:
         copy_to: collected_default_search_fields
@@ -1947,6 +2337,7 @@ Assembly_componentPolymerPolymorphic:
         purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Variant
     source_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -1965,6 +2356,7 @@ Assembly_componentPolymerPolymorphic:
       enum: [Natively, Recombinantly, Synthetically]
       help.en: How the polymer was produced
       required: true
+      label.en: Expression source type
     expression_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -1974,12 +2366,15 @@ Assembly_componentPolymerPolymorphic:
       help.en: If the polymer contains modifications such as non-natural aminoacids,
         post translational modification, or chemically modifications like labeling,
         it can be specified here
+      label.en: Modifications
     quality_controls:
       use: '#/$defs/Quality_controls'
       help.en: Information about if and how quality control of the polymer was performed
+      label.en: Quality controls
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the polymer can be specified here
+      ^label.en: Additional specifications
       type: keyword
     name:
       type: keyword
@@ -1988,16 +2383,20 @@ Assembly_componentPolymerPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical]
       help.en: The type of component, options are (biological) Polymer and Chemical
       required: true
+      label.en: Type
     copy_number:
       type: double
       minimum: -1.0
       help.en: Number of copies of the component within the assembly, -1 if unknown
       required: true
+      label.en: Copy number
+  label.en: Polymer
 Assembly_componentChemicalPolymorphic:
   properties:
     inchikey:
@@ -2009,24 +2408,29 @@ Assembly_componentChemicalPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Inchikey
     additional_identifiers[]:
       ^minItems: 1
       ^help.en: Unique and persistent identifier from an external source; options
         of sources are CAS number, ChEMBL ID, Pubchem Compound ID, and Pubchem Substance
         ID
+      ^label.en: Additional identifiers
       type: keyword
     isotopic_labeling:
       type: keyword
       help.en: If the isotopic composition of the chemical was altered from the naturally
         occurring abundances, it can be specified here (e.g. 15N, 13C)
+      label.en: Isotopic labeling
     molecular_weight:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The molecular weight of the chemical
+      label.en: Molecular weight
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
         RNase free water, recrystallization, desalting)
+      ^label.en: Additional specifications
       type: keyword
     name:
       type: keyword
@@ -2035,30 +2439,37 @@ Assembly_componentChemicalPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical]
       help.en: The type of component, options are (biological) Polymer and Chemical
       required: true
+      label.en: Type
     copy_number:
       type: double
       minimum: -1.0
       help.en: Number of copies of the component within the assembly, -1 if unknown
       required: true
+      label.en: Copy number
+  label.en: Chemical
 EntityComplex_substance_of_biological_originPolymorphic:
   help.en: Information about what the biological substance is derived from and how
     it collected and prepared
-  required: true
+  label.en: Complex substance of biological origin
   schemas:
     Body fluid:
       use: '#/$defs/Complex_substance_of_biological_originBody_fluidPolymorphic'
       required: true
+      label.en: Complex substance of biological origin
     Cell fraction:
       use: '#/$defs/Complex_substance_of_biological_originCell_fractionPolymorphic'
       required: true
+      label.en: Complex substance of biological origin
     Virion:
       use: '#/$defs/Complex_substance_of_biological_originVirionPolymorphic'
       required: true
+      label.en: Complex substance of biological origin
   type: polymorphic
   discriminator: derived_from
 Complex_substance_of_biological_originBody_fluidPolymorphic:
@@ -2070,16 +2481,19 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Fluid
     health_status:
       type: keyword
       help.en: Health status of the donor organism where the body fluid was derived
         from (e.g. healthy, sick, patient with Diabetes type 2)
       required: true
+      label.en: Health status
     derived_from:
       type: keyword
       enum: [Body fluid, Cell fraction, Virion]
       help.en: The biological substance the complex substance is derived from
       required: true
+      label.en: Derived from
     source_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -2099,18 +2513,22 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
@@ -2119,6 +2537,7 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2133,6 +2552,8 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
+  label.en: Body fluid
 Complex_substance_of_biological_originCell_fractionPolymorphic:
   properties:
     fraction:
@@ -2144,25 +2565,31 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Fraction
     organ:
       type: keyword
       help.en: The organ the cell fraction was derived from (e.g. heart)
+      label.en: Organ
     tissue:
       type: keyword
       help.en: The tissue type the cell fraction was derived from
+      label.en: Tissue
     cell_type:
       type: keyword
       help.en: The cell type the cell fraction was derived from
+      label.en: Cell type
     health_status:
       type: keyword
       help.en: Health status of the donor organism where the cell fraction was derived
         from (e.g. healthy, sick, patient with Diabetes type 2)
       required: true
+      label.en: Health status
     derived_from:
       type: keyword
       enum: [Body fluid, Cell fraction, Virion]
       help.en: The biological substance the complex substance is derived from
       required: true
+      label.en: Derived from
     source_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -2182,18 +2609,22 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
@@ -2202,6 +2633,7 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2216,6 +2648,8 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
+  label.en: Cell fraction
 Complex_substance_of_biological_originVirionPolymorphic:
   properties:
     genetic_material:
@@ -2223,16 +2657,19 @@ Complex_substance_of_biological_originVirionPolymorphic:
       enum: [No genetic material, Virus genome, Synthetic]
       help.en: The genetic material carried by the virions (None, virus genome, synthetic)
       required: true
+      label.en: Genetic material
     capsid_type:
       type: keyword
       enum: [None, Native, Genetically Engineered, Synthetic]
       help.en: The type of virion capsid
       required: true
+      label.en: Capsid type
     envelope_type:
       type: keyword
       enum: [None, Native, Genetically Engineered, Synthetic]
       help.en: The type of virion envelope
       required: true
+      label.en: Envelope type
     host_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -2240,11 +2677,13 @@ Complex_substance_of_biological_originVirionPolymorphic:
     host_cell_type:
       type: keyword
       help.en: The host cell type the virion was produced in
+      label.en: Host cell type
     derived_from:
       type: keyword
       enum: [Body fluid, Cell fraction, Virion]
       help.en: The biological substance the complex substance is derived from
       required: true
+      label.en: Derived from
     source_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -2264,18 +2703,22 @@ Complex_substance_of_biological_originVirionPolymorphic:
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
@@ -2284,6 +2727,7 @@ Complex_substance_of_biological_originVirionPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2298,6 +2742,8 @@ Complex_substance_of_biological_originVirionPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
+  label.en: Virion
 EntityComplex_substance_of_environmental_originPolymorphic:
   properties:
     source:
@@ -2307,28 +2753,34 @@ EntityComplex_substance_of_environmental_originPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Source
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     location:
       use: '#/$defs/Coordinates'
       required: true
       help.en: The coordinates, in decimal notation, where the complex substance was
         collected
+      label.en: Location
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
@@ -2337,6 +2789,7 @@ EntityComplex_substance_of_environmental_originPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2351,14 +2804,17 @@ EntityComplex_substance_of_environmental_originPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
+  label.en: Complex substance of environmental origin
 EntityComplex_substance_of_chemical_originPolymorphic:
   help.en: Information about what the chemical substance is derived from and how it
     was prepared
-  required: true
+  label.en: Complex substance of chemical origin
   schemas:
     Lipid assembly:
       use: '#/$defs/Complex_substance_of_chemical_originLipid_assemblyPolymorphic'
       required: true
+      label.en: Complex substance of chemical origin
   type: polymorphic
   discriminator: class
 Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
@@ -2368,10 +2824,12 @@ Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       enum: [Micelle, Liposome, Nanodisc, Sheet]
       help.en: The type of lipid assembly
       required: true
+      label.en: Assembly type
     components[]:
       ^minItems: 1
       ^help.en: The components of the lipid assembly
       ^required: true
+      ^label.en: Components
       use: '#/$defs/Assembly_component'
       type: polymorphic
       mapping:
@@ -2380,31 +2838,38 @@ Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       type: integer
       minimum: -1
       help.en: The number of lipid mono layers in the lipid assembly, -1 if unknown
+      label.en: Number of mono layers
     size:
       use: '#/$defs/Size'
       help.en: The size of the lipid assembly
+      label.en: Size
     class:
       type: keyword
       enum: [Lipid assembly]
       help.en: The chemical origin where the complex substance was derived from
       required: true
+      label.en: Class
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
@@ -2413,6 +2878,7 @@ Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2427,6 +2893,8 @@ Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
+  label.en: Lipid assembly
 EntityComplex_substance_of_industrial_originPolymorphic:
   properties:
     product:
@@ -2437,23 +2905,28 @@ EntityComplex_substance_of_industrial_originPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Product
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
@@ -2462,6 +2935,7 @@ EntityComplex_substance_of_industrial_originPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2476,6 +2950,8 @@ EntityComplex_substance_of_industrial_originPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
+  label.en: Complex substance of industrial origin
 Chemical_constituentChemicalPolymorphic:
   properties:
     inchikey:
@@ -2487,24 +2963,29 @@ Chemical_constituentChemicalPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Inchikey
     additional_identifiers[]:
       ^minItems: 1
       ^help.en: Unique and persistent identifier from an external source; options
         of sources are CAS number, ChEMBL ID, Pubchem Compound ID, and Pubchem Substance
         ID
+      ^label.en: Additional identifiers
       type: keyword
     isotopic_labeling:
       type: keyword
       help.en: If the isotopic composition of the chemical was altered from the naturally
         occurring abundances, it can be specified here (e.g. 15N, 13C)
+      label.en: Isotopic labeling
     molecular_weight:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The molecular weight of the chemical
+      label.en: Molecular weight
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
         RNase free water, recrystallization, desalting)
+      ^label.en: Additional specifications
       type: keyword
     name:
       type: keyword
@@ -2513,16 +2994,20 @@ Chemical_constituentChemicalPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Chemical]
       help.en: The type of the constituent, options are Chemical
       required: true
+      label.en: Type
     concentration:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the constituent including its relative concentration
         related to the collected sample or absolute concentration of the constituent
+      label.en: Concentration
+  label.en: Chemical
 ConstituentPolymerPolymorphic:
   properties:
     polymer_type:
@@ -2534,6 +3019,7 @@ ConstituentPolymerPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Polymer type
     sequence:
       type: keyword
       help.en: Primary sequence of the polymer, using single letter codes (e.g. SAGRELLE,
@@ -2541,14 +3027,17 @@ ConstituentPolymerPolymorphic:
         monomer in brackets
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Sequence
     molecular_weight:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The molecular weight of the polymer
+      label.en: Molecular weight
     external_databases[]:
       ^minItems: 1
       ^help.en: List of identifiers to records in external databases containing information
         about the polymer can be specified here (e.g uniprot:Q8KRF6)
+      ^label.en: External databases
       type: keyword
       mapping:
         copy_to: collected_default_search_fields
@@ -2559,6 +3048,7 @@ ConstituentPolymerPolymorphic:
         purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Variant
     source_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -2577,6 +3067,7 @@ ConstituentPolymerPolymorphic:
       enum: [Natively, Recombinantly, Synthetically]
       help.en: How the polymer was produced
       required: true
+      label.en: Expression source type
     expression_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -2586,12 +3077,15 @@ ConstituentPolymerPolymorphic:
       help.en: If the polymer contains modifications such as non-natural aminoacids,
         post translational modification, or chemically modifications like labeling,
         it can be specified here
+      label.en: Modifications
     quality_controls:
       use: '#/$defs/Quality_controls'
       help.en: Information about if and how quality control of the polymer was performed
+      label.en: Quality controls
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the polymer can be specified here
+      ^label.en: Additional specifications
       type: keyword
     name:
       type: keyword
@@ -2600,6 +3094,7 @@ ConstituentPolymerPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2608,11 +3103,14 @@ ConstituentPolymerPolymorphic:
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
+      label.en: Type
     concentration:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the constituent including its relative concentration
         related to the collected sample or absolute concentration of the constituent
+      label.en: Concentration
+  label.en: Polymer
 ConstituentChemicalPolymorphic:
   properties:
     inchikey:
@@ -2624,24 +3122,29 @@ ConstituentChemicalPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Inchikey
     additional_identifiers[]:
       ^minItems: 1
       ^help.en: Unique and persistent identifier from an external source; options
         of sources are CAS number, ChEMBL ID, Pubchem Compound ID, and Pubchem Substance
         ID
+      ^label.en: Additional identifiers
       type: keyword
     isotopic_labeling:
       type: keyword
       help.en: If the isotopic composition of the chemical was altered from the naturally
         occurring abundances, it can be specified here (e.g. 15N, 13C)
+      label.en: Isotopic labeling
     molecular_weight:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The molecular weight of the chemical
+      label.en: Molecular weight
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
         RNase free water, recrystallization, desalting)
+      ^label.en: Additional specifications
       type: keyword
     name:
       type: keyword
@@ -2650,6 +3153,7 @@ ConstituentChemicalPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2658,11 +3162,14 @@ ConstituentChemicalPolymorphic:
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
+      label.en: Type
     concentration:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the constituent including its relative concentration
         related to the collected sample or absolute concentration of the constituent
+      label.en: Concentration
+  label.en: Chemical
 ConstituentMolecular_assemblyPolymorphic:
   properties:
     external_databases[]:
@@ -2671,6 +3178,7 @@ ConstituentMolecular_assemblyPolymorphic:
         about the molecular assembly as a whole can be specified here (e.g. PDB:1YQ2
         ); information about the individual components should be specified in the
         details of the individual components
+      ^label.en: External databases
       type: keyword
       mapping:
         copy_to: collected_default_search_fields
@@ -2680,6 +3188,7 @@ ConstituentMolecular_assemblyPolymorphic:
         lipids, metal ions etc.) the molecular assembly is composed of (e.g. Hemoglobin
         alpha) and how many copies of each component were present
       ^required: true
+      ^label.en: Components
       use: '#/$defs/Assembly_component'
       type: polymorphic
       mapping:
@@ -2688,20 +3197,24 @@ ConstituentMolecular_assemblyPolymorphic:
       use: '#/$defs/Molecular_weight'
       required: true
       help.en: The molecular weight of the molecular assembly
+      label.en: Molecular weight
     chemical_modifications[]:
       ^minItems: 1
       ^help.en: List describing deliberate modifications made to the molecular assembly
         through chemical, biochemical, or physical means
+      ^label.en: Chemical modifications
       use: '#/$defs/Modification'
       type: nested
     quality_controls:
       use: '#/$defs/Quality_controls'
       help.en: Information about if and how quality control of the molecular assembly
         was performed
+      label.en: Quality controls
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the macromolecular assembly can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     name:
       type: keyword
@@ -2710,6 +3223,7 @@ ConstituentMolecular_assemblyPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2718,25 +3232,31 @@ ConstituentMolecular_assemblyPolymorphic:
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
+      label.en: Type
     concentration:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the constituent including its relative concentration
         related to the collected sample or absolute concentration of the constituent
+      label.en: Concentration
+  label.en: Molecular assembly
 ConstituentComplex_substance_of_biological_originPolymorphic:
   help.en: Information about what the biological substance is derived from and how
     it collected and prepared
-  required: true
+  label.en: Complex substance of biological origin
   schemas:
     Body fluid:
       use: '#/$defs/constituent_Complex_substance_of_biological_originBody_fluidPolymorphic'
       required: true
+      label.en: Complex substance of biological origin
     Cell fraction:
       use: '#/$defs/constituent_Complex_substance_of_biological_originCell_fractionPolymorphic'
       required: true
+      label.en: Complex substance of biological origin
     Virion:
       use: '#/$defs/constituent_Complex_substance_of_biological_originVirionPolymorphic'
       required: true
+      label.en: Complex substance of biological origin
   type: polymorphic
   discriminator: derived_from
 constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
@@ -2748,16 +3268,19 @@ constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Fluid
     health_status:
       type: keyword
       help.en: Health status of the donor organism where the body fluid was derived
         from (e.g. healthy, sick, patient with Diabetes type 2)
       required: true
+      label.en: Health status
     derived_from:
       type: keyword
       enum: [Body fluid, Cell fraction, Virion]
       help.en: The biological substance the complex substance is derived from
       required: true
+      label.en: Derived from
     source_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -2777,15 +3300,18 @@ constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     name:
       type: keyword
@@ -2794,6 +3320,7 @@ constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2802,11 +3329,14 @@ constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
+      label.en: Type
     concentration:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the constituent including its relative concentration
         related to the collected sample or absolute concentration of the constituent
+      label.en: Concentration
+  label.en: Body fluid
 constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
   properties:
     fraction:
@@ -2818,25 +3348,31 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Fraction
     organ:
       type: keyword
       help.en: The organ the cell fraction was derived from (e.g. heart)
+      label.en: Organ
     tissue:
       type: keyword
       help.en: The tissue type the cell fraction was derived from
+      label.en: Tissue
     cell_type:
       type: keyword
       help.en: The cell type the cell fraction was derived from
+      label.en: Cell type
     health_status:
       type: keyword
       help.en: Health status of the donor organism where the cell fraction was derived
         from (e.g. healthy, sick, patient with Diabetes type 2)
       required: true
+      label.en: Health status
     derived_from:
       type: keyword
       enum: [Body fluid, Cell fraction, Virion]
       help.en: The biological substance the complex substance is derived from
       required: true
+      label.en: Derived from
     source_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -2856,15 +3392,18 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     name:
       type: keyword
@@ -2873,6 +3412,7 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2881,11 +3421,14 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
+      label.en: Type
     concentration:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the constituent including its relative concentration
         related to the collected sample or absolute concentration of the constituent
+      label.en: Concentration
+  label.en: Cell fraction
 constituent_Complex_substance_of_biological_originVirionPolymorphic:
   properties:
     genetic_material:
@@ -2893,16 +3436,19 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
       enum: [No genetic material, Virus genome, Synthetic]
       help.en: The genetic material carried by the virions (None, virus genome, synthetic)
       required: true
+      label.en: Genetic material
     capsid_type:
       type: keyword
       enum: [None, Native, Genetically Engineered, Synthetic]
       help.en: The type of virion capsid
       required: true
+      label.en: Capsid type
     envelope_type:
       type: keyword
       enum: [None, Native, Genetically Engineered, Synthetic]
       help.en: The type of virion envelope
       required: true
+      label.en: Envelope type
     host_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -2910,11 +3456,13 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
     host_cell_type:
       type: keyword
       help.en: The host cell type the virion was produced in
+      label.en: Host cell type
     derived_from:
       type: keyword
       enum: [Body fluid, Cell fraction, Virion]
       help.en: The biological substance the complex substance is derived from
       required: true
+      label.en: Derived from
     source_organism:
       keys: [id, title, props.rank]
       vocabulary-type: organisms
@@ -2934,15 +3482,18 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     name:
       type: keyword
@@ -2951,6 +3502,7 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2959,11 +3511,14 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
+      label.en: Type
     concentration:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the constituent including its relative concentration
         related to the collected sample or absolute concentration of the constituent
+      label.en: Concentration
+  label.en: Virion
 ConstituentComplex_substance_of_environmental_originPolymorphic:
   properties:
     source:
@@ -2973,25 +3528,30 @@ ConstituentComplex_substance_of_environmental_originPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Source
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     location:
       use: '#/$defs/Coordinates'
       required: true
       help.en: The coordinates, in decimal notation, where the complex substance was
         collected
+      label.en: Location
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     name:
       type: keyword
@@ -3000,6 +3560,7 @@ ConstituentComplex_substance_of_environmental_originPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -3008,19 +3569,23 @@ ConstituentComplex_substance_of_environmental_originPolymorphic:
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
+      label.en: Type
     concentration:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the constituent including its relative concentration
         related to the collected sample or absolute concentration of the constituent
+      label.en: Concentration
+  label.en: Complex substance of environmental origin
 ConstituentComplex_substance_of_chemical_originPolymorphic:
   help.en: Information about what the chemical substance is derived from and how it
     was prepared
-  required: true
+  label.en: Complex substance of chemical origin
   schemas:
     Lipid assembly:
       use: '#/$defs/constituent_Complex_substance_of_chemical_originLipid_assemblyPolymorphic'
       required: true
+      label.en: Complex substance of chemical origin
   type: polymorphic
   discriminator: class
 constituent_Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
@@ -3030,10 +3595,12 @@ constituent_Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       enum: [Micelle, Liposome, Nanodisc, Sheet]
       help.en: The type of lipid assembly
       required: true
+      label.en: Assembly type
     components[]:
       ^minItems: 1
       ^help.en: The components of the lipid assembly
       ^required: true
+      ^label.en: Components
       use: '#/$defs/Assembly_component'
       type: polymorphic
       mapping:
@@ -3042,28 +3609,34 @@ constituent_Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       type: integer
       minimum: -1
       help.en: The number of lipid mono layers in the lipid assembly, -1 if unknown
+      label.en: Number of mono layers
     size:
       use: '#/$defs/Size'
       help.en: The size of the lipid assembly
+      label.en: Size
     class:
       type: keyword
       enum: [Lipid assembly]
       help.en: The chemical origin where the complex substance was derived from
       required: true
+      label.en: Class
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     name:
       type: keyword
@@ -3072,6 +3645,7 @@ constituent_Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -3080,11 +3654,14 @@ constituent_Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
+      label.en: Type
     concentration:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the constituent including its relative concentration
         related to the collected sample or absolute concentration of the constituent
+      label.en: Concentration
+  label.en: Lipid assembly
 ConstituentComplex_substance_of_industrial_originPolymorphic:
   properties:
     product:
@@ -3095,20 +3672,24 @@ ConstituentComplex_substance_of_industrial_originPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Product
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
         substance
       ^required: true
+      ^label.en: Preparation protocol
       use: '#/$defs/Step'
     storage:
       use: '#/$defs/Storage'
       help.en: Information about how the complex substance was stored between being
         acquired and measured, including temperature and duration
+      label.en: Storage
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the complex substance can be specified
         here
+      ^label.en: Additional specifications
       type: keyword
     name:
       type: keyword
@@ -3117,6 +3698,7 @@ ConstituentComplex_substance_of_industrial_originPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -3125,19 +3707,24 @@ ConstituentComplex_substance_of_industrial_originPolymorphic:
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
+      label.en: Type
     concentration:
       use: '#/$defs/Concentration'
       required: true
       help.en: Concentration of the constituent including its relative concentration
         related to the collected sample or absolute concentration of the constituent
+      label.en: Concentration
+  label.en: Complex substance of industrial origin
 ResultResult_concentrationPolymorphic:
   properties:
     unit:
       use: '#/$defs/CONCENTRATION_UNITS'
       required: true
       help.en: Unit of the concentration
+      label.en: Unit
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
@@ -3145,6 +3732,7 @@ ResultResult_concentrationPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -3155,20 +3743,25 @@ ResultResult_concentrationPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+  label.en: Result concentration
 ResultResult_stoichiometryPolymorphic:
   properties:
     unit:
@@ -3176,8 +3769,10 @@ ResultResult_stoichiometryPolymorphic:
       enum: [per complex]
       help.en: Unit of the stoichiometry
       required: true
+      label.en: Unit
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
@@ -3185,6 +3780,7 @@ ResultResult_stoichiometryPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -3195,20 +3791,25 @@ ResultResult_stoichiometryPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+  label.en: Result stoichiometry
 ResultResult_KAPolymorphic:
   properties:
     unit:
@@ -3216,8 +3817,10 @@ ResultResult_KAPolymorphic:
       enum: [M^-1, M^-2, mM^-1, mM^-2, µM^-1, µM^-2, nM^-1, nM^-2]
       help.en: Unit of the constant of association
       required: true
+      label.en: Unit
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
@@ -3225,6 +3828,7 @@ ResultResult_KAPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -3235,20 +3839,25 @@ ResultResult_KAPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+  label.en: Result ka
 ResultResult_KDPolymorphic:
   properties:
     unit:
@@ -3256,8 +3865,10 @@ ResultResult_KDPolymorphic:
       enum: [M, M^2, mM, mM^2, µM, µM^2, nM, nM^2]
       help.en: Unit of the constant of dissociation
       required: true
+      label.en: Unit
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
@@ -3265,6 +3876,7 @@ ResultResult_KDPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -3275,20 +3887,25 @@ ResultResult_KDPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+  label.en: Result kd
 ResultResult_kOnPolymorphic:
   properties:
     unit:
@@ -3297,8 +3914,10 @@ ResultResult_kOnPolymorphic:
         nM^-1 s^-1, nM^-2 s^-1]
       help.en: Unit of the association rate constant
       required: true
+      label.en: Unit
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
@@ -3306,6 +3925,7 @@ ResultResult_kOnPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -3316,20 +3936,25 @@ ResultResult_kOnPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+  label.en: Result kon
 ResultResult_kOffPolymorphic:
   properties:
     unit:
@@ -3337,8 +3962,10 @@ ResultResult_kOffPolymorphic:
       enum: [s^-1]
       help.en: Unit of the dissociation rate constant
       required: true
+      label.en: Unit
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
@@ -3346,6 +3973,7 @@ ResultResult_kOffPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -3356,28 +3984,35 @@ ResultResult_kOffPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+  label.en: Result koff
 ResultResult_deltaHPolymorphic:
   properties:
     unit:
       use: '#/$defs/ENERGY_UNITS'
       required: true
       help.en: Unit of the change in enthalpy
+      label.en: Unit
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
@@ -3385,6 +4020,7 @@ ResultResult_deltaHPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -3395,20 +4031,25 @@ ResultResult_deltaHPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+  label.en: Result deltah
 ResultResult_deltaSPolymorphic:
   properties:
     unit:
@@ -3416,8 +4057,10 @@ ResultResult_deltaSPolymorphic:
       enum: [kcal/molK, kJ/molK]
       help.en: Unit of the change in entropy
       required: true
+      label.en: Unit
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
@@ -3425,6 +4068,7 @@ ResultResult_deltaSPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -3435,28 +4079,35 @@ ResultResult_deltaSPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+  label.en: Result deltas
 ResultResult_deltaGPolymorphic:
   properties:
     unit:
       use: '#/$defs/ENERGY_UNITS'
       required: true
       help.en: Unit of the change in Gibbs free energy
+      label.en: Unit
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
@@ -3464,6 +4115,7 @@ ResultResult_deltaGPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -3474,28 +4126,35 @@ ResultResult_deltaGPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+  label.en: Result deltag
 ResultResult_MWPolymorphic:
   properties:
     unit:
       use: '#/$defs/MOLECULAR_WEIGHT_UNITS'
       required: true
       help.en: Unit of the molecular weight
+      label.en: Unit
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
@@ -3503,6 +4162,7 @@ ResultResult_MWPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -3513,28 +4173,35 @@ ResultResult_MWPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+  label.en: Result mw
 ResultResult_EC50Polymorphic:
   properties:
     unit:
       use: '#/$defs/CONCENTRATION_UNITS'
       required: true
       help.en: Unit of the half maximal effective concentration
+      label.en: Unit
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
@@ -3542,6 +4209,7 @@ ResultResult_EC50Polymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -3552,20 +4220,25 @@ ResultResult_EC50Polymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+  label.en: Result ec50
 ResultResult_hill_coeffPolymorphic:
   properties:
     unit:
@@ -3573,8 +4246,10 @@ ResultResult_hill_coeffPolymorphic:
       enum: [unitless]
       help.en: Unit of the Hill coefficient
       required: true
+      label.en: Unit
     id:
       type: keyword
+      label.en: Id
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
@@ -3582,6 +4257,7 @@ ResultResult_hill_coeffPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Name
     type:
       type: keyword
       enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
@@ -3592,17 +4268,22 @@ ResultResult_hill_coeffPolymorphic:
       required: true
       mapping:
         copy_to: collected_default_search_fields
+      label.en: Type
     entities_involved[]:
       ^minItems: 1
       ^help.en: List of chemical or molecular assemblies the result describes and
         how many copies of each are involved
       ^required: true
+      ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
     value:
       type: double
       help.en: Numerical value of the result
       required: true
+      label.en: Value
     value_error:
       use: '#/$defs/Value_error'
       help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+  label.en: Result hill coeff

@@ -2,8 +2,10 @@ general_parameters:
   use: '#/$defs/General_parameters'
   required: true
   help.en: The general parameter of the experiment
+  label.en: General parameters
 method_specific_parameters:
   use: '#/$defs/MST_specific_parameters'
   required: true
   help.en: The parameters of the experiment that is specific to MST/TRIC/Spectral
     Shift
+  label.en: Method specific parameters
