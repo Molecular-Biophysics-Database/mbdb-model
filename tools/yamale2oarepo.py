@@ -414,6 +414,7 @@ class ModelChoose(ModelBase):
         ret["discriminator"] = self.type_field
         if self.link_id:
             ret["id"] = self.link_id
+        ret.pop("required", False)
         return ret
 
     def get_links(self, links, path, defs):
