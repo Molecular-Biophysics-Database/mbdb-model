@@ -67,9 +67,8 @@
         ],
         "technique": "Surface plasmon resonance (SPR)",
         "instrument": {
-          "instrument": {
-            "id": "imt:2"
-          }
+          "manufacturer": "Cytiva",
+          "name": "Biacore T200"
         },
         "collection_start_time": "2020-06-05",
         "chemical_environments": [
@@ -78,46 +77,37 @@
             "name": "Measurement buffer",
             "solvent": [
               {
-                "name": "Water",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 18.02,
-                  "unit": "g/mol"
+                "chemical": {
+                  "id": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
                 },
                 "concentration": {
                   "value": 50,
                   "unit": "w/w %"
-                },
-                "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
+                }
               }
             ],
             "ph": 7.4,
             "constituents": [
               {
-                "name": "Tris:HCl",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 121.136,
-                  "unit": "Da"
+                "chemical": {
+                  "id": "QKNYBSVHEMOAJP-UHFFFAOYSA-N"
                 },
                 "concentration": {
                   "value": 50,
                   "unit": "mM"
-                },
-                "inchikey": "QKNYBSVHEMOAJP-UHFFFAOYSA-N"
+                }
               },
               {
-                "name": "Sodium chhhhride",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 58.44,
-                  "unit": "Da"
+                "chemical": {
+                  "id": "FAPWRFPIFSIZLT-UHFFFAOYSA-M"
                 },
                 "concentration": {
                   "value": 150,
                   "unit": "mM"
-                },
-                "inchikey": "FAPWRFPIFSIZLT-UHFFFAOYSA-M"
+                }
               }
             ]
           },
@@ -126,33 +116,27 @@
             "name": "Regeneration buffer",
             "solvent": [
               {
-                "name": "Water",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 18.02,
-                  "unit": "g/mol"
+                "chemical": {
+                  "id": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
                 },
                 "concentration": {
                   "value": 50,
                   "unit": "w/w %"
-                },
-                "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
+                }
               }
             ],
             "ph": 1,
             "constituents": [
               {
-                "name": "HCl",
-                "molecular_weight": {
-                  "value": 36.46,
-                  "unit": "g/mol"
-                },
                 "type": "Chemical",
+                "chemical": {
+                  "id": "VEXZGXHMUGYJMC-UHFFFAOYSA-N"
+                },
                 "concentration": {
                   "value": 100,
                   "unit": "mM"
-                },
-                "inchikey": "VEXZGXHMUGYJMC-UHFFFAOYSA-N"
+                }
               }
             ]
           }

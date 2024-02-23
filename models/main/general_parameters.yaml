@@ -179,13 +179,17 @@ Record_information:
 # Instrument information
 
 Instrument:
-    instrument:
-        description : str(equals='Name of the instrument as provided by the
-                                manufacturer used for raw data collection', 
-                                required=False)
-        value       : vocabulary(vocabulary='instrument',
-                                fields='[id,title,props.manufacturer]',
-                                required=False)
+    manufacturer:
+        description : str(equals='Name of the manufacturer of the instrument
+                                  used for raw data collection',
+                          required=False)
+        default_search : True
+        value       : include('COMPANIES')
+
+    name:
+        description : str(equals='The name of the instrument as provided by the
+                                  manufacturer', required=False)
+        value       : str()
 
 ---
 # Entities and references to them
@@ -458,18 +462,12 @@ Polymer_modifications:
 # Entities and constituents
 
 Chemical:
-    inchikey:
-        description     : str(equals='InChIKey identifier of the chemical.
-                                      In case of chemical polymers please
-                                      specify the InChIKey of the monomer and
-                                      specify the specific type in the
-                                      additional identifiers field (e.g. if
-                                      PEG 3350 was employed, the InChiKey of
-                                      ethylene glycol, i.e.
-                                      LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-                                      specified here)', required=False)
-        default_search  : True
-        value           : keyword()
+    chemical:
+        description     : str(equals='Name of the chemical',
+                            required=False)
+        value           : vocabulary(vocabulary='chemical',
+                                fields='[id, title, props.inchikey, props.molecular_formula, props.molecular_weight, props.additional_identifiers]',
+                                required=False)
 
     additional_identifiers:
         description     : str(equals='Unique and persistent identifier from an
@@ -485,11 +483,6 @@ Chemical:
                                       occurring abundances, it can be specified here
                                       (e.g. 15N, 13C)', required=False)
         value           : keyword(required=False)
-
-    molecular_weight:
-        description     : str(equals='The molecular weight of the chemical',
-                              required=False)
-        value           : include('Molecular_weight')
 
     additional_specifications:
         description      : str(equals='Additional information about the chemical
@@ -547,14 +540,6 @@ Chemical_environment:
         value           : list(str(), required=False)
 
 Constituent_base:
-    name:
-        description     : str(equals='Short descriptive name (id) of the
-                                      constituent, must be unique within
-                                      a record (e.g. NaCl, Human serum P1,
-                                      Lysozyme, etc.)', required=False)
-        default_search  : True
-        value           : str()
-
     type:
         description     : str(equals='The type of the constituent, options are
                                       Polymer, Chemical, and defined assembly',
@@ -576,13 +561,6 @@ Constituent_base:
         value           : include('Concentration')
 
 Chemical_constituent_base:
-    name:
-        description     : str(equals='Short descriptive name (id) of the
-                                      constituent, must be unique within
-                                      a record', required=False)
-        default_search  : True
-        value           : str()
-
     type:
         description     : str(equals='The type of the constituent, options are
                                       Chemical',

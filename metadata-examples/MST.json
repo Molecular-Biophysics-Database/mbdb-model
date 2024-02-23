@@ -67,9 +67,8 @@
         ],
         "technique": "Microscale thermophoresis/Temperature related intensity change (MST/TRIC)",
         "instrument": {
-          "instrument": {
-            "id": "imt:1"
-          }
+          "manufacturer": "Nanotemper",
+          "name": "Monolith NT.115"
         },
         "collection_start_time": "2022-01-02",
         "chemical_environments": [
@@ -78,72 +77,57 @@
             "name": "Measurement buffer",
             "solvent": [
               {
-                "name": "Water",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 18.02,
-                  "unit": "g/mol"
+                "chemical": {
+                  "id": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
                 },
                 "concentration": {
                   "value": 50,
                   "unit": "w/w %"
-                },
-                "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
+                }
               },
               {
-                "name": "Ethanol",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 46.069,
-                  "unit": "Da"
+                "chemical": {
+                  "id": "LFQSCWFLJHTTHZ-UHFFFAOYSA-N"
                 },
                 "concentration": {
                   "value": 50,
                   "unit": "v/v %"
-                },
-                "inchikey": "LFQSCWFLJHTTHZ-UHFFFAOYSA-N"
+                }
               }
             ],
             "ph": 7.4,
             "constituents": [
               {
-                "name": "Tris:HCl",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 121.136,
-                  "unit": "Da"
+                "chemical": {
+                  "id": "QKNYBSVHEMOAJP-UHFFFAOYSA-N"
                 },
                 "concentration": {
                   "value": 50,
                   "unit": "mM"
-                },
-                "inchikey": "QKNYBSVHEMOAJP-UHFFFAOYSA-N"
+                }
               },
               {
-                "name": "Sodium chhhhride",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 58.44,
-                  "unit": "Da"
+                "chemical": {
+                  "id": "FAPWRFPIFSIZLT-UHFFFAOYSA-M"
                 },
                 "concentration": {
                   "value": 150,
                   "unit": "mM"
-                },
-                "inchikey": "FAPWRFPIFSIZLT-UHFFFAOYSA-M"
+                }
               },
               {
-                "name": "SDS",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 288.372,
-                  "unit": "Da"
+                "chemical": {
+                  "id": "DBMJMQXJHONAFJ-UHFFFAOYSA-M"
                 },
                 "concentration": {
                   "value": 1,
                   "unit": "w/v %"
-                },
-                "inchikey": "DBMJMQXJHONAFJ-UHFFFAOYSA-M"
+                }
               }
             ]
           }

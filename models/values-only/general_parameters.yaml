@@ -28,8 +28,8 @@ Record_information:
   date_available: day(required=False)
 ---
 Instrument:
-  instrument: vocabulary(vocabulary='instrument', fields='[id,title,props.manufacturer]',
-    required=False)
+  manufacturer: include('COMPANIES')
+  name: str()
 ---
 Entity_base:
   id: link_target(name="entity")
@@ -83,10 +83,11 @@ Polymer_modifications:
   chemical: list(nested_include('Modification'), required=False)
 ---
 Chemical:
-  inchikey: keyword()
+  chemical: vocabulary(vocabulary='chemical', fields='[id, title, props.inchikey,
+    props.molecular_formula, props.molecular_weight, props.additional_identifiers]',
+    required=False)
   additional_identifiers: list(chemical_id(), required=False)
   isotopic_labeling: keyword(required=False)
-  molecular_weight: include('Molecular_weight')
   additional_specifications: list(str(), required=False)
 Chemical_environment:
   id: link_target(name="chemical-environment")
@@ -96,13 +97,11 @@ Chemical_environment:
   ph: num()
   additional_specifications: list(str(), required=False)
 Constituent_base:
-  name: str()
   type: enum('Polymer', 'Chemical', 'Molecular assembly', 'Complex substance of biological
     origin', 'Complex substance of environmental origin', 'Complex substance of chemical
     origin', 'Complex substance of industrial origin')
   concentration: include('Concentration')
 Chemical_constituent_base:
-  name: str()
   type: enum('Chemical')
   concentration: include('Concentration')
 Chemical_constituent: choose(include('Chemical_constituent_base'), Chemical=include('Chemical'))

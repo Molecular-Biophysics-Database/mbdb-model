@@ -146,10 +146,14 @@ Record_information:
         automatically generated
 Instrument:
   properties:
-    instrument:
-      keys: [id, title, props.manufacturer]
-      vocabulary-type: instrument
-      type: vocabulary
+    manufacturer:
+      use: '#/$defs/COMPANIES'
+      required: true
+      help.en: Name of the manufacturer of the instrument used for raw data collection
+    name:
+      type: keyword
+      help.en: The name of the instrument as provided by the manufacturer
+      required: true
 Entity_base:
   properties:
     id:
@@ -372,15 +376,11 @@ Polymer_modifications:
       type: nested
 Chemical:
   properties:
-    inchikey:
-      type: keyword
-      help.en: InChIKey identifier of the chemical. In case of chemical polymers please
-        specify the InChIKey of the monomer and specify the specific type in the additional
-        identifiers field (e.g. if PEG 3350 was employed, the InChiKey of ethylene
-        glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be specified here)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
+    chemical:
+      keys: [id, title, props.inchikey, props.molecular_formula, props.molecular_weight,
+        props.additional_identifiers]
+      vocabulary-type: chemical
+      type: vocabulary
     additional_identifiers[]:
       ^minItems: 1
       ^help.en: Unique and persistent identifier from an external source; options
@@ -391,10 +391,6 @@ Chemical:
       type: keyword
       help.en: If the isotopic composition of the chemical was altered from the naturally
         occurring abundances, it can be specified here (e.g. 15N, 13C)
-    molecular_weight:
-      use: '#/$defs/Molecular_weight'
-      required: true
-      help.en: The molecular weight of the chemical
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
@@ -444,13 +440,6 @@ Chemical_environment:
   id: chemical-environment
 Constituent_base:
   properties:
-    name:
-      type: keyword
-      help.en: Short descriptive name (id) of the constituent, must be unique within
-        a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -466,13 +455,6 @@ Constituent_base:
         related to the collected sample or absolute concentration of the constituent
 Chemical_constituent_base:
   properties:
-    name:
-      type: keyword
-      help.en: Short descriptive name (id) of the constituent, must be unique within
-        a record
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
     type:
       type: keyword
       enum: [Chemical]
@@ -1336,6 +1318,10 @@ SUPPORTED_TECHNIQUES:
   type: keyword
   enum: [Bio-layer interferometry (BLI), Microscale thermophoresis/Temperature related
       intensity change (MST/TRIC), Surface plasmon resonance (SPR)]
+COMPANIES:
+  type: keyword
+  enum: [Bio-Rad, Bruker, Cytiva, Gatorbio, GE Healthcare, Nanotemper, Nicoya Life,
+    Sartorius, Malvern Panalytical, Refeyn, TA Instruments]
 PublicationArticlePolymorphic:
   properties:
     journal:
@@ -1562,15 +1548,11 @@ HomogeneityEmpty_objectPolymorphic:
       required: true
 EntityChemicalPolymorphic:
   properties:
-    inchikey:
-      type: keyword
-      help.en: InChIKey identifier of the chemical. In case of chemical polymers please
-        specify the InChIKey of the monomer and specify the specific type in the additional
-        identifiers field (e.g. if PEG 3350 was employed, the InChiKey of ethylene
-        glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be specified here)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
+    chemical:
+      keys: [id, title, props.inchikey, props.molecular_formula, props.molecular_weight,
+        props.additional_identifiers]
+      vocabulary-type: chemical
+      type: vocabulary
     additional_identifiers[]:
       ^minItems: 1
       ^help.en: Unique and persistent identifier from an external source; options
@@ -1581,10 +1563,6 @@ EntityChemicalPolymorphic:
       type: keyword
       help.en: If the isotopic composition of the chemical was altered from the naturally
         occurring abundances, it can be specified here (e.g. 15N, 13C)
-    molecular_weight:
-      use: '#/$defs/Molecular_weight'
-      required: true
-      help.en: The molecular weight of the chemical
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
@@ -1767,15 +1745,11 @@ Assembly_componentPolymerPolymorphic:
       required: true
 Assembly_componentChemicalPolymorphic:
   properties:
-    inchikey:
-      type: keyword
-      help.en: InChIKey identifier of the chemical. In case of chemical polymers please
-        specify the InChIKey of the monomer and specify the specific type in the additional
-        identifiers field (e.g. if PEG 3350 was employed, the InChiKey of ethylene
-        glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be specified here)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
+    chemical:
+      keys: [id, title, props.inchikey, props.molecular_formula, props.molecular_weight,
+        props.additional_identifiers]
+      vocabulary-type: chemical
+      type: vocabulary
     additional_identifiers[]:
       ^minItems: 1
       ^help.en: Unique and persistent identifier from an external source; options
@@ -1786,10 +1760,6 @@ Assembly_componentChemicalPolymorphic:
       type: keyword
       help.en: If the isotopic composition of the chemical was altered from the naturally
         occurring abundances, it can be specified here (e.g. 15N, 13C)
-    molecular_weight:
-      use: '#/$defs/Molecular_weight'
-      required: true
-      help.en: The molecular weight of the chemical
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
@@ -2245,15 +2215,11 @@ EntityComplex_substance_of_industrial_originPolymorphic:
         copy_to: collected_default_search_fields
 Chemical_constituentChemicalPolymorphic:
   properties:
-    inchikey:
-      type: keyword
-      help.en: InChIKey identifier of the chemical. In case of chemical polymers please
-        specify the InChIKey of the monomer and specify the specific type in the additional
-        identifiers field (e.g. if PEG 3350 was employed, the InChiKey of ethylene
-        glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be specified here)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
+    chemical:
+      keys: [id, title, props.inchikey, props.molecular_formula, props.molecular_weight,
+        props.additional_identifiers]
+      vocabulary-type: chemical
+      type: vocabulary
     additional_identifiers[]:
       ^minItems: 1
       ^help.en: Unique and persistent identifier from an external source; options
@@ -2264,22 +2230,11 @@ Chemical_constituentChemicalPolymorphic:
       type: keyword
       help.en: If the isotopic composition of the chemical was altered from the naturally
         occurring abundances, it can be specified here (e.g. 15N, 13C)
-    molecular_weight:
-      use: '#/$defs/Molecular_weight'
-      required: true
-      help.en: The molecular weight of the chemical
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
         RNase free water, recrystallization, desalting)
       type: keyword
-    name:
-      type: keyword
-      help.en: Short descriptive name (id) of the constituent, must be unique within
-        a record
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
     type:
       type: keyword
       enum: [Chemical]
@@ -2360,13 +2315,6 @@ ConstituentPolymerPolymorphic:
       ^minItems: 1
       ^help.en: Additional information about the polymer can be specified here
       type: keyword
-    name:
-      type: keyword
-      help.en: Short descriptive name (id) of the constituent, must be unique within
-        a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2382,15 +2330,11 @@ ConstituentPolymerPolymorphic:
         related to the collected sample or absolute concentration of the constituent
 ConstituentChemicalPolymorphic:
   properties:
-    inchikey:
-      type: keyword
-      help.en: InChIKey identifier of the chemical. In case of chemical polymers please
-        specify the InChIKey of the monomer and specify the specific type in the additional
-        identifiers field (e.g. if PEG 3350 was employed, the InChiKey of ethylene
-        glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be specified here)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
+    chemical:
+      keys: [id, title, props.inchikey, props.molecular_formula, props.molecular_weight,
+        props.additional_identifiers]
+      vocabulary-type: chemical
+      type: vocabulary
     additional_identifiers[]:
       ^minItems: 1
       ^help.en: Unique and persistent identifier from an external source; options
@@ -2401,22 +2345,11 @@ ConstituentChemicalPolymorphic:
       type: keyword
       help.en: If the isotopic composition of the chemical was altered from the naturally
         occurring abundances, it can be specified here (e.g. 15N, 13C)
-    molecular_weight:
-      use: '#/$defs/Molecular_weight'
-      required: true
-      help.en: The molecular weight of the chemical
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
         RNase free water, recrystallization, desalting)
       type: keyword
-    name:
-      type: keyword
-      help.en: Short descriptive name (id) of the constituent, must be unique within
-        a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2470,13 +2403,6 @@ ConstituentMolecular_assemblyPolymorphic:
       ^help.en: Additional information about the macromolecular assembly can be specified
         here
       type: keyword
-    name:
-      type: keyword
-      help.en: Short descriptive name (id) of the constituent, must be unique within
-        a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2554,13 +2480,6 @@ constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
       ^help.en: Additional information about the complex substance can be specified
         here
       type: keyword
-    name:
-      type: keyword
-      help.en: Short descriptive name (id) of the constituent, must be unique within
-        a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2633,13 +2552,6 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
       ^help.en: Additional information about the complex substance can be specified
         here
       type: keyword
-    name:
-      type: keyword
-      help.en: Short descriptive name (id) of the constituent, must be unique within
-        a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2711,13 +2623,6 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
       ^help.en: Additional information about the complex substance can be specified
         here
       type: keyword
-    name:
-      type: keyword
-      help.en: Short descriptive name (id) of the constituent, must be unique within
-        a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2760,13 +2665,6 @@ ConstituentComplex_substance_of_environmental_originPolymorphic:
       ^help.en: Additional information about the complex substance can be specified
         here
       type: keyword
-    name:
-      type: keyword
-      help.en: Short descriptive name (id) of the constituent, must be unique within
-        a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2832,13 +2730,6 @@ constituent_Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       ^help.en: Additional information about the complex substance can be specified
         here
       type: keyword
-    name:
-      type: keyword
-      help.en: Short descriptive name (id) of the constituent, must be unique within
-        a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
@@ -2877,13 +2768,6 @@ ConstituentComplex_substance_of_industrial_originPolymorphic:
       ^help.en: Additional information about the complex substance can be specified
         here
       type: keyword
-    name:
-      type: keyword
-      help.en: Short descriptive name (id) of the constituent, must be unique within
-        a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
-      required: true
-      mapping:
-        copy_to: collected_default_search_fields
     type:
       type: keyword
       enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
