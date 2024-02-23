@@ -395,14 +395,10 @@ Record_information:
         automatically generated
 Instrument:
   properties:
-    manufacturer:
-      use: '#/$defs/COMPANIES'
-      required: true
-      help.en: Name of the manufacturer of the instrument used for raw data collection
-    name:
-      type: keyword
-      help.en: The name of the instrument as provided by the manufacturer
-      required: true
+    instrument:
+      keys: [id, title, props.manufacturer]
+      vocabulary-type: instrument
+      type: vocabulary
 Entity_base:
   properties:
     id:
@@ -1654,10 +1650,6 @@ SUPPORTED_TECHNIQUES:
   type: keyword
   enum: [Bio-layer interferometry (BLI), Microscale thermophoresis/Temperature related
       intensity change (MST/TRIC), Surface plasmon resonance (SPR)]
-COMPANIES:
-  type: keyword
-  enum: [Bio-Rad, Bruker, Cytiva, Gatorbio, GE Healthcare, Nanotemper, Nicoya Life,
-    Sartorius, Malvern Panalytical, Refeyn, TA Instruments]
 PublicationArticlePolymorphic:
   properties:
     journal:

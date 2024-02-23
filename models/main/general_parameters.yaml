@@ -179,17 +179,13 @@ Record_information:
 # Instrument information
 
 Instrument:
-    manufacturer:
-        description : str(equals='Name of the manufacturer of the instrument
-                                  used for raw data collection',
-                          required=False)
-        default_search : True
-        value       : include('COMPANIES')
-
-    name:
-        description : str(equals='The name of the instrument as provided by the
-                                  manufacturer', required=False)
-        value       : str()
+    instrument:
+        description : str(equals='Name of the instrument as provided by the
+                                manufacturer used for raw data collection', 
+                                required=False)
+        value       : vocabulary(vocabulary='instrument',
+                                fields='[id,title,props.manufacturer]',
+                                required=False)
 
 ---
 # Entities and references to them

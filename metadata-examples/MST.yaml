@@ -45,8 +45,8 @@ general_parameters:
                (MST/TRIC)'
 
     instrument:
-        manufacturer: 'Nanotemper'
-        name: 'Monolith NT.115'
+        instrument:
+            id: "imt:1"
 
     collection_start_time: 2022-01-02
 

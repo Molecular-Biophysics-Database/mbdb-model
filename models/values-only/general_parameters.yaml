@@ -28,8 +28,8 @@ Record_information:
   date_available: day(required=False)
 ---
 Instrument:
-  manufacturer: include('COMPANIES')
-  name: str()
+  instrument: vocabulary(vocabulary='instrument', fields='[id,title,props.manufacturer]',
+    required=False)
 ---
 Entity_base:
   id: link_target(name="entity")
