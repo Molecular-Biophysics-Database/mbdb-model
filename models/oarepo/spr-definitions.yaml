@@ -281,7 +281,7 @@ General_parameters:
   properties:
     schema_version:
       type: keyword
-      enum: [0.9.18]
+      enum: [0.9.19]
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -331,11 +331,10 @@ General_parameters:
       required: true
       label.en: Collection start time
     instrument:
-      use: '#/$defs/Instrument'
+      keys: [id, title, props.manufacturer]
+      vocabulary-type: instruments
+      type: vocabulary
       required: true
-      help.en: Information about the instrument being used to collect (measure) the
-        raw data annotated by this record
-      label.en: Instrument
     entities_of_interest[]:
       ^minItems: 1
       ^help.en: List of the entities that are being directly measured, as well as
@@ -448,19 +447,6 @@ Record_information:
         automatically generated
       label.en: Date available
   label.en: Record information
-Instrument:
-  properties:
-    manufacturer:
-      use: '#/$defs/COMPANIES'
-      required: true
-      help.en: Name of the manufacturer of the instrument used for raw data collection
-      label.en: Manufacturer
-    name:
-      type: keyword
-      help.en: The name of the instrument as provided by the manufacturer
-      required: true
-      label.en: Name
-  label.en: Instrument
 Entity_base:
   properties:
     id:
@@ -1986,11 +1972,6 @@ SUPPORTED_TECHNIQUES:
   enum: [Bio-layer interferometry (BLI), Microscale thermophoresis/Temperature related
       intensity change (MST/TRIC), Surface plasmon resonance (SPR)]
   label.en: Supported techniques
-COMPANIES:
-  type: keyword
-  enum: [Bio-Rad, Bruker, Cytiva, Gatorbio, GE Healthcare, Nanotemper, Nicoya Life,
-    Sartorius, Malvern Panalytical, Refeyn, TA Instruments]
-  label.en: Companies
 PublicationArticlePolymorphic:
   properties:
     journal:

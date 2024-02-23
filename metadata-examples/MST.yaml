@@ -1,5 +1,5 @@
 general_parameters:
-    schema_version: '0.9.18'
+    schema_version: '0.9.19'
     record_information:
         publisher: 'MBDB'
         resource_type_general: 'Dataset'
@@ -45,8 +45,7 @@ general_parameters:
                (MST/TRIC)'
 
     instrument:
-        manufacturer: 'Nanotemper'
-        name: 'Monolith NT.115'
+        id: "ins:2"
 
     collection_start_time: 2022-01-02
 
