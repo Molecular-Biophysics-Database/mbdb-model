@@ -138,8 +138,6 @@ general_parameters:
               temperature:
                   value: -80
                   unit: '°C'
-                  obtained_by: 'Measurement'
-                  controlled: True
               storage_preparation:
                   - name: "Flash freezing in liquid nitrogen"
                     description: 'Aliquotes were placed in liquid

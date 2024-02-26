@@ -174,9 +174,7 @@
             "storage": {
               "temperature": {
                 "value": -80,
-                "unit": "°C",
-                "obtained_by": "Measurement",
-                "controlled": true
+                "unit": "°C"
               },
               "storage_preparation": [
                 {
