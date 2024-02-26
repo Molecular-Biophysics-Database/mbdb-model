@@ -1,7 +1,7 @@
 general_parameters: include('General_parameters')
 ---
 General_parameters:
-  schema_version: keyword(equals='0.9.18')
+  schema_version: keyword(equals='0.9.19')
   record_information: include('Record_information')
   depositors: include('Depositors')
   associated_publication: include('Publication', required=False)
@@ -9,7 +9,7 @@ General_parameters:
     required=False)
   technique: include('SUPPORTED_TECHNIQUES')
   collection_start_time: day()
-  instrument: include('Instrument')
+  instrument: vocabulary(vocabulary='instruments', fields='[id,title,props.manufacturer]')
   entities_of_interest: list(nested_include('Entity'), min=1)
   chemical_environments: list(nested_include('Chemical_environment'), min=1)
   results: list(nested_include('Result'), required=False)
@@ -26,10 +26,6 @@ Record_information:
   subject_category: keyword(equals='Biophysics')
   deposition_date: day()
   date_available: day(required=False)
----
-Instrument:
-  manufacturer: include('COMPANIES')
-  name: str()
 ---
 Entity_base:
   id: link_target(name="entity")
@@ -363,5 +359,3 @@ MOLECULAR_WEIGHT_UNITS: enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
 ---
 SUPPORTED_TECHNIQUES: enum('Bio-layer interferometry (BLI)', 'Microscale thermophoresis/Temperature
   related intensity change (MST/TRIC)', 'Surface plasmon resonance (SPR)', required=False)
-COMPANIES: enum('Bio-Rad', 'Bruker', 'Cytiva', 'Gatorbio', 'GE Healthcare', 'Nanotemper',
-  'Nicoya Life', 'Sartorius', 'Malvern Panalytical', 'Refeyn', 'TA Instruments', required=False)
