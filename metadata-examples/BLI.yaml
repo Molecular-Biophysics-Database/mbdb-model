@@ -44,7 +44,7 @@ general_parameters:
     technique: 'Bio-layer interferometry (BLI)'
 
     instrument:
-        id: ins:32'
+        id: ins:32
 
     collection_start_time: 2020-06-05
 
