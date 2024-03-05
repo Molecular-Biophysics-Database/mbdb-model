@@ -41,11 +41,11 @@ def convert_oarepo_to_yup(oarepo_file, output_file):
                 assert isinstance(s, YUPField)
                 s = s.type
                 if isinstance(s, ObjectYUPSchema):
-                    s.fields[fld.discriminator].remove_constraint('oneOf').add_constraint(f"oneOf({json_repr(key)})")
+                    s.fields[fld.discriminator].remove_constraint('oneOf').add_constraint(f"oneOf([{json_repr(key)}])")
                 elif isinstance(s, PolymorphicYUPSchema):
                     for sc in s.schemas.values():
                         sc = sc.type
-                        sc.fields[fld.discriminator].remove_constraint('oneOf').add_constraint(f"oneOf({json_repr(key)})")
+                        sc.fields[fld.discriminator].remove_constraint('oneOf').add_constraint(f"oneOf([{json_repr(key)}])")
 
 
         objects.append(fld)
