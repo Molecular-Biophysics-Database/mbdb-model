@@ -327,7 +327,7 @@ Homogeneity: choose(include('Homogeneity_base'), type_field='checked', Yes=inclu
 Yes_homogeneity:
   method: enum("Dynamic light scattering", "Size exclusion chromatography", "Native
     Gel Electrophoresis", "Mass photometry")
-  expected number_of_species: int(min=1)
+  expected_number_of_species: int(min=1)
   number_of_species_observed: int(min=1)
 ---
 Storage:

@@ -1533,7 +1533,7 @@ Value_error:
     lower:
       type: double
       help.en: The lower error, i.e. the number that should be added to the value
-        to get the upper bound of the 95 % confidence interval. The same unit as the
+        to get the lower bound of the 95 % confidence interval. The same unit as the
         value being described is assumed. If relative errors are provided, please
         provide it in fractional form (e.g.  0.01 for 1 %)
       required: true
@@ -1796,7 +1796,7 @@ Yes_homogeneity:
       help.en: The method used to evaluate the homogeneity
       required: true
       label.en: Method
-    expected number_of_species:
+    expected_number_of_species:
       type: integer
       minimum: 1
       help.en: The number of species that were expected to be present
@@ -2113,7 +2113,7 @@ HomogeneityYes_homogeneityPolymorphic:
       help.en: The method used to evaluate the homogeneity
       required: true
       label.en: Method
-    expected number_of_species:
+    expected_number_of_species:
       type: integer
       minimum: 1
       help.en: The number of species that were expected to be present
