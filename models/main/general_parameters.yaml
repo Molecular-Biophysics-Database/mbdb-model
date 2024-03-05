@@ -1278,7 +1278,7 @@ Value_error:
     lower:
         description     : str(equals='The lower error, i.e. the number that
                                       should be added to the value to get
-                                      the upper bound of the 95 % confidence
+                                      the lower bound of the 95 % confidence
                                       interval. The same unit as the value
                                       being described is assumed. If relative
                                       errors are provided, please provide it in
@@ -1558,7 +1558,7 @@ Yes_homogeneity:
                                    "Native Gel Electrophoresis",
                                    "Mass photometry")
 
-    expected number_of_species:
+    expected_number_of_species:
         description         : str(equals="The number of species that were expected to
                                           be present", required=False)
         value               : int(min=1)
