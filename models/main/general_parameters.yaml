@@ -1277,7 +1277,7 @@ Processing_step:
 Value_error:
     lower:
         description     : str(equals='The lower error, i.e. the number that
-                                      should be added to the value to get
+                                      should be subtracted from the value to get
                                       the lower bound of the 95 % confidence
                                       interval. The same unit as the value
                                       being described is assumed. If relative
@@ -1567,9 +1567,6 @@ Yes_homogeneity:
         description         : str(equals="The number of species that was observed to
                                           be present", required=False)
         value               : int(min=1)
-
-
-
 
 ---
 # Additional objects

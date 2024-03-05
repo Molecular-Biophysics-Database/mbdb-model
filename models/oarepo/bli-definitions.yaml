@@ -1628,10 +1628,10 @@ Value_error:
   properties:
     lower:
       type: double
-      help.en: The lower error, i.e. the number that should be added to the value
-        to get the lower bound of the 95 % confidence interval. The same unit as the
-        value being described is assumed. If relative errors are provided, please
-        provide it in fractional form (e.g.  0.01 for 1 %)
+      help.en: The lower error, i.e. the number that should be subtracted from the
+        value to get the lower bound of the 95 % confidence interval. The same unit
+        as the value being described is assumed. If relative errors are provided,
+        please provide it in fractional form (e.g.  0.01 for 1 %)
       required: true
       label.en: Lower
     upper:
