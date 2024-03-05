@@ -35,6 +35,19 @@ def convert_oarepo_to_yup(oarepo_file, output_file):
     def dump_objects(fld):
         if not isinstance(fld, (ObjectYUPSchema, PolymorphicYUPSchema)):
             return
+        if isinstance(fld, PolymorphicYUPSchema):
+            # fix up polymorphic types
+            for key, s in fld.schemas.items():
+                assert isinstance(s, YUPField)
+                s = s.type
+                if isinstance(s, ObjectYUPSchema):
+                    s.fields[fld.discriminator].remove_constraint('oneOf').add_constraint(f"oneOf({json_repr(key)})")
+                elif isinstance(s, PolymorphicYUPSchema):
+                    for sc in s.schemas.values():
+                        sc = sc.type
+                        sc.fields[fld.discriminator].remove_constraint('oneOf').add_constraint(f"oneOf({json_repr(key)})")
+
+
         objects.append(fld)
 
     yup_object.visit(dump_objects)
@@ -96,6 +109,14 @@ class YUPField:
         ret.extend(self.type.extra_constraints)
         ret.extend(self.constraints)
         return '.'.join(ret)
+
+    def remove_constraint(self, constraint):
+        self.constraints = [x for x in self.constraints if not x.startswith(constraint)]
+        return self
+
+    def add_constraint(self, constraint):
+        self.remove_constraint(constraint)
+        self.constraints.append(constraint)
 
     @classmethod
     def parse_enum(cls, value):
@@ -204,8 +225,10 @@ class PrimitiveYUPSchema:
             case 'boolean':
                 return "boolean()"
             case 'vocabulary':
+                # TODO: fix to contain only the allowed fields
                 return "object()"
             case 'relation':
+                # TODO: fix to contain only the allowed fields
                 return "object()"
             case _:
                 raise Exception(f'Not implemented type {self.type}')
@@ -226,6 +249,7 @@ class ArrayYUPSchema:
 
     def to_js_item(self):
         return f"array({self.type.to_js_item()})"
+
 
 @dataclasses.dataclass
 class PolymorphicYUPSchema:
@@ -249,9 +273,9 @@ class PolymorphicYUPSchema:
         return f"{self.type}"
 
     def to_js(self):
-        subschemas = ", ".join(f"{v.type.type}" for v in self.schemas.values())
+        subschemas = ",\n    ".join(f"{v.type.type}" for k, v in self.schemas.items())
         return f"""
-export const {self.type} = union({subschemas});
+export const {self.type} = union(\n    {subschemas});
         """
 
 def parse_yup(schema, path):
