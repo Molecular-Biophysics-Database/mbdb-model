@@ -391,9 +391,10 @@ Polymer:
         value           : enum('Natively', 'Recombinantly', 'Synthetically')
 
     expression_organism:
-        description     : str(equals='The biological species where the polymer
-                                      naturally occurs. Note that this is based
-                                      on the NCBI taxonomy', required=False)
+        description     : str(equals='The biological species that was used to
+                                      express (produce) the polymer. Note that
+                                      this is based on the NCBI taxonomy',
+                                     required=False)
         value           : vocabulary(vocabulary='organisms',
                                      fields='[id,title,props.rank]',
                                      required=False)
