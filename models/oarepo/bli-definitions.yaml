@@ -46,8 +46,10 @@ BLI_specific_parameters:
 BLI_Measurement:
   properties:
     id:
-      type: keyword
+      help.en: Unique ID to be used as a link target
       required: true
+      label.en: Id
+      type: keyword
     name:
       type: keyword
       help.en: Name (id) of the measurement which must be unique within a record (i.e.
@@ -112,8 +114,10 @@ Sample:
 BLI_protocol_step:
   properties:
     id:
-      type: keyword
+      help.en: id to be used for internal links
       required: true
+      label.en: Id
+      type: keyword
     name:
       type: keyword
       help.en: Descriptive name (id) of the a step in the measurement protocol which
@@ -149,8 +153,10 @@ BLI_protocol_step:
 Sensor:
   properties:
     id:
-      type: keyword
+      help.en: id to be used for internal links
       required: true
+      label.en: Id
+      type: keyword
     name:
       type: keyword
       help.en: Descriptive name of the sensor
@@ -203,8 +209,10 @@ Ligand_information:
 Plate:
   properties:
     id:
-      type: keyword
+      help.en: id to be used for internal links
       required: true
+      label.en: Id
+      type: keyword
     name:
       type: keyword
       help.en: Name (id) of the plate which must be unique within a record
@@ -471,8 +479,10 @@ Record_information:
 Entity_base:
   properties:
     id:
-      type: keyword
+      help.en: Unique ID for the entity to be used as a link
       required: true
+      label.en: Id
+      type: keyword
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
@@ -777,8 +787,10 @@ Chemical:
 Chemical_environment:
   properties:
     id:
-      type: keyword
+      help.en: Unique ID for the chemical environment to be used as a link
       required: true
+      label.en: Id
+      type: keyword
     name:
       type: keyword
       help.en: Name of the chemical environment (e.g. Measurement Buffer). The name
@@ -1326,8 +1338,10 @@ Thesis:
 Result_base:
   properties:
     id:
-      type: keyword
+      help.en: Unique ID for the result to be used as a link
       required: true
+      label.en: Id
+      type: keyword
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).

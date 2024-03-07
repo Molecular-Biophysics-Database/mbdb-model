@@ -559,9 +559,8 @@ class ModelLinkTarget(ModelBase):
         self.name = data.name
 
     def to_json(self):
-        ret = {"type": "keyword"}
-        if self.required:
-            ret["required"] = True
+        ret = super().to_json()
+        ret["type"] = "keyword"
         return ret
 
     def get_links(self, links, path, defs):
