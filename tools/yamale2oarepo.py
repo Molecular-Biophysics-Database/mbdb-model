@@ -378,15 +378,8 @@ class ModelInclude(ModelBase):
         self.include = data.include_name
 
     def to_json(self):
-        ret = {"use": f"#/$defs/{self.include}"}
-        if self.required:
-            ret["required"] = True
-        if self.description:
-            ret["help.en"] = self.description.strip()
-        if not self.label:
-            self.label = self.to_label()
-        ret["label.en"] = self.label.strip()
-
+        ret = super().to_json()
+        ret["use"] = f"#/$defs/{self.include}"
         return ret
 
     def get_links(self, links, path, defs):
