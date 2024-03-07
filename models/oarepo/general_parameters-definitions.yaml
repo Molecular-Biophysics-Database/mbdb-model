@@ -171,8 +171,10 @@ Record_information:
 Entity_base:
   properties:
     id:
-      type: keyword
+      help.en: Unique ID for the entity to be used as a link
       required: true
+      label.en: Id
+      type: keyword
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
@@ -464,8 +466,10 @@ Chemical:
 Chemical_environment:
   properties:
     id:
-      type: keyword
+      help.en: Unique ID for the chemical environment to be used as a link
       required: true
+      label.en: Id
+      type: keyword
     name:
       type: keyword
       help.en: Name of the chemical environment (e.g. Measurement Buffer). The name
@@ -1013,8 +1017,10 @@ Thesis:
 Result_base:
   properties:
     id:
-      type: keyword
+      help.en: Unique ID for the result to be used as a link
       required: true
+      label.en: Id
+      type: keyword
     name:
       type: keyword
       help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
