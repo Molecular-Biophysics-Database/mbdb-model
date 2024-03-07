@@ -179,10 +179,13 @@ Sample:
       ^label.en: Ligands
       use: '#/$defs/Entity_constituent'
     chemical_environment:
+      help.en: Name (id) of the chemical environment of the sample (from the chemical
+        environments defined in the general parameters)
+      required: true
+      label.en: Chemical environment
       type: relation
       model: '#chemical-environment'
       keys: [id, name]
-      required: true
     measurement_container:
       type: keyword
       enum: [Monolith Standard Capillary, Monolith Premium Capillary, Monolith LabelFree
@@ -442,10 +445,13 @@ Entity:
 Entity_constituent:
   properties:
     entity:
+      help.en: Name (id) of the entity (from the entities of interest defined in the
+        general parameters)
+      required: true
+      label.en: Entity
       type: relation
       model: '#entity'
       keys: [id, name]
-      required: true
     concentration:
       use: '#/$defs/Concentration'
       required: true
@@ -1432,10 +1438,13 @@ Result_hill_coeff:
 Entity_and_stoichiometry:
   properties:
     entity:
+      help.en: Name (ids) of the entity (from the entities of interest defined in
+        the general parameters)
+      required: true
+      label.en: Entity
       type: relation
       model: '#entity'
       keys: [id, name]
-      required: true
     copy_number:
       type: double
       minimum: -1.0

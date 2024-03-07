@@ -588,9 +588,9 @@ class ModelLink(ModelBase):
             self.fields = ruamel.yaml.safe_load(StringIO(self.fields))
 
     def to_json(self):
-        ret = {"type": "relation", "model": "#" + self.target, "keys": self.fields}
-        if self.required:
-            ret["required"] = True
+        ret = super().to_json()
+        link_props = {"type": "relation", "model": "#" + self.target, "keys": self.fields}
+        ret.update(link_props)
         return ret
 
     def get_links(self, links, path, defs):

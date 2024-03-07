@@ -47,6 +47,8 @@ SPR_specific_parameters:
 SPR_data_analysis:
   properties:
     result:
+      help.en: Link to a result that was defined in the general parameters
+      label.en: Result
       type: relation
       model: '#result'
       keys: [id, name]
@@ -83,11 +85,15 @@ Measurement:
       required: true
       label.en: Name
     measurement_position:
+      help.en: Name (id) of the measurement position
+      required: true
+      label.en: Measurement position
       type: relation
       model: '#spr-measurement-position'
       keys: [id, name]
-      required: true
     reference_measurement_position:
+      help.en: Name (id) of the measurement position
+      label.en: Reference measurement position
       type: relation
       model: '#spr-measurement-position'
       keys: [id, name]
@@ -109,19 +115,25 @@ Measurement:
 Sample:
   properties:
     measurement_step:
+      help.en: Name (id) of the measurement step in the measurement protocol where
+        the sample was measured
+      required: true
+      label.en: Measurement step
       type: relation
       model: '#spr-measurement-step'
       keys: [id, name]
-      required: true
     position:
       type: keyword
       help.en: Position of the sample within the sample holder
       label.en: Position
     chemical_environment:
+      help.en: Name (id) of the chemical environment of the sample (from the chemical
+        environments defined in the general parameters)
+      required: true
+      label.en: Chemical environment
       type: relation
       model: '#chemical-environment'
       keys: [id, name]
-      required: true
     analytes[]:
       ^minItems: 1
       ^help.en: List of names (ids) of entities (from the entities of interest defined
@@ -205,6 +217,9 @@ Measurement_position:
 Ligand_information:
   properties:
     ligand:
+      help.en: Name (id) of the ligand (entity that is immobilized, from the list
+        of entities of interest defined in the general parameters)
+      label.en: Ligand
       type: relation
       model: '#entity'
       keys: [id, name]
@@ -517,10 +532,13 @@ Entity:
 Entity_constituent:
   properties:
     entity:
+      help.en: Name (id) of the entity (from the entities of interest defined in the
+        general parameters)
+      required: true
+      label.en: Entity
       type: relation
       model: '#entity'
       keys: [id, name]
-      required: true
     concentration:
       use: '#/$defs/Concentration'
       required: true
@@ -1507,10 +1525,13 @@ Result_hill_coeff:
 Entity_and_stoichiometry:
   properties:
     entity:
+      help.en: Name (ids) of the entity (from the entities of interest defined in
+        the general parameters)
+      required: true
+      label.en: Entity
       type: relation
       model: '#entity'
       keys: [id, name]
-      required: true
     copy_number:
       type: double
       minimum: -1.0

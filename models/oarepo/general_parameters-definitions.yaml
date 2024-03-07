@@ -1215,10 +1215,13 @@ Result_hill_coeff:
 Entity_and_stoichiometry:
   properties:
     entity:
+      help.en: Name (ids) of the entity (from the entities of interest defined in
+        the general parameters)
+      required: true
+      label.en: Entity
       type: relation
       model: '#entity'
       keys: [id, name]
-      required: true
     copy_number:
       type: double
       minimum: -1.0

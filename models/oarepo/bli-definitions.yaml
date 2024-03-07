@@ -57,15 +57,19 @@ BLI_Measurement:
       required: true
       label.en: Name
     sensor:
+      help.en: link to the sensor used for the measurement
+      required: true
+      label.en: Sensor
       type: relation
       model: '#bli-sensor'
       keys: [id, name]
-      required: true
     measurement_protocol_step:
+      help.en: link to one of the measurement steps
+      required: true
+      label.en: Measurement protocol step
       type: relation
       model: '#bli-protocol-step'
       keys: [id, name]
-      required: true
     sample:
       use: '#/$defs/Sample'
       required: true
@@ -76,10 +80,12 @@ BLI_Measurement:
 Sample:
   properties:
     plate:
+      help.en: link to one of the plates
+      required: true
+      label.en: Plate
       type: relation
       model: '#plate'
       keys: [id, name]
-      required: true
     well_position:
       type: keyword
       help.en: The position the well (in the plate) where the sample was during the
@@ -87,10 +93,13 @@ Sample:
       required: true
       label.en: Well position
     chemical_environment:
+      help.en: Name (id) of the chemical environment of the sample (from the chemical
+        environments defined in the general parameters)
+      required: true
+      label.en: Chemical environment
       type: relation
       model: '#chemical-environment'
       keys: [id, name]
-      required: true
     analytes[]:
       ^minItems: 1
       ^help.en: List of names (ids) of entities (from the entities of interest defined
@@ -186,6 +195,9 @@ Sensor:
 Ligand_information:
   properties:
     ligand:
+      help.en: Name (id) of the ligand (entity that is immobilized, from the list
+        of entities of interest defined in the general parameters)
+      label.en: Ligand
       type: relation
       model: '#entity'
       keys: [id, name]
@@ -275,6 +287,8 @@ Shaking_speed:
 BLI_data_analysis:
   properties:
     result:
+      help.en: Link to a result that was defined in the general parameters
+      label.en: Result
       type: relation
       model: '#result'
       keys: [id, name]
@@ -538,10 +552,13 @@ Entity:
 Entity_constituent:
   properties:
     entity:
+      help.en: Name (id) of the entity (from the entities of interest defined in the
+        general parameters)
+      required: true
+      label.en: Entity
       type: relation
       model: '#entity'
       keys: [id, name]
-      required: true
     concentration:
       use: '#/$defs/Concentration'
       required: true
@@ -1528,10 +1545,13 @@ Result_hill_coeff:
 Entity_and_stoichiometry:
   properties:
     entity:
+      help.en: Name (ids) of the entity (from the entities of interest defined in
+        the general parameters)
+      required: true
+      label.en: Entity
       type: relation
       model: '#entity'
       keys: [id, name]
-      required: true
     copy_number:
       type: double
       minimum: -1.0
