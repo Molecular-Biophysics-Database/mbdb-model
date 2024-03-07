@@ -52,10 +52,13 @@ General_parameters:
       required: true
       label.en: Collection start time
     instrument:
+      help.en: Information about the instrument being used to collect (measure) the
+        raw data annotated by this record
+      required: true
+      label.en: Instrument
       keys: [id, title, props.manufacturer]
       vocabulary-type: instruments
       type: vocabulary
-      required: true
     entities_of_interest[]:
       ^minItems: 1
       ^help.en: List of the entities that are being directly measured, as well as
@@ -361,6 +364,9 @@ Polymer:
         copy_to: collected_default_search_fields
       label.en: Variant
     source_organism:
+      help.en: The biological species where the polymer naturally occurs. Note that
+        this is based on the NCBI taxonomy
+      label.en: Source organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
@@ -380,6 +386,9 @@ Polymer:
       required: true
       label.en: Expression source type
     expression_organism:
+      help.en: The biological species that was used to express (produce) the polymer.
+        Note that this is based on the NCBI taxonomy
+      label.en: Expression organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
@@ -635,10 +644,13 @@ Complex_substance_of_biological_origin_base:
       required: true
       label.en: Derived from
     source_organism:
+      help.en: Identification of the organism to the lowest taxonomic rank possible
+        e.g. strain. Note that this is based on the NCBI taxonomy
+      required: true
+      label.en: Source organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
-      required: true
       extras:
         title:
           mapping:
@@ -736,6 +748,9 @@ Virion:
       required: true
       label.en: Envelope type
     host_organism:
+      help.en: The host organism the virion was produced in. Note that information
+        is based on the NCBI taxonomy
+      label.en: Host organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
@@ -1739,6 +1754,9 @@ EntityPolymerPolymorphic:
         copy_to: collected_default_search_fields
       label.en: Variant
     source_organism:
+      help.en: The biological species where the polymer naturally occurs. Note that
+        this is based on the NCBI taxonomy
+      label.en: Source organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
@@ -1758,6 +1776,9 @@ EntityPolymerPolymorphic:
       required: true
       label.en: Expression source type
     expression_organism:
+      help.en: The biological species that was used to express (produce) the polymer.
+        Note that this is based on the NCBI taxonomy
+      label.en: Expression organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
@@ -2050,6 +2071,9 @@ Assembly_componentPolymerPolymorphic:
         copy_to: collected_default_search_fields
       label.en: Variant
     source_organism:
+      help.en: The biological species where the polymer naturally occurs. Note that
+        this is based on the NCBI taxonomy
+      label.en: Source organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
@@ -2069,6 +2093,9 @@ Assembly_componentPolymerPolymorphic:
       required: true
       label.en: Expression source type
     expression_organism:
+      help.en: The biological species that was used to express (produce) the polymer.
+        Note that this is based on the NCBI taxonomy
+      label.en: Expression organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
@@ -2206,10 +2233,13 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
       required: true
       label.en: Derived from
     source_organism:
+      help.en: Identification of the organism to the lowest taxonomic rank possible
+        e.g. strain. Note that this is based on the NCBI taxonomy
+      required: true
+      label.en: Source organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
-      required: true
       extras:
         title:
           mapping:
@@ -2302,10 +2332,13 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
       required: true
       label.en: Derived from
     source_organism:
+      help.en: Identification of the organism to the lowest taxonomic rank possible
+        e.g. strain. Note that this is based on the NCBI taxonomy
+      required: true
+      label.en: Source organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
-      required: true
       extras:
         title:
           mapping:
@@ -2382,6 +2415,9 @@ Complex_substance_of_biological_originVirionPolymorphic:
       required: true
       label.en: Envelope type
     host_organism:
+      help.en: The host organism the virion was produced in. Note that information
+        is based on the NCBI taxonomy
+      label.en: Host organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
@@ -2396,10 +2432,13 @@ Complex_substance_of_biological_originVirionPolymorphic:
       required: true
       label.en: Derived from
     source_organism:
+      help.en: Identification of the organism to the lowest taxonomic rank possible
+        e.g. strain. Note that this is based on the NCBI taxonomy
+      required: true
+      label.en: Source organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
-      required: true
       extras:
         title:
           mapping:
@@ -2761,6 +2800,9 @@ ConstituentPolymerPolymorphic:
         copy_to: collected_default_search_fields
       label.en: Variant
     source_organism:
+      help.en: The biological species where the polymer naturally occurs. Note that
+        this is based on the NCBI taxonomy
+      label.en: Source organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
@@ -2780,6 +2822,9 @@ ConstituentPolymerPolymorphic:
       required: true
       label.en: Expression source type
     expression_organism:
+      help.en: The biological species that was used to express (produce) the polymer.
+        Note that this is based on the NCBI taxonomy
+      label.en: Expression organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
@@ -2993,10 +3038,13 @@ constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
       required: true
       label.en: Derived from
     source_organism:
+      help.en: Identification of the organism to the lowest taxonomic rank possible
+        e.g. strain. Note that this is based on the NCBI taxonomy
+      required: true
+      label.en: Source organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
-      required: true
       extras:
         title:
           mapping:
@@ -3085,10 +3133,13 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
       required: true
       label.en: Derived from
     source_organism:
+      help.en: Identification of the organism to the lowest taxonomic rank possible
+        e.g. strain. Note that this is based on the NCBI taxonomy
+      required: true
+      label.en: Source organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
-      required: true
       extras:
         title:
           mapping:
@@ -3161,6 +3212,9 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
       required: true
       label.en: Envelope type
     host_organism:
+      help.en: The host organism the virion was produced in. Note that information
+        is based on the NCBI taxonomy
+      label.en: Host organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
@@ -3175,10 +3229,13 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
       required: true
       label.en: Derived from
     source_organism:
+      help.en: Identification of the organism to the lowest taxonomic rank possible
+        e.g. strain. Note that this is based on the NCBI taxonomy
+      required: true
+      label.en: Source organism
       keys: [id, title, props.rank]
       vocabulary-type: organisms
       type: vocabulary
-      required: true
       extras:
         title:
           mapping:

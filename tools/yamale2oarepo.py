@@ -613,15 +613,19 @@ class ModelVocabulary(ModelLink):
         self.vocabulary = data.vocabulary
 
     def to_json(self):
-        ret = {
+        # Calling grandparents method instead of parent method is a sign that
+        # the inheritance structure is not optimal
+        ret = super(ModelLink, self).to_json()
+        vocab_fields = {
             "keys": self.fields,
             "vocabulary-type": self.vocabulary,
             "type": "vocabulary",
         }
-        if self.required:
-            ret["required"] = True
-
+        ret.update(vocab_fields)
         if self.default_search:
+            # searching for vocabulary needs to be placed in extra
+            # instead of directly in mapping
+            ret.pop("mapping")
             # note that only vocabularies titles are made searchable
             # TODO: allow placement of custom fields to be searchable
             ret["extras"] = VOCABULARY_MAPPING
