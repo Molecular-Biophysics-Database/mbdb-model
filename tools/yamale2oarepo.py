@@ -152,7 +152,7 @@ class ModelBase:
         return ret
 
     def to_label(self):
-        label = self.path.split('/')
+        label = self.path.split("/")
         # if this is a described value we need to go up a level
         if label[-1] == "value" and len(label) > 2:
             label = label[-2]
@@ -184,7 +184,7 @@ class ModelObject(ModelBase):
             path=path,
             required=data.is_required if not isinstance(data, dict) else False,
             default_search=default_search,
-            label=label
+            label=label,
         )
         self.children = {}
         self.parse(data, includes)
@@ -238,7 +238,7 @@ class ModelObject(ModelBase):
                     "keyword",
                     v.path,
                     default_search=self.default_search,
-                    label=self.label
+                    label=self.label,
                 )
             if k not in self.children:
                 self.children[k] = v.copy()
@@ -483,7 +483,7 @@ class ModelChoose(ModelBase):
                     new_include_params,
                     subschema_include.path,
                     self.default_search,
-                    self.label
+                    self.label,
                 )
                 new_subschemas[subschema_name] = new_subschema_include
                 new_subschema_include.propagate_polymorphic_base_schemas(
@@ -581,7 +581,11 @@ class ModelLink(ModelBase):
 
     def to_json(self):
         ret = super().to_json()
-        link_props = {"type": "relation", "model": "#" + self.target, "keys": self.fields}
+        link_props = {
+            "type": "relation",
+            "model": "#" + self.target,
+            "keys": self.fields,
+        }
         ret.update(link_props)
         return ret
 
