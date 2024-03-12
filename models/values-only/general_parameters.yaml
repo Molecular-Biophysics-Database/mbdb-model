@@ -316,7 +316,7 @@ By_intact_mass:
 By_sequencing:
   method: enum("Mass spectrometry-Mass spectrometry", "Edman degradation", "Sanger
     sequencing", "Next generation sequencing")
-  coverage: int(min=0, max=100)
+  coverage: num(min=0, max=100)
 By_fingerprinting:
   method: enum("Protease digest + Mass spectrometry", "Restriction enzyme digest +
     Gel electrophoresis")

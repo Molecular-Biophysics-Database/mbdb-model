@@ -1417,7 +1417,7 @@ Purity_base:
     checked:
       type: keyword
       enum: ["Yes", "No"]
-      help.en: Information about if and how the purity was obtained
+      help.en: Wether or not the purity was checked
       required: true
       label.en: Checked
   label.en: Purity base
@@ -1499,9 +1499,9 @@ By_sequencing:
       required: true
       label.en: Method
     coverage:
-      type: integer
-      minimum: 0
-      maximum: 100
+      type: double
+      minimum: 0.0
+      maximum: 100.0
       help.en: The amount of the total (expected) sequence that was actually observed
         by sequencing in percent
       required: true
@@ -1522,7 +1522,7 @@ Homogeneity_base:
     checked:
       type: keyword
       enum: ["Yes", "No"]
-      help.en: Whether the homogeneity was checked
+      help.en: Whether or not the homogeneity was checked
       required: true
       label.en: Checked
   label.en: Homogeneity base
@@ -1851,7 +1851,7 @@ PurityYes_purityPolymorphic:
     checked:
       type: keyword
       enum: ["Yes", "No"]
-      help.en: Information about if and how the purity was obtained
+      help.en: Wether or not the purity was checked
       required: true
       label.en: Checked
   label.en: Yes purity
@@ -1860,7 +1860,7 @@ PurityEmpty_objectPolymorphic:
     checked:
       type: keyword
       enum: ["Yes", "No"]
-      help.en: Information about if and how the purity was obtained
+      help.en: Wether or not the purity was checked
       required: true
       label.en: Checked
   label.en: Empty object
@@ -1888,7 +1888,7 @@ HomogeneityYes_homogeneityPolymorphic:
     checked:
       type: keyword
       enum: ["Yes", "No"]
-      help.en: Whether the homogeneity was checked
+      help.en: Whether or not the homogeneity was checked
       required: true
       label.en: Checked
   label.en: Yes homogeneity
@@ -1897,7 +1897,7 @@ HomogeneityEmpty_objectPolymorphic:
     checked:
       type: keyword
       enum: ["Yes", "No"]
-      help.en: Whether the homogeneity was checked
+      help.en: Whether or not the homogeneity was checked
       required: true
       label.en: Checked
   label.en: Empty object

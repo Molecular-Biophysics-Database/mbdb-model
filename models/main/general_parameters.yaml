@@ -1458,8 +1458,7 @@ Quality_controls:
 
 Purity_base:
     checked:
-        description     : str(equals='Information about if and how
-                                      the purity was obtained', required=False)
+        description     : str(equals='Wether or not the purity was checked', required=False)
         value           : enum("Yes", "No")
 
 Purity:
@@ -1529,7 +1528,7 @@ By_sequencing:
         description     : str(equals='The amount of the total (expected)
                                       sequence that was actually observed
                                       by sequencing in percent', required=False)
-        value           : int(min=0, max=100)
+        value           : num(min=0, max=100)
 
 By_fingerprinting:
     method:
@@ -1540,7 +1539,7 @@ By_fingerprinting:
 
 Homogeneity_base:
     checked:
-        description     : str(equals='Whether the homogeneity was checked', required=False)
+        description     : str(equals='Whether or not the homogeneity was checked', required=False)
         value           : enum("Yes", "No")
 
 Homogeneity:
