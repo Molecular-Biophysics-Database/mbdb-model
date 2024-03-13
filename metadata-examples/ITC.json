@@ -1,0 +1,461 @@
+[
+  {
+    "metadata": {
+      "general_parameters": {
+        "schema_version": "0.9.18",
+        "record_information": {
+          "publisher": "MBDB",
+          "resource_type_general": "Dataset",
+          "resource_type": "ITC",
+          "access_rights": "open access",
+          "metadata_access_rights": "open access",
+          "title": "ITC measurement of hemoglobin serum elements",
+          "deposition_date": "2022-01-23",
+          "date_available": "2023-01-23",
+          "subject_category": "Biophysics"
+        },
+        "depositors": {
+          "depositor": {
+            "given_name": "Max",
+            "family_name": "Mustermann",
+            "affiliations": [
+              {
+                "id": "ror:02hpadn98"
+              }
+            ]
+          },
+          "principal_contact": {
+            "given_name": "Josiah",
+            "family_name": "Carberry",
+            "identifiers": [
+              "orcid:0000-0002-1825-0097"
+            ],
+            "affiliations": [
+              {
+                "id": "ror:05gq02987"
+              }
+            ]
+          },
+          "contributors": [
+            {
+              "given_name": "Jane",
+              "family_name": "Doe",
+              "affiliations": [
+                {
+                  "id": "ror:02hpadn98"
+                }
+              ]
+            },
+            {
+              "given_name": "John",
+              "family_name": "Doe",
+              "affiliations": [
+                {
+                  "id": "ror:02hpadn98"
+                }
+              ]
+            }
+          ]
+        },
+        "funding_references": [
+          {
+            "id": "oa:aka_________::0138cbca472312ad7dd56c2cdb8a55c2"
+          },
+          {
+            "id": "oa:aka_________::05f51e273cb679ac343eb5be8ecbd9b5"
+          }
+        ],
+        "technique": "Isothermal Titration Calorimetry (ITC)",
+        "instrument": {
+          "id": "ins:4"
+        },
+        "collection_start_time": "2022-01-02",
+        "chemical_environments": [
+          {
+            "id": "chem-env-measurement-buffer",
+            "name": "Measurement buffer",
+            "solvent": [
+              {
+                "type": "Chemical",
+                "chemical": {
+                  "id": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
+                },
+                "concentration": {
+                  "value": 50,
+                  "unit": "w/w %"
+                }
+              },
+              {
+                "type": "Chemical",
+                "chemical": {
+                  "id": "LFQSCWFLJHTTHZ-UHFFFAOYSA-N"
+                },
+                "concentration": {
+                  "value": 50,
+                  "unit": "v/v %"
+                }
+              }
+            ],
+            "ph": 7.4,
+            "constituents": [
+              {
+                "type": "Chemical",
+                "chemical": {
+                  "id": "QKNYBSVHEMOAJP-UHFFFAOYSA-N"
+                },
+                "concentration": {
+                  "value": 50,
+                  "unit": "mM"
+                }
+              },
+              {
+                "type": "Chemical",
+                "chemical": {
+                  "id": "FAPWRFPIFSIZLT-UHFFFAOYSA-M"
+                },
+                "concentration": {
+                  "value": 150,
+                  "unit": "mM"
+                }
+              },
+              {
+                "type": "Chemical",
+                "chemical": {
+                  "id": "DBMJMQXJHONAFJ-UHFFFAOYSA-M"
+                },
+                "concentration": {
+                  "value": 1,
+                  "unit": "w/v %"
+                }
+              }
+            ]
+          }
+        ],
+        "entities_of_interest": [
+          {
+            "id": "eoi-human-serum",
+            "name": "Human serum",
+            "type": "Complex substance of biological origin",
+            "derived_from": "Body fluid",
+            "fluid": "Serum",
+            "health_status": "Healthy",
+            "source_organism": {
+              "id": "taxid:12374"
+            },
+            "additional_specifications": [
+              "Blood was drawn after 12 hours of fasting"
+            ],
+            "preparation_protocol": [
+              {
+                "name": "Centrifugation",
+                "description": "Tubes were centrifuged for 10 min at 1,300g at 4°C within 2 hours of collection"
+              },
+              {
+                "name": "Aliquotation",
+                "description": "The supernatant was distributed among 0.5mL cryostorage tubes that were maintained at 4°C"
+              }
+            ],
+            "storage": {
+              "temperature": {
+                "value": -80,
+                "unit": "°C",
+                "obtained_by": "Measurement",
+                "controlled": true
+              },
+              "storage_preparation": [
+                {
+                  "name": "Flash freezing in liquid nitrogen",
+                  "description": "Aliquotes were placed in liquid nitrogen for 5 min"
+                }
+              ]
+            }
+          },
+          {
+            "id": "eoi-human-hemoglobin",
+            "name": "human Hemoglobin",
+            "type": "Molecular assembly",
+            "external_databases": [
+              "pdb:2HCO"
+            ],
+            "quality_controls": {
+              "purity": {
+                "checked": "Yes",
+                "method": "SDS-PAGE",
+                "purity_percentage": ">99 %"
+              },
+              "homogeneity": {
+                "checked": "No"
+              }
+            },
+            "molecular_weight": {
+              "value": 64.5,
+              "unit": "kDa"
+            },
+            "components": [
+              {
+                "name": "Hemoglobin subunit alpha",
+                "type": "Polymer",
+                "molecular_weight": {
+                  "value": 16,
+                  "unit": "kDa"
+                },
+                "copy_number": 2,
+                "polymer_type": "polypeptide(L)",
+                "source_organism": {
+                  "id": "taxid:12374"
+                },
+                "variant": "WT",
+                "expression_source_type": "Natively",
+                "external_databases": [
+                  "Uniprot:P69905"
+                ]
+              },
+              {
+                "name": "Hemoglobin subunit beta",
+                "type": "Polymer",
+                "molecular_weight": {
+                  "value": 16,
+                  "unit": "kDa"
+                },
+                "copy_number": 2,
+                "polymer_type": "polypeptide(L)",
+                "source_organism": {
+                  "id": "taxid:12374"
+                },
+                "variant": "V2A",
+                "modifications": {
+                  "biological_postprocessing": [
+                    {
+                      "position": "S10",
+                      "type": "Phosphorylation"
+                    }
+                  ],
+                  "chemical": [
+                    {
+                      "type": "FITC labelling",
+                      "protocol": [
+                        {
+                          "name": "Make the solution more alkaline",
+                          "description": "Addition of 10 ul 1 M bicarbonate to 90 ul protein solution"
+                        },
+                        {
+                          "name": "Solubilise NHS-FITC",
+                          "description": "100 % DMSO was added to make a 2 mM concentrated stock of NHS-FITC"
+                        },
+                        {
+                          "name": "Labelling reaction",
+                          "description": "Added NHS-FITC stock to protein in a 5:1 molar ratio and incubated sample for 15 min."
+                        },
+                        {
+                          "name": "Removal of unconjugated dye",
+                          "description": "Using a 2 ml PD10 column, the unconjugated dye was removed"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "sequence": "MAHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVANALAHKYH",
+                "expression_source_type": "Recombinantly",
+                "external_databases": [
+                  "Uniprot:P68871"
+                ]
+              }
+            ]
+          }
+        ],
+        "results": [
+          {
+            "id": "de-par-kd-hemo",
+            "name": "KD of hemoglobin to unknown component in serum",
+            "type": "Constant of dissociation KD",
+            "entities_involved": [
+              {
+                "entity": {
+                  "id": "eoi-human-hemoglobin",
+                  "name": "human Hemoglobin"
+                },
+                "copy_number": -1
+              },
+              {
+                "entity": {
+                  "id": "eoi-human-serum",
+                  "name": "Human serum"
+                },
+                "copy_number": -1
+              }
+            ],
+            "value": 10.3,
+            "unit": "nM"
+          }
+        ],
+        "raw_measurement_files": [
+          "https://mbdb.eu/itc/files/foo.txt"
+        ]
+      },
+      "method_specific_parameters": {
+        "schema_version": "0.0.1",
+        "measurements": [
+          {
+            "id": "pos_1_rep_1",
+            "name": "1 nM hemoglobin + 10 mg/ml Human serum",
+            "sample": {
+              "target_in_cell": [
+                {
+                  "entity": {
+                    "id": "eoi-human-hemoglobin",
+                    "name": "human Hemoglobin"
+                  },
+                  "concentration": {
+                    "value": 1,
+                    "unit": "nM"
+                  }
+                }
+              ],
+              "target_in_syringe": [
+                {
+                  "entity": {
+                    "id": "eoi-human-serum",
+                    "name": "Human serum"
+                  },
+                  "concentration": {
+                    "value": 10,
+                    "unit": "mg/mL"
+                  }
+                }
+              ],
+              "chemical_environment": [
+                {
+                  "id": "chem-env-measurement-buffer",
+                  "name": "Measurement buffer"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pos_2_rep_1",
+            "name": "1 nM hemoglobin + 20 mg/ml Human serum",
+            "sample": {
+              "target_in_cell": [
+                {
+                  "entity": {
+                    "id": "eoi-human-hemoglobin",
+                    "name": "human Hemoglobin"
+                  },
+                  "concentration": {
+                    "value": 1,
+                    "unit": "nM"
+                  }
+                }
+              ],
+              "target_in_syringe": [
+                {
+                  "entity": {
+                    "id": "eoi-human-serum",
+                    "name": "Human serum"
+                  },
+                  "concentration": {
+                    "value": 20,
+                    "unit": "mg/mL"
+                  }
+                }
+              ],
+              "chemical_environment": [
+                {
+                  "id": "chem-env-measurement-buffer",
+                  "name": "Measurement buffer"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pos_3_rep_1",
+            "name": "1 nM hemoglobin + 40 mg/ml Human serum",
+            "sample": {
+              "target_in_cell": [
+                {
+                  "entity": {
+                    "id": "eoi-human-hemoglobin",
+                    "name": "human Hemoglobin"
+                  },
+                  "concentration": {
+                    "value": 1,
+                    "unit": "nM"
+                  }
+                }
+              ],
+              "target_in_syringe": [
+                {
+                  "entity": {
+                    "id": "eoi-human-serum",
+                    "name": "Human serum"
+                  },
+                  "concentration": {
+                    "value": 40,
+                    "unit": "mg/mL"
+                  }
+                }
+              ],
+              "chemical_environment": [
+                {
+                  "id": "chem-env-measurement-buffer",
+                  "name": "Measurement buffer"
+                }
+              ]
+            }
+          }
+        ],
+        "experiment_type": {
+          "type": "Titration",
+          "number_injections": 25,
+          "injection_parameters": [
+            {
+              "n_injections": 1,
+              "volume": {
+                "value": 0.4,
+                "unit": "ml"
+              }
+            },
+            {
+              "n_injections": 24,
+              "volume": {
+                "value": 0.5,
+                "unit": "ml"
+              }
+            }
+          ]
+        },
+        "cell_temperature": {
+          "value": 298,
+          "unit": "K"
+        },
+        "cell_volume": {
+          "value": 0.6,
+          "unit": "ml"
+        },
+        "reference_power": {
+          "value": 11,
+          "unit": "µcal/s"
+        },
+        "stirring_speed": 1000,
+        "feedback_mode": "Low",
+        "data_analysis": [
+          {
+            "data_fitting": {
+              "type": "Simple model",
+              "data_fitting_model": {
+                "model": "1:1",
+                "software_name": "AFFINImeter Software"
+              },
+              "result": [
+                {
+                  "id": "de-par-kd-hemo",
+                  "name": "KD of hemoglobin to unknown component in serum"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+]

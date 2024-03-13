@@ -30,7 +30,7 @@ def add_includes(path: Path, schema: yamale.schema.Schema) -> None:
 def main():
     general_param_file_name = PATH_TO_SCHEMAS.joinpath("general_parameters.yaml")
 
-    file_names = ("MST.yaml", "BLI.yaml", "SPR.yaml")
+    file_names = ("MST.yaml", "BLI.yaml", "SPR.yaml", "ITC.yaml")
 
     for file_name in file_names:
         # Validate file

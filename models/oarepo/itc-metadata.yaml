@@ -1,0 +1,10 @@
+general_parameters:
+  use: '#/$defs/General_parameters'
+  required: true
+  label.en: General parameters
+  help.en: The general parameter of the experiment
+method_specific_parameters:
+  use: '#/$defs/ITC_specific_parameters'
+  required: true
+  label.en: Method specific parameters
+  help.en: The parameters of the experiment that is specific to ITC

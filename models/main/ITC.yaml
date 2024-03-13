@@ -1,0 +1,237 @@
+# Beginning of schema
+general_parameters:
+    description         : str(equals='The general parameter of the experiment',
+                                      required=False)
+    value               : include('General_parameters')
+
+method_specific_parameters:
+    description         : str(equals='The parameters of the experiment that is
+                                      specific to ITC',
+                                      required=False)
+    value               : include('ITC_specific_parameters')
+
+# End of schema
+
+---
+# Support objects (includes)
+
+ITC_specific_parameters:
+    schema_version:
+        description     : str(equals='The schema version used to annotate the
+                                      ITC method specific parameters',
+                              required=False)
+        value           : keyword(equals='0.0.1')
+    
+    measurements:
+        description     : str(equals='List of the information about each
+                                      measurement. This includes target(s),
+                                      ligand(s), chemical environment, and the
+                                      position of the sample within the
+                                      instrument', required=False)
+        value           : list(include('Measurement'), min=1)
+
+    experiment_type:
+        description     : str(equals= 'Type of experiment conducted',
+                            required=False)
+        value           : include('Experiment_type', required=False)
+
+    cell_temperature: 
+        description     :   str(equal= 'Temperature of the cell in which the sample is measured',
+                                required=False)
+        value           :   include('Temperature')
+    
+    cell_volume:
+        description     : str(equal= 'Volume of the cell in which the sample is measured',
+                                required=False)
+        value           : include('Volume')
+     
+    reference_power: 
+        description     :   str(equal= 'Energy supplied to the offset header of the reference cell
+                                        to equilibrate the temperatures.', 
+                                        required = False)
+        value           :   include('Reference_power')
+
+    stirring_speed:
+        description : str(equal='Sample cell stirring speed in RPM',
+                                required=False)
+        value       : num()
+    
+    feedback_mode:
+        description :   str(equals= 'Operating mode where conditions are adjusted automatically
+                                    to maintain constant temperature during heat measurements')
+        value       :   enum('None', 'Low', 'High')
+
+    data_analysis:
+        description     : str(equals='The details of how data analysis
+                                      was performed to obtain the result', 
+                              required=False)
+        value           : list(include('ITC_data_analysis'), required=False)
+
+---
+# Experimental parameters definitions
+
+Reference_power:
+    value:
+        description : str(equal='Value of energy supplied to the offset header of the reference cell
+                                to equilibrate the temperatures.',
+                                required=False)
+        value       : num()
+    unit:
+        description : str(equal='Unit of reference power',
+                                required=False)
+        value       : include('POWER_UNITS')
+
+Volume:
+    value :
+        description     :   str('Volume of the sample',
+                            required=False)
+        value           : num()
+    unit :
+        description     : str(equals='Unit of the volume',
+                              required=False)
+        value           : include('VOLUME_UNITS')
+
+---
+# Experiment type definitions
+Experiment_type:
+    description     : str(equals= 'Type of experiment conducted',
+                                required=False)
+    value           : choose(include('Experiment_type_base'),
+                                Single_injection=include('Single_injection'),
+                                Titration=include('Titration'))
+
+Experiment_type_base:
+    type:
+        description     : str(equals='Type of ITC experiment', required=False)
+        default_search  : True
+        value           : enum('Single injection',
+                                'Titration')
+
+Titration:
+    number_injections:
+        description     : str(equal='Number of injections performed in the measurement',
+                            required=False)
+        value           : num()
+    
+    injection_parameters:
+        description     : str(equals='Characteristics of each injection (i. e. number of ijections at a specific volume of 0.2 ml)',
+                                required=False)
+        value           : list(include('Injection_parameters'), required=False)
+
+Single_injection:
+    volume:
+        description     : str(equals='Titrant volume injected into the cell.',
+                            required=False)
+        value           : include('Volume')
+
+Injection_parameters:
+    n_injections:
+        description     : str(equal='Numer of injections measured at a specific volume.',
+                            required=False)
+        value           : num()
+    volume:
+        description     : str('Titrant volume injected into the cell.',
+                            required=False)
+        value           : include('Volume')
+
+---
+# Data analysis definitions
+ITC_data_analysis:
+    data_processing_steps:
+        description     : str(equals='Describe the steps in the data analysis
+                                      prior to fitting (removing outliers in the
+                                      raw data, applying smoothing filters,
+                                      etc.)', required=False)
+
+        value           : list(include('Processing_step'), required=False)
+
+    data_fitting:
+        description     : str(equals='The details of how data fitting
+                                      was performed to obtain the result', 
+                              required=False)
+        value           : include('Data_fitting_base', required=False)
+
+Data_fitting_base:
+    type:
+        description     : str(equals='Type of model used to obtain derived parameters', 
+                                required=False)
+        value           : enum('Simple model',
+                                'Complex model')
+
+    result:
+        description     : str(equals='Link to the result(s) that was obtained 
+                                      by the data analysis. The link is to the 
+                                      results defined in the general parameters',
+                                      required=False)
+        value           : list(link(target='result'), required=False)
+
+    data_fitting_model:
+        description     : str(equals='The details of how data fitting
+                                      was performed to obtain the result', required=False)
+        value           : include('Data_fitting', required=False)
+
+---
+
+# Measurement definitions
+
+Measurement:
+    id:
+        description     : str(equals='Unique ID to be used as a link target',
+                              required=False)
+        value           : link_target(name='itc-measurement')
+
+    name:
+        description     : str(equals='Name (id) of the measurement which must be
+                                      unique within a record (i.e. triplicates
+                                      must be named individually in the raw data
+                                      file). The name must allow location of the
+                                      measurement data within the raw data file
+                                      as well as processed data files if these
+                                      are present', required=False)
+        value           : str()
+
+    sample:
+        description     : str(equals='Information about the sample including
+                                      concentrations of ligands and targets, and
+                                      which chemical environment the sample was
+                                      composed of', required=False)
+        value           : include('Sample')
+
+Sample:
+    target_in_cell:
+        description     : str(equals='List of names (ids), from the entities of
+                                      interest defined in the general
+                                      parameters, of directly measured entities
+                                      and entities at constant concentration for
+                                      a series of measurements and their
+                                      concentration', required=False)
+        value           : list(include('Entity_constituent'))
+
+    target_in_syringe:
+        description     : str(equals='List of names (ids) of entities (from the
+                                      entities of interest defined in the
+                                      general parameters) that were used to
+                                      alter the behavior of the target(s) or
+                                      entities present at varying concentrations
+                                      for a series of measurements and their
+                                      concentration', required=False)
+        value           : list(include('Entity_constituent'))
+
+    chemical_environment:
+        description     : str(equals='Name (id) of the chemical environment of
+                                      the sample (from the chemical environments
+                                      defined in the general parameters)',
+                                      required=False)
+        value           : list(link(target='chemical-environment'))  # different environment in synringe and cell
+
+    preparation_protocol:
+        description     : str(equals='List of steps taken to prepare the
+                                      sample, ending at the point where 
+                                      it was placed in the measurement 
+                                      container. Information include 
+                                      operations like filtration and which 
+                                      filter material and pore-size was used
+                                      should be added', required=False)
+        value           : list(include('Step'), required=False)
+
+
