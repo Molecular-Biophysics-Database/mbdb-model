@@ -1,0 +1,10 @@
+general_parameters:
+  help.en: The general information of the measurements
+  required: true
+  label.en: General parameters
+  use: '#/$defs/General_parameters'
+method_specific_parameters:
+  help.en: The parameters of the experiment that is specific to BLI
+  required: true
+  label.en: Method specific parameters
+  use: '#/$defs/BLI_specific_parameters'

@@ -42,17 +42,7 @@ from custom_validators import (
     Uuid,
     Vocabulary,
 )
-from yamale2oarepo_config import (
-    FILE_RESOURCE,
-    MODEL_SETTINGS,
-    PLUGINS,
-    PRIMITIVES_MAPPING,
-    PROFILES,
-    QUERY_STRING_FIELD,
-    QUERY_STRING_FIELD_SETTINGS,
-    RECORD_MAPPING,
-    VOCABULARY_MAPPING,
-)
+from yamale2oarepo_config import PRIMITIVES_MAPPING, VOCABULARY_MAPPING
 
 log = logging.getLogger("yamale2oarepo")
 
@@ -112,12 +102,14 @@ class ModelBase:
     description = None
     extension_elements = None
     default_search = None
+    label = None
 
-    def __init__(self, path, required, default_search) -> None:
+    def __init__(self, path, required, default_search, label) -> None:
         self.constraints = {}
         self.path = path
         self.required = required
         self.default_search = default_search
+        self.label = label
 
     def parse(self, data):
         if isinstance(data, Validator):
@@ -149,9 +141,26 @@ class ModelBase:
             for key, value in self.extension_elements.items():
                 ret[key] = value.to_json()
                 ret[key].pop("required", False)
+                ret[key].pop("default", False)
                 ret[key].pop("mapping", False)
 
+        if not self.label:
+            self.label = self.to_label()
+
+        ret["label.en"] = self.label.strip()
+
         return ret
+
+    def to_label(self):
+        label = self.path.split("/")
+        # if this is a described value we need to go up a level
+        if label[-1] == "value" and len(label) > 2:
+            label = label[-2]
+        else:
+            label = label[-1]
+        label = label.replace("_", " ")
+        label = label.capitalize()
+        return label
 
     def get_links(self, links, path, defs):
         raise NotImplementedError(f"Not implemented for {type(self)}")
@@ -170,11 +179,12 @@ class ModelBase:
 
 
 class ModelObject(ModelBase):
-    def __init__(self, data: Any, path: str, includes, default_search) -> None:
+    def __init__(self, data: Any, path: str, includes, default_search, label) -> None:
         super().__init__(
             path=path,
             required=data.is_required if not isinstance(data, dict) else False,
             default_search=default_search,
+            label=label,
         )
         self.children = {}
         self.parse(data, includes)
@@ -182,7 +192,7 @@ class ModelObject(ModelBase):
     def parse(self, data, includes):
         super().parse(data)
         self.children = {
-            k: parse(v, f"{self.path}/{k}", includes, self.default_search)
+            k: parse(v, f"{self.path}/{k}", includes, self.default_search, self.label)
             for k, v in data.items()
         }
 
@@ -228,6 +238,7 @@ class ModelObject(ModelBase):
                     "keyword",
                     v.path,
                     default_search=self.default_search,
+                    label=self.label,
                 )
             if k not in self.children:
                 self.children[k] = v.copy()
@@ -236,8 +247,8 @@ class ModelObject(ModelBase):
 
 
 class ModelArray(ModelBase):
-    def __init__(self, data: Any, path: str, includes, default_search) -> None:
-        super().__init__(path, data.is_required, default_search)
+    def __init__(self, data: Any, path: str, includes, default_search, label) -> None:
+        super().__init__(path, data.is_required, default_search, label)
         self.item = None
         self.parse(data, includes)
 
@@ -275,12 +286,14 @@ class ModelArray(ModelBase):
             ret.update(self.item.to_json())
         # remove required from item
         ret.pop("required", False)
+        ret.pop("label.en", None)
         return ArrayModifier(ret)
 
     def to_explicit_json(self, **extras):
         ret = super().to_json(**extras)
         item = self.item.to_json()
         item.pop("required", False)
+        item.pop("label.en", None)
         ret["items"] = item
         ret["type"] = "array"
         return ret
@@ -299,12 +312,12 @@ class ModelArray(ModelBase):
 
 
 class ModelPrimitive(ModelBase):
-    def __init__(self, data: Any, type: str, path: str, default_search) -> None:
+    def __init__(self, data: Any, type: str, path: str, default_search, label) -> None:
         is_required = False
         if data is not None:
             is_required = data.is_required
 
-        super().__init__(path, is_required, default_search)
+        super().__init__(path, is_required, default_search, label)
         self.type = type
         self.path = path
 
@@ -343,8 +356,8 @@ class ModelPrimitive(ModelBase):
 
 
 class ModelEnum(ModelPrimitive):
-    def __init__(self, data, path: str, default_search) -> None:
-        super().__init__(data, "keyword", path, default_search)
+    def __init__(self, data, path: str, default_search, label) -> None:
+        super().__init__(data, "keyword", path, default_search, label)
         if hasattr(data, "enums"):
             self.constraints["enum"] = data.enums
 
@@ -354,22 +367,19 @@ class ModelEnum(ModelPrimitive):
 
 
 class ModelRegex(ModelPrimitive):
-    def __init__(self, data, path: str, default_search) -> None:
-        super().__init__(data, "keyword", path, default_search)
+    def __init__(self, data, path: str, default_search, label) -> None:
+        super().__init__(data, "keyword", path, default_search, label)
         self.constraints["regex"] = data.args[0]
 
 
 class ModelInclude(ModelBase):
-    def __init__(self, data, path: str, default_search) -> None:
-        super().__init__(path, data.is_required, default_search)
+    def __init__(self, data, path: str, default_search, label) -> None:
+        super().__init__(path, data.is_required, default_search, label)
         self.include = data.include_name
 
     def to_json(self):
-        ret = {"use": f"#/$defs/{self.include}"}
-        if self.required:
-            ret["required"] = True
-        if self.description:
-            ret["help.en"] = self.description.strip()
+        ret = super().to_json()
+        ret["use"] = f"#/$defs/{self.include}"
         return ret
 
     def get_links(self, links, path, defs):
@@ -391,8 +401,8 @@ class ModelInclude(ModelBase):
 
 
 class ModelNestedInclude(ModelInclude):
-    def __init__(self, data, path: str, default_search) -> None:
-        super().__init__(data, path, default_search)
+    def __init__(self, data, path: str, default_search, label) -> None:
+        super().__init__(data, path, default_search, label)
         self.json_proto = {"type": "nested"}
 
     def to_json(self):
@@ -407,12 +417,12 @@ class ModelNestedInclude(ModelInclude):
 
 
 class ModelChoose(ModelBase):
-    def __init__(self, data, path: str, default_search) -> None:
-        super().__init__(path, data.is_required, default_search)
-        self.base_schema = ModelInclude(data.base_schema, path, default_search)
+    def __init__(self, data, path: str, default_search, label) -> None:
+        super().__init__(path, data.is_required, default_search, label)
+        self.base_schema = ModelInclude(data.base_schema, path, default_search, label)
         self.type_field = data.type_field
         self.subschemas = {
-            k.replace("_", " "): ModelInclude(v, path, default_search)
+            k.replace("_", " "): ModelInclude(v, path, default_search, label)
             for k, v in data.detailed_schemas.items()
         }
         self.link_id = None
@@ -424,6 +434,7 @@ class ModelChoose(ModelBase):
         ret["discriminator"] = self.type_field
         if self.link_id:
             ret["id"] = self.link_id
+        ret.pop("required", False)
         return ret
 
     def get_links(self, links, path, defs):
@@ -472,6 +483,7 @@ class ModelChoose(ModelBase):
                     new_include_params,
                     subschema_include.path,
                     self.default_search,
+                    self.label,
                 )
                 new_subschemas[subschema_name] = new_subschema_include
                 new_subschema_include.propagate_polymorphic_base_schemas(
@@ -535,14 +547,13 @@ class ModelChoose(ModelBase):
 
 
 class ModelLinkTarget(ModelBase):
-    def __init__(self, data, path: str, default_search) -> None:
-        super().__init__(path, data.is_required, default_search)
+    def __init__(self, data, path: str, default_search, label) -> None:
+        super().__init__(path, data.is_required, default_search, label)
         self.name = data.name
 
     def to_json(self):
-        ret = {"type": "keyword"}
-        if self.required:
-            ret["required"] = True
+        ret = super().to_json()
+        ret["type"] = "keyword"
         return ret
 
     def get_links(self, links, path, defs):
@@ -561,17 +572,21 @@ class ModelLinkTarget(ModelBase):
 
 
 class ModelLink(ModelBase):
-    def __init__(self, data, path: str, default_search) -> None:
-        super().__init__(path, data.is_required, default_search)
+    def __init__(self, data, path: str, default_search, label) -> None:
+        super().__init__(path, data.is_required, default_search, label)
         self.target = data.target
         self.fields = data.fields
         if isinstance(self.fields, str):
             self.fields = ruamel.yaml.safe_load(StringIO(self.fields))
 
     def to_json(self):
-        ret = {"type": "relation", "model": "#" + self.target, "keys": self.fields}
-        if self.required:
-            ret["required"] = True
+        ret = super().to_json()
+        link_props = {
+            "type": "relation",
+            "model": "#" + self.target,
+            "keys": self.fields,
+        }
+        ret.update(link_props)
         return ret
 
     def get_links(self, links, path, defs):
@@ -588,21 +603,25 @@ class ModelLink(ModelBase):
 
 
 class ModelVocabulary(ModelLink):
-    def __init__(self, data, path: str, default_search) -> None:
+    def __init__(self, data, path: str, default_search, label) -> None:
         data.target = None
-        super().__init__(data, path, default_search)
+        super().__init__(data, path, default_search, label)
         self.vocabulary = data.vocabulary
 
     def to_json(self):
-        ret = {
+        # Calling grandparents method instead of parent method is a sign that
+        # the inheritance structure is not optimal
+        ret = super(ModelLink, self).to_json()
+        vocab_fields = {
             "keys": self.fields,
             "vocabulary-type": self.vocabulary,
             "type": "vocabulary",
         }
-        if self.required:
-            ret["required"] = True
-
+        ret.update(vocab_fields)
         if self.default_search:
+            # searching for vocabulary needs to be placed in extra
+            # instead of directly in mapping
+            ret.pop("mapping")
             # note that only vocabularies titles are made searchable
             # TODO: allow placement of custom fields to be searchable
             ret["extras"] = VOCABULARY_MAPPING
@@ -616,44 +635,17 @@ class ModelVocabulary(ModelLink):
 class Model:
     includes: Dict[str, ModelBase]
     model: ModelBase
-    files_meta: Dict = None
     package: str = None
 
     def to_json(self):
-        return {
-            "profiles": PROFILES,
-            "record": self._to_record(),
-            "plugins": PLUGINS,
-            "$defs": self._to_defs(),
-            "settings": MODEL_SETTINGS,
-        }
+        return self.model.to_json()["properties"]
 
-    def _to_defs(self):
+    def to_defs(self):
         return {k: v.to_json() for k, v in self.includes.items()}
 
-    def _to_record(self):
-        return {
-            "use": ["invenio"],
-            "module": {"qualified": f"mbdb_{self.package}"},
-            "properties": {
-                "id": {
-                    "mapping": PRIMITIVES_MAPPING
-                },  # add record id field to default search
-                "metadata": self.model.to_json(),
-                QUERY_STRING_FIELD: QUERY_STRING_FIELD_SETTINGS,
-            },
-            "files": {
-                **self.files_meta,
-                "use": ["invenio_files"],
-                "resource": FILE_RESOURCE,
-            },
-            "draft": {},
-            "draft-files": {
-                "resource": FILE_RESOURCE,
-            },
-            "mapping": RECORD_MAPPING,
-            "resource-config": {"base-html-url": f"/{self.package}/"},
-        }
+    @staticmethod
+    def to_files_meta(filename):
+        return parse_file(filename, modelbase_only=True).to_json()
 
     def set_links(self):
         links = {}
@@ -676,9 +668,6 @@ class Model:
     def propagate_polymorphic_base_schemas(self):
         self.model.propagate_polymorphic_base_schemas(self.includes, [])
 
-    def add_files_meta(self, files_meta: Dict):
-        self.files_meta = files_meta
-
 
 def parse_described_value(d, path, includes):
     value = d.get("value")
@@ -686,6 +675,10 @@ def parse_described_value(d, path, includes):
     description = d.get("description")
     if description:
         description = description.kwargs.get("equals", None)
+
+    label = d.get("label")
+    if label:
+        label = label.kwargs.get("equals", None)
 
     default_search = d.get("default_search", False)
     if default_search:
@@ -698,18 +691,19 @@ def parse_described_value(d, path, includes):
         default_search=default_search,
     )
     value.description = description
+    value.label = label
     value.default_search = default_search
 
     value.extension_elements = {
         k: parse(v, f"{path}/{k}", includes)
         for k, v in d.items()
-        if k not in ("description", "value", "default_search")
+        if k not in ("description", "value", "default_search", "label")
     }
 
     return value
 
 
-def parse(d, path, includes, default_search=False):
+def parse(d, path, includes, default_search=False, label=None):
     clz = type(d)
     if clz is dict:
         log.debug("%s: %s", path, {k: type(v).__name__ for k, v in d.items()})
@@ -717,53 +711,53 @@ def parse(d, path, includes, default_search=False):
             log.debug("... described value")
             return parse_described_value(d, path, includes)
         log.debug("... plain dict")
-        return ModelObject(d, path, includes, default_search)
+        return ModelObject(d, path, includes, default_search, label)
     elif clz is String:
-        return parse_keyword(d, path, default_search)
+        return parse_keyword(d, path, default_search, label)
     elif clz is Enum:
-        return ModelEnum(d, path, default_search)
+        return ModelEnum(d, path, default_search, label)
     elif clz is Uuid:
-        return ModelPrimitive(d, "uuid", path, default_search)
+        return ModelPrimitive(d, "uuid", path, default_search, label)
     elif clz is Url:
-        return ModelPrimitive(d, "url", path, default_search)
+        return ModelPrimitive(d, "url", path, default_search, label)
     elif clz is Day:
-        return ModelPrimitive(d, "date", path, default_search)
+        return ModelPrimitive(d, "date", path, default_search, label)
     elif clz is Boolean:
-        return ModelPrimitive(d, "boolean", path, default_search)
+        return ModelPrimitive(d, "boolean", path, default_search, label)
     elif clz is Number:
-        return ModelPrimitive(d, "double", path, default_search)
+        return ModelPrimitive(d, "double", path, default_search, label)
     elif clz is Integer:
-        return ModelPrimitive(d, "integer", path, default_search)
+        return ModelPrimitive(d, "integer", path, default_search, label)
     elif clz is Keyword:
-        return parse_keyword(d, path, default_search)
+        return parse_keyword(d, path, default_search, label)
     elif clz is Fulltext:
-        return ModelPrimitive(d, "fulltext", path, default_search)
+        return ModelPrimitive(d, "fulltext", path, default_search, label)
     elif clz is Regex:
-        return ModelRegex(d, path, default_search)
+        return ModelRegex(d, path, default_search, label)
     elif clz is Include:
-        return ModelInclude(d, path, default_search)
+        return ModelInclude(d, path, default_search, label)
     elif clz is Nested_include:
-        return ModelNestedInclude(d, path, default_search)
+        return ModelNestedInclude(d, path, default_search, label)
     elif clz is List:
-        return ModelArray(d, path, includes, default_search)
+        return ModelArray(d, path, includes, default_search, label)
     elif clz is Schema:
         return parse_schema(d, path, includes)
     elif clz is LinkTarget:
-        return ModelLinkTarget(d, path, default_search)
+        return ModelLinkTarget(d, path, default_search, label)
     elif clz is Vocabulary:
-        return ModelVocabulary(d, path, default_search)
+        return ModelVocabulary(d, path, default_search, label)
     elif clz is Link:
-        return ModelLink(d, path, default_search)
+        return ModelLink(d, path, default_search, label)
     elif clz is Choose:
-        return ModelChoose(d, path, default_search)
+        return ModelChoose(d, path, default_search, label)
     elif clz is Publication_id:
-        return parse_publication_id(d, path, default_search)
+        return parse_publication_id(d, path, default_search, label)
     elif clz is Chemical_id:
-        return parse_chemical_id(d, path, default_search)
+        return parse_chemical_id(d, path, default_search, label)
     elif clz is Person_id:
-        return parse_person_id(d, path, default_search)
+        return parse_person_id(d, path, default_search, label)
     elif clz is Database_id:
-        return parse_database_id(d, path, default_search)
+        return parse_database_id(d, path, default_search, label)
     elif clz is str:
         return parse(
             yamale.make_schema(content="root:\n" + "    " + d).dict["root"],
@@ -776,30 +770,30 @@ def parse(d, path, includes, default_search=False):
         )
 
 
-def parse_keyword(d, path, default_search):
+def parse_keyword(d, path, default_search, label):
     for constraint in d._constraints_inst:
         constraint_name = type(constraint).__name__
         if not constraint.is_active:
             continue
         if constraint_name == "StringEquals":
-            return ModelEnum(d, path, default_search)
-    return ModelPrimitive(d, "keyword", path, default_search)
+            return ModelEnum(d, path, default_search, label)
+    return ModelPrimitive(d, "keyword", path, default_search, label)
 
 
-def parse_database_id(d, path, default_search):
-    return parse_keyword(d, path, default_search)
+def parse_database_id(d, path, default_search, label):
+    return parse_keyword(d, path, default_search, label)
 
 
-def parse_person_id(d, path, default_search):
-    return parse_keyword(d, path, default_search)
+def parse_person_id(d, path, default_search, label):
+    return parse_keyword(d, path, default_search, label)
 
 
-def parse_publication_id(d, path, default_search):
-    return parse_keyword(d, path, default_search)
+def parse_publication_id(d, path, default_search, label):
+    return parse_keyword(d, path, default_search, label)
 
 
-def parse_chemical_id(d, path, default_search):
-    return parse_keyword(d, path, default_search)
+def parse_chemical_id(d, path, default_search, label):
+    return parse_keyword(d, path, default_search, label)
 
 
 def parse_schema(schema, path, includes):
@@ -844,6 +838,30 @@ def set_flow_style(d):
             set_flow_style(v)
 
 
+def json_to_yaml(json_dict):
+    yaml = ruamel_YAML()
+    yaml.default_flow_style = False
+    yaml.preserve_quotes = True
+    yaml.allow_unicode = True
+    yaml.sort_base_mapping_type_on_output = True
+    yaml.Representer = NonAliasingRTRepresenter
+    io = StringIO()
+    yaml.dump(ruamel_quote_booleans(json_dict), io)
+    io.seek(0)
+    loaded = yaml.load(io)
+    set_flow_style(loaded)
+    io = StringIO()
+    yaml.dump(loaded, io)
+    return io.getvalue()
+
+
+def get_filename(name: str, out_dir: Path, model_package: str) -> Path:
+    if model_package:
+        model_package = f"{model_package}-"
+
+    return out_dir / f"{model_package}{name}.yaml"
+
+
 def ruamel_quote_booleans(d):
     if isinstance(d, (list, tuple)):
         return [ruamel_quote_booleans(x) for x in d]
@@ -863,8 +881,9 @@ def ruamel_quote_booleans(d):
     default=Path(__file__).parent.parent / "models" / "main" / "MST.yaml",
     required=True,
 )
-@click.argument("output_file", required=False)
 @click.option("--debug", type=bool)
+@click.option("--only_defs", type=bool)
+@click.option("--out_dir", type=Path)
 @click.option(
     "--include",
     default=Path(__file__).parent.parent
@@ -873,7 +892,7 @@ def ruamel_quote_booleans(d):
     / "general_parameters.yaml",
     required=False,
 )
-def run(input_file, output_file, debug, include):
+def run(input_file, debug, out_dir, only_defs, include):
     if debug:
         logging.basicConfig(level=logging.DEBUG)
     ym_file = input_file
@@ -886,27 +905,25 @@ def run(input_file, output_file, debug, include):
     model.remove_unused_includes()
     model.set_links()
     model.propagate_polymorphic_base_schemas()
-    model.add_files_meta(parse_file(attachment, modelbase_only=True).to_json())
-    yaml = ruamel_YAML()
-    yaml.default_flow_style = False
-    yaml.preserve_quotes = True
-    yaml.allow_unicode = True
-    yaml.sort_base_mapping_type_on_output = True
-    yaml.Representer = NonAliasingRTRepresenter
-    io = StringIO()
-    yaml.dump(ruamel_quote_booleans(model.to_json()), io)
-    io.seek(0)
-    loaded = yaml.load(io)
-    set_flow_style(loaded)
-    io = StringIO()
-    yaml.dump(loaded, io)
-    model_yaml = io.getvalue()
-    if output_file:
-        output_file = Path(output_file)
-        output_file.parent.mkdir(parents=True, exist_ok=True)
-        Path(output_file).write_text(model_yaml)
-    else:
-        print(model_yaml)
+
+    out = [(model.to_defs(), "definitions", model.package)]
+
+    if not only_defs:
+        out += [
+            (model.to_json(), "metadata", model.package),
+            (model.to_files_meta(filename=attachment), "files", ""),
+        ]
+
+    for json_dict, name, model_package in out:
+        yaml_text = json_to_yaml(json_dict)
+
+        if out_dir:
+            output_file = get_filename(name, out_dir, model_package)
+            output_file.parent.mkdir(parents=True, exist_ok=True)
+            output_file.write_text(yaml_text)
+
+        else:
+            print(yaml_text)
 
 
 if __name__ == "__main__":

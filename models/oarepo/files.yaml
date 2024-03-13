@@ -1,0 +1,49 @@
+properties:
+  name:
+    type: keyword
+    help.en: Name of the file
+    required: true
+    label.en: Name
+  content_type:
+    type: keyword
+    enum: [text, binary, text and binary]
+    help.en: Type of the file content in terms of how it can be read (text, binary,
+      etc.)
+    required: true
+    label.en: Content type
+  context:
+    type: keyword
+    enum: [raw measurement data, derived measurement data, quality control report]
+    help.en: The context the file should be understood within (e.g. raw measurement
+      data)
+    required: true
+    label.en: Context
+  originates_from:
+    type: keyword
+    enum: [Instrument software, User, MBDB]
+    help.en: What is the source of the file
+    required: true
+    label.en: Originates from
+  size:
+    type: integer
+    minimum: 0
+    help.en: Size of the file in bytes
+    required: true
+    label.en: Size
+  description:
+    type: keyword
+    help.en: Short description of what the file contains
+    label.en: Description
+  recommended_software:
+    type: keyword
+    help.en: The name of the software recommended for opening and working with the
+      file
+    label.en: Recommended software
+  processing_steps[]:
+    ^minItems: 1
+    ^help.en: List of the processing steps performed on the file before it was deposited
+      (e.g. exported to xlsx)
+    ^required: true
+    ^label.en: Processing steps
+    use: '#/$defs/Processing_step'
+label.en: ''

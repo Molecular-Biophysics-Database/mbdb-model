@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.9.18')
+        value           : keyword(equals='0.9.19')
 
     record_information:
         description     : str(equals='Information about the record itself,
@@ -59,7 +59,8 @@ General_parameters:
         description     : str(equals='Information about the instrument being
                                       used to collect (measure) the raw data
                                       annotated by this record', required=False)
-        value           : include('Instrument')
+        value           : vocabulary(vocabulary='instruments',
+                                     fields='[id,title,props.manufacturer]')
 
     entities_of_interest:
         description : str(equals='List of the entities that are being
@@ -175,21 +176,6 @@ Record_information:
                                   generated', required=False)
         value       : day(required=False)
 
----
-# Instrument information
-
-Instrument:
-    manufacturer:
-        description : str(equals='Name of the manufacturer of the instrument
-                                  used for raw data collection',
-                          required=False)
-        default_search : True
-        value       : include('COMPANIES')
-
-    name:
-        description : str(equals='The name of the instrument as provided by the
-                                  manufacturer', required=False)
-        value       : str()
 
 ---
 # Entities and references to them
@@ -299,10 +285,10 @@ Molecular_assembly:
         value           : list(nested_include('Modification'), required=False)
 
     quality_controls:
-        description     : str(equals='Information about if and how quality 
-                                      control of the molecular assembly was 
+        description     : str(equals='Information about if and how quality
+                                      control of the molecular assembly was
                                       performed', required=False)
-        value           : include('Quality_controls', required=False)    
+        value           : include('Quality_controls', required=False)
 
     additional_specifications:
         description     : str(equals='Additional information about the
@@ -405,9 +391,10 @@ Polymer:
         value           : enum('Natively', 'Recombinantly', 'Synthetically')
 
     expression_organism:
-        description     : str(equals='The biological species where the polymer
-                                      naturally occurs. Note that this is based
-                                      on the NCBI taxonomy', required=False)
+        description     : str(equals='The biological species that was used to
+                                      express (produce) the polymer. Note that
+                                      this is based on the NCBI taxonomy',
+                                     required=False)
         value           : vocabulary(vocabulary='organisms',
                                      fields='[id,title,props.rank]',
                                      required=False)
@@ -421,11 +408,11 @@ Polymer:
         value           : include('Polymer_modifications', required=False)
 
     quality_controls:
-        description     : str(equals='Information about if and how quality 
-                                      control of the polymer was performed', 
+        description     : str(equals='Information about if and how quality
+                                      control of the polymer was performed',
                               required=False)
         value           : include('Quality_controls', required=False)
-    
+
 
     additional_specifications:
         description     : str(equals='Additional information about the polymer
@@ -1270,8 +1257,8 @@ Processing_step:
 Value_error:
     lower:
         description     : str(equals='The lower error, i.e. the number that
-                                      should be added to the value to get
-                                      the upper bound of the 95 % confidence
+                                      should be subtracted from the value to get
+                                      the lower bound of the 95 % confidence
                                       interval. The same unit as the value
                                       being described is assumed. If relative
                                       errors are provided, please provide it in
@@ -1433,29 +1420,28 @@ Size:
 
 Quality_controls:
     purity:
-        description     : str(equals='Information about if, and how 
-                                      purity was assessed', required=False) 
+        description     : str(equals='Information about if, and how
+                                      purity was assessed', required=False)
         value           : include('Purity', required=False)
-    
+
     identity:
-        description     : str(equals='Information about if, and how 
-                                      identity was assessed', required=False) 
+        description     : str(equals='Information about if, and how
+                                      identity was assessed', required=False)
         value           : include('Identity', required=False)
 
     homogeneity:
-        description     : str(equals='Information about if, and how 
-                                      homogeneity was assessed', required=False) 
-        value           : include("Homogeneity", required=False)    
+        description     : str(equals='Information about if, and how
+                                      homogeneity was assessed', required=False)
+        value           : include("Homogeneity", required=False)
 
 
 Purity_base:
     checked:
-        description     : str(equals='Information about if and how 
-                                      the purity was obtained', required=False)
-        value           : enum("Yes", "No") 
+        description     : str(equals='Wether or not the purity was checked', required=False)
+        value           : enum("Yes", "No")
 
 Purity:
-    description         : str(equals='Information about if and how 
+    description         : str(equals='Information about if and how
                                       the purity was obtained', required=False)
     value               : choose(include('Purity_base'), type_field='checked',
                                  Yes=include('Yes_purity'),
@@ -1465,104 +1451,101 @@ Empty_object: {}
 
 Yes_purity:
     method:
-        description     : str(equals='The method that was used to determine 
+        description     : str(equals='The method that was used to determine
                                       the purity', required=False)
-        value           : enum("SDS-PAGE", 
-                               "Capillary Electrophoresis", 
+        value           : enum("SDS-PAGE",
+                               "Capillary Electrophoresis",
                                "Agarose Gel electrophoresis")
-    purity_percentage: 
+    purity_percentage:
         description     : str(equals='The obtained purity (in percent)',
                               required=False)
-        value           : enum('<90 %', '>90 %', '>95 %', '>99 %')   
+        value           : enum('<90 %', '>90 %', '>95 %', '>99 %')
 
-Identity:        
-    checked:  
-            description : str(equals="Wether the identity was confirmed 
-                                      experimentally", required=False)  
+Identity:
+    checked:
+            description : str(equals="Wether the identity was confirmed
+                                      experimentally", required=False)
             value       : enum("Yes", "No")
-     
-    by_intact_mass:    
-        description     : str(equals='How identity was determined by intact mass, 
+
+    by_intact_mass:
+        description     : str(equals='How identity was determined by intact mass,
                                       if applicable', required=False)
         value           : include('By_intact_mass', required=False)
 
     by_sequencing:
-        description     : str(equals='How identity was determined by sequencing, 
+        description     : str(equals='How identity was determined by sequencing,
                                       if applicable', required=False)
         value           : include('By_sequencing', required=False)
 
     by_fingerprinting:
-        description     : str(equals='How identity was determined by fingerprinting, 
+        description     : str(equals='How identity was determined by fingerprinting,
                                       if applicable', required=False)
-        value           : include('By_fingerprinting', required=False)    
+        value           : include('By_fingerprinting', required=False)
 
 By_intact_mass:
     method:
         description     : str(equals="The method used to determine the intact mass",
                                 required=False)
-        value           : enum("Mass spectrometry", "SDS-PAGE") 
-    
+        value           : enum("Mass spectrometry", "SDS-PAGE")
+
     deviation_from_expected_mass:
-        description     : str(equals="The amount, including unit, the obtained 
-                                      intact mass deviated from the expected 
+        description     : str(equals="The amount, including unit, the obtained
+                                      intact mass deviated from the expected
                                       intact mass", required=False)
         value           : include('Molecular_weight')
-   
+
 By_sequencing:
     method:
         description     : str(equals="The method that was used for sequencing",
                                 required=False)
-        value           : enum("Mass spectrometry-Mass spectrometry", 
-                               "Edman degradation", 
+        value           : enum("Mass spectrometry-Mass spectrometry",
+                               "Edman degradation",
                                "Sanger sequencing",
                                "Next generation sequencing")
-    
-    coverage: 
-        description     : str(equals='The amount of the total (expected) 
-                                      sequence that was actually observed 
+
+    coverage:
+        description     : str(equals='The amount of the total (expected)
+                                      sequence that was actually observed
                                       by sequencing in percent', required=False)
-        value           : int(min=0, max=100)
-    
+        value           : num(min=0, max=100)
+
 By_fingerprinting:
     method:
-        description     : str(equals="The method used for fingerprinting", 
+        description     : str(equals="The method used for fingerprinting",
                              required=False)
         value           : enum("Protease digest + Mass spectrometry",
-                               "Restriction enzyme digest + Gel electrophoresis")            
+                               "Restriction enzyme digest + Gel electrophoresis")
 
 Homogeneity_base:
-    checked:    
-        description     : str(equals='Whether the homogeneity was checked', required=False)        
+    checked:
+        description     : str(equals='Whether or not the homogeneity was checked', required=False)
         value           : enum("Yes", "No")
 
-Homogeneity: 
-    description         : str(equals="Whether the homogeneity was tested and whether the 
+Homogeneity:
+    description         : str(equals="Whether the homogeneity was tested and whether the
                                       expected number of species were present", required=False)
     value               : choose(include('Homogeneity_base'), type_field='checked',
                                  Yes=include('Yes_homogeneity'),
                                  No=include('Empty_object'))
 
 Yes_homogeneity:
-    method: 
-        description         : str(equals='The method used to evaluate the homogeneity', 
+    method:
+        description         : str(equals='The method used to evaluate the homogeneity',
                                   required=False)
-        value               : enum("Dynamic light scattering", 
-                                   "Size exclusion chromatography", 
+        value               : enum("Dynamic light scattering",
+                                   "Size exclusion chromatography",
                                    "Native Gel Electrophoresis",
                                    "Mass photometry")
 
-    expected number_of_species:
-        description         : str(equals="The number of species that were expected to 
-                                          be present", required=False) 
-        value               : int(min=1)    
-    
-    number_of_species_observed:
-        description         : str(equals="The number of species that was observed to 
-                                          be present", required=False) 
+    expected_number_of_species:
+        description         : str(equals="The number of species that were expected to
+                                          be present", required=False)
         value               : int(min=1)
 
-    
-
+    number_of_species_observed:
+        description         : str(equals="The number of species that was observed to
+                                          be present", required=False)
+        value               : int(min=1)
 
 ---
 # Additional objects
@@ -1645,18 +1628,4 @@ SUPPORTED_TECHNIQUES    : enum('Bio-layer interferometry (BLI)',
                                'Microscale thermophoresis/Temperature related
                                 intensity change (MST/TRIC)',
                                'Surface plasmon resonance (SPR)',
-                               required=False)
-
-# Likely incomplete
-COMPANIES               : enum('Bio-Rad',
-                               'Bruker',
-                               'Cytiva',
-                               'Gatorbio',
-                               'GE Healthcare',
-                               'Nanotemper',
-                               'Nicoya Life',
-                               'Sartorius',
-                               'Malvern Panalytical',
-                               'Refeyn',
-                               'TA Instruments',
                                required=False)

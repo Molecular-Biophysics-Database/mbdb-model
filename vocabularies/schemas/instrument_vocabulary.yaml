@@ -1,0 +1,21 @@
+
+id:
+    description:    str(equals='The instrument id of the record. Note that this
+                                is from a local databases', required=False)
+    value:          fulltext(min=1)
+
+title:
+    en:
+        description:    str(equals='Name of the instrument', required=False)
+        value:          fulltext(min=1)
+
+props:
+    manufacturer:
+        description:    str(equals='The (company) name of the manufacturer of
+                                    the instrument', required=False)
+        value:          keyword(min=1)
+
+    technique:
+        description:    str(equals='The model type of the instrument',
+                                    required=False)
+        value:          enum("MST", "BLI", "SPR")
