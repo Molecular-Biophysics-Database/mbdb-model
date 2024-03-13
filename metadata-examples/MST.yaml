@@ -1,5 +1,5 @@
 general_parameters:
-    schema_version: '0.9.19'
+    schema_version: '0.9.20'
     record_information:
         publisher: 'MBDB'
         resource_type_general: 'Dataset'
@@ -55,61 +55,46 @@ general_parameters:
           solvent:
               -  name: 'Water'
                  type: 'Chemical'
-                 molecular_weight:
-                    value: 18.02
-                    unit: 'g/mol'
+                 basic_information:
+                    id: inchikey:XLYOFNOQVPJJNP-UHFFFAOYSA-N
                  concentration:
                     value: 50
                     unit: 'w/w %'
-                 inchikey: 'XLYOFNOQVPJJNP-UHFFFAOYSA-N'
 
               -  name: 'Ethanol'
                  type: 'Chemical'
-                 molecular_weight:
-                    value: 46.069
-                    unit: 'Da'
+                 basic_information:
+                    id: inchikey:LFQSCWFLJHTTHZ-UHFFFAOYSA-N
                  concentration:
                     value: 50
                     unit: 'v/v %'
 
-                 inchikey: 'LFQSCWFLJHTTHZ-UHFFFAOYSA-N'
-
           ph: 7.4
-
 
           constituents:
               - name: 'Tris:HCl'
                 type: 'Chemical'
-                molecular_weight:
-                    value: 121.136
-                    unit: 'Da'
+                basic_information:
+                    id: inchikey:QKNYBSVHEMOAJP-UHFFFAOYSA-N
                 concentration:
                     value: 50
                     unit: 'mM'
 
-                inchikey: 'QKNYBSVHEMOAJP-UHFFFAOYSA-N'
-
               - name: 'Sodium chhhhride'
                 type: 'Chemical'
-                molecular_weight:
-                    value: 58.44
-                    unit: 'Da'
+                basic_information:
+                    id: inchikey:FAPWRFPIFSIZLT-UHFFFAOYSA-M
                 concentration:
                     value: 150
                     unit: 'mM'
 
-                inchikey: 'FAPWRFPIFSIZLT-UHFFFAOYSA-M'
-
               - name: 'SDS'
                 type: 'Chemical'
-                molecular_weight:
-                    value: 288.372
-                    unit: 'Da'
+                basic_information:
+                    id: 'inchikey:DBMJMQXJHONAFJ-UHFFFAOYSA-M'
                 concentration:
                     value: 1
                     unit: 'w/v %'
-
-                inchikey: 'DBMJMQXJHONAFJ-UHFFFAOYSA-M'
 
     entities_of_interest:
         - id: 'eoi-human-serum'
@@ -149,8 +134,8 @@ general_parameters:
           quality_controls:
             purity:
                 checked: "Yes"
-                method: "SDS-PAGE" 
-                purity_percentage: '>99 %'   
+                method: "SDS-PAGE"
+                purity_percentage: '>99 %'
 
             homogeneity:
                 checked: "No"
@@ -172,7 +157,6 @@ general_parameters:
                 expression_source_type: 'Natively'
                 external_databases:
                     - 'Uniprot:P69905'
-
 
               - name: 'Hemoglobin subunit beta'
                 type: 'Polymer'
@@ -218,7 +202,6 @@ general_parameters:
                 expression_source_type: 'Recombinantly'
                 external_databases:
                     - 'Uniprot:P68871'
-
 
     results:
         - id: 'de-par-kd-hemo'
