@@ -1,7 +1,7 @@
 general_parameters: include('General_parameters')
 ---
 General_parameters:
-  schema_version: keyword(equals='0.9.19')
+  schema_version: keyword(equals='0.9.20')
   record_information: include('Record_information')
   depositors: include('Depositors')
   associated_publication: include('Publication', required=False)
@@ -79,10 +79,8 @@ Polymer_modifications:
   chemical: list(nested_include('Modification'), required=False)
 ---
 Chemical:
-  inchikey: keyword()
-  additional_identifiers: list(chemical_id(), required=False)
-  isotopic_labeling: keyword(required=False)
-  molecular_weight: include('Molecular_weight')
+  basic_information: vocabulary(vocabulary="chemicals", fields='[id,title, molecular_weight.value,
+    molecular_weight.unit, additional_identifiers, chemical_formula]')
   additional_specifications: list(str(), required=False)
 Chemical_environment:
   id: link_target(name="chemical-environment")

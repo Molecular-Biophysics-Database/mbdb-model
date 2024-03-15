@@ -1,0 +1,30 @@
+
+id:
+    description:    str(equals='The inchikey associated with the chemical
+                                    (e.g. 03ad39j10)', required=False)
+    value:          fulltext(min=1)
+
+title:
+    en:
+        description:    str(equals='The name of the chemical', required=False)
+        value:          fulltext(min=1)
+
+props:
+    additional_identifiers:
+        description     : str(equals='Unique and persistent identifier from an
+                                      external source; options of sources are
+                                      CAS number (cas:), ChEMBL ID(chembl:), 
+                                      Pubchem Compound ID (pccid:), 
+                                      and Pubchem Substance ID (pcsid:)',
+                              required=False)
+        value           : list(chemical_id(), required=False)
+
+    molecular_weight:
+        description     : str(equals='The molecular weight of the chemical in 
+                                      Daltons', required=False)
+        value           : include('Molecular_weight')
+    
+    chemical_formula:
+        description     : str(equals='The chemical formula (e.g H2O) of the chemical',
+                                      required=False)
+        value           : number(min=1)

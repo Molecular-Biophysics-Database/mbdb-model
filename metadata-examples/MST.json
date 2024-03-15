@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.19",
+        "schema_version": "0.9.20",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -78,28 +78,24 @@
               {
                 "name": "Water",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 18.02,
-                  "unit": "g/mol"
+                "basic_information": {
+                  "id": "inchikey:XLYOFNOQVPJJNP-UHFFFAOYSA-N"
                 },
                 "concentration": {
                   "value": 50,
                   "unit": "w/w %"
-                },
-                "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
+                }
               },
               {
                 "name": "Ethanol",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 46.069,
-                  "unit": "Da"
+                "basic_information": {
+                  "id": "inchikey:LFQSCWFLJHTTHZ-UHFFFAOYSA-N"
                 },
                 "concentration": {
                   "value": 50,
                   "unit": "v/v %"
-                },
-                "inchikey": "LFQSCWFLJHTTHZ-UHFFFAOYSA-N"
+                }
               }
             ],
             "ph": 7.4,
@@ -107,41 +103,35 @@
               {
                 "name": "Tris:HCl",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 121.136,
-                  "unit": "Da"
+                "basic_information": {
+                  "id": "inchikey:QKNYBSVHEMOAJP-UHFFFAOYSA-N"
                 },
                 "concentration": {
                   "value": 50,
                   "unit": "mM"
-                },
-                "inchikey": "QKNYBSVHEMOAJP-UHFFFAOYSA-N"
+                }
               },
               {
                 "name": "Sodium chhhhride",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 58.44,
-                  "unit": "Da"
+                "basic_information": {
+                  "id": "inchikey:FAPWRFPIFSIZLT-UHFFFAOYSA-M"
                 },
                 "concentration": {
                   "value": 150,
                   "unit": "mM"
-                },
-                "inchikey": "FAPWRFPIFSIZLT-UHFFFAOYSA-M"
+                }
               },
               {
                 "name": "SDS",
                 "type": "Chemical",
-                "molecular_weight": {
-                  "value": 288.372,
-                  "unit": "Da"
+                "basic_information": {
+                  "id": "inchikey:DBMJMQXJHONAFJ-UHFFFAOYSA-M"
                 },
                 "concentration": {
                   "value": 1,
                   "unit": "w/v %"
-                },
-                "inchikey": "DBMJMQXJHONAFJ-UHFFFAOYSA-M"
+                }
               }
             ]
           }

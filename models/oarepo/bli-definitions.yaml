@@ -324,7 +324,7 @@ General_parameters:
   properties:
     schema_version:
       type: keyword
-      enum: [0.9.19]
+      enum: [0.9.20]
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -776,33 +776,16 @@ Polymer_modifications:
   label.en: Polymer modifications
 Chemical:
   properties:
-    inchikey:
-      type: keyword
-      help.en: InChIKey identifier of the chemical. In case of chemical polymers please
-        specify the InChIKey of the monomer and specify the specific type in the additional
-        identifiers field (e.g. if PEG 3350 was employed, the InChiKey of ethylene
-        glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be specified here)
+    basic_information:
+      help.en: The basic information about the chemical. This information is pulled
+        from Pubchem, however if the information is not available it can be manually
+        filled
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
-      label.en: Inchikey
-    additional_identifiers[]:
-      ^minItems: 1
-      ^help.en: Unique and persistent identifier from an external source; options
-        of sources are CAS number, ChEMBL ID, Pubchem Compound ID, and Pubchem Substance
-        ID
-      ^label.en: Additional identifiers
-      type: keyword
-    isotopic_labeling:
-      type: keyword
-      help.en: If the isotopic composition of the chemical was altered from the naturally
-        occurring abundances, it can be specified here (e.g. 15N, 13C)
-      label.en: Isotopic labeling
-    molecular_weight:
-      help.en: The molecular weight of the chemical
-      required: true
-      label.en: Molecular weight
-      use: '#/$defs/Molecular_weight'
+      label.en: Basic information
+      keys: [id, title, molecular_weight.value, molecular_weight.unit, additional_identifiers,
+        chemical_formula]
+      vocabulary-type: chemicals
+      type: vocabulary
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
@@ -2311,33 +2294,16 @@ HomogeneityEmpty_objectPolymorphic:
   label.en: Empty object
 EntityChemicalPolymorphic:
   properties:
-    inchikey:
-      type: keyword
-      help.en: InChIKey identifier of the chemical. In case of chemical polymers please
-        specify the InChIKey of the monomer and specify the specific type in the additional
-        identifiers field (e.g. if PEG 3350 was employed, the InChiKey of ethylene
-        glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be specified here)
+    basic_information:
+      help.en: The basic information about the chemical. This information is pulled
+        from Pubchem, however if the information is not available it can be manually
+        filled
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
-      label.en: Inchikey
-    additional_identifiers[]:
-      ^minItems: 1
-      ^help.en: Unique and persistent identifier from an external source; options
-        of sources are CAS number, ChEMBL ID, Pubchem Compound ID, and Pubchem Substance
-        ID
-      ^label.en: Additional identifiers
-      type: keyword
-    isotopic_labeling:
-      type: keyword
-      help.en: If the isotopic composition of the chemical was altered from the naturally
-        occurring abundances, it can be specified here (e.g. 15N, 13C)
-      label.en: Isotopic labeling
-    molecular_weight:
-      help.en: The molecular weight of the chemical
-      required: true
-      label.en: Molecular weight
-      use: '#/$defs/Molecular_weight'
+      label.en: Basic information
+      keys: [id, title, molecular_weight.value, molecular_weight.unit, additional_identifiers,
+        chemical_formula]
+      vocabulary-type: chemicals
+      type: vocabulary
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
@@ -2554,33 +2520,16 @@ Assembly_componentPolymerPolymorphic:
   label.en: Polymer
 Assembly_componentChemicalPolymorphic:
   properties:
-    inchikey:
-      type: keyword
-      help.en: InChIKey identifier of the chemical. In case of chemical polymers please
-        specify the InChIKey of the monomer and specify the specific type in the additional
-        identifiers field (e.g. if PEG 3350 was employed, the InChiKey of ethylene
-        glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be specified here)
+    basic_information:
+      help.en: The basic information about the chemical. This information is pulled
+        from Pubchem, however if the information is not available it can be manually
+        filled
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
-      label.en: Inchikey
-    additional_identifiers[]:
-      ^minItems: 1
-      ^help.en: Unique and persistent identifier from an external source; options
-        of sources are CAS number, ChEMBL ID, Pubchem Compound ID, and Pubchem Substance
-        ID
-      ^label.en: Additional identifiers
-      type: keyword
-    isotopic_labeling:
-      type: keyword
-      help.en: If the isotopic composition of the chemical was altered from the naturally
-        occurring abundances, it can be specified here (e.g. 15N, 13C)
-      label.en: Isotopic labeling
-    molecular_weight:
-      help.en: The molecular weight of the chemical
-      required: true
-      label.en: Molecular weight
-      use: '#/$defs/Molecular_weight'
+      label.en: Basic information
+      keys: [id, title, molecular_weight.value, molecular_weight.unit, additional_identifiers,
+        chemical_formula]
+      vocabulary-type: chemicals
+      type: vocabulary
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
@@ -3121,33 +3070,16 @@ EntityComplex_substance_of_industrial_originPolymorphic:
   label.en: Complex substance of industrial origin
 Chemical_constituentChemicalPolymorphic:
   properties:
-    inchikey:
-      type: keyword
-      help.en: InChIKey identifier of the chemical. In case of chemical polymers please
-        specify the InChIKey of the monomer and specify the specific type in the additional
-        identifiers field (e.g. if PEG 3350 was employed, the InChiKey of ethylene
-        glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be specified here)
+    basic_information:
+      help.en: The basic information about the chemical. This information is pulled
+        from Pubchem, however if the information is not available it can be manually
+        filled
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
-      label.en: Inchikey
-    additional_identifiers[]:
-      ^minItems: 1
-      ^help.en: Unique and persistent identifier from an external source; options
-        of sources are CAS number, ChEMBL ID, Pubchem Compound ID, and Pubchem Substance
-        ID
-      ^label.en: Additional identifiers
-      type: keyword
-    isotopic_labeling:
-      type: keyword
-      help.en: If the isotopic composition of the chemical was altered from the naturally
-        occurring abundances, it can be specified here (e.g. 15N, 13C)
-      label.en: Isotopic labeling
-    molecular_weight:
-      help.en: The molecular weight of the chemical
-      required: true
-      label.en: Molecular weight
-      use: '#/$defs/Molecular_weight'
+      label.en: Basic information
+      keys: [id, title, molecular_weight.value, molecular_weight.unit, additional_identifiers,
+        chemical_formula]
+      vocabulary-type: chemicals
+      type: vocabulary
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
@@ -3286,33 +3218,16 @@ ConstituentPolymerPolymorphic:
   label.en: Polymer
 ConstituentChemicalPolymorphic:
   properties:
-    inchikey:
-      type: keyword
-      help.en: InChIKey identifier of the chemical. In case of chemical polymers please
-        specify the InChIKey of the monomer and specify the specific type in the additional
-        identifiers field (e.g. if PEG 3350 was employed, the InChiKey of ethylene
-        glycol, i.e. LYCAIKOWRPUZTN-UHFFFAOYSA-N should be specified here)
+    basic_information:
+      help.en: The basic information about the chemical. This information is pulled
+        from Pubchem, however if the information is not available it can be manually
+        filled
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
-      label.en: Inchikey
-    additional_identifiers[]:
-      ^minItems: 1
-      ^help.en: Unique and persistent identifier from an external source; options
-        of sources are CAS number, ChEMBL ID, Pubchem Compound ID, and Pubchem Substance
-        ID
-      ^label.en: Additional identifiers
-      type: keyword
-    isotopic_labeling:
-      type: keyword
-      help.en: If the isotopic composition of the chemical was altered from the naturally
-        occurring abundances, it can be specified here (e.g. 15N, 13C)
-      label.en: Isotopic labeling
-    molecular_weight:
-      help.en: The molecular weight of the chemical
-      required: true
-      label.en: Molecular weight
-      use: '#/$defs/Molecular_weight'
+      label.en: Basic information
+      keys: [id, title, molecular_weight.value, molecular_weight.unit, additional_identifiers,
+        chemical_formula]
+      vocabulary-type: chemicals
+      type: vocabulary
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.

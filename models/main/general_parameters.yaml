@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.9.19')
+        value           : keyword(equals='0.9.20')
 
     record_information:
         description     : str(equals='Information about the record itself,
@@ -449,38 +449,17 @@ Polymer_modifications:
 # Entities and constituents
 
 Chemical:
-    inchikey:
-        description     : str(equals='InChIKey identifier of the chemical.
-                                      In case of chemical polymers please
-                                      specify the InChIKey of the monomer and
-                                      specify the specific type in the
-                                      additional identifiers field (e.g. if
-                                      PEG 3350 was employed, the InChiKey of
-                                      ethylene glycol, i.e.
-                                      LYCAIKOWRPUZTN-UHFFFAOYSA-N should be
-                                      specified here)', required=False)
-        default_search  : True
-        value           : keyword()
-
-    additional_identifiers:
-        description     : str(equals='Unique and persistent identifier from an
-                                      external source; options of sources are
-                                      CAS number, ChEMBL ID, Pubchem Compound
-                                      ID, and Pubchem Substance ID',
-                              required=False)
-        value           : list(chemical_id(), required=False)
-
-    isotopic_labeling:
-        description     : str(equals='If the isotopic composition of the
-                                      chemical was altered from the naturally
-                                      occurring abundances, it can be specified here
-                                      (e.g. 15N, 13C)', required=False)
-        value           : keyword(required=False)
-
-    molecular_weight:
-        description     : str(equals='The molecular weight of the chemical',
-                              required=False)
-        value           : include('Molecular_weight')
+    basic_information:
+        description     : str(equals='The basic information about the chemical.
+                                      This information is pulled from Pubchem,
+                                      however if the information is not available
+                                      it can be manually filled', required=False)
+        value           : vocabulary(vocabulary="chemicals",
+                                     fields='[id,title,
+                                              molecular_weight.value,
+                                              molecular_weight.unit,
+                                              additional_identifiers,
+                                              chemical_formula]')
 
     additional_specifications:
         description      : str(equals='Additional information about the chemical
