@@ -31,3 +31,7 @@ python yamale2oarepo.py ../models/main/MST.yaml \
 python yamale2oarepo.py ../models/main/SPR.yaml \
         --out_dir ../models/oarepo \
         --include ../models/main/general_parameters.yaml
+
+python yamale2oarepo.py ../models/main/ITC.yaml \
+        --out_dir ../models/oarepo \
+        --include ../models/main/general_parameters.yaml

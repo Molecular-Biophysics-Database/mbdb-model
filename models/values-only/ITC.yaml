@@ -1,0 +1,51 @@
+general_parameters: include('General_parameters')
+method_specific_parameters: include('ITC_specific_parameters')
+---
+ITC_specific_parameters:
+  schema_version: keyword(equals='0.0.1')
+  measurements: list(include('Measurement'), min=1)
+  experiment_type: include('Experiment_type', required=False)
+  cell_temperature: include('Temperature')
+  cell_volume: include('Volume')
+  reference_power: include('Reference_power')
+  stirring_speed: num()
+  feedback_mode: enum('None', 'Low', 'High')
+  data_analysis: list(include('ITC_data_analysis'), required=False)
+---
+Reference_power:
+  value: num()
+  unit: include('POWER_UNITS')
+Volume:
+  value: num()
+  unit: include('VOLUME_UNITS')
+---
+Experiment_type: choose(include('Experiment_type_base'), Single_injection=include('Single_injection'),
+  Titration=include('Titration'))
+Experiment_type_base:
+  type: enum('Single injection', 'Titration')
+Titration:
+  number_injections: num()
+  injection_parameters: list(include('Injection_parameters'), required=False)
+Single_injection:
+  volume: include('Volume')
+Injection_parameters:
+  n_injections: num()
+  volume: include('Volume')
+---
+ITC_data_analysis:
+  data_processing_steps: list(include('Processing_step'), required=False)
+  data_fitting: include('Data_fitting_base', required=False)
+Data_fitting_base:
+  type: enum('Simple model', 'Complex model')
+  result: list(link(target='result'), required=False)
+  data_fitting_model: include('Data_fitting', required=False)
+---
+Measurement:
+  id: link_target(name='itc-measurement')
+  name: str()
+  sample: include('Sample')
+Sample:
+  target_in_cell: list(include('Entity_constituent'))
+  target_in_syringe: list(include('Entity_constituent'))
+  chemical_environment: list(link(target='chemical-environment'))
+  preparation_protocol: list(include('Step'), required=False)
