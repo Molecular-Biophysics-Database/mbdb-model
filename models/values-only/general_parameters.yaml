@@ -354,6 +354,8 @@ ENERGY_UNITS: enum('kcal/mol','kJ/mol', required=False)
 POWER_UNITS: enum('µcal/s','µJ/s', required=False)
 LENGTH_UNITS: enum('Å', 'nm', 'μm', 'mm', 'cm', 'm', required=False)
 MOLECULAR_WEIGHT_UNITS: enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
+VOLUME_UNITS: enum('ml', 'µl', required=False)
 ---
 SUPPORTED_TECHNIQUES: enum('Bio-layer interferometry (BLI)', 'Microscale thermophoresis/Temperature
-  related intensity change (MST/TRIC)', 'Surface plasmon resonance (SPR)', required=False)
+  related intensity change (MST/TRIC)', 'Surface plasmon resonance (SPR)', 'Isothermal
+  Titration Calorimetry (ITC)', required=False)

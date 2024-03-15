@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.18",
+        "schema_version": "0.9.20",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -76,9 +76,10 @@
             "name": "Measurement buffer",
             "solvent": [
               {
+                "name": "Water",
                 "type": "Chemical",
-                "chemical": {
-                  "id": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
+                "basic_information": {
+                  "id": "inchikey:XLYOFNOQVPJJNP-UHFFFAOYSA-N"
                 },
                 "concentration": {
                   "value": 50,
@@ -86,9 +87,10 @@
                 }
               },
               {
+                "name": "Ethanol",
                 "type": "Chemical",
-                "chemical": {
-                  "id": "LFQSCWFLJHTTHZ-UHFFFAOYSA-N"
+                "basic_information": {
+                  "id": "inchikey:LFQSCWFLJHTTHZ-UHFFFAOYSA-N"
                 },
                 "concentration": {
                   "value": 50,
@@ -99,9 +101,10 @@
             "ph": 7.4,
             "constituents": [
               {
+                "name": "Tris:HCl",
                 "type": "Chemical",
-                "chemical": {
-                  "id": "QKNYBSVHEMOAJP-UHFFFAOYSA-N"
+                "basic_information": {
+                  "id": "inchikey:QKNYBSVHEMOAJP-UHFFFAOYSA-N"
                 },
                 "concentration": {
                   "value": 50,
@@ -109,9 +112,10 @@
                 }
               },
               {
+                "name": "Sodium chhhhride",
                 "type": "Chemical",
-                "chemical": {
-                  "id": "FAPWRFPIFSIZLT-UHFFFAOYSA-M"
+                "basic_information": {
+                  "id": "inchikey:FAPWRFPIFSIZLT-UHFFFAOYSA-M"
                 },
                 "concentration": {
                   "value": 150,
@@ -119,9 +123,10 @@
                 }
               },
               {
+                "name": "SDS",
                 "type": "Chemical",
-                "chemical": {
-                  "id": "DBMJMQXJHONAFJ-UHFFFAOYSA-M"
+                "basic_information": {
+                  "id": "inchikey:DBMJMQXJHONAFJ-UHFFFAOYSA-M"
                 },
                 "concentration": {
                   "value": 1,
@@ -159,7 +164,6 @@
               "temperature": {
                 "value": -80,
                 "unit": "°C",
-                "obtained_by": "Measurement",
                 "controlled": true
               },
               "storage_preparation": [
