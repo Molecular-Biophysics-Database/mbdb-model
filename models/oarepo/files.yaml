@@ -6,21 +6,30 @@ properties:
     label.en: Name
   content_type:
     type: keyword
-    enum: [text, binary, text and binary]
+    enum:
+      - text
+      - binary
+      - text and binary
     help.en: Type of the file content in terms of how it can be read (text, binary,
       etc.)
     required: true
     label.en: Content type
   context:
     type: keyword
-    enum: [raw measurement data, derived measurement data, quality control report]
+    enum:
+      - raw measurement data
+      - derived measurement data
+      - quality control report
     help.en: The context the file should be understood within (e.g. raw measurement
       data)
     required: true
     label.en: Context
   originates_from:
     type: keyword
-    enum: [Instrument software, User, MBDB]
+    enum:
+      - Instrument software
+      - User
+      - MBDB
     help.en: What is the source of the file
     required: true
     label.en: Originates from

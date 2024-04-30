@@ -2,7 +2,8 @@ General_parameters:
   properties:
     schema_version:
       type: keyword
-      enum: [0.9.20]
+      enum:
+        - 0.9.20
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -28,7 +29,10 @@ General_parameters:
         the raw data annotated by this record. Note that this information is based
         on OpenAire Projects
       ^label.en: Funding references
-      keys: [id, title, props.funder_name]
+      keys:
+        - id
+        - title
+        - props.funder_name
       vocabulary-type: grants
       type: vocabulary
       extras:
@@ -56,7 +60,10 @@ General_parameters:
         raw data annotated by this record
       required: true
       label.en: Instrument
-      keys: [id, title, props.manufacturer]
+      keys:
+        - id
+        - title
+        - props.manufacturer
       vocabulary-type: instruments
       type: vocabulary
     entities_of_interest[]:
@@ -94,7 +101,8 @@ General_parameters:
       ^help.en: List of file(s) containing the raw measurements
       ^ui_file_context:
         type: keyword
-        enum: [raw measurement data]
+        enum:
+          - raw measurement data
         label.en: Ui file context
       ^label.en: Raw measurement files
       type: url
@@ -110,7 +118,10 @@ Record_information:
       label.en: Title
     access_rights:
       type: keyword
-      enum: [open access, embargoed access, restricted access]
+      enum:
+        - open access
+        - embargoed access
+        - restricted access
       help.en: The access rights to the uploaded files. There are three options, 1)
         "open access" where the files are accessible immediately when the deposition
         is published, 2) "embargoed access" where the files will only become available
@@ -120,7 +131,10 @@ Record_information:
       label.en: Access rights
     metadata_access_rights:
       type: keyword
-      enum: [open access, embargoed access, restricted access]
+      enum:
+        - open access
+        - embargoed access
+        - restricted access
       help.en: The access rights to the metadata. Minimal metadata that includes title
         and depositors is accessible regardless of which type is chosen as it is required
         to obtain a DOI. There are three options, 1) "open access" where the complete
@@ -132,14 +146,16 @@ Record_information:
       label.en: Metadata access rights
     publisher:
       type: keyword
-      enum: [MBDB]
+      enum:
+        - MBDB
       help.en: When made available MBDB is to be considered the publisher, however,
         the depositors are still the owners
       required: true
       label.en: Publisher
     resource_type_general:
       type: keyword
-      enum: [Dataset]
+      enum:
+        - Dataset
       help.en: All records are considered to be datasets
       required: true
       label.en: Resource type general
@@ -156,7 +172,8 @@ Record_information:
       label.en: External identifier
     subject_category:
       type: keyword
-      enum: [Biophysics]
+      enum:
+        - Biophysics
       help.en: DataCite subject category the record data belongs to default is Biophysics
       required: true
       label.en: Subject category
@@ -189,9 +206,14 @@ Entity_base:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the entity, where the options are (biological) Polymer,
         Chemical, Molecular assembly (also includes all proteins composed of more
         than one polypeptide chain) or Complex substance. Chemical polymers such as
@@ -299,7 +321,9 @@ Assembly_component_base:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical]
+      enum:
+        - Polymer
+        - Chemical
       help.en: The type of component, options are (biological) Polymer and Chemical
       required: true
       label.en: Type
@@ -328,9 +352,14 @@ Polymer:
   properties:
     polymer_type:
       type: keyword
-      enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
-        polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
-        polyribonucleotide]
+      enum:
+        - cyclic-pseudo-peptide
+        - peptide nucleic acid
+        - polydeoxyribonucleotide
+        - polydeoxyribonucleotide/polyribonucleotide hybrid
+        - polypeptide(D)
+        - polypeptide(L)
+        - polyribonucleotide
       help.en: The type of polymer (e.g. polypeptide(L))
       required: true
       mapping:
@@ -369,7 +398,10 @@ Polymer:
       help.en: The biological species where the polymer naturally occurs. Note that
         this is based on the NCBI taxonomy
       label.en: Source organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
       extras:
@@ -383,7 +415,10 @@ Polymer:
             copy_to: collected_default_search_fields
     expression_source_type:
       type: keyword
-      enum: [Natively, Recombinantly, Synthetically]
+      enum:
+        - Natively
+        - Recombinantly
+        - Synthetically
       help.en: How the polymer was produced
       required: true
       label.en: Expression source type
@@ -391,7 +426,10 @@ Polymer:
       help.en: The biological species that was used to express (produce) the polymer.
         Note that this is based on the NCBI taxonomy
       label.en: Expression organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
     modifications:
@@ -444,8 +482,25 @@ Chemical:
         filled
       required: true
       label.en: Basic information
-      keys: [id, title, molecular_weight.value, molecular_weight.unit, additional_identifiers,
-        chemical_formula]
+      keys:
+        - id
+        - title
+        - key: chemical_formula
+          model:
+            type: keyword
+        - key: additional_identifiers
+          model:
+            type: array
+            items:
+              type: keyword
+        - key: molecular_weight
+          model:
+            type: object
+            properties:
+              value:
+                type: float
+              unit:
+                type: keyword
       vocabulary-type: chemicals
       type: vocabulary
     additional_specifications[]:
@@ -517,9 +572,14 @@ Constituent_base:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
@@ -543,7 +603,8 @@ Chemical_constituent_base:
       label.en: Name
     type:
       type: keyword
-      enum: [Chemical]
+      enum:
+        - Chemical
       help.en: The type of the constituent, options are Chemical
       required: true
       label.en: Type
@@ -626,7 +687,10 @@ Complex_substance_of_biological_origin_base:
   properties:
     derived_from:
       type: keyword
-      enum: [Body fluid, Cell fraction, Virion]
+      enum:
+        - Body fluid
+        - Cell fraction
+        - Virion
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -635,7 +699,10 @@ Complex_substance_of_biological_origin_base:
         e.g. strain. Note that this is based on the NCBI taxonomy
       required: true
       label.en: Source organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
       extras:
@@ -670,7 +737,15 @@ Body_fluid:
   properties:
     fluid:
       type: keyword
-      enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract]
+      enum:
+        - Blood
+        - Fecal matter
+        - Milk
+        - Plasma
+        - Saliva
+        - Serum
+        - Urine
+        - Plant extract
       help.en: The body fluid the complex substance is derived from
       required: true
       mapping:
@@ -687,9 +762,20 @@ Cell_fraction:
   properties:
     fraction:
       type: keyword
-      enum: [Ribosome, Cell wall, VesicleCell lysate/Cytoplasm, Cell Membrane, Extracellular
-          matrix, Lysosome, Golgi Apparatus, Mitochondrion, Nucleus, Rough Endoplasmic
-          Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast]
+      enum:
+        - Ribosome
+        - Cell wall
+        - VesicleCell lysate/Cytoplasm
+        - Cell Membrane
+        - Extracellular matrix
+        - Lysosome
+        - Golgi Apparatus
+        - Mitochondrion
+        - Nucleus
+        - Rough Endoplasmic Reticulum
+        - Smooth Endoplasmic Reticulum
+        - Vacuole
+        - Chloroplast
       help.en: The subcelluar component e.g. (Ribosome)
       required: true
       mapping:
@@ -718,19 +804,30 @@ Virion:
   properties:
     genetic_material:
       type: keyword
-      enum: [No genetic material, Virus genome, Synthetic]
+      enum:
+        - No genetic material
+        - Virus genome
+        - Synthetic
       help.en: The genetic material carried by the virions (None, virus genome, synthetic)
       required: true
       label.en: Genetic material
     capsid_type:
       type: keyword
-      enum: [None, Native, Genetically Engineered, Synthetic]
+      enum:
+        - None
+        - Native
+        - Genetically Engineered
+        - Synthetic
       help.en: The type of virion capsid
       required: true
       label.en: Capsid type
     envelope_type:
       type: keyword
-      enum: [None, Native, Genetically Engineered, Synthetic]
+      enum:
+        - None
+        - Native
+        - Genetically Engineered
+        - Synthetic
       help.en: The type of virion envelope
       required: true
       label.en: Envelope type
@@ -738,7 +835,10 @@ Virion:
       help.en: The host organism the virion was produced in. Note that information
         is based on the NCBI taxonomy
       label.en: Host organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
     host_cell_type:
@@ -750,7 +850,13 @@ Complex_substance_of_environmental_origin:
   properties:
     source:
       type: keyword
-      enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil]
+      enum:
+        - Fresh water
+        - Marine
+        - Ice core
+        - Sediment
+        - Sewage
+        - Soil
       help.en: The environmental source where the complex substance was derived from
       required: true
       mapping:
@@ -785,7 +891,8 @@ Complex_substance_of_chemical_origin_base:
   properties:
     class:
       type: keyword
-      enum: [Lipid assembly]
+      enum:
+        - Lipid assembly
       help.en: The chemical origin where the complex substance was derived from
       required: true
       label.en: Class
@@ -823,7 +930,11 @@ Lipid_assembly:
   properties:
     assembly_type:
       type: keyword
-      enum: [Micelle, Liposome, Nanodisc, Sheet]
+      enum:
+        - Micelle
+        - Liposome
+        - Nanodisc
+        - Sheet
       help.en: The type of lipid assembly
       required: true
       label.en: Assembly type
@@ -850,7 +961,10 @@ Complex_substance_of_industrial_origin:
   properties:
     product:
       type: keyword
-      enum: [Beer, Cell medium, Whey]
+      enum:
+        - Beer
+        - Cell medium
+        - Whey
       help.en: The type of product, byproduct, or waste product the complex substance
         was derived from
       required: true
@@ -926,7 +1040,12 @@ Person:
       ^help.en: The affiliation of the person. Note that this is based on the Research
         Organization Registry (ROR)
       ^label.en: Affiliations
-      keys: [id, title, props.city, props.state, props.country]
+      keys:
+        - id
+        - title
+        - props.city
+        - props.state
+        - props.country
       vocabulary-type: affiliations
       type: vocabulary
       extras:
@@ -957,7 +1076,10 @@ Publication_base:
       label.en: Title
     type:
       type: keyword
-      enum: [Article, Book, Thesis]
+      enum:
+        - Article
+        - Book
+        - Thesis
       help.en: The type of the publication
       required: true
       label.en: Type
@@ -1005,7 +1127,11 @@ Thesis:
   properties:
     degree_type:
       type: keyword
-      enum: [PhD, Habilitation, Master, Bachelor]
+      enum:
+        - PhD
+        - Habilitation
+        - Master
+        - Bachelor
       help.en: The type of degree (equivalent) the thesis was submitted to attain
       required: true
       mapping:
@@ -1029,10 +1155,19 @@ Result_base:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -1124,7 +1259,8 @@ Result_stoichiometry:
   properties:
     unit:
       type: keyword
-      enum: [per complex]
+      enum:
+        - per complex
       help.en: Unit of the stoichiometry
       required: true
       label.en: Unit
@@ -1133,7 +1269,15 @@ Result_KA:
   properties:
     unit:
       type: keyword
-      enum: [M^-1, M^-2, mM^-1, mM^-2, µM^-1, µM^-2, nM^-1, nM^-2]
+      enum:
+        - M^-1
+        - M^-2
+        - mM^-1
+        - mM^-2
+        - µM^-1
+        - µM^-2
+        - nM^-1
+        - nM^-2
       help.en: Unit of the constant of association
       required: true
       label.en: Unit
@@ -1142,7 +1286,15 @@ Result_KD:
   properties:
     unit:
       type: keyword
-      enum: [M, M^2, mM, mM^2, µM, µM^2, nM, nM^2]
+      enum:
+        - M
+        - M^2
+        - mM
+        - mM^2
+        - µM
+        - µM^2
+        - nM
+        - nM^2
       help.en: Unit of the constant of dissociation
       required: true
       label.en: Unit
@@ -1151,8 +1303,15 @@ Result_kOn:
   properties:
     unit:
       type: keyword
-      enum: [M^-1 s^-1, M^-2 s^-1, mM^-1 s^-1, mM^-2 s^-1, µM^-1 s^-1, µM^-2 s^-1,
-        nM^-1 s^-1, nM^-2 s^-1]
+      enum:
+        - M^-1 s^-1
+        - M^-2 s^-1
+        - mM^-1 s^-1
+        - mM^-2 s^-1
+        - µM^-1 s^-1
+        - µM^-2 s^-1
+        - nM^-1 s^-1
+        - nM^-2 s^-1
       help.en: Unit of the association rate constant
       required: true
       label.en: Unit
@@ -1161,7 +1320,8 @@ Result_kOff:
   properties:
     unit:
       type: keyword
-      enum: [s^-1]
+      enum:
+        - s^-1
       help.en: Unit of the dissociation rate constant
       required: true
       label.en: Unit
@@ -1178,7 +1338,9 @@ Result_deltaS:
   properties:
     unit:
       type: keyword
-      enum: [kcal/molK, kJ/molK]
+      enum:
+        - kcal/molK
+        - kJ/molK
       help.en: Unit of the change in entropy
       required: true
       label.en: Unit
@@ -1211,7 +1373,8 @@ Result_hill_coeff:
   properties:
     unit:
       type: keyword
-      enum: [unitless]
+      enum:
+        - unitless
       help.en: Unit of the Hill coefficient
       required: true
       label.en: Unit
@@ -1225,7 +1388,9 @@ Entity_and_stoichiometry:
       label.en: Entity
       type: relation
       model: '#entity'
-      keys: [id, name]
+      keys:
+        - id
+        - name
     copy_number:
       type: double
       minimum: -1.0
@@ -1349,7 +1514,10 @@ Size:
   properties:
     type:
       type: keyword
-      enum: [radius, diameter, path length]
+      enum:
+        - radius
+        - diameter
+        - path length
       help.en: The type of size (e.g. radius)
       required: true
       label.en: Type
@@ -1399,7 +1567,9 @@ Purity_base:
   properties:
     checked:
       type: keyword
-      enum: ["Yes", "No"]
+      enum:
+        - "Yes"
+        - "No"
       help.en: Wether or not the purity was checked
       required: true
       label.en: Checked
@@ -1425,13 +1595,20 @@ Yes_purity:
   properties:
     method:
       type: keyword
-      enum: [SDS-PAGE, Capillary Electrophoresis, Agarose Gel electrophoresis]
+      enum:
+        - SDS-PAGE
+        - Capillary Electrophoresis
+        - Agarose Gel electrophoresis
       help.en: The method that was used to determine the purity
       required: true
       label.en: Method
     purity_percentage:
       type: keyword
-      enum: [<90 %, '>90 %', '>95 %', '>99 %']
+      enum:
+        - <90 %
+        - '>90 %'
+        - '>95 %'
+        - '>99 %'
       help.en: The obtained purity (in percent)
       required: true
       label.en: Purity percentage
@@ -1440,7 +1617,9 @@ Identity:
   properties:
     checked:
       type: keyword
-      enum: ["Yes", "No"]
+      enum:
+        - "Yes"
+        - "No"
       help.en: Wether the identity was confirmed experimentally
       required: true
       label.en: Checked
@@ -1461,7 +1640,9 @@ By_intact_mass:
   properties:
     method:
       type: keyword
-      enum: [Mass spectrometry, SDS-PAGE]
+      enum:
+        - Mass spectrometry
+        - SDS-PAGE
       help.en: The method used to determine the intact mass
       required: true
       label.en: Method
@@ -1476,8 +1657,11 @@ By_sequencing:
   properties:
     method:
       type: keyword
-      enum: [Mass spectrometry-Mass spectrometry, Edman degradation, Sanger sequencing,
-        Next generation sequencing]
+      enum:
+        - Mass spectrometry-Mass spectrometry
+        - Edman degradation
+        - Sanger sequencing
+        - Next generation sequencing
       help.en: The method that was used for sequencing
       required: true
       label.en: Method
@@ -1494,8 +1678,9 @@ By_fingerprinting:
   properties:
     method:
       type: keyword
-      enum: [Protease digest + Mass spectrometry, Restriction enzyme digest + Gel
-          electrophoresis]
+      enum:
+        - Protease digest + Mass spectrometry
+        - Restriction enzyme digest + Gel electrophoresis
       help.en: The method used for fingerprinting
       required: true
       label.en: Method
@@ -1504,7 +1689,9 @@ Homogeneity_base:
   properties:
     checked:
       type: keyword
-      enum: ["Yes", "No"]
+      enum:
+        - "Yes"
+        - "No"
       help.en: Whether or not the homogeneity was checked
       required: true
       label.en: Checked
@@ -1528,8 +1715,11 @@ Yes_homogeneity:
   properties:
     method:
       type: keyword
-      enum: [Dynamic light scattering, Size exclusion chromatography, Native Gel Electrophoresis,
-        Mass photometry]
+      enum:
+        - Dynamic light scattering
+        - Size exclusion chromatography
+        - Native Gel Electrophoresis
+        - Mass photometry
       help.en: The method used to evaluate the homogeneity
       required: true
       label.en: Method
@@ -1583,36 +1773,79 @@ Coordinates:
   label.en: Coordinates
 CONCENTRATION_UNITS:
   type: keyword
-  enum: [M, mM, µM, nM, pM, fM, aM, g/L, mg/mL, µg/mL, ng/mL, mol/kg, mmol/kg, v/v
-      %, w/w %, v/w %, w/v %, U/ml, '% saturated']
+  enum:
+    - M
+    - mM
+    - µM
+    - nM
+    - pM
+    - fM
+    - aM
+    - g/L
+    - mg/mL
+    - µg/mL
+    - ng/mL
+    - mol/kg
+    - mmol/kg
+    - v/v %
+    - w/w %
+    - v/w %
+    - w/v %
+    - U/ml
+    - '% saturated'
   label.en: Concentration units
 TEMPERATURE_UNITS:
   type: keyword
-  enum: [K, °C, °F]
+  enum:
+    - K
+    - °C
+    - °F
   required: true
   label.en: Temperature units
 TIME_UNITS:
   type: keyword
-  enum: [nanoseconds, microseconds, milliseconds, seconds, minutes, hours, days, months,
-    years]
+  enum:
+    - nanoseconds
+    - microseconds
+    - milliseconds
+    - seconds
+    - minutes
+    - hours
+    - days
+    - months
+    - years
   label.en: Time units
 ENERGY_UNITS:
   type: keyword
-  enum: [kcal/mol, kJ/mol]
+  enum:
+    - kcal/mol
+    - kJ/mol
   label.en: Energy units
 LENGTH_UNITS:
   type: keyword
-  enum: [Å, nm, μm, mm, cm, m]
+  enum:
+    - Å
+    - nm
+    - μm
+    - mm
+    - cm
+    - m
   label.en: Length units
 MOLECULAR_WEIGHT_UNITS:
   type: keyword
-  enum: [g/mol, Da, kDa, MDa]
+  enum:
+    - g/mol
+    - Da
+    - kDa
+    - MDa
   label.en: Molecular weight units
 SUPPORTED_TECHNIQUES:
   type: keyword
-  enum: [Bio-layer interferometry (BLI), Microscale thermophoresis/Temperature related
-      intensity change (MST/TRIC), Surface plasmon resonance (SPR), Isothermal Titration
-      Calorimetry (ITC)]
+  enum:
+    - Bio-layer interferometry (BLI)
+    - Microscale thermophoresis/Temperature related intensity change (MST/TRIC)
+    - Surface plasmon resonance (SPR)
+    - Isothermal Titration Calorimetry (ITC)
   label.en: Supported techniques
 PublicationArticlePolymorphic:
   properties:
@@ -1639,7 +1872,10 @@ PublicationArticlePolymorphic:
       label.en: Title
     type:
       type: keyword
-      enum: [Article, Book, Thesis]
+      enum:
+        - Article
+        - Book
+        - Thesis
       help.en: The type of the publication
       required: true
       label.en: Type
@@ -1669,7 +1905,10 @@ PublicationBookPolymorphic:
       label.en: Title
     type:
       type: keyword
-      enum: [Article, Book, Thesis]
+      enum:
+        - Article
+        - Book
+        - Thesis
       help.en: The type of the publication
       required: true
       label.en: Type
@@ -1678,7 +1917,11 @@ PublicationThesisPolymorphic:
   properties:
     degree_type:
       type: keyword
-      enum: [PhD, Habilitation, Master, Bachelor]
+      enum:
+        - PhD
+        - Habilitation
+        - Master
+        - Bachelor
       help.en: The type of degree (equivalent) the thesis was submitted to attain
       required: true
       mapping:
@@ -1700,7 +1943,10 @@ PublicationThesisPolymorphic:
       label.en: Title
     type:
       type: keyword
-      enum: [Article, Book, Thesis]
+      enum:
+        - Article
+        - Book
+        - Thesis
       help.en: The type of the publication
       required: true
       label.en: Type
@@ -1709,9 +1955,14 @@ EntityPolymerPolymorphic:
   properties:
     polymer_type:
       type: keyword
-      enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
-        polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
-        polyribonucleotide]
+      enum:
+        - cyclic-pseudo-peptide
+        - peptide nucleic acid
+        - polydeoxyribonucleotide
+        - polydeoxyribonucleotide/polyribonucleotide hybrid
+        - polypeptide(D)
+        - polypeptide(L)
+        - polyribonucleotide
       help.en: The type of polymer (e.g. polypeptide(L))
       required: true
       mapping:
@@ -1750,7 +2001,10 @@ EntityPolymerPolymorphic:
       help.en: The biological species where the polymer naturally occurs. Note that
         this is based on the NCBI taxonomy
       label.en: Source organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
       extras:
@@ -1764,7 +2018,10 @@ EntityPolymerPolymorphic:
             copy_to: collected_default_search_fields
     expression_source_type:
       type: keyword
-      enum: [Natively, Recombinantly, Synthetically]
+      enum:
+        - Natively
+        - Recombinantly
+        - Synthetically
       help.en: How the polymer was produced
       required: true
       label.en: Expression source type
@@ -1772,7 +2029,10 @@ EntityPolymerPolymorphic:
       help.en: The biological species that was used to express (produce) the polymer.
         Note that this is based on the NCBI taxonomy
       label.en: Expression organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
     modifications:
@@ -1804,9 +2064,14 @@ EntityPolymerPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the entity, where the options are (biological) Polymer,
         Chemical, Molecular assembly (also includes all proteins composed of more
         than one polypeptide chain) or Complex substance. Chemical polymers such as
@@ -1822,19 +2087,28 @@ PurityYes_purityPolymorphic:
   properties:
     method:
       type: keyword
-      enum: [SDS-PAGE, Capillary Electrophoresis, Agarose Gel electrophoresis]
+      enum:
+        - SDS-PAGE
+        - Capillary Electrophoresis
+        - Agarose Gel electrophoresis
       help.en: The method that was used to determine the purity
       required: true
       label.en: Method
     purity_percentage:
       type: keyword
-      enum: [<90 %, '>90 %', '>95 %', '>99 %']
+      enum:
+        - <90 %
+        - '>90 %'
+        - '>95 %'
+        - '>99 %'
       help.en: The obtained purity (in percent)
       required: true
       label.en: Purity percentage
     checked:
       type: keyword
-      enum: ["Yes", "No"]
+      enum:
+        - "Yes"
+        - "No"
       help.en: Wether or not the purity was checked
       required: true
       label.en: Checked
@@ -1843,7 +2117,9 @@ PurityEmpty_objectPolymorphic:
   properties:
     checked:
       type: keyword
-      enum: ["Yes", "No"]
+      enum:
+        - "Yes"
+        - "No"
       help.en: Wether or not the purity was checked
       required: true
       label.en: Checked
@@ -1852,8 +2128,11 @@ HomogeneityYes_homogeneityPolymorphic:
   properties:
     method:
       type: keyword
-      enum: [Dynamic light scattering, Size exclusion chromatography, Native Gel Electrophoresis,
-        Mass photometry]
+      enum:
+        - Dynamic light scattering
+        - Size exclusion chromatography
+        - Native Gel Electrophoresis
+        - Mass photometry
       help.en: The method used to evaluate the homogeneity
       required: true
       label.en: Method
@@ -1871,7 +2150,9 @@ HomogeneityYes_homogeneityPolymorphic:
       label.en: Number of species observed
     checked:
       type: keyword
-      enum: ["Yes", "No"]
+      enum:
+        - "Yes"
+        - "No"
       help.en: Whether or not the homogeneity was checked
       required: true
       label.en: Checked
@@ -1880,7 +2161,9 @@ HomogeneityEmpty_objectPolymorphic:
   properties:
     checked:
       type: keyword
-      enum: ["Yes", "No"]
+      enum:
+        - "Yes"
+        - "No"
       help.en: Whether or not the homogeneity was checked
       required: true
       label.en: Checked
@@ -1893,8 +2176,25 @@ EntityChemicalPolymorphic:
         filled
       required: true
       label.en: Basic information
-      keys: [id, title, molecular_weight.value, molecular_weight.unit, additional_identifiers,
-        chemical_formula]
+      keys:
+        - id
+        - title
+        - key: chemical_formula
+          model:
+            type: keyword
+        - key: additional_identifiers
+          model:
+            type: array
+            items:
+              type: keyword
+        - key: molecular_weight
+          model:
+            type: object
+            properties:
+              value:
+                type: float
+              unit:
+                type: keyword
       vocabulary-type: chemicals
       type: vocabulary
     additional_specifications[]:
@@ -1917,9 +2217,14 @@ EntityChemicalPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the entity, where the options are (biological) Polymer,
         Chemical, Molecular assembly (also includes all proteins composed of more
         than one polypeptide chain) or Complex substance. Chemical polymers such as
@@ -1991,9 +2296,14 @@ EntityMolecular_assemblyPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the entity, where the options are (biological) Polymer,
         Chemical, Molecular assembly (also includes all proteins composed of more
         than one polypeptide chain) or Complex substance. Chemical polymers such as
@@ -2009,9 +2319,14 @@ Assembly_componentPolymerPolymorphic:
   properties:
     polymer_type:
       type: keyword
-      enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
-        polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
-        polyribonucleotide]
+      enum:
+        - cyclic-pseudo-peptide
+        - peptide nucleic acid
+        - polydeoxyribonucleotide
+        - polydeoxyribonucleotide/polyribonucleotide hybrid
+        - polypeptide(D)
+        - polypeptide(L)
+        - polyribonucleotide
       help.en: The type of polymer (e.g. polypeptide(L))
       required: true
       mapping:
@@ -2050,7 +2365,10 @@ Assembly_componentPolymerPolymorphic:
       help.en: The biological species where the polymer naturally occurs. Note that
         this is based on the NCBI taxonomy
       label.en: Source organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
       extras:
@@ -2064,7 +2382,10 @@ Assembly_componentPolymerPolymorphic:
             copy_to: collected_default_search_fields
     expression_source_type:
       type: keyword
-      enum: [Natively, Recombinantly, Synthetically]
+      enum:
+        - Natively
+        - Recombinantly
+        - Synthetically
       help.en: How the polymer was produced
       required: true
       label.en: Expression source type
@@ -2072,7 +2393,10 @@ Assembly_componentPolymerPolymorphic:
       help.en: The biological species that was used to express (produce) the polymer.
         Note that this is based on the NCBI taxonomy
       label.en: Expression organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
     modifications:
@@ -2100,7 +2424,9 @@ Assembly_componentPolymerPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical]
+      enum:
+        - Polymer
+        - Chemical
       help.en: The type of component, options are (biological) Polymer and Chemical
       required: true
       label.en: Type
@@ -2119,8 +2445,25 @@ Assembly_componentChemicalPolymorphic:
         filled
       required: true
       label.en: Basic information
-      keys: [id, title, molecular_weight.value, molecular_weight.unit, additional_identifiers,
-        chemical_formula]
+      keys:
+        - id
+        - title
+        - key: chemical_formula
+          model:
+            type: keyword
+        - key: additional_identifiers
+          model:
+            type: array
+            items:
+              type: keyword
+        - key: molecular_weight
+          model:
+            type: object
+            properties:
+              value:
+                type: float
+              unit:
+                type: keyword
       vocabulary-type: chemicals
       type: vocabulary
     additional_specifications[]:
@@ -2139,7 +2482,9 @@ Assembly_componentChemicalPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical]
+      enum:
+        - Polymer
+        - Chemical
       help.en: The type of component, options are (biological) Polymer and Chemical
       required: true
       label.en: Type
@@ -2173,7 +2518,15 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
   properties:
     fluid:
       type: keyword
-      enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract]
+      enum:
+        - Blood
+        - Fecal matter
+        - Milk
+        - Plasma
+        - Saliva
+        - Serum
+        - Urine
+        - Plant extract
       help.en: The body fluid the complex substance is derived from
       required: true
       mapping:
@@ -2187,7 +2540,10 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
       label.en: Health status
     derived_from:
       type: keyword
-      enum: [Body fluid, Cell fraction, Virion]
+      enum:
+        - Body fluid
+        - Cell fraction
+        - Virion
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -2196,7 +2552,10 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
         e.g. strain. Note that this is based on the NCBI taxonomy
       required: true
       label.en: Source organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
       extras:
@@ -2240,9 +2599,14 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the entity, where the options are (biological) Polymer,
         Chemical, Molecular assembly (also includes all proteins composed of more
         than one polypeptide chain) or Complex substance. Chemical polymers such as
@@ -2258,9 +2622,20 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
   properties:
     fraction:
       type: keyword
-      enum: [Ribosome, Cell wall, VesicleCell lysate/Cytoplasm, Cell Membrane, Extracellular
-          matrix, Lysosome, Golgi Apparatus, Mitochondrion, Nucleus, Rough Endoplasmic
-          Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast]
+      enum:
+        - Ribosome
+        - Cell wall
+        - VesicleCell lysate/Cytoplasm
+        - Cell Membrane
+        - Extracellular matrix
+        - Lysosome
+        - Golgi Apparatus
+        - Mitochondrion
+        - Nucleus
+        - Rough Endoplasmic Reticulum
+        - Smooth Endoplasmic Reticulum
+        - Vacuole
+        - Chloroplast
       help.en: The subcelluar component e.g. (Ribosome)
       required: true
       mapping:
@@ -2286,7 +2661,10 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
       label.en: Health status
     derived_from:
       type: keyword
-      enum: [Body fluid, Cell fraction, Virion]
+      enum:
+        - Body fluid
+        - Cell fraction
+        - Virion
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -2295,7 +2673,10 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
         e.g. strain. Note that this is based on the NCBI taxonomy
       required: true
       label.en: Source organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
       extras:
@@ -2339,9 +2720,14 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the entity, where the options are (biological) Polymer,
         Chemical, Molecular assembly (also includes all proteins composed of more
         than one polypeptide chain) or Complex substance. Chemical polymers such as
@@ -2357,19 +2743,30 @@ Complex_substance_of_biological_originVirionPolymorphic:
   properties:
     genetic_material:
       type: keyword
-      enum: [No genetic material, Virus genome, Synthetic]
+      enum:
+        - No genetic material
+        - Virus genome
+        - Synthetic
       help.en: The genetic material carried by the virions (None, virus genome, synthetic)
       required: true
       label.en: Genetic material
     capsid_type:
       type: keyword
-      enum: [None, Native, Genetically Engineered, Synthetic]
+      enum:
+        - None
+        - Native
+        - Genetically Engineered
+        - Synthetic
       help.en: The type of virion capsid
       required: true
       label.en: Capsid type
     envelope_type:
       type: keyword
-      enum: [None, Native, Genetically Engineered, Synthetic]
+      enum:
+        - None
+        - Native
+        - Genetically Engineered
+        - Synthetic
       help.en: The type of virion envelope
       required: true
       label.en: Envelope type
@@ -2377,7 +2774,10 @@ Complex_substance_of_biological_originVirionPolymorphic:
       help.en: The host organism the virion was produced in. Note that information
         is based on the NCBI taxonomy
       label.en: Host organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
     host_cell_type:
@@ -2386,7 +2786,10 @@ Complex_substance_of_biological_originVirionPolymorphic:
       label.en: Host cell type
     derived_from:
       type: keyword
-      enum: [Body fluid, Cell fraction, Virion]
+      enum:
+        - Body fluid
+        - Cell fraction
+        - Virion
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -2395,7 +2798,10 @@ Complex_substance_of_biological_originVirionPolymorphic:
         e.g. strain. Note that this is based on the NCBI taxonomy
       required: true
       label.en: Source organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
       extras:
@@ -2439,9 +2845,14 @@ Complex_substance_of_biological_originVirionPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the entity, where the options are (biological) Polymer,
         Chemical, Molecular assembly (also includes all proteins composed of more
         than one polypeptide chain) or Complex substance. Chemical polymers such as
@@ -2457,7 +2868,13 @@ EntityComplex_substance_of_environmental_originPolymorphic:
   properties:
     source:
       type: keyword
-      enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil]
+      enum:
+        - Fresh water
+        - Marine
+        - Ice core
+        - Sediment
+        - Sewage
+        - Soil
       help.en: The environmental source where the complex substance was derived from
       required: true
       mapping:
@@ -2501,9 +2918,14 @@ EntityComplex_substance_of_environmental_originPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the entity, where the options are (biological) Polymer,
         Chemical, Molecular assembly (also includes all proteins composed of more
         than one polypeptide chain) or Complex substance. Chemical polymers such as
@@ -2530,7 +2952,11 @@ Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
   properties:
     assembly_type:
       type: keyword
-      enum: [Micelle, Liposome, Nanodisc, Sheet]
+      enum:
+        - Micelle
+        - Liposome
+        - Nanodisc
+        - Sheet
       help.en: The type of lipid assembly
       required: true
       label.en: Assembly type
@@ -2554,7 +2980,8 @@ Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       use: '#/$defs/Size'
     class:
       type: keyword
-      enum: [Lipid assembly]
+      enum:
+        - Lipid assembly
       help.en: The chemical origin where the complex substance was derived from
       required: true
       label.en: Class
@@ -2590,9 +3017,14 @@ Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the entity, where the options are (biological) Polymer,
         Chemical, Molecular assembly (also includes all proteins composed of more
         than one polypeptide chain) or Complex substance. Chemical polymers such as
@@ -2608,7 +3040,10 @@ EntityComplex_substance_of_industrial_originPolymorphic:
   properties:
     product:
       type: keyword
-      enum: [Beer, Cell medium, Whey]
+      enum:
+        - Beer
+        - Cell medium
+        - Whey
       help.en: The type of product, byproduct, or waste product the complex substance
         was derived from
       required: true
@@ -2647,9 +3082,14 @@ EntityComplex_substance_of_industrial_originPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the entity, where the options are (biological) Polymer,
         Chemical, Molecular assembly (also includes all proteins composed of more
         than one polypeptide chain) or Complex substance. Chemical polymers such as
@@ -2669,8 +3109,25 @@ Chemical_constituentChemicalPolymorphic:
         filled
       required: true
       label.en: Basic information
-      keys: [id, title, molecular_weight.value, molecular_weight.unit, additional_identifiers,
-        chemical_formula]
+      keys:
+        - id
+        - title
+        - key: chemical_formula
+          model:
+            type: keyword
+        - key: additional_identifiers
+          model:
+            type: array
+            items:
+              type: keyword
+        - key: molecular_weight
+          model:
+            type: object
+            properties:
+              value:
+                type: float
+              unit:
+                type: keyword
       vocabulary-type: chemicals
       type: vocabulary
     additional_specifications[]:
@@ -2689,7 +3146,8 @@ Chemical_constituentChemicalPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Chemical]
+      enum:
+        - Chemical
       help.en: The type of the constituent, options are Chemical
       required: true
       label.en: Type
@@ -2704,9 +3162,14 @@ ConstituentPolymerPolymorphic:
   properties:
     polymer_type:
       type: keyword
-      enum: [cyclic-pseudo-peptide, peptide nucleic acid, polydeoxyribonucleotide,
-        polydeoxyribonucleotide/polyribonucleotide hybrid, polypeptide(D), polypeptide(L),
-        polyribonucleotide]
+      enum:
+        - cyclic-pseudo-peptide
+        - peptide nucleic acid
+        - polydeoxyribonucleotide
+        - polydeoxyribonucleotide/polyribonucleotide hybrid
+        - polypeptide(D)
+        - polypeptide(L)
+        - polyribonucleotide
       help.en: The type of polymer (e.g. polypeptide(L))
       required: true
       mapping:
@@ -2745,7 +3208,10 @@ ConstituentPolymerPolymorphic:
       help.en: The biological species where the polymer naturally occurs. Note that
         this is based on the NCBI taxonomy
       label.en: Source organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
       extras:
@@ -2759,7 +3225,10 @@ ConstituentPolymerPolymorphic:
             copy_to: collected_default_search_fields
     expression_source_type:
       type: keyword
-      enum: [Natively, Recombinantly, Synthetically]
+      enum:
+        - Natively
+        - Recombinantly
+        - Synthetically
       help.en: How the polymer was produced
       required: true
       label.en: Expression source type
@@ -2767,7 +3236,10 @@ ConstituentPolymerPolymorphic:
       help.en: The biological species that was used to express (produce) the polymer.
         Note that this is based on the NCBI taxonomy
       label.en: Expression organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
     modifications:
@@ -2795,9 +3267,14 @@ ConstituentPolymerPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
@@ -2817,8 +3294,25 @@ ConstituentChemicalPolymorphic:
         filled
       required: true
       label.en: Basic information
-      keys: [id, title, molecular_weight.value, molecular_weight.unit, additional_identifiers,
-        chemical_formula]
+      keys:
+        - id
+        - title
+        - key: chemical_formula
+          model:
+            type: keyword
+        - key: additional_identifiers
+          model:
+            type: array
+            items:
+              type: keyword
+        - key: molecular_weight
+          model:
+            type: object
+            properties:
+              value:
+                type: float
+              unit:
+                type: keyword
       vocabulary-type: chemicals
       type: vocabulary
     additional_specifications[]:
@@ -2837,9 +3331,14 @@ ConstituentChemicalPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
@@ -2907,9 +3406,14 @@ ConstituentMolecular_assemblyPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
@@ -2944,7 +3448,15 @@ constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
   properties:
     fluid:
       type: keyword
-      enum: [Blood, Fecal matter, Milk, Plasma, Saliva, Serum, Urine, Plant extract]
+      enum:
+        - Blood
+        - Fecal matter
+        - Milk
+        - Plasma
+        - Saliva
+        - Serum
+        - Urine
+        - Plant extract
       help.en: The body fluid the complex substance is derived from
       required: true
       mapping:
@@ -2958,7 +3470,10 @@ constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
       label.en: Health status
     derived_from:
       type: keyword
-      enum: [Body fluid, Cell fraction, Virion]
+      enum:
+        - Body fluid
+        - Cell fraction
+        - Virion
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -2967,7 +3482,10 @@ constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
         e.g. strain. Note that this is based on the NCBI taxonomy
       required: true
       label.en: Source organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
       extras:
@@ -3007,9 +3525,14 @@ constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
@@ -3025,9 +3548,20 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
   properties:
     fraction:
       type: keyword
-      enum: [Ribosome, Cell wall, VesicleCell lysate/Cytoplasm, Cell Membrane, Extracellular
-          matrix, Lysosome, Golgi Apparatus, Mitochondrion, Nucleus, Rough Endoplasmic
-          Reticulum, Smooth Endoplasmic Reticulum, Vacuole, Chloroplast]
+      enum:
+        - Ribosome
+        - Cell wall
+        - VesicleCell lysate/Cytoplasm
+        - Cell Membrane
+        - Extracellular matrix
+        - Lysosome
+        - Golgi Apparatus
+        - Mitochondrion
+        - Nucleus
+        - Rough Endoplasmic Reticulum
+        - Smooth Endoplasmic Reticulum
+        - Vacuole
+        - Chloroplast
       help.en: The subcelluar component e.g. (Ribosome)
       required: true
       mapping:
@@ -3053,7 +3587,10 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
       label.en: Health status
     derived_from:
       type: keyword
-      enum: [Body fluid, Cell fraction, Virion]
+      enum:
+        - Body fluid
+        - Cell fraction
+        - Virion
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -3062,7 +3599,10 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
         e.g. strain. Note that this is based on the NCBI taxonomy
       required: true
       label.en: Source organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
       extras:
@@ -3102,9 +3642,14 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
@@ -3120,19 +3665,30 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
   properties:
     genetic_material:
       type: keyword
-      enum: [No genetic material, Virus genome, Synthetic]
+      enum:
+        - No genetic material
+        - Virus genome
+        - Synthetic
       help.en: The genetic material carried by the virions (None, virus genome, synthetic)
       required: true
       label.en: Genetic material
     capsid_type:
       type: keyword
-      enum: [None, Native, Genetically Engineered, Synthetic]
+      enum:
+        - None
+        - Native
+        - Genetically Engineered
+        - Synthetic
       help.en: The type of virion capsid
       required: true
       label.en: Capsid type
     envelope_type:
       type: keyword
-      enum: [None, Native, Genetically Engineered, Synthetic]
+      enum:
+        - None
+        - Native
+        - Genetically Engineered
+        - Synthetic
       help.en: The type of virion envelope
       required: true
       label.en: Envelope type
@@ -3140,7 +3696,10 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
       help.en: The host organism the virion was produced in. Note that information
         is based on the NCBI taxonomy
       label.en: Host organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
     host_cell_type:
@@ -3149,7 +3708,10 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
       label.en: Host cell type
     derived_from:
       type: keyword
-      enum: [Body fluid, Cell fraction, Virion]
+      enum:
+        - Body fluid
+        - Cell fraction
+        - Virion
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -3158,7 +3720,10 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
         e.g. strain. Note that this is based on the NCBI taxonomy
       required: true
       label.en: Source organism
-      keys: [id, title, props.rank]
+      keys:
+        - id
+        - title
+        - props.rank
       vocabulary-type: organisms
       type: vocabulary
       extras:
@@ -3198,9 +3763,14 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
@@ -3216,7 +3786,13 @@ ConstituentComplex_substance_of_environmental_originPolymorphic:
   properties:
     source:
       type: keyword
-      enum: [Fresh water, Marine, Ice core, Sediment, Sewage, Soil]
+      enum:
+        - Fresh water
+        - Marine
+        - Ice core
+        - Sediment
+        - Sewage
+        - Soil
       help.en: The environmental source where the complex substance was derived from
       required: true
       mapping:
@@ -3256,9 +3832,14 @@ ConstituentComplex_substance_of_environmental_originPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
@@ -3285,7 +3866,11 @@ constituent_Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
   properties:
     assembly_type:
       type: keyword
-      enum: [Micelle, Liposome, Nanodisc, Sheet]
+      enum:
+        - Micelle
+        - Liposome
+        - Nanodisc
+        - Sheet
       help.en: The type of lipid assembly
       required: true
       label.en: Assembly type
@@ -3309,7 +3894,8 @@ constituent_Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       use: '#/$defs/Size'
     class:
       type: keyword
-      enum: [Lipid assembly]
+      enum:
+        - Lipid assembly
       help.en: The chemical origin where the complex substance was derived from
       required: true
       label.en: Class
@@ -3341,9 +3927,14 @@ constituent_Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
@@ -3359,7 +3950,10 @@ ConstituentComplex_substance_of_industrial_originPolymorphic:
   properties:
     product:
       type: keyword
-      enum: [Beer, Cell medium, Whey]
+      enum:
+        - Beer
+        - Cell medium
+        - Whey
       help.en: The type of product, byproduct, or waste product the complex substance
         was derived from
       required: true
@@ -3394,9 +3988,14 @@ ConstituentComplex_substance_of_industrial_originPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Polymer, Chemical, Molecular assembly, Complex substance of biological
-          origin, Complex substance of environmental origin, Complex substance of
-          chemical origin, Complex substance of industrial origin]
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
       help.en: The type of the constituent, options are Polymer, Chemical, and defined
         assembly
       required: true
@@ -3428,10 +4027,19 @@ ResultResult_concentrationPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -3459,7 +4067,8 @@ ResultResult_stoichiometryPolymorphic:
   properties:
     unit:
       type: keyword
-      enum: [per complex]
+      enum:
+        - per complex
       help.en: Unit of the stoichiometry
       required: true
       label.en: Unit
@@ -3476,10 +4085,19 @@ ResultResult_stoichiometryPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -3507,7 +4125,15 @@ ResultResult_KAPolymorphic:
   properties:
     unit:
       type: keyword
-      enum: [M^-1, M^-2, mM^-1, mM^-2, µM^-1, µM^-2, nM^-1, nM^-2]
+      enum:
+        - M^-1
+        - M^-2
+        - mM^-1
+        - mM^-2
+        - µM^-1
+        - µM^-2
+        - nM^-1
+        - nM^-2
       help.en: Unit of the constant of association
       required: true
       label.en: Unit
@@ -3524,10 +4150,19 @@ ResultResult_KAPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -3555,7 +4190,15 @@ ResultResult_KDPolymorphic:
   properties:
     unit:
       type: keyword
-      enum: [M, M^2, mM, mM^2, µM, µM^2, nM, nM^2]
+      enum:
+        - M
+        - M^2
+        - mM
+        - mM^2
+        - µM
+        - µM^2
+        - nM
+        - nM^2
       help.en: Unit of the constant of dissociation
       required: true
       label.en: Unit
@@ -3572,10 +4215,19 @@ ResultResult_KDPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -3603,8 +4255,15 @@ ResultResult_kOnPolymorphic:
   properties:
     unit:
       type: keyword
-      enum: [M^-1 s^-1, M^-2 s^-1, mM^-1 s^-1, mM^-2 s^-1, µM^-1 s^-1, µM^-2 s^-1,
-        nM^-1 s^-1, nM^-2 s^-1]
+      enum:
+        - M^-1 s^-1
+        - M^-2 s^-1
+        - mM^-1 s^-1
+        - mM^-2 s^-1
+        - µM^-1 s^-1
+        - µM^-2 s^-1
+        - nM^-1 s^-1
+        - nM^-2 s^-1
       help.en: Unit of the association rate constant
       required: true
       label.en: Unit
@@ -3621,10 +4280,19 @@ ResultResult_kOnPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -3652,7 +4320,8 @@ ResultResult_kOffPolymorphic:
   properties:
     unit:
       type: keyword
-      enum: [s^-1]
+      enum:
+        - s^-1
       help.en: Unit of the dissociation rate constant
       required: true
       label.en: Unit
@@ -3669,10 +4338,19 @@ ResultResult_kOffPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -3716,10 +4394,19 @@ ResultResult_deltaHPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -3747,7 +4434,9 @@ ResultResult_deltaSPolymorphic:
   properties:
     unit:
       type: keyword
-      enum: [kcal/molK, kJ/molK]
+      enum:
+        - kcal/molK
+        - kJ/molK
       help.en: Unit of the change in entropy
       required: true
       label.en: Unit
@@ -3764,10 +4453,19 @@ ResultResult_deltaSPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -3811,10 +4509,19 @@ ResultResult_deltaGPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -3858,10 +4565,19 @@ ResultResult_MWPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -3905,10 +4621,19 @@ ResultResult_EC50Polymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -3936,7 +4661,8 @@ ResultResult_hill_coeffPolymorphic:
   properties:
     unit:
       type: keyword
-      enum: [unitless]
+      enum:
+        - unitless
       help.en: Unit of the Hill coefficient
       required: true
       label.en: Unit
@@ -3953,10 +4679,19 @@ ResultResult_hill_coeffPolymorphic:
       label.en: Name
     type:
       type: keyword
-      enum: [Concentration, Stoichiometry, Constant of association KA, Constant of
-          dissociation KD, Half maximal effective concentration EC50, Hill coefficient,
-        Association rate kOn, Dissociation rate kOff, Change in enthalpy deltaH, Change
-          in entropy deltaS, Change in Gibbs free energy deltaG, Molecular weight]
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
