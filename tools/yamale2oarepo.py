@@ -42,7 +42,7 @@ from custom_validators import (
     Uuid,
     Vocabulary,
 )
-from yamale2oarepo_config import PRIMITIVES_MAPPING, VOCABULARY_MAPPING
+from yamale2oarepo_config import PRIMITIVES_MAPPING, VOCABULARY_MAPPING, VOCABULARY_CUSTOM_FIELD_KEYS
 
 log = logging.getLogger("yamale2oarepo")
 
@@ -612,8 +612,10 @@ class ModelVocabulary(ModelLink):
         # Calling grandparents method instead of parent method is a sign that
         # the inheritance structure is not optimal
         ret = super(ModelLink, self).to_json()
+        keys = VOCABULARY_CUSTOM_FIELD_KEYS[self.vocabulary] or self.fields
+
         vocab_fields = {
-            "keys": self.fields,
+            "keys": keys,
             "vocabulary-type": self.vocabulary,
             "type": "vocabulary",
         }
@@ -830,14 +832,6 @@ def parse_file(ym_file, modelbase_only=False) -> Union[Model, ModelBase]:
     )
 
 
-def set_flow_style(d):
-    if isinstance(d, (list, tuple)):
-        d.fa.set_flow_style()
-    elif isinstance(d, dict):
-        for v in d.values():
-            set_flow_style(v)
-
-
 def json_to_yaml(json_dict):
     yaml = ruamel_YAML()
     yaml.default_flow_style = False
@@ -845,11 +839,11 @@ def json_to_yaml(json_dict):
     yaml.allow_unicode = True
     yaml.sort_base_mapping_type_on_output = True
     yaml.Representer = NonAliasingRTRepresenter
+    yaml.indent(mapping=2, sequence=4, offset=2)
     io = StringIO()
     yaml.dump(ruamel_quote_booleans(json_dict), io)
     io.seek(0)
     loaded = yaml.load(io)
-    set_flow_style(loaded)
     io = StringIO()
     yaml.dump(loaded, io)
     return io.getvalue()
