@@ -3,7 +3,7 @@ BLI_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.4
+        - 0.9.5
       help.en: The schema version used to annotate the BLI method specific parameters
       required: true
       label.en: Schema version
@@ -261,7 +261,7 @@ Plate:
       label.en: Wells
     type:
       type: keyword
-      help.en: The type of the plate
+      help.en: The type of the plate (e.g. half-area black polystyrene)
       required: true
       label.en: Type
     supplier:
@@ -274,7 +274,8 @@ Plate:
       help.en: The type of sealing used to seal the top of the plate
       label.en: Sealing
     surface_modification:
-      help.en: The type of sealing used to seal the top of the plate
+      help.en: If the plate had a modified surface, the modification can specified
+        here (e.g. Non-binding surface)
       label.en: Surface modification
       use: '#/$defs/Plate_surface_modification'
   id: plate
