@@ -3,7 +3,7 @@ ITC_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.0.1
+        - 0.0.2
       help.en: The schema version used to annotate the ITC method specific parameters
       required: true
       label.en: Schema version
@@ -32,9 +32,9 @@ ITC_specific_parameters:
       label.en: Reference power
       use: '#/$defs/Reference_power'
     stirring_speed:
-      type: double
       required: true
       label.en: Stirring speed
+      use: '#/$defs/Shaking_and_stirring_speed'
     feedback_mode:
       type: keyword
       enum:
@@ -43,11 +43,10 @@ ITC_specific_parameters:
         - High
       help.en: Operating mode where conditions are adjusted automatically to maintain
         constant temperature during heat measurements
-      required: true
       label.en: Feedback mode
     data_analysis[]:
       ^minItems: 1
-      ^help.en: The details of how data analysis was performed to obtain the result
+      ^help.en: The details of how data analysis was performed to obtain results
       ^label.en: Data analysis
       use: '#/$defs/ITC_data_analysis'
   label.en: Itc specific parameters
@@ -66,6 +65,7 @@ Volume:
   properties:
     value:
       type: double
+      minimum: 0.0
       required: true
       label.en: Value
     unit:
@@ -105,11 +105,12 @@ Titration:
   properties:
     number_injections:
       type: double
+      minimum: 1.0
       required: true
       label.en: Number injections
     injection_parameters[]:
       ^minItems: 1
-      ^help.en: Characteristics of each injection (i. e. number of ijections at a
+      ^help.en: Characteristics of each injection (i. e. number of injections at a
         specific volume of 0.2 ml)
       ^label.en: Injection parameters
       use: '#/$defs/Injection_parameters'
@@ -117,7 +118,7 @@ Titration:
 Single_injection:
   properties:
     volume:
-      help.en: Titrant volume injected into the cell.
+      help.en: Titrant volume injected into the cell
       required: true
       label.en: Volume
       use: '#/$defs/Volume'
@@ -141,13 +142,6 @@ ITC_data_analysis:
         outliers in the raw data, applying smoothing filters, etc.)
       ^label.en: Data processing steps
       use: '#/$defs/Processing_step'
-    data_fitting:
-      help.en: The details of how data fitting was performed to obtain the result
-      label.en: Data fitting
-      use: '#/$defs/Data_fitting_base'
-  label.en: Itc data analysis
-Data_fitting_base:
-  properties:
     type:
       type: keyword
       enum:
@@ -156,21 +150,31 @@ Data_fitting_base:
       help.en: Type of model used to obtain derived parameters
       required: true
       label.en: Type
-    result[]:
+    results[]:
       ^minItems: 1
       ^help.en: Link to the result(s) that was obtained by the data analysis. The
         link is to the results defined in the general parameters
-      ^label.en: Result
+      ^label.en: Results
       type: relation
       model: '#result'
       keys:
         - id
         - name
-    data_fitting_model:
+    measurements[]:
+      ^minItems: 1
+      ^help.en: List of the measurements that was analyzed together for a specific
+        parameter
+      ^label.en: Measurements
+      type: relation
+      model: '#itc-measurement'
+      keys:
+        - id
+        - name
+    data_fitting:
       help.en: The details of how data fitting was performed to obtain the result
-      label.en: Data fitting model
+      label.en: Data fitting
       use: '#/$defs/Data_fitting'
-  label.en: Data fitting base
+  label.en: Itc data analysis
 Measurement:
   properties:
     id:
@@ -186,39 +190,34 @@ Measurement:
         processed data files if these are present
       required: true
       label.en: Name
-    sample:
-      help.en: Information about the sample including concentrations of ligands and
-        targets, and which chemical environment the sample was composed of
+    sample_in_cell:
+      help.en: Composition of the solution in the cell including targets and chemical
+        environment
       required: true
-      label.en: Sample
-      use: '#/$defs/Sample'
+      label.en: Sample in cell
+      use: '#/$defs/ITC_sample'
+    sample_in_syringe:
+      help.en: Composition of the solution in the syringe including targets and chemical
+        environment
+      required: true
+      label.en: Sample in syringe
+      use: '#/$defs/ITC_sample'
   id: itc-measurement
   label.en: Measurement
-Sample:
+ITC_sample:
   properties:
-    target_in_cell[]:
+    targets[]:
       ^minItems: 1
       ^help.en: List of names (ids), from the entities of interest defined in the
-        general parameters, of directly measured entities and entities at constant
-        concentration for a series of measurements and their concentration
+        general parameters, of directly measured entities
       ^required: true
-      ^label.en: Target in cell
+      ^label.en: Targets
       use: '#/$defs/Entity_constituent'
-    target_in_syringe[]:
-      ^minItems: 1
-      ^help.en: List of names (ids) of entities (from the entities of interest defined
-        in the general parameters) that were used to alter the behavior of the target(s)
-        or entities present at varying concentrations for a series of measurements
-        and their concentration
-      ^required: true
-      ^label.en: Target in syringe
-      use: '#/$defs/Entity_constituent'
-    chemical_environment[]:
-      ^minItems: 1
-      ^help.en: Name (id) of the chemical environment of the sample (from the chemical
+    chemical_environment:
+      help.en: Name (id) of the chemical environment of the sample (from the chemical
         environments defined in the general parameters)
-      ^required: true
-      ^label.en: Chemical environment
+      required: true
+      label.en: Chemical environment
       type: relation
       model: '#chemical-environment'
       keys:
@@ -232,13 +231,13 @@ Sample:
         added
       ^label.en: Preparation protocol
       use: '#/$defs/Step'
-  label.en: Sample
+  label.en: Itc sample
 General_parameters:
   properties:
     schema_version:
       type: keyword
       enum:
-        - 0.9.20
+        - 0.9.21
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -2050,6 +2049,22 @@ Yes_homogeneity:
       required: true
       label.en: Number of species observed
   label.en: Yes homogeneity
+Shaking_and_stirring_speed:
+  properties:
+    value:
+      type: integer
+      minimum: 0
+      help.en: The numerical value of the shaking/stirring speed
+      required: true
+      label.en: Value
+    unit:
+      type: keyword
+      enum:
+        - RPM
+      help.en: The unit of the shaking/stirring speed)
+      required: true
+      label.en: Unit
+  label.en: Shaking and stirring speed
 Storage:
   properties:
     temperature:
@@ -5044,7 +5059,7 @@ ResultResult_hill_coeffPolymorphic:
 Experiment_typeSingle_injectionPolymorphic:
   properties:
     volume:
-      help.en: Titrant volume injected into the cell.
+      help.en: Titrant volume injected into the cell
       required: true
       label.en: Volume
       use: '#/$defs/Volume'
@@ -5063,11 +5078,12 @@ Experiment_typeTitrationPolymorphic:
   properties:
     number_injections:
       type: double
+      minimum: 1.0
       required: true
       label.en: Number injections
     injection_parameters[]:
       ^minItems: 1
-      ^help.en: Characteristics of each injection (i. e. number of ijections at a
+      ^help.en: Characteristics of each injection (i. e. number of injections at a
         specific volume of 0.2 ml)
       ^label.en: Injection parameters
       use: '#/$defs/Injection_parameters'
