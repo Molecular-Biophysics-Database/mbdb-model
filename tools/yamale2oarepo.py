@@ -42,7 +42,11 @@ from custom_validators import (
     Uuid,
     Vocabulary,
 )
-from yamale2oarepo_config import PRIMITIVES_MAPPING, VOCABULARY_MAPPING, VOCABULARY_CUSTOM_FIELD_KEYS
+from yamale2oarepo_config import (
+    PRIMITIVES_MAPPING,
+    VOCABULARY_MAPPING,
+    VOCABULARY_CUSTOM_FIELD_KEYS,
+)
 
 log = logging.getLogger("yamale2oarepo")
 
