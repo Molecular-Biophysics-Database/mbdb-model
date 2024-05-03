@@ -22,7 +22,7 @@ BLI_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       BLI method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.9.5')
+        value           : keyword(equals='0.9.6')
 
     experiment_type:
         description     : str(equals='Which type of parameter is sought with the
@@ -52,8 +52,9 @@ BLI_specific_parameters:
         value           : list(include('BLI_Measurement'), min=1)
 
     data_analysis:
-        description     : str(equals='The details of how data fitting
-                                      was performed to obtain the result', required=False)
+        description     : str(equals='The details of how data analysis
+                                      was performed to obtain results',
+                              required=False)
         value           : list(include('BLI_data_analysis'), required=False)
 
 
@@ -166,7 +167,7 @@ BLI_protocol_step:
                                       of the plate during the measurement step
                                       in the units defined in the general
                                       parameters', required=False)
-        value           : include('Shaking_speed')
+        value           : include('Shaking_and_stirring_speed')
 
 Sensor:
     id:
@@ -284,33 +285,13 @@ Plate_surface_modification:
                                       surface of the wells', required=False)
             value       : list(include('Step'))
 
-Shaking_speed:
-    value:
-        description     : str(equals='The numerical value of the shaking speed
-                                      of the plate during the measurement step
-                                      in the units defined in the general
-                                      parameters', required=False)
-        value           : int(min=0)
-
-    value_error:
-        description     : str(equals='The reported error of the value of the
-                                      shaking speed (e.g. standard deviation,
-                                      % error)', required=False)
-        value           : include('Value_error', required=False)
-
-    unit:
-        description     : str(equals='The reported error of the value of the
-                                      shaking speed (e.g. standard deviation,
-                                      % error)', required=False)
-        value           : enum('RPM')
-
 BLI_data_analysis:
-    result:
+    results:
         description     : str(equals='Link to a result that was
                                       defined in the general parameters',
                                       required=False)
 
-        value           : link(target='result', required=False)
+        value           : list(link(target='result'),  required=False)
 
     measurements:
         description     : str(equals='List of measurement links that was

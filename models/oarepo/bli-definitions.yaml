@@ -3,7 +3,7 @@ BLI_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.5
+        - 0.9.6
       help.en: The schema version used to annotate the BLI method specific parameters
       required: true
       label.en: Schema version
@@ -43,7 +43,7 @@ BLI_specific_parameters:
       use: '#/$defs/BLI_Measurement'
     data_analysis[]:
       ^minItems: 1
-      ^help.en: The details of how data fitting was performed to obtain the result
+      ^help.en: The details of how data analysis was performed to obtain results
       ^label.en: Data analysis
       use: '#/$defs/BLI_data_analysis'
   label.en: Bli specific parameters
@@ -175,7 +175,7 @@ BLI_protocol_step:
         step in the units defined in the general parameters
       required: true
       label.en: Shaking speed
-      use: '#/$defs/Shaking_speed'
+      use: '#/$defs/Shaking_and_stirring_speed'
   id: bli-protocol-step
   label.en: Bli protocol step
 Sensor:
@@ -294,34 +294,12 @@ Plate_surface_modification:
       ^label.en: Protocol
       use: '#/$defs/Step'
   label.en: Plate surface modification
-Shaking_speed:
-  properties:
-    value:
-      type: integer
-      minimum: 0
-      help.en: The numerical value of the shaking speed of the plate during the measurement
-        step in the units defined in the general parameters
-      required: true
-      label.en: Value
-    value_error:
-      help.en: The reported error of the value of the shaking speed (e.g. standard
-        deviation, % error)
-      label.en: Value error
-      use: '#/$defs/Value_error'
-    unit:
-      type: keyword
-      enum:
-        - RPM
-      help.en: The reported error of the value of the shaking speed (e.g. standard
-        deviation, % error)
-      required: true
-      label.en: Unit
-  label.en: Shaking speed
 BLI_data_analysis:
   properties:
-    result:
-      help.en: Link to a result that was defined in the general parameters
-      label.en: Result
+    results[]:
+      ^minItems: 1
+      ^help.en: Link to a result that was defined in the general parameters
+      ^label.en: Results
       type: relation
       model: '#result'
       keys:
@@ -354,7 +332,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.20
+        - 0.9.21
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -2166,6 +2144,22 @@ Yes_homogeneity:
       required: true
       label.en: Number of species observed
   label.en: Yes homogeneity
+Shaking_and_stirring_speed:
+  properties:
+    value:
+      type: integer
+      minimum: 0
+      help.en: The numerical value of the shaking/stirring speed
+      required: true
+      label.en: Value
+    unit:
+      type: keyword
+      enum:
+        - RPM
+      help.en: The unit of the shaking/stirring speed)
+      required: true
+      label.en: Unit
+  label.en: Shaking and stirring speed
 Storage:
   properties:
     temperature:

@@ -2,7 +2,7 @@ general_parameters: include('General_parameters')
 method_specific_parameters: include('BLI_specific_parameters')
 ---
 BLI_specific_parameters:
-  schema_version: keyword(equals='0.9.5')
+  schema_version: keyword(equals='0.9.6')
   experiment_type: enum('Affinity','Quantification', 'Other')
   plates: list(include('Plate'), min=1)
   sensors: list(include('Sensor'), min=1)
@@ -29,7 +29,7 @@ BLI_protocol_step:
     'Activation')
   start_time: include('Time_duration')
   time_length: include('Time_duration')
-  shaking_speed: include('Shaking_speed')
+  shaking_speed: include('Shaking_and_stirring_speed')
 Sensor:
   id: link_target(name='bli-sensor')
   name: str()
@@ -54,12 +54,8 @@ Plate:
 Plate_surface_modification:
   type: str(required=False)
   protocol: list(include('Step'))
-Shaking_speed:
-  value: int(min=0)
-  value_error: include('Value_error', required=False)
-  unit: enum('RPM')
 BLI_data_analysis:
-  result: link(target='result', required=False)
+  results: list(link(target='result'),  required=False)
   measurements: list(link(target='bli-measurement'), required=False)
   data_processing_steps: list(include('Processing_step'), required=False)
   data_fitting: include('Data_fitting', required=False)
