@@ -3,7 +3,7 @@ SPR_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.3
+        - 0.9.4
       help.en: The schema version used to annotate the SPR method specific parameters
       required: true
       label.en: Schema version
@@ -43,16 +43,16 @@ SPR_specific_parameters:
       use: '#/$defs/Measurement'
     data_analysis[]:
       ^minItems: 1
-      ^help.en: Details of how the data was processed and model in order to derive
-        parameters from it
+      ^help.en: The details of how data analysis was performed to obtain results
       ^label.en: Data analysis
       use: '#/$defs/SPR_data_analysis'
   label.en: Spr specific parameters
 SPR_data_analysis:
   properties:
-    result:
-      help.en: Link to a result that was defined in the general parameters
-      label.en: Result
+    results[]:
+      ^minItems: 1
+      ^help.en: Link to a result that was defined in the general parameters
+      ^label.en: Results
       type: relation
       model: '#result'
       keys:
@@ -334,7 +334,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.20
+        - 0.9.21
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version

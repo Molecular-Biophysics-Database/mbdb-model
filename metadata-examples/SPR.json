@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.20",
+        "schema_version": "0.9.21",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -377,7 +377,7 @@
         ]
       },
       "method_specific_parameters": {
-        "schema_version": "0.9.3",
+        "schema_version": "0.9.4",
         "experiment_type": "Affinity",
         "sensor": {
           "surface_properties": "protein G",
@@ -437,14 +437,16 @@
         ],
         "data_analysis": [
           {
-            "result": {
-              "id": "de-par-kd-hemo",
-              "name": "KD of hemoglobin to unknown component in serum"
-            },
-            "data_fitting": {
-              "model": "1:1",
-              "software_name": "Biacore analysis software"
-            }
+            "results": [
+              {
+                "id": "de-par-kd-hemo",
+                "name": "KD of hemoglobin to unknown component in serum",
+                "data_fitting": {
+                  "model": "1:1",
+                  "software_name": "Biacore analysis software"
+                }
+              }
+            ]
           }
         ],
         "measurements": [

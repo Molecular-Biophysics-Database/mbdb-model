@@ -1,5 +1,5 @@
 general_parameters:
-    schema_version: '0.9.20'
+    schema_version: '0.9.21'
     record_information:
         publisher: 'MBDB'
         resource_type_general: 'Dataset'
@@ -289,7 +289,7 @@ general_parameters:
     raw_measurement_files: ['https://mbdb.eu/mst/files/foo.txt']
 
 method_specific_parameters:
-    schema_version: '0.9.3'
+    schema_version: '0.9.4'
     experiment_type: 'Affinity'
     sensor:
         surface_properties: 'protein G'
@@ -324,19 +324,19 @@ method_specific_parameters:
               rate: 0.1
               unit: 'µl/s'
               path:
-                  -
-                      - $ref: 'position-1-measure'
-                        name: 'Measurement'
-                      - $ref: 'position-2-reference'
-                        name: 'Reference'
+                -
+                  - $ref: 'position-1-measure'
+                    name: 'Measurement'
+                  - $ref: 'position-2-reference'
+                    name: 'Reference'
 
     data_analysis:
-        - result:
-              $ref: 'de-par-kd-hemo'
+        - results:
+            - $ref: 'de-par-kd-hemo'
               name: 'KD of hemoglobin to unknown component in serum'
-          data_fitting:
-            model: '1:1'
-            software_name: 'Biacore analysis software'
+              data_fitting:
+                model: '1:1'
+                software_name: 'Biacore analysis software'
 
     measurements:
         - id: 'active'
