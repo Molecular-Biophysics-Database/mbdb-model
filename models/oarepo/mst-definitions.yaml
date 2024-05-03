@@ -3,7 +3,7 @@ MST_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.9
+        - 0.9.10
       help.en: The schema version used to annotate the MST method specific parameters
       required: true
       label.en: Schema version
@@ -72,17 +72,17 @@ MST_specific_parameters:
       use: '#/$defs/Measurement'
     data_analysis[]:
       ^minItems: 1
-      ^help.en: The details of how data analysis was performed to obtain the result
+      ^help.en: The details of how data analysis was performed to obtain results
       ^label.en: Data analysis
       use: '#/$defs/MST_data_analysis'
   label.en: Mst specific parameters
 MST_data_analysis:
   properties:
-    result[]:
+    results[]:
       ^minItems: 1
       ^help.en: Link to the result(s) that was obtained by the data analysis. The
         link is to the results defined in the general parameters
-      ^label.en: Result
+      ^label.en: Results
       type: relation
       model: '#result'
       keys:
@@ -236,7 +236,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.20
+        - 0.9.21
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version

@@ -23,7 +23,7 @@ MST_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MST method specific parameters',
                               required=False)
-        value           : keyword(equals='0.9.9')
+        value           : keyword(equals='0.9.10')
 
     experiment_type:
         description     : str(equals='The type of physical parameter that was
@@ -71,10 +71,10 @@ MST_specific_parameters:
         value           : num(min=0, max=100)
 
     temperature:
-        description     : str(equals='The temperature of the sample chamber 
-                                      while the measurement was performed', 
-                              required=False)     
-        value           : include('Temperature', required=False)    
+        description     : str(equals='The temperature of the sample chamber
+                                      while the measurement was performed',
+                              required=False)
+        value           : include('Temperature', required=False)
 
     measurements:
         description     : str(equals='List of the information about each
@@ -86,14 +86,14 @@ MST_specific_parameters:
 
     data_analysis:
         description     : str(equals='The details of how data analysis
-                                      was performed to obtain the result', 
+                                      was performed to obtain results',
                               required=False)
         value           : list(include('MST_data_analysis'), required=False)
 
 MST_data_analysis:
-    result:
-        description     : str(equals='Link to the result(s) that was obtained 
-                                      by the data analysis. The link is to the 
+    results:
+        description     : str(equals='Link to the result(s) that was obtained
+                                      by the data analysis. The link is to the
                                       results defined in the general parameters',
                                       required=False)
 
@@ -124,7 +124,7 @@ MST_data_analysis:
 
     data_fitting:
         description     : str(equals='The details of how data fitting
-                                      was performed to obtain the result', 
+                                      was performed to obtain the result',
                               required=False)
         value           : include('Data_fitting', required=False)
 
@@ -180,7 +180,7 @@ Measurement:
         description     : str(equals='Position where the container (capillary) of the
                                       measured sample within the instrument (e.g. 1, 2, 3)',
                                       required=False)
-        value           : keyword()    
+        value           : keyword()
 
     sample:
         description     : str(equals='Information about the sample including
@@ -229,10 +229,10 @@ Sample:
 
     preparation_protocol:
         description     : str(equals='List of steps taken to prepare the
-                                      sample, ending at the point where 
-                                      it was placed in the measurement 
-                                      container. Information include 
-                                      operations like filtration and which 
+                                      sample, ending at the point where
+                                      it was placed in the measurement
+                                      container. Information include
+                                      operations like filtration and which
                                       filter material and pore-size was used
                                       should be added', required=False)
         value           : list(include('Step'), required=False)
