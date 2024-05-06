@@ -20,7 +20,7 @@ ITC_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       ITC method specific parameters',
                               required=False)
-        value           : keyword(equals='0.0.2')
+        value           : keyword(equals='0.0.3')
 
     measurements:
         description     : str(equals='List of the information about each
@@ -36,23 +36,23 @@ ITC_specific_parameters:
         value           : include('Experiment_type', required=False)
 
     cell_temperature:
-        description     :   str(equal='Temperature of the cell in which the sample is measured',
+        description     :   str(equals='Temperature of the cell in which the sample is measured',
                                 required=False)
         value           :   include('Temperature')
 
     cell_volume:
-        description     : str(equal='Volume of the cell in which the sample is measured',
+        description     : str(equals='Volume of the cell in which the sample is measured',
                                 required=False)
         value           : include('Volume')
 
     reference_power:
-        description     :   str(equal='Energy supplied to the offset header of the reference cell
+        description     :   str(equals='Energy supplied to the offset header of the reference cell
                                         to equilibrate the temperatures',
                                 required=False)
         value           :   include('Reference_power')
 
     stirring_speed:
-        description : str(equal='Sample cell stirring speed in RPM',
+        description : str(equals='Sample cell stirring speed in RPM',
                                 required=False)
         value       : include('Shaking_and_stirring_speed')
 
@@ -72,12 +72,12 @@ ITC_specific_parameters:
 
 Reference_power:
     value:
-        description : str(equal='Value of energy supplied to the offset header of the reference cell
+        description : str(equals='Value of energy supplied to the offset header of the reference cell
                                 to equilibrate the temperatures',
                                 required=False)
         value       : num()
     unit:
-        description : str(equal='Unit of reference power',
+        description : str(equals='Unit of reference power',
                                 required=False)
         value       : include('POWER_UNITS')
 
@@ -94,7 +94,7 @@ Volume:
 ---
 # Experiment type definitions
 Experiment_type:
-    description     : str(equals= 'Type of experiment conducted',
+    description     : str(equals='Type of experiment conducted',
                                 required=False)
     value           : choose(include('Experiment_type_base'),
                                 Single_injection=include('Single_injection'),
@@ -109,7 +109,7 @@ Experiment_type_base:
 
 Titration:
     number_injections:
-        description     : str(equal='Number of injections performed in the measurement',
+        description     : str(equals='Number of injections performed in the measurement',
                                      required=False)
         value           : num(min=1)
 
@@ -127,11 +127,11 @@ Single_injection:
 
 Injection_parameters:
     n_injections:
-        description     : str(equal='Number of injections measured at a specific volume',
+        description     : str(equals='Number of injections measured at a specific volume',
                             required=False)
         value           : num()
     volume:
-        description     : str('Titrant volume injected into the cell',
+        description     : str(equals='Titrant volume injected into the cell',
                             required=False)
         value           : include('Volume')
 

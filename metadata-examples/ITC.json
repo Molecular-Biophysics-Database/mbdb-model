@@ -297,7 +297,7 @@
         ]
       },
       "method_specific_parameters": {
-        "schema_version": "0.0.2",
+        "schema_version": "0.0.3",
         "measurements": [
           {
             "id": "pos_1_rep_1",
