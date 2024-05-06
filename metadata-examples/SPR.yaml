@@ -289,7 +289,7 @@ general_parameters:
     raw_measurement_files: ['https://mbdb.eu/mst/files/foo.txt']
 
 method_specific_parameters:
-    schema_version: '0.9.4'
+    schema_version: '0.9.5'
     experiment_type: 'Affinity'
     sensor:
         surface_properties: 'protein G'
