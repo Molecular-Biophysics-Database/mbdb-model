@@ -3,7 +3,7 @@ ITC_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.0.2
+        - 0.0.3
       help.en: The schema version used to annotate the ITC method specific parameters
       required: true
       label.en: Schema version
@@ -20,18 +20,23 @@ ITC_specific_parameters:
       label.en: Experiment type
       use: '#/$defs/Experiment_type'
     cell_temperature:
+      help.en: Temperature of the cell in which the sample is measured
       required: true
       label.en: Cell temperature
       use: '#/$defs/Temperature'
     cell_volume:
+      help.en: Volume of the cell in which the sample is measured
       required: true
       label.en: Cell volume
       use: '#/$defs/Volume'
     reference_power:
+      help.en: Energy supplied to the offset header of the reference cell to equilibrate
+        the temperatures
       required: true
       label.en: Reference power
       use: '#/$defs/Reference_power'
     stirring_speed:
+      help.en: Sample cell stirring speed in RPM
       required: true
       label.en: Stirring speed
       use: '#/$defs/Shaking_and_stirring_speed'
@@ -54,9 +59,12 @@ Reference_power:
   properties:
     value:
       type: double
+      help.en: Value of energy supplied to the offset header of the reference cell
+        to equilibrate the temperatures
       required: true
       label.en: Value
     unit:
+      help.en: Unit of reference power
       required: true
       label.en: Unit
       use: '#/$defs/POWER_UNITS'
@@ -106,6 +114,7 @@ Titration:
     number_injections:
       type: double
       minimum: 1.0
+      help.en: Number of injections performed in the measurement
       required: true
       label.en: Number injections
     injection_parameters[]:
@@ -127,9 +136,11 @@ Injection_parameters:
   properties:
     n_injections:
       type: double
+      help.en: Number of injections measured at a specific volume
       required: true
       label.en: N injections
     volume:
+      help.en: Titrant volume injected into the cell
       required: true
       label.en: Volume
       use: '#/$defs/Volume'
@@ -5079,6 +5090,7 @@ Experiment_typeTitrationPolymorphic:
     number_injections:
       type: double
       minimum: 1.0
+      help.en: Number of injections performed in the measurement
       required: true
       label.en: Number injections
     injection_parameters[]:

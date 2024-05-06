@@ -354,7 +354,7 @@
 "  |    |   unit                                                                             ('singular', 'required', ['Enum'], {}) "
 "  |   raw_measurement_files                                                                 ('list', 'required', ['Url'], {}) "
 " method_specific_parameters                                                                 ('singular', 'required', ['dict'], {}) "
-"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.0.2'}) "
+"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.0.3'}) "
 "  |   measurements                                                                          ('list', 'required', ['dict'], {}) "
 "  |    |   id                                                                               ('singular', 'required', ['LinkTarget'], {}) "
 "  |    |   name                                                                             ('singular', 'required', ['String'], {}) "

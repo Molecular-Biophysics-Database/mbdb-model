@@ -223,7 +223,7 @@ general_parameters:
     raw_measurement_files: ['https://mbdb.eu/itc/files/foo.txt']
 
 method_specific_parameters:
-  schema_version: '0.0.2'
+  schema_version: '0.0.3'
   measurements:
       - id: 'pos_1_rep_1'
         name: '1 nM hemoglobin + 10 mg/ml Human serum'
