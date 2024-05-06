@@ -3,7 +3,7 @@ SPR_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.4
+        - 0.9.5
       help.en: The schema version used to annotate the SPR method specific parameters
       required: true
       label.en: Schema version
@@ -314,8 +314,8 @@ Flow:
       label.en: Direction
     path[]:
       ^minItems: 1
-      ^help.en: list of the flow-path, in terms of measurement postitions. measurement
-        postitions that are connected by a flow running serially  though them should
+      ^help.en: list of the flow-path, in terms of measurement positions. Measurement
+        positions that are connected by a flow running serially through them should
         be mentioned within the inner list, while parallel flows should be mentioned
         in the outer list
       ^required: true
