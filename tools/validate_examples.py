@@ -2,6 +2,7 @@
 
 import json
 from pathlib import Path
+import click
 
 import yamale
 from yamale.readers import parse_yaml
@@ -26,14 +27,16 @@ def add_includes(path: Path, schema: yamale.schema.Schema) -> None:
     for doc in list_of_docs:
         schema.add_include(doc)
 
-
-def main():
+@click.command()
+@click.argument(
+    "models",
+    nargs=-1,
+)
+def main(models):
     general_param_file_name = PATH_TO_SCHEMAS.joinpath("general_parameters.yaml")
-
-    file_names = ("MST.yaml", "BLI.yaml", "SPR.yaml", "ITC.yaml")
-
-    for file_name in file_names:
+    for model in models:
         # Validate file
+        file_name = f"{model}.yaml"
         schema = merged_schema(
             PATH_TO_SCHEMAS.joinpath(file_name), general_param_file_name
         )

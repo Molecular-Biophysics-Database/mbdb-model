@@ -1,5 +1,7 @@
 #!/bin/bash
 
+MODELS=(BLI MST ITC SPR)
+
 # Remove descriptions
 ./values_only.py ../models/main/*.yaml \
 --output-folder ../models/values-only/
@@ -11,7 +13,7 @@
 --includes ../models/values-only/general_parameters.yaml
 
 # Check that test data can still be validated
-./validate_examples.py
+./validate_examples.py ${MODELS[@]}
 
 # run conversion to oarepo (Invenio) model
 cd $(dirname $0)
@@ -20,18 +22,9 @@ python yamale2oarepo.py ../models/main/general_parameters.yaml \
         --out_dir ../models/oarepo \
         --only_defs True
 
-python yamale2oarepo.py ../models/main/BLI.yaml \
+for model in ${MODELS[@]}
+do
+    python yamale2oarepo.py ../models/main/$model.yaml \
         --out_dir ../models/oarepo \
         --include ../models/main/general_parameters.yaml
-
-python yamale2oarepo.py ../models/main/MST.yaml \
-        --out_dir ../models/oarepo \
-        --include ../models/main/general_parameters.yaml
-
-python yamale2oarepo.py ../models/main/SPR.yaml \
-        --out_dir ../models/oarepo \
-        --include ../models/main/general_parameters.yaml
-
-python yamale2oarepo.py ../models/main/ITC.yaml \
-        --out_dir ../models/oarepo \
-        --include ../models/main/general_parameters.yaml
+done
