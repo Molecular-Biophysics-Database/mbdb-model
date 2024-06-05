@@ -334,7 +334,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.21
+        - 0.9.22
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -364,6 +364,7 @@ General_parameters:
         - id
         - title
         - props.funder_name
+        - props.grant_id
       vocabulary-type: grants
       type: vocabulary
       extras:
