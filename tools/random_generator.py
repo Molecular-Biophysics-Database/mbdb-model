@@ -18,6 +18,14 @@ import custom_validators
 from validate_examples import merged_schema
 
 
+def get_words():
+    with open('words.txt', 'r') as f:
+        return f.read().splitlines()
+
+
+WORDS = get_words()
+
+
 class AnnotatedValidator:
     def __init__(self, name: str, value: validators.Validator | dict, includes):
         self.name = name
@@ -255,6 +263,12 @@ def random_string(*args, min=10, max=100, equals=None, char_set=None):
     return "".join([char_set[pos] for pos in random_indexes])
 
 
+def random_words(*args, min=5, max=20):
+    n_words = random.randint(min, max)
+    words = random.choices(WORDS, k=n_words)
+    return " ".join(words)
+
+
 def random_dict_like(av, link_dict, vocab_dict):
     # dict like random objects (excluding includes that only have a chose element)
     ret = {
@@ -379,10 +393,10 @@ def type_mapping(av: AnnotatedValidator, link_dict, vocab_dict):
     picker = {
         validators.Number: random_float,
         validators.Integer: random_int,
-        validators.String: random_string,
+        validators.String: random_words,
         validators.Day: random_day,
         custom_validators.Keyword: random_string,
-        custom_validators.Fulltext: random_string,
+        custom_validators.Fulltext: random_words,
         validators.Enum: random_enum,
         validators.Boolean: random_bool,
         custom_validators.Chemical_id: random_id,
@@ -502,6 +516,7 @@ def changes_to_general_schema(schema: yamale.schema.Schema, input_file: Path):
         "BLI": "Bio-layer interferometry (BLI)",
         "MST": "Microscale thermophoresis/Temperature related intensity change (MST/TRIC)",
         "SPR": "Surface plasmon resonance (SPR)",
+        "ITC": "Isothermal Titration Calorimetry (ITC)",
     }
 
     schema.includes["SUPPORTED_TECHNIQUES"]._schema.args = (technique[input_file.stem],)
@@ -511,7 +526,6 @@ def changes_to_general_schema(schema: yamale.schema.Schema, input_file: Path):
     # True to allow the parent item to determine if the include it's required or not.
 
     const_enums = [
-        "OBTAINED_TYPES",
         "CONCENTRATION_UNITS",
         "FLOWRATE_UNITS",
         "HUMIDITY_UNITS",
@@ -522,8 +536,8 @@ def changes_to_general_schema(schema: yamale.schema.Schema, input_file: Path):
         "POWER_UNITS",
         "LENGTH_UNITS",
         "MOLECULAR_WEIGHT_UNITS",
+        "VOLUME_UNITS",
         "SUPPORTED_TECHNIQUES",
-        "COMPANIES",
     ]
     for con in const_enums:
         schema.includes[con]._schema.is_required = True
