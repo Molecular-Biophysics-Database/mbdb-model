@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
+from datetime import datetime
 import json
 import os
 import random
 import string
 import uuid
 from copy import deepcopy
-from glob import glob
 from pathlib import Path
+from math import ceil
 
 import click
 import numpy as np
@@ -16,6 +17,14 @@ import yamale.validators as validators
 
 import custom_validators
 from validate_examples import merged_schema
+
+
+def get_words():
+    with open('words.txt', 'r') as f:
+        return f.read().splitlines()
+
+
+WORDS = get_words()
 
 
 class AnnotatedValidator:
@@ -255,6 +264,12 @@ def random_string(*args, min=10, max=100, equals=None, char_set=None):
     return "".join([char_set[pos] for pos in random_indexes])
 
 
+def random_words(*args, min=5, max=20):
+    n_words = random.randint(min, max)
+    words = random.choices(WORDS, k=n_words)
+    return " ".join(words)
+
+
 def random_dict_like(av, link_dict, vocab_dict):
     # dict like random objects (excluding includes that only have a chose element)
     ret = {
@@ -379,10 +394,10 @@ def type_mapping(av: AnnotatedValidator, link_dict, vocab_dict):
     picker = {
         validators.Number: random_float,
         validators.Integer: random_int,
-        validators.String: random_string,
+        validators.String: random_words,
         validators.Day: random_day,
         custom_validators.Keyword: random_string,
-        custom_validators.Fulltext: random_string,
+        custom_validators.Fulltext: random_words,
         validators.Enum: random_enum,
         validators.Boolean: random_bool,
         custom_validators.Chemical_id: random_id,
@@ -502,16 +517,16 @@ def changes_to_general_schema(schema: yamale.schema.Schema, input_file: Path):
         "BLI": "Bio-layer interferometry (BLI)",
         "MST": "Microscale thermophoresis/Temperature related intensity change (MST/TRIC)",
         "SPR": "Surface plasmon resonance (SPR)",
+        "ITC": "Isothermal Titration Calorimetry (ITC)",
     }
 
     schema.includes["SUPPORTED_TECHNIQUES"]._schema.args = (technique[input_file.stem],)
 
     # marshmallow and random_generator has opposite ways of determining the required status of child items in the corner
-    # case it is an include of a single item. This, so far, only occurs for a few enums, so their status is changed to
-    # True to allow the parent item to determine if the include it's required or not.
+    # case of the include being a single item. So far, this only occurs for a few enums, so their status is changed to
+    # True to allow the parent item to determine if the include is required or not.
 
     const_enums = [
-        "OBTAINED_TYPES",
         "CONCENTRATION_UNITS",
         "FLOWRATE_UNITS",
         "HUMIDITY_UNITS",
@@ -522,35 +537,34 @@ def changes_to_general_schema(schema: yamale.schema.Schema, input_file: Path):
         "POWER_UNITS",
         "LENGTH_UNITS",
         "MOLECULAR_WEIGHT_UNITS",
+        "VOLUME_UNITS",
         "SUPPORTED_TECHNIQUES",
-        "COMPANIES",
     ]
     for con in const_enums:
         schema.includes[con]._schema.is_required = True
     return schema
 
 
-def make_file_name(n, i, data_dir):
+def make_file_name(data_dir, file_name):
     data_dir = Path(data_dir)
     if not data_dir.exists():
         os.mkdir(data_dir)
 
-    width = int(np.floor(np.log10(n)) + 1)
-    return data_dir / f"{str(i + 1).zfill(width)}_testfile.json"
+    return data_dir / f"{file_name}.json"
 
 
 def with_header(mapped_dict):
     return {"metadata": mapped_dict}
 
 
-def write_file(document_list, output_folder, as_fixture):
-    if as_fixture:
-        document_list = [document_list]
-
-    for i, document in enumerate(document_list):
-        fn = make_file_name(n=len(document_list), i=i, data_dir=output_folder)
-        with open(fn, "w") as f_out:
-            json.dump(document, f_out, ensure_ascii=False, indent=2)
+def add_documents(document_list, output_folder, file_name, first=False):
+    fn = make_file_name(data_dir=output_folder, file_name=file_name)
+    with open(fn, "a") as f_out:
+        json_str = json.dumps(document_list, ensure_ascii=False, indent=2)
+        json_str = json_str[1:-2]
+        if not first:
+            json_str = f",{json_str}"
+        f_out.write(json_str)
 
 
 @click.command()
@@ -561,14 +575,8 @@ def write_file(document_list, output_folder, as_fixture):
     type=Path,
 )
 @click.option(
-    "--n_outputs",
+    "--n_docs",
     default=25,
-    required=False,
-    show_default=True,
-)
-@click.option(
-    "--as_fixture",
-    default=False,
     required=False,
     show_default=True,
 )
@@ -576,6 +584,15 @@ def write_file(document_list, output_folder, as_fixture):
     "--output_folder",
     default=Path(__file__).parent / "random_generated_data",
     required=False,
+    show_default=True,
+    type=Path,
+)
+@click.option(
+    "--output_file",
+    default="random_docs",
+    required=False,
+    show_default=True,
+    type=Path,
 )
 @click.option(
     "--include_schema",
@@ -584,39 +601,70 @@ def write_file(document_list, output_folder, as_fixture):
     / "values-only"
     / "general_parameters.yaml",
     required=False,
+    show_default=True,
+    type=Path,
 )
-def main(input_file, n_outputs, output_folder, include_schema, as_fixture):
+def main(input_file, n_docs, output_folder, output_file, include_schema):
+
+    # vocabularies needs to be present
     vocab_dir = Path(__file__).parent.parent / "vocabularies"
-    vocabs = glob(f"{vocab_dir}/generated_vocabularies/*.yaml")
-
+    vocabs = vocab_dir.glob("generated_vocabularies/*.yaml")
     if not vocabs:
-        print("No vocabularies detected, generating them")
-        os.system(vocab_dir / "generate_vocabularies.py")
-        vocabs = glob(f"{vocab_dir}/generated_vocabularies/*.yaml")
+        raise FileNotFoundError("No vocabularies detected!")
+    vocab_dict = {vocab.stem: get_vocabulary_ids(vocab) for vocab in vocabs}
 
-    vocab_dict = {Path(vocab).stem: get_vocabulary_ids(vocab) for vocab in vocabs}
-
+    # convert  input to a template form (annotated validator)
     inputs = (input_file, include_schema)
     full_schema = merged_schema(*inputs, validators=custom_validators.extend_validators)
     full_schema = changes_to_general_schema(full_schema, input_file)
-
     annotated_validators = to_av(full_schema.dict, full_schema.includes)
 
-    document_list = []
-    for i in range(n_outputs):
-        link_dict = {}
-        document = type_mapping(
-            annotated_validators, link_dict=link_dict, vocab_dict=vocab_dict
-        )
-        clean_linktargets(document)
-        clean_enum_includes(document)
-        clean_none(document)
+    # set max number of docs per write
+    docs_per_write = 200
 
-        document_list.append(with_header(document))
+    # opening bracket for json list
+    with open(output_folder / f"{output_file}.json", "w") as f_out:
+        f_out.write("[")
 
-    write_file(document_list, output_folder, as_fixture)
+    # progress objects
+    written_counter = 0
+    start_time = datetime.now()
+    rounds = ceil(n_docs/docs_per_write)
+    end = "\r"
+    for i in range(rounds):
 
-    print(f"Generated {n_outputs} test documents in {output_folder}")
+        # ensure that we write a maximum of "docs_per_write"
+        if (i+1)*docs_per_write > n_docs:
+            chunk_size = n_docs % docs_per_write
+        else:
+            chunk_size = docs_per_write
+
+        written_counter += chunk_size
+
+        # generate random docs one at a time
+        document_list = []
+        for j in range(chunk_size):
+            link_dict = {}
+            document = type_mapping(
+                annotated_validators, link_dict=link_dict, vocab_dict=vocab_dict
+            )
+            clean_linktargets(document)
+            clean_enum_includes(document)
+            clean_none(document)
+            document_list.append(with_header(document))
+
+        # append generated documents
+        add_documents(document_list, output_folder, output_file, first=not bool(i))
+
+        # progress bar
+        if i == rounds - 1:
+            end = "\n"
+        print(f"Wrote {written_counter}/{n_docs} [time elapsed {datetime.now() - start_time}]", end=end)
+
+    # closing bracket for json list
+    with open(output_folder / f"{output_file}.json", "a") as f_out:
+        f_out.write("\n]")
+    print(f"Generated documents in {output_folder}")
 
 
 if __name__ == "__main__":
