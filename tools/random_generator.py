@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
+from datetime import datetime
 import json
 import os
 import random
 import string
 import uuid
 from copy import deepcopy
-from glob import glob
 from pathlib import Path
 from math import ceil
 
@@ -626,8 +626,12 @@ def main(input_file, n_docs, output_folder, output_file, include_schema):
     with open(output_folder / f"{output_file}.json", "w") as f_out:
         f_out.write("[")
 
+    # progress objects
     written_counter = 0
-    for i in range(0, ceil(n_docs/docs_per_write)):
+    start_time = datetime.now()
+    rounds = ceil(n_docs/docs_per_write)
+    end = "\r"
+    for i in range(rounds):
 
         # ensure that we write a maximum of "docs_per_write"
         if (i+1)*docs_per_write > n_docs:
@@ -651,13 +655,16 @@ def main(input_file, n_docs, output_folder, output_file, include_schema):
 
         # append generated documents
         add_documents(document_list, output_folder, output_file, first=not bool(i))
-        print(f"Wrote {written_counter}/{n_docs}")
+
+        # progress bar
+        if i == rounds - 1:
+            end = "\n"
+        print(f"Wrote {written_counter}/{n_docs} [time elapsed {datetime.now() - start_time}]", end=end)
 
     # closing bracket for json list
     with open(output_folder / f"{output_file}.json", "a") as f_out:
         f_out.write("\n]")
-
-    print(f"Generated {written_counter} test documents in {output_folder}")
+    print(f"Generated documents in {output_folder}")
 
 
 if __name__ == "__main__":
