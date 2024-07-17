@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.22",
+        "schema_version": "0.9.23",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -291,13 +291,10 @@
             "value": 10.3,
             "unit": "nM"
           }
-        ],
-        "raw_measurement_files": [
-          "https://mbdb.eu/itc/files/foo.txt"
         ]
       },
       "method_specific_parameters": {
-        "schema_version": "0.0.3",
+        "schema_version": "0.1.0",
         "measurements": [
           {
             "id": "pos_1_rep_1",
@@ -340,7 +337,7 @@
             }
           }
         ],
-        "experiment_type": {
+        "injection_mode": {
           "type": "Titration",
           "number_injections": 25,
           "injection_parameters": [

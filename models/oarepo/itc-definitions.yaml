@@ -3,7 +3,7 @@ ITC_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.0.3
+        - 0.1.0
       help.en: The schema version used to annotate the ITC method specific parameters
       required: true
       label.en: Schema version
@@ -15,10 +15,11 @@ ITC_specific_parameters:
       ^required: true
       ^label.en: Measurements
       use: '#/$defs/Measurement'
-    experiment_type:
-      help.en: Type of experiment conducted
-      label.en: Experiment type
-      use: '#/$defs/Experiment_type'
+    injection_mode:
+      help.en: Details of how the experiment was conducted in terms of injection (e.g.
+        titration)
+      label.en: Injection mode
+      use: '#/$defs/Injection_mode'
     cell_temperature:
       help.en: Temperature of the cell in which the sample is measured
       required: true
@@ -46,7 +47,7 @@ ITC_specific_parameters:
         - None
         - Low
         - High
-      help.en: Operating mode where conditions are adjusted automatically to maintain
+      help.en: The operating mode where conditions are adjusted automatically to maintain
         constant temperature during heat measurements
       label.en: Feedback mode
     data_analysis[]:
@@ -82,21 +83,21 @@ Volume:
       label.en: Unit
       use: '#/$defs/VOLUME_UNITS'
   label.en: Volume
-Experiment_type:
+Injection_mode:
   help.en: Type of experiment conducted
-  label.en: Experiment type
+  label.en: Injection mode
   schemas:
     Single injection:
       required: true
-      label.en: Experiment type
-      use: '#/$defs/Experiment_typeSingle_injectionPolymorphic'
+      label.en: Injection mode
+      use: '#/$defs/Injection_modeSingle_injectionPolymorphic'
     Titration:
       required: true
-      label.en: Experiment type
-      use: '#/$defs/Experiment_typeTitrationPolymorphic'
+      label.en: Injection mode
+      use: '#/$defs/Injection_modeTitrationPolymorphic'
   type: polymorphic
   discriminator: type
-Experiment_type_base:
+Injection_mode_base:
   properties:
     type:
       type: keyword
@@ -108,7 +109,7 @@ Experiment_type_base:
       mapping:
         copy_to: collected_default_search_fields
       label.en: Type
-  label.en: Experiment type base
+  label.en: Injection mode base
 Titration:
   properties:
     number_injections:
@@ -147,11 +148,11 @@ Injection_parameters:
   label.en: Injection parameters
 ITC_data_analysis:
   properties:
-    data_processing_steps[]:
+    data_processing[]:
       ^minItems: 1
       ^help.en: Describe the steps in the data analysis prior to fitting (removing
         outliers in the raw data, applying smoothing filters, etc.)
-      ^label.en: Data processing steps
+      ^label.en: Data processing
       use: '#/$defs/Processing_step'
     type:
       type: keyword
@@ -248,7 +249,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.22
+        - 0.9.23
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -342,16 +343,6 @@ General_parameters:
         type: nested
       use: '#/$defs/Result'
       type: polymorphic
-    raw_measurement_files[]:
-      ^minItems: 1
-      ^help.en: List of file(s) containing the raw measurements
-      ^ui_file_context:
-        type: keyword
-        enum:
-          - raw measurement data
-        label.en: Ui file context
-      ^label.en: Raw measurement files
-      type: url
   label.en: General parameters
 Record_information:
   properties:
@@ -5068,7 +5059,7 @@ ResultResult_hill_coeffPolymorphic:
       label.en: Value error
       use: '#/$defs/Value_error'
   label.en: Result hill coeff
-Experiment_typeSingle_injectionPolymorphic:
+Injection_modeSingle_injectionPolymorphic:
   properties:
     volume:
       help.en: Titrant volume injected into the cell
@@ -5086,7 +5077,7 @@ Experiment_typeSingle_injectionPolymorphic:
         copy_to: collected_default_search_fields
       label.en: Type
   label.en: Single injection
-Experiment_typeTitrationPolymorphic:
+Injection_modeTitrationPolymorphic:
   properties:
     number_injections:
       type: double

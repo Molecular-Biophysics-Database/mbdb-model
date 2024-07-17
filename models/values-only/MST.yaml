@@ -18,7 +18,7 @@ MST_data_analysis:
   results: list(link(target='result'), required=False)
   measurements: list(link(target='mst-measurement'), required=False)
   f_cold_and_hot: include('F_cold_and_hot', required=False)
-  data_processing_steps: list(include('Processing_step'), required=False)
+  data_processing: list(include('Processing_step'), required=False)
   data_fitting: include('Data_fitting', required=False)
 F_cold_and_hot:
   time_unit: include('TIME_UNITS')

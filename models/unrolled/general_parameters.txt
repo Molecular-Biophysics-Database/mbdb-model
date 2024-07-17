@@ -1,5 +1,5 @@
  general_parameters                                                                         ('singular', 'required', ['dict'], {}) "
-"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.9.22'}) "
+"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.9.23'}) "
 "  |   record_information                                                                    ('singular', 'required', ['dict'], {}) "
 "  |    |   title                                                                            ('singular', 'required', ['String'], {}) "
 "  |    |   access_rights                                                                    ('singular', 'required', ['Enum'], {}) "
@@ -352,5 +352,4 @@
 "  |    |    |   upper                                                                       ('singular', 'required', ['Number'], {}) "
 "  |    |    |   is_relative                                                                 ('singular', 'required', ['Boolean'], {}) "
 "  |    |   unit                                                                             ('singular', 'required', ['Enum'], {}) "
-"  |   raw_measurement_files                                                                 ('list', 'required', ['Url'], {}) "
 "
