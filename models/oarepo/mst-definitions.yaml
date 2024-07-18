@@ -104,11 +104,11 @@ MST_data_analysis:
         windows can be specified here
       label.en: F cold and hot
       use: '#/$defs/F_cold_and_hot'
-    data_processing_steps[]:
+    data_processing[]:
       ^minItems: 1
       ^help.en: Describe the steps in the data analysis prior to fitting (removing
         outliers in the raw data, applying smoothing filters, etc.)
-      ^label.en: Data processing steps
+      ^label.en: Data processing
       use: '#/$defs/Processing_step'
     data_fitting:
       help.en: The details of how data fitting was performed to obtain the result
@@ -236,7 +236,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.22
+        - 0.9.23
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -330,16 +330,6 @@ General_parameters:
         type: nested
       use: '#/$defs/Result'
       type: polymorphic
-    raw_measurement_files[]:
-      ^minItems: 1
-      ^help.en: List of file(s) containing the raw measurements
-      ^ui_file_context:
-        type: keyword
-        enum:
-          - raw measurement data
-        label.en: Ui file context
-      ^label.en: Raw measurement files
-      type: url
   label.en: General parameters
 Record_information:
   properties:

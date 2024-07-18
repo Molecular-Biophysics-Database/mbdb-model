@@ -3,7 +3,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.22
+        - 0.9.23
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -97,16 +97,6 @@ General_parameters:
         type: nested
       use: '#/$defs/Result'
       type: polymorphic
-    raw_measurement_files[]:
-      ^minItems: 1
-      ^help.en: List of file(s) containing the raw measurements
-      ^ui_file_context:
-        type: keyword
-        enum:
-          - raw measurement data
-        label.en: Ui file context
-      ^label.en: Raw measurement files
-      type: url
   label.en: General parameters
 Record_information:
   properties:

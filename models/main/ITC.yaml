@@ -20,7 +20,7 @@ ITC_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       ITC method specific parameters',
                               required=False)
-        value           : keyword(equals='0.0.3')
+        value           : keyword(equals='0.1.0')
 
     measurements:
         description     : str(equals='List of the information about each
@@ -30,10 +30,11 @@ ITC_specific_parameters:
                                       instrument', required=False)
         value           : list(include('Measurement'), min=1)
 
-    experiment_type:
-        description     : str(equals='Type of experiment conducted',
+    injection_mode:
+        description     : str(equals='Details of how the experiment was conducted in 
+                                      terms of injection (e.g. titration)',
                               required=False)
-        value           : include('Experiment_type', required=False)
+        value           : include('Injection_mode', required=False)
 
     cell_temperature:
         description     :   str(equals='Temperature of the cell in which the sample is measured',
@@ -57,7 +58,7 @@ ITC_specific_parameters:
         value       : include('Shaking_and_stirring_speed')
 
     feedback_mode:
-        description :   str(equals='Operating mode where conditions are adjusted automatically
+        description :   str(equals='The operating mode where conditions are adjusted automatically
                                     to maintain constant temperature during heat measurements')
         value       :   enum('None', 'Low', 'High', required=False)
 
@@ -82,25 +83,25 @@ Reference_power:
         value       : include('POWER_UNITS')
 
 Volume:
-    value :
+    value:
         description :   str('Volume of the sample',
                             required=False)
         value       : num(min=0)
-    unit :
-        description     : str(equals='Unit of the volume',
+    unit:
+        description : str(equals='Unit of the volume',
                               required=False)
-        value           : include('VOLUME_UNITS')
+        value       : include('VOLUME_UNITS')
 
 ---
-# Experiment type definitions
-Experiment_type:
+# Injection mode (experiment) definitions
+Injection_mode:
     description     : str(equals='Type of experiment conducted',
                                 required=False)
-    value           : choose(include('Experiment_type_base'),
+    value           : choose(include('Injection_mode_base'),
                                 Single_injection=include('Single_injection'),
                                 Titration=include('Titration'))
 
-Experiment_type_base:
+Injection_mode_base:
     type:
         description     : str(equals='Type of ITC experiment', required=False)
         default_search  : True
@@ -138,7 +139,7 @@ Injection_parameters:
 ---
 # Data analysis definitions
 ITC_data_analysis:
-    data_processing_steps:
+    data_processing:
         description     : str(equals='Describe the steps in the data analysis
                                       prior to fitting (removing outliers in the
                                       raw data, applying smoothing filters,

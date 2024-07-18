@@ -1,9 +1,4 @@
 properties:
-  name:
-    type: keyword
-    help.en: Name of the file
-    required: true
-    label.en: Name
   content_type:
     type: keyword
     enum:
@@ -33,12 +28,6 @@ properties:
     help.en: What is the source of the file
     required: true
     label.en: Originates from
-  size:
-    type: integer
-    minimum: 0
-    help.en: Size of the file in bytes
-    required: true
-    label.en: Size
   description:
     type: keyword
     help.en: Short description of what the file contains

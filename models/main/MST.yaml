@@ -114,7 +114,7 @@ MST_data_analysis:
                                       specified here', required=False)
         value           : include('F_cold_and_hot', required=False)
 
-    data_processing_steps:
+    data_processing:
         description     : str(equals='Describe the steps in the data analysis
                                       prior to fitting (removing outliers in the
                                       raw data, applying smoothing filters,

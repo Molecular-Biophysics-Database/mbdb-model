@@ -3,7 +3,7 @@ SPR_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.5
+        - 0.9.6
       help.en: The schema version used to annotate the SPR method specific parameters
       required: true
       label.en: Schema version
@@ -67,12 +67,12 @@ SPR_data_analysis:
       keys:
         - id
         - name
-    data_processing_steps[]:
+    data_processing[]:
       ^minItems: 1
       ^help.en: Describe the steps in the data analysis prior to fitting (removing
         outliers in the raw data, applying data filter, placing data at same start
         time etc. )
-      ^label.en: Data processing steps
+      ^label.en: Data processing
       use: '#/$defs/Processing_step'
     data_fitting:
       help.en: The details of how data fitting was performed to obtain the result
@@ -210,7 +210,7 @@ Measurement_step:
       label.en: Time length
       use: '#/$defs/Time_duration'
     flow:
-      help.en: Information about the flow during the measurement step
+      help.en: Information about the liquid flow during the measurement step
       required: true
       label.en: Flow
       use: '#/$defs/Flow'
@@ -237,32 +237,32 @@ Measurement_position:
       type: keyword
       help.en: Position of the measurement spot within the flow cell
       label.en: Position
-    ligand_information:
+    ligand:
       help.en: Information about the ligand and how it was immobilized
-      label.en: Ligand information
+      label.en: Ligand
       use: '#/$defs/Ligand_information'
   id: spr-measurement-position
   label.en: Measurement position
 Ligand_information:
   properties:
-    ligand:
+    entity:
       help.en: Name (id) of the ligand (entity that is immobilized, from the list
         of entities of interest defined in the general parameters)
-      label.en: Ligand
+      label.en: Entity
       type: relation
       model: '#entity'
       keys:
         - id
         - name
-    ligand_immobilization_chemistry:
+    immobilization_chemistry:
       type: keyword
-      help.en: The type of chemistry on ligands and surface that allows for immobilization
-        of the ligands on the surface of the senor
-      label.en: Ligand immobilization chemistry
-    ligand_immobilization_protocol[]:
+      help.en: The type of chemistry on the ligands that allows for immobilization
+        on the sensor
+      label.en: Immobilization chemistry
+    immobilization_protocol[]:
       ^minItems: 1
       ^help.en: List of steps for immobilizing the ligand on the surface of the sensor
-      ^label.en: Ligand immobilization protocol
+      ^label.en: Immobilization protocol
       use: '#/$defs/Step'
   label.en: Ligand information
 Sensor:
@@ -276,7 +276,7 @@ Sensor:
       help.en: The type surface properties the sensor has. e.g. Protein A
       label.en: Surface properties
     supplier:
-      help.en: Information about the supplier of the senor
+      help.en: Information about the supplier of the sensor
       required: true
       label.en: Supplier
       use: '#/$defs/Supplier'
@@ -285,7 +285,7 @@ Sensor:
       enum:
         - Air
         - Glycerol
-      help.en: How the initialization of the senor was performed
+      help.en: How the initialization of the sensor was performed
       label.en: Sensor initialization
     previously_used:
       type: boolean
@@ -334,7 +334,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.22
+        - 0.9.23
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -428,16 +428,6 @@ General_parameters:
         type: nested
       use: '#/$defs/Result'
       type: polymorphic
-    raw_measurement_files[]:
-      ^minItems: 1
-      ^help.en: List of file(s) containing the raw measurements
-      ^ui_file_context:
-        type: keyword
-        enum:
-          - raw measurement data
-        label.en: Ui file context
-      ^label.en: Raw measurement files
-      type: url
   label.en: General parameters
 Record_information:
   properties:

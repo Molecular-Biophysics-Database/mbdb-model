@@ -1,7 +1,3 @@
-name:
-    description     : str(equals='Name of the file', required=False)
-    value           : keyword()
-
 content_type:
     description     : str(equals='Type of the file content in terms of how
                                   it can be read (text, binary, etc.)',
@@ -19,10 +15,6 @@ context:
 originates_from:
     description     : str(equals='What is the source of the file')
     value           : enum('Instrument software', 'User', 'MBDB')
-
-size:
-    description     : str(equals='Size of the file in bytes', required=False)
-    value           : int(min=0)
 
 
 description:

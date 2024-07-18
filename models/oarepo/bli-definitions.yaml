@@ -3,7 +3,7 @@ BLI_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.6
+        - 0.9.7
       help.en: The schema version used to annotate the BLI method specific parameters
       required: true
       label.en: Schema version
@@ -24,7 +24,7 @@ BLI_specific_parameters:
       use: '#/$defs/Plate'
     sensors[]:
       ^minItems: 1
-      ^help.en: List of the senors used for the measurements, reference sensors included
+      ^help.en: List of the sensors used for the measurements, reference sensors included
       ^required: true
       ^label.en: Sensors
       use: '#/$defs/Sensor'
@@ -190,9 +190,9 @@ Sensor:
       help.en: Descriptive name of the sensor
       required: true
       label.en: Name
-    ligand_information:
+    ligand:
       help.en: Information about the ligand and how it was immobilized
-      label.en: Ligand information
+      label.en: Ligand
       use: '#/$defs/Ligand_information'
     sensor_id:
       type: keyword
@@ -203,7 +203,7 @@ Sensor:
       help.en: The type of surface properties the sensor has, e.g. Protein A
       label.en: Surface properties
     supplier:
-      help.en: Information about the supplier of the senor
+      help.en: Information about the supplier of the sensor
       required: true
       label.en: Supplier
       use: '#/$defs/Supplier'
@@ -219,24 +219,24 @@ Sensor:
   label.en: Sensor
 Ligand_information:
   properties:
-    ligand:
+    entity:
       help.en: Name (id) of the ligand (entity that is immobilized, from the list
         of entities of interest defined in the general parameters)
-      label.en: Ligand
+      label.en: Entity
       type: relation
       model: '#entity'
       keys:
         - id
         - name
-    ligand_immobilization_chemistry:
+    immobilization_chemistry:
       type: keyword
-      help.en: The type of chemistry on ligands and surface that allows for immobilization
-        of the ligands on the surface of the senor
-      label.en: Ligand immobilization chemistry
-    ligand_immobilization_protocol[]:
+      help.en: The type of chemistry on the ligands that allows for immobilization
+        on the sensor
+      label.en: Immobilization chemistry
+    immobilization_protocol[]:
       ^minItems: 1
       ^help.en: List of steps for immobilizing the ligand on the surface of the sensor
-      ^label.en: Ligand immobilization protocol
+      ^label.en: Immobilization protocol
       use: '#/$defs/Step'
   label.en: Ligand information
 Plate:
@@ -314,12 +314,12 @@ BLI_data_analysis:
       keys:
         - id
         - name
-    data_processing_steps[]:
+    data_processing[]:
       ^minItems: 1
       ^help.en: Describe the steps in the data analysis prior to fitting (removing
         outliers in the raw data, applying data filter, placing data at same start
         time etc. )
-      ^label.en: Data processing steps
+      ^label.en: Data processing
       use: '#/$defs/Processing_step'
     data_fitting:
       help.en: The details of how data fitting of the data to obtain the result was
@@ -332,7 +332,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.22
+        - 0.9.23
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -426,16 +426,6 @@ General_parameters:
         type: nested
       use: '#/$defs/Result'
       type: polymorphic
-    raw_measurement_files[]:
-      ^minItems: 1
-      ^help.en: List of file(s) containing the raw measurements
-      ^ui_file_context:
-        type: keyword
-        enum:
-          - raw measurement data
-        label.en: Ui file context
-      ^label.en: Raw measurement files
-      type: url
   label.en: General parameters
 Record_information:
   properties:
