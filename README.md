@@ -31,15 +31,15 @@ pipenv install --dev
 Remember to activate the virtual environment:
 
 ```bash
-pipenv shell 
+pipenv shell
 ```
 
-Close the shell either by issuing the following command: 
+Close the shell either by issuing the following command:
 
 ```bash
-exit 
+exit
 ```
-or by pressing <kbd>Ctrl</kbd> + <kbd>D</kbd> 
+or by pressing <kbd>Ctrl</kbd> + <kbd>D</kbd>
 
 #### Using requirements.txt
 
@@ -58,12 +58,28 @@ their structure, syntax, and usage can be found.
 
 ```
 mbdb-model
-├── models              <--
-├── metadata-examples
+├── models                <--
+├── model_conversion
+├── metadata_examples
+├── random_records
 ├── tools
 └── vocabularies
 ```
 
+### Model conversion
+
+Various tools for converting to different the different forms of the model
+as well as validating example metadata using the current model/
+
+```
+mbdb-model
+├── models
+├── model_conversion      <--
+├── metadata_examples
+├── random_records
+├── tools
+└── vocabularies
+```
 
 ### Example data
 
@@ -73,7 +89,23 @@ compatible for being loaded into the Invenio instance of MBDB.
 ```
 mbdb-model
 ├── models
-├── metadata-examples   <--
+├── model_conversion
+├── metadata_examples     <--
+├── random_records
+├── tools
+└── vocabularies
+```
+
+### Random records
+
+Tools for generating random metadata records as well as the generated records.
+
+```
+mbdb-model
+├── models
+├── model_conversion
+├── metadata_examples
+├── random_records        <--
 ├── tools
 └── vocabularies
 ```
@@ -81,14 +113,15 @@ mbdb-model
 
 ### Tools
 
-Various tools for converting to different forms of the model (excluding the
-final conversion to the Invenio compatible models).
+Modules used by other tools as well as for formatting python code and conversion of units.
 
 ```
 mbdb-model
 ├── models
-├── metadata-examples
-├── tools               <--
+├── model_conversion
+├── metadata_examples
+├── random_records
+├── tools                 <--
 └── vocabularies
 ```
 
@@ -100,9 +133,11 @@ their sources can be found here.
 ```
 mbdb-model
 ├── models
-├── metadata-examples
+├── model_conversion
+├── metadata_examples
+├── random_records
 ├── tools
-└── vocabularies         <--
+└── vocabularies          <--
 ```
 
 ## How to contribute?

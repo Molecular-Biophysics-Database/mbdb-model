@@ -608,6 +608,10 @@ def add_documents(document_list, output_folder, file_name, first=False):
     type=Path,
 )
 def main(input_file, n_docs, output_folder, output_file, include_schema):
+    """
+    Generate N_DOCS random records based on INPUT_FILE (defaults to MST model)
+    which must be a values_only model.
+    """
 
     # vocabularies needs to be present
     vocab_dir = ROOT_DIR / "vocabularies"
