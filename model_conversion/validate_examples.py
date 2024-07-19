@@ -1,31 +1,22 @@
 #!/usr/bin/env python3
 
 import json
+import sys
 from pathlib import Path
+
 import click
-
 import yamale
-from yamale.readers import parse_yaml
 
-from custom_validators import current_schema, extend_validators
+current_dir = Path(__file__).parent.absolute()
+root_dir = current_dir.parent.absolute()
+sys.path.append(str(root_dir))
 
-PATH_TO_SCHEMAS = Path("../models/values-only/")
-PATH_TO_TEST_DATA = Path("../metadata-examples/")
+from tools.custom_validators import current_schema
+from tools.schema_merge import merged_schema
+from tools.paths import MODEL_DIR, EXAMPLES_DIR
 
+PATH_TO_SCHEMAS = MODEL_DIR / "values-only"
 
-def merged_schema(
-    method_specific: Path, *additional_includes: Path, validators=extend_validators
-) -> yamale.schema.Schema:
-    schema = yamale.make_schema(method_specific, validators=validators)
-    for path in additional_includes:
-        add_includes(path, schema)
-    return schema
-
-
-def add_includes(path: Path, schema: yamale.schema.Schema) -> None:
-    list_of_docs = parse_yaml(path)
-    for doc in list_of_docs:
-        schema.add_include(doc)
 
 @click.command()
 @click.argument(
@@ -41,7 +32,7 @@ def main(models):
             PATH_TO_SCHEMAS.joinpath(file_name), general_param_file_name
         )
         current_schema.schema = schema
-        full_test_path = PATH_TO_TEST_DATA.joinpath(file_name)
+        full_test_path = EXAMPLES_DIR.joinpath(file_name)
         test_data = yamale.make_data(full_test_path)
         yamale.validate(schema, test_data)
 

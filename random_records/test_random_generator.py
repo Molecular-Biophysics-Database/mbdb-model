@@ -1,6 +1,4 @@
-import yamale
 import yamale.validators.validators as val
-
 from random_generator import *
 
 test_schema = """

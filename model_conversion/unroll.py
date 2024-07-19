@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import sys
 from argparse import ArgumentParser
 from copy import deepcopy
 from pathlib import Path
@@ -9,7 +9,11 @@ import yamale
 import yamale.validators.validators as validators
 from yamale.readers import parse_yaml
 
-import custom_validators
+current_dir = Path(__file__).parent.absolute()
+root_dir = current_dir.parent.absolute()
+sys.path.append(str(root_dir))
+from tools import custom_validators
+from tools.paths import MODEL_DIR
 
 
 class YamaleTree:
@@ -188,13 +192,13 @@ def _mk_arg_parser() -> ArgumentParser:
         nargs="+",
         type=Path,
         help="Input Yamale schema files without descriptions",
-        default=[Path(__file__).parent.parent / "models" / "values-only" / "MST.yaml"],
+        default=[MODEL_DIR / "models" / "values-only" / "MST.yaml"],
     )
     parser.add_argument(
         "--output-folder",
         type=Path,
         help="Output folder where the unrolled structures will be stored",
-        default=Path(__file__).parent.parent / "models" / "unrolled",
+        default=MODEL_DIR / "models" / "unrolled",
     )
     parser.add_argument(
         "--includes",
@@ -202,8 +206,7 @@ def _mk_arg_parser() -> ArgumentParser:
         type=Path,
         help="Additional Yamale schema input files without descriptions to be used as includes",
         default=[
-            Path(__file__).parent.parent
-            / "models"
+            MODEL_DIR
             / "values-only"
             / "general_parameters.yaml"
         ],

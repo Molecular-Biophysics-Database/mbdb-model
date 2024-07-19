@@ -15,4 +15,4 @@ __pycache__
 *.log
 vocabularies/vocabulary_sources/*
 vocabularies/generated_vocabularies/*
-tools/random_generated_data/*
+random_records/random_generated_data/*
