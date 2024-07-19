@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-from datetime import datetime
 import json
 import os
 import random
 import string
+import sys
 import uuid
 from copy import deepcopy
-from pathlib import Path
+from datetime import datetime
 from math import ceil
+from pathlib import Path
 
 import click
 import numpy as np
@@ -15,12 +16,17 @@ import ruamel.yaml
 import yamale.schema
 import yamale.validators as validators
 
-import custom_validators
-from validate_examples import merged_schema
+current_dir = Path(__file__).parent.absolute()
+root_dir = current_dir.parent.absolute()
+sys.path.append(str(root_dir))
+
+from tools import custom_validators
+from tools.schema_merge import merged_schema
+from tools.paths import ROOT_DIR, MODEL_DIR
 
 
 def get_words():
-    with open('words.txt', 'r') as f:
+    with open("words.txt", "r") as f:
         return f.read().splitlines()
 
 
@@ -515,9 +521,9 @@ def changes_to_general_schema(schema: yamale.schema.Schema, input_file: Path):
     # make sure that supported technique is fixed to the technique of the input file
     technique = {
         "BLI": "Bio-layer interferometry (BLI)",
+        "ITC": "Isothermal Titration Calorimetry (ITC)",
         "MST": "Microscale thermophoresis/Temperature related intensity change (MST/TRIC)",
         "SPR": "Surface plasmon resonance (SPR)",
-        "ITC": "Isothermal Titration Calorimetry (ITC)",
     }
 
     schema.includes["SUPPORTED_TECHNIQUES"]._schema.args = (technique[input_file.stem],)
@@ -528,17 +534,17 @@ def changes_to_general_schema(schema: yamale.schema.Schema, input_file: Path):
 
     const_enums = [
         "CONCENTRATION_UNITS",
+        "ENERGY_UNITS",
         "FLOWRATE_UNITS",
         "HUMIDITY_UNITS",
-        "PRESSURE_UNITS",
-        "TEMPERATURE_UNITS",
-        "TIME_UNITS",
-        "ENERGY_UNITS",
-        "POWER_UNITS",
         "LENGTH_UNITS",
         "MOLECULAR_WEIGHT_UNITS",
-        "VOLUME_UNITS",
+        "POWER_UNITS",
+        "PRESSURE_UNITS",
         "SUPPORTED_TECHNIQUES",
+        "TEMPERATURE_UNITS",
+        "TIME_UNITS",
+        "VOLUME_UNITS",
     ]
     for con in const_enums:
         schema.includes[con]._schema.is_required = True
@@ -570,7 +576,7 @@ def add_documents(document_list, output_folder, file_name, first=False):
 @click.command()
 @click.argument(
     "input_file",
-    default=Path(__file__).parent.parent / "models" / "values-only" / "MST.yaml",
+    default=MODEL_DIR / "values-only" / "MST.yaml",
     required=True,
     type=Path,
 )
@@ -596,10 +602,7 @@ def add_documents(document_list, output_folder, file_name, first=False):
 )
 @click.option(
     "--include_schema",
-    default=Path(__file__).parent.parent
-    / "models"
-    / "values-only"
-    / "general_parameters.yaml",
+    default=MODEL_DIR / "values-only" / "general_parameters.yaml",
     required=False,
     show_default=True,
     type=Path,
@@ -607,7 +610,7 @@ def add_documents(document_list, output_folder, file_name, first=False):
 def main(input_file, n_docs, output_folder, output_file, include_schema):
 
     # vocabularies needs to be present
-    vocab_dir = Path(__file__).parent.parent / "vocabularies"
+    vocab_dir = ROOT_DIR / "vocabularies"
     vocabs = vocab_dir.glob("generated_vocabularies/*.yaml")
     if not vocabs:
         raise FileNotFoundError("No vocabularies detected!")
@@ -629,12 +632,12 @@ def main(input_file, n_docs, output_folder, output_file, include_schema):
     # progress objects
     written_counter = 0
     start_time = datetime.now()
-    rounds = ceil(n_docs/docs_per_write)
+    rounds = ceil(n_docs / docs_per_write)
     end = "\r"
     for i in range(rounds):
 
         # ensure that we write a maximum of "docs_per_write"
-        if (i+1)*docs_per_write > n_docs:
+        if (i + 1) * docs_per_write > n_docs:
             chunk_size = n_docs % docs_per_write
         else:
             chunk_size = docs_per_write
@@ -659,7 +662,10 @@ def main(input_file, n_docs, output_folder, output_file, include_schema):
         # progress bar
         if i == rounds - 1:
             end = "\n"
-        print(f"Wrote {written_counter}/{n_docs} [time elapsed {datetime.now() - start_time}]", end=end)
+        print(
+            f"Wrote {written_counter}/{n_docs} [time elapsed {datetime.now() - start_time}]",
+            end=end,
+        )
 
     # closing bracket for json list
     with open(output_folder / f"{output_file}.json", "a") as f_out:
