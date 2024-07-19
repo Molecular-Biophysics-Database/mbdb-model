@@ -1,7 +1,10 @@
+#!/usr/bin/env python3
+
 import copy
 import dataclasses
 import logging
 import re
+import sys
 from collections import namedtuple
 from io import StringIO
 from pathlib import Path
@@ -12,6 +15,11 @@ import ruamel
 import yamale
 from ruamel.yaml import YAML as ruamel_YAML
 from ruamel.yaml.scalarstring import DoubleQuotedScalarString
+from yamale2oarepo_config import (
+    PRIMITIVES_MAPPING,
+    VOCABULARY_CUSTOM_FIELD_KEYS,
+    VOCABULARY_MAPPING,
+)
 from yamale.schema import Schema
 from yamale.validators import (
     Boolean,
@@ -27,7 +35,11 @@ from yamale.validators import (
     Validator,
 )
 
-from custom_validators import (
+current_dir = Path(__file__).parent.absolute()
+root_dir = current_dir.parent.absolute()
+sys.path.append(str(root_dir))
+
+from tools.custom_validators import (
     Chemical_id,
     Choose,
     Database_id,
@@ -42,11 +54,7 @@ from custom_validators import (
     Uuid,
     Vocabulary,
 )
-from yamale2oarepo_config import (
-    PRIMITIVES_MAPPING,
-    VOCABULARY_MAPPING,
-    VOCABULARY_CUSTOM_FIELD_KEYS,
-)
+from tools.paths import MODEL_DIR
 
 log = logging.getLogger("yamale2oarepo")
 
@@ -876,7 +884,7 @@ def ruamel_quote_booleans(d):
 @click.command()
 @click.argument(
     "input_file",
-    default=Path(__file__).parent.parent / "models" / "main" / "MST.yaml",
+    default=MODEL_DIR / "main" / "MST.yaml",
     required=True,
 )
 @click.option("--debug", type=bool)
@@ -884,19 +892,14 @@ def ruamel_quote_booleans(d):
 @click.option("--out_dir", type=Path)
 @click.option(
     "--include",
-    default=Path(__file__).parent.parent
-    / "models"
-    / "main"
-    / "general_parameters.yaml",
+    default=MODEL_DIR / "main" / "general_parameters.yaml",
     required=False,
 )
 def run(input_file, debug, out_dir, only_defs, include):
     if debug:
         logging.basicConfig(level=logging.DEBUG)
     ym_file = input_file
-    attachment = (
-        Path(__file__).parent.parent / "models" / "main" / "file_attachment.yaml"
-    )
+    attachment = MODEL_DIR / "main" / "file_attachment.yaml"
     model = parse_file(ym_file)
     if include:
         model.add_includes_from(include)
