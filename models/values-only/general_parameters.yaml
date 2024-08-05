@@ -1,7 +1,7 @@
 general_parameters: include('General_parameters')
 ---
 General_parameters:
-  schema_version: keyword(equals='0.9.23')
+  schema_version: keyword(equals='0.9.24')
   record_information: include('Record_information')
   depositors: include('Depositors')
   associated_publication: include('Publication', required=False)
@@ -302,8 +302,11 @@ Empty_object: {}
 Yes_purity:
   method: enum("SDS-PAGE", "Capillary Electrophoresis", "Agarose Gel electrophoresis")
   purity_percentage: enum('<90 %', '>90 %', '>95 %', '>99 %')
-Identity:
+Identity_base:
   checked: enum("Yes", "No")
+Identity: choose(include('Identity_base'), type_field='checked', Yes=include('Yes_identity'),
+  No=include('Empty_object'))
+Yes_identity:
   by_intact_mass: include('By_intact_mass', required=False)
   by_sequencing: include('By_sequencing', required=False)
   by_fingerprinting: include('By_fingerprinting', required=False)

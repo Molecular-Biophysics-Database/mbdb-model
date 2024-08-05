@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.9.23')
+        value           : keyword(equals='0.9.24')
 
     record_information:
         description     : str(equals='Information about the record itself,
@@ -1416,17 +1416,17 @@ Size:
 Quality_controls:
     purity:
         description     : str(equals='Information about if, and how
-                                      purity was assessed', required=False)
+                                      purity was checked', required=False)
         value           : include('Purity', required=False)
 
     identity:
         description     : str(equals='Information about if, and how
-                                      identity was assessed', required=False)
+                                      identity was checked', required=False)
         value           : include('Identity', required=False)
 
     homogeneity:
         description     : str(equals='Information about if, and how
-                                      homogeneity was assessed', required=False)
+                                      homogeneity was checked', required=False)
         value           : include("Homogeneity", required=False)
 
 
@@ -1456,12 +1456,20 @@ Yes_purity:
                               required=False)
         value           : enum('<90 %', '>90 %', '>95 %', '>99 %')
 
-Identity:
+Identity_base:
     checked:
-            description : str(equals="Wether the identity was confirmed
-                                      experimentally", required=False)
-            value       : enum("Yes", "No")
+        description : str(equals="Wether the identity was confirmed
+                                  experimentally", required=False)
+        value       : enum("Yes", "No")
 
+Identity:
+    description         : str(equals='Information about if and how
+                                      the identity was obtained', required=False)
+    value               : choose(include('Identity_base'), type_field='checked',
+                                 Yes=include('Yes_identity'),
+                                 No=include('Empty_object'))
+
+Yes_identity:
     by_intact_mass:
         description     : str(equals='How identity was determined by intact mass,
                                       if applicable', required=False)
