@@ -332,7 +332,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.23
+        - 0.9.24
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -1950,15 +1950,15 @@ Size:
 Quality_controls:
   properties:
     purity:
-      help.en: Information about if, and how purity was assessed
+      help.en: Information about if, and how purity was checked
       label.en: Purity
       use: '#/$defs/Purity'
     identity:
-      help.en: Information about if, and how identity was assessed
+      help.en: Information about if, and how identity was checked
       label.en: Identity
       use: '#/$defs/Identity'
     homogeneity:
-      help.en: Information about if, and how homogeneity was assessed
+      help.en: Information about if, and how homogeneity was checked
       label.en: Homogeneity
       use: '#/$defs/Homogeneity'
   label.en: Quality controls
@@ -2012,7 +2012,7 @@ Yes_purity:
       required: true
       label.en: Purity percentage
   label.en: Yes purity
-Identity:
+Identity_base:
   properties:
     checked:
       type: keyword
@@ -2022,6 +2022,23 @@ Identity:
       help.en: Wether the identity was confirmed experimentally
       required: true
       label.en: Checked
+  label.en: Identity base
+Identity:
+  help.en: Information about if and how the identity was obtained
+  label.en: Identity
+  schemas:
+    "Yes":
+      required: true
+      label.en: Identity
+      use: '#/$defs/IdentityYes_identityPolymorphic'
+    "No":
+      required: true
+      label.en: Identity
+      use: '#/$defs/IdentityEmpty_objectPolymorphic'
+  type: polymorphic
+  discriminator: checked
+Yes_identity:
+  properties:
     by_intact_mass:
       help.en: How identity was determined by intact mass, if applicable
       label.en: By intact mass
@@ -2034,7 +2051,7 @@ Identity:
       help.en: How identity was determined by fingerprinting, if applicable
       label.en: By fingerprinting
       use: '#/$defs/By_fingerprinting'
-  label.en: Identity
+  label.en: Yes identity
 By_intact_mass:
   properties:
     method:
@@ -2553,6 +2570,40 @@ PurityEmpty_objectPolymorphic:
         - "Yes"
         - "No"
       help.en: Wether or not the purity was checked
+      required: true
+      label.en: Checked
+  label.en: Empty object
+IdentityYes_identityPolymorphic:
+  properties:
+    by_intact_mass:
+      help.en: How identity was determined by intact mass, if applicable
+      label.en: By intact mass
+      use: '#/$defs/By_intact_mass'
+    by_sequencing:
+      help.en: How identity was determined by sequencing, if applicable
+      label.en: By sequencing
+      use: '#/$defs/By_sequencing'
+    by_fingerprinting:
+      help.en: How identity was determined by fingerprinting, if applicable
+      label.en: By fingerprinting
+      use: '#/$defs/By_fingerprinting'
+    checked:
+      type: keyword
+      enum:
+        - "Yes"
+        - "No"
+      help.en: Wether the identity was confirmed experimentally
+      required: true
+      label.en: Checked
+  label.en: Yes identity
+IdentityEmpty_objectPolymorphic:
+  properties:
+    checked:
+      type: keyword
+      enum:
+        - "Yes"
+        - "No"
+      help.en: Wether the identity was confirmed experimentally
       required: true
       label.en: Checked
   label.en: Empty object
