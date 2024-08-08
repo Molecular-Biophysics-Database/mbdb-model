@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.9.24')
+        value           : keyword(equals='0.9.25')
 
     record_information:
         description     : str(equals='Information about the record itself,
@@ -106,7 +106,7 @@ Record_information:
                                   "embargoed access" where the files will
                                   only become available after a specified
                                   date, 3) "restricted access" where
-                                  depositors are of the record are the only
+                                  depositors of the record are the only
                                   ones who has access', required=False)
         value       : enum('open access', 'embargoed access',
                            'restricted access')
@@ -123,7 +123,7 @@ Record_information:
                                   "embargoed access" where the files will
                                   only become available after a specified
                                   date, 3) "restricted access" where
-                                  depositors are of the record are the only
+                                  depositors of the record are the only
                                   ones who has access', required=False)
         value       : enum('open access', 'embargoed access',
                            'restricted access')
@@ -171,7 +171,6 @@ Record_information:
                                   generated', required=False)
         value       : day(required=False)
 
-
 ---
 # Entities and references to them
 
@@ -184,10 +183,10 @@ Entity_base:
     name:
         description     : str(equals='Short descriptive name (id) of the entity;
                                       must be unique within a record (e.g.
-                                      Lysozyme, Serum from Patient 1). This name
-                                      is referenced in the measurement
+                                      Lysozyme, Serum from Patient 1, Ligand A). 
+                                      This name is referenced in the measurement
                                       description to identify the entities
-                                      present in measured sample',
+                                      present in the measured sample',
                               required=False)
         default_search  : True
         value           : str()
@@ -203,7 +202,7 @@ Entity_base:
                                       substance refers to substances which are
                                       not exactly specified by their exact
                                       chemical composition by the time
-                                      measurement were performed, but e.g.
+                                      measurements were performed, e.g.
                                       blood, serum, plant extract',
                           required=False)
         default_search  : True
@@ -340,9 +339,10 @@ Polymer:
     sequence:
         description     : str(equals='Primary sequence of the polymer, using
                                       single letter codes (e.g. SAGRELLE, AGTTA).
-                                      In case of non-natural amino acids or
+                                      In the case of non-natural amino acids or
                                       nucleotides, please place the monomer in
-                                      brackets', required=False)
+                                      brackets (e.g. for selenocysteine 
+                                      as SAGREL<Sec>LE)', required=False)
         default_search  : True
         value           : str(required=False)
 
@@ -352,7 +352,7 @@ Polymer:
         value           : include('Molecular_weight')
 
     external_databases:
-        description     : str(equals='List of identifiers to records in
+        description     : str(equals='List of identifiers of records in
                                       external databases containing
                                       information about the polymer can
                                       be specified here (e.g uniprot:Q8KRF6)',
@@ -396,10 +396,10 @@ Polymer:
 
     modifications:
         description     : str(equals='If the polymer contains modifications
-                                      such as non-natural aminoacids, post
-                                      translational modification, or chemically
-                                      modifications like labeling, it can be
-                                      specified here', required=False)
+                                      such as non-natural amino acids, 
+                                      post-translational modification, or 
+                                      chemical modifications like labeling,
+                                      it can be specified here', required=False)
         value           : include('Polymer_modifications', required=False)
 
     quality_controls:
@@ -425,7 +425,7 @@ Polymer_modifications:
 
     biological_postprocessing:
         description     : str(equals='Modifications of the polymer made
-                                      after synthesis (e.g. posttranslational
+                                      after synthesis (e.g. post-translational
                                       modifications, DNA methylation) by the
                                       organism where synthesis occurred
                                       (e.g. glycosylation)', required=False)
@@ -458,7 +458,7 @@ Chemical:
 
     additional_specifications:
         description      : str(equals='Additional information about the chemical
-                                      can be specified here (e.g. RNase free
+                                      can be specified here (e.g. RNase-free
                                       water, recrystallization, desalting)',
                                required=False)
         value            : list(str(), required=False)
@@ -891,8 +891,8 @@ Depositors:
 
     principal_contact:
         description : str(equals='The person responsible for the record and
-                                  the one to contact for inquiries, would
-                                  typically be the principle investigator
+                                  the one to contact for inquiries; this would
+                                  typically be the principle investigator,
                                   group leader, or laboratory head',
                           required=False)
         value       : include('Person')
@@ -1163,7 +1163,7 @@ Entity_and_stoichiometry:
 Modification:
     position:
         description     : str(equals='The position where the modification
-                                      occurs', required=False)
+                                      occurs (e.g. 23)', required=False)
         value           : str(required=False)
 
     type:
@@ -1243,7 +1243,7 @@ Processing_step:
                                       where the source code is freely available
                                       a link can be specified here (e.g.
                                       self-written python script in a GitHub
-                                      repository', required=False)
+                                      repository)', required=False)
         value           : url(required=False)
 
 ---
@@ -1416,29 +1416,29 @@ Size:
 Quality_controls:
     purity:
         description     : str(equals='Information about if, and how
-                                      purity was checked', required=False)
+                                      purity was assessed', required=False)
         value           : include('Purity', required=False)
 
     identity:
         description     : str(equals='Information about if, and how
-                                      identity was checked', required=False)
+                                      identity was assessed', required=False)
         value           : include('Identity', required=False)
 
     homogeneity:
         description     : str(equals='Information about if, and how
-                                      homogeneity was checked', required=False)
+                                      homogeneity was assessed', required=False)
         value           : include("Homogeneity", required=False)
 
 
 Purity_base:
-    checked:
-        description     : str(equals='Wether or not the purity was checked', required=False)
+    assessed:
+        description     : str(equals='Whether or not the purity was assessed', required=False)
         value           : enum("Yes", "No")
 
 Purity:
     description         : str(equals='Information about if and how
                                       the purity was obtained', required=False)
-    value               : choose(include('Purity_base'), type_field='checked',
+    value               : choose(include('Purity_base'), type_field='assessed',
                                  Yes=include('Yes_purity'),
                                  No=include('Empty_object'))
 
@@ -1446,7 +1446,7 @@ Empty_object: {}
 
 Yes_purity:
     method:
-        description     : str(equals='The method that was used to determine
+        description     : str(equals='The method that was used to assess
                                       the purity', required=False)
         value           : enum("SDS-PAGE",
                                "Capillary Electrophoresis",
@@ -1457,42 +1457,42 @@ Yes_purity:
         value           : enum('<90 %', '>90 %', '>95 %', '>99 %')
 
 Identity_base:
-    checked:
-        description : str(equals="Wether the identity was confirmed
+    assessed:
+        description : str(equals="Whether the identity was assessed
                                   experimentally", required=False)
         value       : enum("Yes", "No")
 
 Identity:
     description         : str(equals='Information about if and how
                                       the identity was obtained', required=False)
-    value               : choose(include('Identity_base'), type_field='checked',
+    value               : choose(include('Identity_base'), type_field='assessed',
                                  Yes=include('Yes_identity'),
                                  No=include('Empty_object'))
 
 Yes_identity:
     by_intact_mass:
-        description     : str(equals='How identity was determined by intact mass,
+        description     : str(equals='How identity was assessed by intact mass,
                                       if applicable', required=False)
         value           : include('By_intact_mass', required=False)
 
     by_sequencing:
-        description     : str(equals='How identity was determined by sequencing,
+        description     : str(equals='How identity was assessed by sequencing,
                                       if applicable', required=False)
         value           : include('By_sequencing', required=False)
 
     by_fingerprinting:
-        description     : str(equals='How identity was determined by fingerprinting,
+        description     : str(equals='How identity was assessed by fingerprinting,
                                       if applicable', required=False)
         value           : include('By_fingerprinting', required=False)
 
 By_intact_mass:
     method:
-        description     : str(equals="The method used to determine the intact mass",
+        description     : str(equals="The method used to assess the intact mass",
                                 required=False)
         value           : enum("Mass spectrometry", "SDS-PAGE")
 
     deviation_from_expected_mass:
-        description     : str(equals="The amount, including unit, the obtained
+        description     : str(equals="The amount, including unit, the
                                       intact mass deviated from the expected
                                       intact mass", required=False)
         value           : include('Molecular_weight')
@@ -1520,14 +1520,14 @@ By_fingerprinting:
                                "Restriction enzyme digest + Gel electrophoresis")
 
 Homogeneity_base:
-    checked:
-        description     : str(equals='Whether or not the homogeneity was checked', required=False)
+    assessed:
+        description     : str(equals='Whether or not the homogeneity was assessed', required=False)
         value           : enum("Yes", "No")
 
 Homogeneity:
     description         : str(equals="Whether the homogeneity was tested and whether the
                                       expected number of species were present", required=False)
-    value               : choose(include('Homogeneity_base'), type_field='checked',
+    value               : choose(include('Homogeneity_base'), type_field='assessed',
                                  Yes=include('Yes_homogeneity'),
                                  No=include('Empty_object'))
 
