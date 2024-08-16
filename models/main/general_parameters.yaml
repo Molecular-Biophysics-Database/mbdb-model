@@ -79,7 +79,7 @@ General_parameters:
         value       : list(nested_include('Chemical_environment'), min=1)
 
     results:
-        description     : str(equals='List of the results (parameter) that were
+        description     : str(equals='List of the results (parameters) that were
                                       derived by analyzing the raw data,
                                       and which steps were taken to obtain
                                       them', required=False)
@@ -156,7 +156,7 @@ Record_information:
     description     : str(equals='Information about the record itself', required=False)
     value           : choose(include('Record_information_base'), type_field='access_rights',
                              open=include('Open_access'),
-                             embargoed=include('Open_access'), 
+                             embargoed=include('Open_access'),
                              restricted=include('Restricted_access')
                       )
 
@@ -171,14 +171,14 @@ Open_access:
           value       : keyword(equals="CC0 1.0 Universal")
 
         url:
-          description : str(equals="The url where further information about 
+          description : str(equals="The url where further information about
                                     the license can be found", required=False)
           value       : keyword(equals="https://creativecommons.org/publicdomain/zero/1.0/")
 
 Restricted_access:
     copyright:
         description : str(equals="The people holding copyright", required=False)
-        value       : keyword(equals="The depositors retains copyright to the 
+        value       : keyword(equals="The depositors retains copyright to the
                                       data files and metadata")
 
 ---
@@ -193,7 +193,7 @@ Entity_base:
     name:
         description     : str(equals='Short descriptive name (id) of the entity;
                                       must be unique within a record (e.g.
-                                      Lysozyme, Serum from Patient 1, Ligand A). 
+                                      Lysozyme, Serum from Patient 1, Ligand A).
                                       This name is referenced in the measurement
                                       description to identify the entities
                                       present in the measured sample',
@@ -351,7 +351,7 @@ Polymer:
                                       single letter codes (e.g. SAGRELLE, AGTTA).
                                       In the case of non-natural amino acids or
                                       nucleotides, please place the monomer in
-                                      brackets (e.g. for selenocysteine 
+                                      brackets (e.g. for selenocysteine
                                       as SAGREL<Sec>LE)', required=False)
         default_search  : True
         value           : str(required=False)
@@ -406,8 +406,8 @@ Polymer:
 
     modifications:
         description     : str(equals='If the polymer contains modifications
-                                      such as non-natural amino acids, 
-                                      post-translational modification, or 
+                                      such as non-natural amino acids,
+                                      post-translational modification, or
                                       chemical modifications like labeling,
                                       it can be specified here', required=False)
         value           : include('Polymer_modifications', required=False)
@@ -484,7 +484,7 @@ Chemical_environment:
                                       Measurement Buffer). The name must be
                                       unique within a record as it will be
                                       referred to the in method specific section
-                                      in when describing the composition of the
+                                      when describing the composition of the
                                       individual samples or measurement steps',
                                       required=False)
         value           : str()
@@ -699,7 +699,7 @@ Body_fluid:
 
 Cell_fraction:
     fraction:
-        description     : str(equals='The subcelluar component e.g. (Ribosome)',
+        description     : str(equals='The subcelluar component (e.g. Ribosome)',
                               required=False)
         default_search  : True
         value           : enum('Ribosome', 'Cell wall', 'Vesicle'
@@ -718,12 +718,14 @@ Cell_fraction:
 
     tissue:
         description     : str(equals='The tissue type the cell fraction was
-                                      derived from', required=False)
+                                      derived from (e.g. epithelia, muscle)',
+                              required=False)
         value           : str(required=False)
 
     cell_type:
         description     : str(equals='The cell type the cell fraction was
-                                      derived from', required=False)
+                                      derived from (e.g. macrophage, sperm)',
+                              required=False)
         value           : str(required=False)
 
     health_status:
@@ -762,7 +764,7 @@ Virion:
 
     host_cell_type:
         description     : str(equals='The host cell type the virion was
-                                      produced in', required=False)
+                                      produced in (e.g. macrophage)', required=False)
         value           : str(required=False)
 
 
@@ -1146,13 +1148,13 @@ Result_EC50:
 
 Result_hill_coeff:
     unit:
-        description     : str(equals='Unit of the Hill coefficient',
+        description     : str(equals='Hill coefficient is unitless',
                               required=False)
         value           : enum("unitless")
 
 Entity_and_stoichiometry:
     entity:
-        description     : str(equals='Name (ids) of the entity (from the
+        description     : str(equals='Name (id) of the entity (from the
                                       entities of interest defined in the
                                       general parameters)', required=False)
         value           : link(target='entity')
@@ -1162,7 +1164,7 @@ Entity_and_stoichiometry:
         description     : str(equals='Number of copies of the entity that
                                       contribute to the result, -1
                                       if unknown (e.g. if two individual copies
-                                      of a polymer binds to another, the copy
+                                      of a polymer bind to another, the copy
                                       number would be 2)',
                               required=False)
         value           : num(min=-1)
@@ -1266,7 +1268,7 @@ Value_error:
                                       the lower bound of the 95 % confidence
                                       interval. The same unit as the value
                                       being described is assumed. If relative
-                                      errors are provided, please provide it in
+                                      errors are provided, please provide them in
                                       fractional form (e.g.  0.01 for 1 %)',
                               required=False)
         value           : num()
@@ -1277,7 +1279,7 @@ Value_error:
                                       the upper bound of the 95 % confidence
                                       interval. The same unit as the value
                                       being described is assumed. If relative
-                                      errors are provided, please provide it in
+                                      errors are provided, please provide them in
                                       fractional form (e.g.  0.01 for 1 %)',
                               required=False)
         value           : num()
@@ -1425,17 +1427,17 @@ Size:
 
 Quality_controls:
     purity:
-        description     : str(equals='Information about if, and how
+        description     : str(equals='Information about if and how
                                       purity was assessed', required=False)
         value           : include('Purity', required=False)
 
     identity:
-        description     : str(equals='Information about if, and how
+        description     : str(equals='Information about if and how
                                       identity was assessed', required=False)
         value           : include('Identity', required=False)
 
     homogeneity:
-        description     : str(equals='Information about if, and how
+        description     : str(equals='Information about if and how
                                       homogeneity was assessed', required=False)
         value           : include("Homogeneity", required=False)
 
@@ -1447,7 +1449,7 @@ Purity_base:
 
 Purity:
     description         : str(equals='Information about if and how
-                                      the purity was obtained', required=False)
+                                      purity was assessed', required=False)
     value               : choose(include('Purity_base'), type_field='assessed',
                                  Yes=include('Yes_purity'),
                                  No=include('Empty_object'))
@@ -1474,7 +1476,7 @@ Identity_base:
 
 Identity:
     description         : str(equals='Information about if and how
-                                      the identity was obtained', required=False)
+                                      identity was assessed', required=False)
     value               : choose(include('Identity_base'), type_field='assessed',
                                  Yes=include('Yes_identity'),
                                  No=include('Empty_object'))
@@ -1502,9 +1504,9 @@ By_intact_mass:
         value           : enum("Mass spectrometry", "SDS-PAGE")
 
     deviation_from_expected_mass:
-        description     : str(equals="The amount, including unit, the
+        description     : str(equals="The amount, including unit, by which
                                       intact mass deviated from the expected
-                                      intact mass", required=False)
+                                      intact mass (e.g. 1 kDa)", required=False)
         value           : include('Molecular_weight')
 
 By_sequencing:
@@ -1535,8 +1537,8 @@ Homogeneity_base:
         value           : enum("Yes", "No")
 
 Homogeneity:
-    description         : str(equals="Whether the homogeneity was tested and whether the
-                                      expected number of species were present", required=False)
+    description         : str(equals="Information about if and how
+                                      homogeneity was assessed", required=False)
     value               : choose(include('Homogeneity_base'), type_field='assessed',
                                  Yes=include('Yes_homogeneity'),
                                  No=include('Empty_object'))
@@ -1552,7 +1554,11 @@ Yes_homogeneity:
 
     expected_number_of_species:
         description         : str(equals="The number of species that were expected to
-                                          be present", required=False)
+                                          be present (e.g. 2 if monomers and dimers are
+                                          expected to occur as an equilibrium;
+                                          large aggregates should always be considered
+                                          as being unexpected in this regard)",
+                                  required=False)
         value               : int(min=1)
 
     number_of_species_observed:
