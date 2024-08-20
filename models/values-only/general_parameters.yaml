@@ -1,7 +1,7 @@
 general_parameters: include('General_parameters')
 ---
 General_parameters:
-  schema_version: keyword(equals='0.9.24')
+  schema_version: keyword(equals='0.9.25')
   record_information: include('Record_information')
   depositors: include('Depositors')
   associated_publication: include('Publication', required=False)
@@ -14,10 +14,9 @@ General_parameters:
   chemical_environments: list(nested_include('Chemical_environment'), min=1)
   results: list(nested_include('Result'), required=False)
 ---
-Record_information:
+Record_information_base:
   title: str()
-  access_rights: enum('open access', 'embargoed access', 'restricted access')
-  metadata_access_rights: enum('open access', 'embargoed access', 'restricted access')
+  access_rights: enum('open', 'embargoed', 'restricted')
   publisher: keyword(equals='MBDB')
   resource_type_general: keyword(equals='Dataset')
   resource_type: keyword()
@@ -25,6 +24,17 @@ Record_information:
   subject_category: keyword(equals='Biophysics')
   deposition_date: day()
   date_available: day(required=False)
+Record_information: choose(include('Record_information_base'), type_field='access_rights',
+  open=include('Open_access'), embargoed=include('Open_access'), restricted=include('Restricted_access')
+  )
+Open_access:
+  copyright: keyword(equals="Anyone is free to distribute the data and metadata")
+  license:
+    name: keyword(equals="CC0 1.0 Universal")
+    url: keyword(equals="https://creativecommons.org/publicdomain/zero/1.0/")
+Restricted_access:
+  copyright: keyword(equals="The depositors retains copyright to the data files and
+    metadata")
 ---
 Entity_base:
   id: link_target(name="entity")
@@ -295,16 +305,16 @@ Quality_controls:
   identity: include('Identity', required=False)
   homogeneity: include("Homogeneity", required=False)
 Purity_base:
-  checked: enum("Yes", "No")
-Purity: choose(include('Purity_base'), type_field='checked', Yes=include('Yes_purity'),
+  assessed: enum("Yes", "No")
+Purity: choose(include('Purity_base'), type_field='assessed', Yes=include('Yes_purity'),
   No=include('Empty_object'))
 Empty_object: {}
 Yes_purity:
   method: enum("SDS-PAGE", "Capillary Electrophoresis", "Agarose Gel electrophoresis")
   purity_percentage: enum('<90 %', '>90 %', '>95 %', '>99 %')
 Identity_base:
-  checked: enum("Yes", "No")
-Identity: choose(include('Identity_base'), type_field='checked', Yes=include('Yes_identity'),
+  assessed: enum("Yes", "No")
+Identity: choose(include('Identity_base'), type_field='assessed', Yes=include('Yes_identity'),
   No=include('Empty_object'))
 Yes_identity:
   by_intact_mass: include('By_intact_mass', required=False)
@@ -321,8 +331,8 @@ By_fingerprinting:
   method: enum("Protease digest + Mass spectrometry", "Restriction enzyme digest +
     Gel electrophoresis")
 Homogeneity_base:
-  checked: enum("Yes", "No")
-Homogeneity: choose(include('Homogeneity_base'), type_field='checked', Yes=include('Yes_homogeneity'),
+  assessed: enum("Yes", "No")
+Homogeneity: choose(include('Homogeneity_base'), type_field='assessed', Yes=include('Yes_homogeneity'),
   No=include('Empty_object'))
 Yes_homogeneity:
   method: enum("Dynamic light scattering", "Size exclusion chromatography", "Native
