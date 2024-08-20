@@ -2,17 +2,21 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.24",
+        "schema_version": "0.9.25",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
           "resource_type": "BLI",
-          "access_rights": "open access",
-          "metadata_access_rights": "open access",
+          "access_rights": "open",
           "title": "BLI measurement of hemoglobin serum elements",
           "deposition_date": "2022-01-23",
           "date_available": "2023-01-23",
-          "subject_category": "Biophysics"
+          "subject_category": "Biophysics",
+          "copyright": "Anyone is free to distribute the data and metadata",
+          "license": {
+            "name": "CC0 1.0 Universal",
+            "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+          }
         },
         "depositors": {
           "depositor": {

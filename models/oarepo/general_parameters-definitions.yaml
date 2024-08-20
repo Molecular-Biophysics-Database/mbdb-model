@@ -3,13 +3,12 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.24
+        - 0.9.25
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
     record_information:
-      help.en: Information about the record itself, including whether this particular
-        record is associated with other records
+      help.en: Information about the record itself
       required: true
       label.en: Record information
       use: '#/$defs/Record_information'
@@ -90,7 +89,7 @@ General_parameters:
       type: nested
     results[]:
       ^minItems: 1
-      ^help.en: List of the results (parameter) that were derived by analyzing the
+      ^help.en: List of the results (parameters) that were derived by analyzing the
         raw data, and which steps were taken to obtain them
       ^label.en: Results
       mapping:
@@ -98,7 +97,7 @@ General_parameters:
       use: '#/$defs/Result'
       type: polymorphic
   label.en: General parameters
-Record_information:
+Record_information_base:
   properties:
     title:
       type: keyword
@@ -110,31 +109,16 @@ Record_information:
     access_rights:
       type: keyword
       enum:
-        - open access
-        - embargoed access
-        - restricted access
-      help.en: The access rights to the uploaded files. There are three options, 1)
-        "open access" where the files are accessible immediately when the deposition
-        is published, 2) "embargoed access" where the files will only become available
-        after a specified date, 3) "restricted access" where depositors are of the
-        record are the only ones who has access
+        - open
+        - embargoed
+        - restricted
+      help.en: The access rights to the uploaded data files. There are three options,
+        1) "open" where the files are accessible immediately when the deposition is
+        published, 2) "embargoed" where the files will only become available after
+        a specified date, 3) "restricted" where depositors of the record are the only
+        ones who has access
       required: true
       label.en: Access rights
-    metadata_access_rights:
-      type: keyword
-      enum:
-        - open access
-        - embargoed access
-        - restricted access
-      help.en: The access rights to the metadata. Minimal metadata that includes title
-        and depositors is accessible regardless of which type is chosen as it is required
-        to obtain a DOI. There are three options, 1) "open access" where the complete
-        metadata are accessible immediately when the deposition is published, 2) "embargoed
-        access" where the files will only become available after a specified date,
-        3) "restricted access" where depositors are of the record are the only ones
-        who has access
-      required: true
-      label.en: Metadata access rights
     publisher:
       type: keyword
       enum:
@@ -153,7 +137,7 @@ Record_information:
     resource_type:
       type: keyword
       help.en: DataCite item which shows type of dataset the record is and corresponds
-        directly to which kind of technique was used (MST/BLI/SPR)
+        directly to which kind of technique was used (BLI/ITC/MST/SPR)
       required: true
       label.en: Resource type
     external_identifier:
@@ -178,7 +162,62 @@ Record_information:
       help.en: The date when the data was/will be made publicly available. Will be
         automatically generated
       label.en: Date available
+  label.en: Record information base
+Record_information:
+  help.en: Information about the record itself
   label.en: Record information
+  schemas:
+    open:
+      required: true
+      label.en: Record information
+      use: '#/$defs/Record_informationOpen_accessPolymorphic'
+    embargoed:
+      required: true
+      label.en: Record information
+      use: '#/$defs/record_information_Record_informationOpen_accessPolymorphic'
+    restricted:
+      required: true
+      label.en: Record information
+      use: '#/$defs/Record_informationRestricted_accessPolymorphic'
+  type: polymorphic
+  discriminator: access_rights
+Open_access:
+  properties:
+    copyright:
+      type: keyword
+      enum:
+        - Anyone is free to distribute the data and metadata
+      help.en: The people holding copy right
+      required: true
+      label.en: Copyright
+    license:
+      properties:
+        name:
+          type: keyword
+          enum:
+            - CC0 1.0 Universal
+          help.en: The name of the license
+          required: true
+          label.en: Name
+        url:
+          type: keyword
+          enum:
+            - https://creativecommons.org/publicdomain/zero/1.0/
+          help.en: The url where further information about the license can be found
+          required: true
+          label.en: Url
+      label.en: License
+  label.en: Open access
+Restricted_access:
+  properties:
+    copyright:
+      type: keyword
+      enum:
+        - The depositors retains copyright to the data files and metadata
+      help.en: The people holding copyright
+      required: true
+      label.en: Copyright
+  label.en: Restricted access
 Entity_base:
   properties:
     id:
@@ -189,8 +228,9 @@ Entity_base:
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
-        record (e.g. Lysozyme, Serum from Patient 1). This name is referenced in the
-        measurement description to identify the entities present in measured sample
+        record (e.g. Lysozyme, Serum from Patient 1, Ligand A). This name is referenced
+        in the measurement description to identify the entities present in the measured
+        sample
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -210,7 +250,7 @@ Entity_base:
         than one polypeptide chain) or Complex substance. Chemical polymers such as
         PEG 5000 should be described as being a Chemical. Complex substance refers
         to substances which are not exactly specified by their exact chemical composition
-        by the time measurement were performed, but e.g. blood, serum, plant extract
+        by the time measurements were performed, e.g. blood, serum, plant extract
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -359,8 +399,8 @@ Polymer:
     sequence:
       type: keyword
       help.en: Primary sequence of the polymer, using single letter codes (e.g. SAGRELLE,
-        AGTTA). In case of non-natural amino acids or nucleotides, please place the
-        monomer in brackets
+        AGTTA). In the case of non-natural amino acids or nucleotides, please place
+        the monomer in brackets (e.g. for selenocysteine as SAGREL<Sec>LE)
       mapping:
         copy_to: collected_default_search_fields
       label.en: Sequence
@@ -371,7 +411,7 @@ Polymer:
       use: '#/$defs/Molecular_weight'
     external_databases[]:
       ^minItems: 1
-      ^help.en: List of identifiers to records in external databases containing information
+      ^help.en: List of identifiers of records in external databases containing information
         about the polymer can be specified here (e.g uniprot:Q8KRF6)
       ^label.en: External databases
       type: keyword
@@ -424,8 +464,8 @@ Polymer:
       vocabulary-type: organisms
       type: vocabulary
     modifications:
-      help.en: If the polymer contains modifications such as non-natural aminoacids,
-        post translational modification, or chemically modifications like labeling,
+      help.en: If the polymer contains modifications such as non-natural amino acids,
+        post-translational modification, or chemical modifications like labeling,
         it can be specified here
       label.en: Modifications
       use: '#/$defs/Polymer_modifications'
@@ -450,7 +490,7 @@ Polymer_modifications:
       type: nested
     biological_postprocessing[]:
       ^minItems: 1
-      ^help.en: Modifications of the polymer made after synthesis (e.g. posttranslational
+      ^help.en: Modifications of the polymer made after synthesis (e.g. post-translational
         modifications, DNA methylation) by the organism where synthesis occurred (e.g.
         glycosylation)
       ^label.en: Biological postprocessing
@@ -497,7 +537,7 @@ Chemical:
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
-        RNase free water, recrystallization, desalting)
+        RNase-free water, recrystallization, desalting)
       ^label.en: Additional specifications
       type: keyword
   label.en: Chemical
@@ -512,7 +552,7 @@ Chemical_environment:
       type: keyword
       help.en: Name of the chemical environment (e.g. Measurement Buffer). The name
         must be unique within a record as it will be referred to the in method specific
-        section in when describing the composition of the individual samples or measurement
+        section when describing the composition of the individual samples or measurement
         steps
       required: true
       label.en: Name
@@ -767,7 +807,7 @@ Cell_fraction:
         - Smooth Endoplasmic Reticulum
         - Vacuole
         - Chloroplast
-      help.en: The subcelluar component e.g. (Ribosome)
+      help.en: The subcelluar component (e.g. Ribosome)
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -778,11 +818,13 @@ Cell_fraction:
       label.en: Organ
     tissue:
       type: keyword
-      help.en: The tissue type the cell fraction was derived from
+      help.en: The tissue type the cell fraction was derived from (e.g. epithelia,
+        muscle)
       label.en: Tissue
     cell_type:
       type: keyword
-      help.en: The cell type the cell fraction was derived from
+      help.en: The cell type the cell fraction was derived from (e.g. macrophage,
+        sperm)
       label.en: Cell type
     health_status:
       type: keyword
@@ -834,7 +876,7 @@ Virion:
       type: vocabulary
     host_cell_type:
       type: keyword
-      help.en: The host cell type the virion was produced in
+      help.en: The host cell type the virion was produced in (e.g. macrophage)
       label.en: Host cell type
   label.en: Virion
 Complex_substance_of_environmental_origin:
@@ -989,8 +1031,8 @@ Depositors:
       label.en: Depositor
       use: '#/$defs/Person'
     principal_contact:
-      help.en: The person responsible for the record and the one to contact for inquiries,
-        would typically be the principle investigator group leader, or laboratory
+      help.en: The person responsible for the record and the one to contact for inquiries;
+        this would typically be the principle investigator, group leader, or laboratory
         head
       required: true
       label.en: Principal contact
@@ -1366,15 +1408,15 @@ Result_hill_coeff:
       type: keyword
       enum:
         - unitless
-      help.en: Unit of the Hill coefficient
+      help.en: Hill coefficient is unitless
       required: true
       label.en: Unit
   label.en: Result hill coeff
 Entity_and_stoichiometry:
   properties:
     entity:
-      help.en: Name (ids) of the entity (from the entities of interest defined in
-        the general parameters)
+      help.en: Name (id) of the entity (from the entities of interest defined in the
+        general parameters)
       required: true
       label.en: Entity
       type: relation
@@ -1386,8 +1428,8 @@ Entity_and_stoichiometry:
       type: double
       minimum: -1.0
       help.en: Number of copies of the entity that contribute to the result, -1 if
-        unknown (e.g. if two individual copies of a polymer binds to another, the
-        copy number would be 2)
+        unknown (e.g. if two individual copies of a polymer bind to another, the copy
+        number would be 2)
       required: true
       label.en: Copy number
   label.en: Entity and stoichiometry
@@ -1395,7 +1437,7 @@ Modification:
   properties:
     position:
       type: keyword
-      help.en: The position where the modification occurs
+      help.en: The position where the modification occurs (e.g. 23)
       label.en: Position
     type:
       type: keyword
@@ -1428,7 +1470,7 @@ Value_error:
       help.en: The lower error, i.e. the number that should be subtracted from the
         value to get the lower bound of the 95 % confidence interval. The same unit
         as the value being described is assumed. If relative errors are provided,
-        please provide it in fractional form (e.g.  0.01 for 1 %)
+        please provide them in fractional form (e.g.  0.01 for 1 %)
       required: true
       label.en: Lower
     upper:
@@ -1436,7 +1478,7 @@ Value_error:
       help.en: The upper error, i.e. the number that should be added to the value
         to get the upper bound of the 95 % confidence interval. The same unit as the
         value being described is assumed. If relative errors are provided, please
-        provide it in fractional form (e.g.  0.01 for 1 %)
+        provide them in fractional form (e.g.  0.01 for 1 %)
       required: true
       label.en: Upper
     is_relative:
@@ -1542,31 +1584,31 @@ Size:
 Quality_controls:
   properties:
     purity:
-      help.en: Information about if, and how purity was checked
+      help.en: Information about if and how purity was assessed
       label.en: Purity
       use: '#/$defs/Purity'
     identity:
-      help.en: Information about if, and how identity was checked
+      help.en: Information about if and how identity was assessed
       label.en: Identity
       use: '#/$defs/Identity'
     homogeneity:
-      help.en: Information about if, and how homogeneity was checked
+      help.en: Information about if and how homogeneity was assessed
       label.en: Homogeneity
       use: '#/$defs/Homogeneity'
   label.en: Quality controls
 Purity_base:
   properties:
-    checked:
+    assessed:
       type: keyword
       enum:
         - "Yes"
         - "No"
-      help.en: Wether or not the purity was checked
+      help.en: Whether or not the purity was assessed
       required: true
-      label.en: Checked
+      label.en: Assessed
   label.en: Purity base
 Purity:
-  help.en: Information about if and how the purity was obtained
+  help.en: Information about if and how purity was assessed
   label.en: Purity
   schemas:
     "Yes":
@@ -1578,7 +1620,7 @@ Purity:
       label.en: Purity
       use: '#/$defs/PurityEmpty_objectPolymorphic'
   type: polymorphic
-  discriminator: checked
+  discriminator: assessed
 Empty_object:
   properties: {}
   label.en: Empty object
@@ -1590,7 +1632,7 @@ Yes_purity:
         - SDS-PAGE
         - Capillary Electrophoresis
         - Agarose Gel electrophoresis
-      help.en: The method that was used to determine the purity
+      help.en: The method that was used to assess the purity
       required: true
       label.en: Method
     purity_percentage:
@@ -1606,17 +1648,17 @@ Yes_purity:
   label.en: Yes purity
 Identity_base:
   properties:
-    checked:
+    assessed:
       type: keyword
       enum:
         - "Yes"
         - "No"
-      help.en: Wether the identity was confirmed experimentally
+      help.en: Whether the identity was assessed experimentally
       required: true
-      label.en: Checked
+      label.en: Assessed
   label.en: Identity base
 Identity:
-  help.en: Information about if and how the identity was obtained
+  help.en: Information about if and how identity was assessed
   label.en: Identity
   schemas:
     "Yes":
@@ -1628,19 +1670,19 @@ Identity:
       label.en: Identity
       use: '#/$defs/IdentityEmpty_objectPolymorphic'
   type: polymorphic
-  discriminator: checked
+  discriminator: assessed
 Yes_identity:
   properties:
     by_intact_mass:
-      help.en: How identity was determined by intact mass, if applicable
+      help.en: How identity was assessed by intact mass, if applicable
       label.en: By intact mass
       use: '#/$defs/By_intact_mass'
     by_sequencing:
-      help.en: How identity was determined by sequencing, if applicable
+      help.en: How identity was assessed by sequencing, if applicable
       label.en: By sequencing
       use: '#/$defs/By_sequencing'
     by_fingerprinting:
-      help.en: How identity was determined by fingerprinting, if applicable
+      help.en: How identity was assessed by fingerprinting, if applicable
       label.en: By fingerprinting
       use: '#/$defs/By_fingerprinting'
   label.en: Yes identity
@@ -1651,12 +1693,12 @@ By_intact_mass:
       enum:
         - Mass spectrometry
         - SDS-PAGE
-      help.en: The method used to determine the intact mass
+      help.en: The method used to assess the intact mass
       required: true
       label.en: Method
     deviation_from_expected_mass:
-      help.en: The amount, including unit, the obtained intact mass deviated from
-        the expected intact mass
+      help.en: The amount, including unit, by which intact mass deviated from the
+        expected intact mass (e.g. 1 kDa)
       required: true
       label.en: Deviation from expected mass
       use: '#/$defs/Molecular_weight'
@@ -1695,18 +1737,17 @@ By_fingerprinting:
   label.en: By fingerprinting
 Homogeneity_base:
   properties:
-    checked:
+    assessed:
       type: keyword
       enum:
         - "Yes"
         - "No"
-      help.en: Whether or not the homogeneity was checked
+      help.en: Whether or not the homogeneity was assessed
       required: true
-      label.en: Checked
+      label.en: Assessed
   label.en: Homogeneity base
 Homogeneity:
-  help.en: Whether the homogeneity was tested and whether the expected number of species
-    were present
+  help.en: Information about if and how homogeneity was assessed
   label.en: Homogeneity
   schemas:
     "Yes":
@@ -1718,7 +1759,7 @@ Homogeneity:
       label.en: Homogeneity
       use: '#/$defs/HomogeneityEmpty_objectPolymorphic'
   type: polymorphic
-  discriminator: checked
+  discriminator: assessed
 Yes_homogeneity:
   properties:
     method:
@@ -1734,7 +1775,9 @@ Yes_homogeneity:
     expected_number_of_species:
       type: integer
       minimum: 1
-      help.en: The number of species that were expected to be present
+      help.en: The number of species that were expected to be present (e.g. 2 if monomers
+        and dimers are expected to occur as an equilibrium; large aggregates should
+        always be considered as being unexpected in this regard)
       required: true
       label.en: Expected number of species
     number_of_species_observed:
@@ -1855,6 +1898,259 @@ SUPPORTED_TECHNIQUES:
     - Surface plasmon resonance (SPR)
     - Isothermal Titration Calorimetry (ITC)
   label.en: Supported techniques
+Record_informationOpen_accessPolymorphic:
+  properties:
+    copyright:
+      type: keyword
+      enum:
+        - Anyone is free to distribute the data and metadata
+      help.en: The people holding copy right
+      required: true
+      label.en: Copyright
+    license:
+      properties:
+        name:
+          type: keyword
+          enum:
+            - CC0 1.0 Universal
+          help.en: The name of the license
+          required: true
+          label.en: Name
+        url:
+          type: keyword
+          enum:
+            - https://creativecommons.org/publicdomain/zero/1.0/
+          help.en: The url where further information about the license can be found
+          required: true
+          label.en: Url
+      label.en: License
+    title:
+      type: keyword
+      help.en: Short descriptive title of the record
+      required: true
+      mapping:
+        copy_to: collected_default_search_fields
+      label.en: Title
+    access_rights:
+      type: keyword
+      enum:
+        - open
+        - embargoed
+        - restricted
+      help.en: The access rights to the uploaded data files. There are three options,
+        1) "open" where the files are accessible immediately when the deposition is
+        published, 2) "embargoed" where the files will only become available after
+        a specified date, 3) "restricted" where depositors of the record are the only
+        ones who has access
+      required: true
+      label.en: Access rights
+    publisher:
+      type: keyword
+      enum:
+        - MBDB
+      help.en: When made available MBDB is to be considered the publisher, however,
+        the depositors are still the owners
+      required: true
+      label.en: Publisher
+    resource_type_general:
+      type: keyword
+      enum:
+        - Dataset
+      help.en: All records are considered to be datasets
+      required: true
+      label.en: Resource type general
+    resource_type:
+      type: keyword
+      help.en: DataCite item which shows type of dataset the record is and corresponds
+        directly to which kind of technique was used (BLI/ITC/MST/SPR)
+      required: true
+      label.en: Resource type
+    external_identifier:
+      type: keyword
+      help.en: The external identifier of the record which is a DOI generated by Datacite.
+        This will automatically be generated when the record is published
+      label.en: External identifier
+    subject_category:
+      type: keyword
+      enum:
+        - Biophysics
+      help.en: DataCite subject category the record data belongs to default is Biophysics
+      required: true
+      label.en: Subject category
+    deposition_date:
+      type: date
+      help.en: The date when the data was deposited; automatically generated
+      required: true
+      label.en: Deposition date
+    date_available:
+      type: date
+      help.en: The date when the data was/will be made publicly available. Will be
+        automatically generated
+      label.en: Date available
+  label.en: Open access
+record_information_Record_informationOpen_accessPolymorphic:
+  properties:
+    copyright:
+      type: keyword
+      enum:
+        - Anyone is free to distribute the data and metadata
+      help.en: The people holding copy right
+      required: true
+      label.en: Copyright
+    license:
+      properties:
+        name:
+          type: keyword
+          enum:
+            - CC0 1.0 Universal
+          help.en: The name of the license
+          required: true
+          label.en: Name
+        url:
+          type: keyword
+          enum:
+            - https://creativecommons.org/publicdomain/zero/1.0/
+          help.en: The url where further information about the license can be found
+          required: true
+          label.en: Url
+      label.en: License
+    title:
+      type: keyword
+      help.en: Short descriptive title of the record
+      required: true
+      mapping:
+        copy_to: collected_default_search_fields
+      label.en: Title
+    access_rights:
+      type: keyword
+      enum:
+        - open
+        - embargoed
+        - restricted
+      help.en: The access rights to the uploaded data files. There are three options,
+        1) "open" where the files are accessible immediately when the deposition is
+        published, 2) "embargoed" where the files will only become available after
+        a specified date, 3) "restricted" where depositors of the record are the only
+        ones who has access
+      required: true
+      label.en: Access rights
+    publisher:
+      type: keyword
+      enum:
+        - MBDB
+      help.en: When made available MBDB is to be considered the publisher, however,
+        the depositors are still the owners
+      required: true
+      label.en: Publisher
+    resource_type_general:
+      type: keyword
+      enum:
+        - Dataset
+      help.en: All records are considered to be datasets
+      required: true
+      label.en: Resource type general
+    resource_type:
+      type: keyword
+      help.en: DataCite item which shows type of dataset the record is and corresponds
+        directly to which kind of technique was used (BLI/ITC/MST/SPR)
+      required: true
+      label.en: Resource type
+    external_identifier:
+      type: keyword
+      help.en: The external identifier of the record which is a DOI generated by Datacite.
+        This will automatically be generated when the record is published
+      label.en: External identifier
+    subject_category:
+      type: keyword
+      enum:
+        - Biophysics
+      help.en: DataCite subject category the record data belongs to default is Biophysics
+      required: true
+      label.en: Subject category
+    deposition_date:
+      type: date
+      help.en: The date when the data was deposited; automatically generated
+      required: true
+      label.en: Deposition date
+    date_available:
+      type: date
+      help.en: The date when the data was/will be made publicly available. Will be
+        automatically generated
+      label.en: Date available
+  label.en: Open access
+Record_informationRestricted_accessPolymorphic:
+  properties:
+    copyright:
+      type: keyword
+      enum:
+        - The depositors retains copyright to the data files and metadata
+      help.en: The people holding copyright
+      required: true
+      label.en: Copyright
+    title:
+      type: keyword
+      help.en: Short descriptive title of the record
+      required: true
+      mapping:
+        copy_to: collected_default_search_fields
+      label.en: Title
+    access_rights:
+      type: keyword
+      enum:
+        - open
+        - embargoed
+        - restricted
+      help.en: The access rights to the uploaded data files. There are three options,
+        1) "open" where the files are accessible immediately when the deposition is
+        published, 2) "embargoed" where the files will only become available after
+        a specified date, 3) "restricted" where depositors of the record are the only
+        ones who has access
+      required: true
+      label.en: Access rights
+    publisher:
+      type: keyword
+      enum:
+        - MBDB
+      help.en: When made available MBDB is to be considered the publisher, however,
+        the depositors are still the owners
+      required: true
+      label.en: Publisher
+    resource_type_general:
+      type: keyword
+      enum:
+        - Dataset
+      help.en: All records are considered to be datasets
+      required: true
+      label.en: Resource type general
+    resource_type:
+      type: keyword
+      help.en: DataCite item which shows type of dataset the record is and corresponds
+        directly to which kind of technique was used (BLI/ITC/MST/SPR)
+      required: true
+      label.en: Resource type
+    external_identifier:
+      type: keyword
+      help.en: The external identifier of the record which is a DOI generated by Datacite.
+        This will automatically be generated when the record is published
+      label.en: External identifier
+    subject_category:
+      type: keyword
+      enum:
+        - Biophysics
+      help.en: DataCite subject category the record data belongs to default is Biophysics
+      required: true
+      label.en: Subject category
+    deposition_date:
+      type: date
+      help.en: The date when the data was deposited; automatically generated
+      required: true
+      label.en: Deposition date
+    date_available:
+      type: date
+      help.en: The date when the data was/will be made publicly available. Will be
+        automatically generated
+      label.en: Date available
+  label.en: Restricted access
 PublicationArticlePolymorphic:
   properties:
     journal:
@@ -1979,8 +2275,8 @@ EntityPolymerPolymorphic:
     sequence:
       type: keyword
       help.en: Primary sequence of the polymer, using single letter codes (e.g. SAGRELLE,
-        AGTTA). In case of non-natural amino acids or nucleotides, please place the
-        monomer in brackets
+        AGTTA). In the case of non-natural amino acids or nucleotides, please place
+        the monomer in brackets (e.g. for selenocysteine as SAGREL<Sec>LE)
       mapping:
         copy_to: collected_default_search_fields
       label.en: Sequence
@@ -1991,7 +2287,7 @@ EntityPolymerPolymorphic:
       use: '#/$defs/Molecular_weight'
     external_databases[]:
       ^minItems: 1
-      ^help.en: List of identifiers to records in external databases containing information
+      ^help.en: List of identifiers of records in external databases containing information
         about the polymer can be specified here (e.g uniprot:Q8KRF6)
       ^label.en: External databases
       type: keyword
@@ -2044,8 +2340,8 @@ EntityPolymerPolymorphic:
       vocabulary-type: organisms
       type: vocabulary
     modifications:
-      help.en: If the polymer contains modifications such as non-natural aminoacids,
-        post translational modification, or chemically modifications like labeling,
+      help.en: If the polymer contains modifications such as non-natural amino acids,
+        post-translational modification, or chemical modifications like labeling,
         it can be specified here
       label.en: Modifications
       use: '#/$defs/Polymer_modifications'
@@ -2064,8 +2360,9 @@ EntityPolymerPolymorphic:
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
-        record (e.g. Lysozyme, Serum from Patient 1). This name is referenced in the
-        measurement description to identify the entities present in measured sample
+        record (e.g. Lysozyme, Serum from Patient 1, Ligand A). This name is referenced
+        in the measurement description to identify the entities present in the measured
+        sample
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2085,7 +2382,7 @@ EntityPolymerPolymorphic:
         than one polypeptide chain) or Complex substance. Chemical polymers such as
         PEG 5000 should be described as being a Chemical. Complex substance refers
         to substances which are not exactly specified by their exact chemical composition
-        by the time measurement were performed, but e.g. blood, serum, plant extract
+        by the time measurements were performed, e.g. blood, serum, plant extract
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2099,7 +2396,7 @@ PurityYes_purityPolymorphic:
         - SDS-PAGE
         - Capillary Electrophoresis
         - Agarose Gel electrophoresis
-      help.en: The method that was used to determine the purity
+      help.en: The method that was used to assess the purity
       required: true
       label.en: Method
     purity_percentage:
@@ -2112,59 +2409,59 @@ PurityYes_purityPolymorphic:
       help.en: The obtained purity (in percent)
       required: true
       label.en: Purity percentage
-    checked:
+    assessed:
       type: keyword
       enum:
         - "Yes"
         - "No"
-      help.en: Wether or not the purity was checked
+      help.en: Whether or not the purity was assessed
       required: true
-      label.en: Checked
+      label.en: Assessed
   label.en: Yes purity
 PurityEmpty_objectPolymorphic:
   properties:
-    checked:
+    assessed:
       type: keyword
       enum:
         - "Yes"
         - "No"
-      help.en: Wether or not the purity was checked
+      help.en: Whether or not the purity was assessed
       required: true
-      label.en: Checked
+      label.en: Assessed
   label.en: Empty object
 IdentityYes_identityPolymorphic:
   properties:
     by_intact_mass:
-      help.en: How identity was determined by intact mass, if applicable
+      help.en: How identity was assessed by intact mass, if applicable
       label.en: By intact mass
       use: '#/$defs/By_intact_mass'
     by_sequencing:
-      help.en: How identity was determined by sequencing, if applicable
+      help.en: How identity was assessed by sequencing, if applicable
       label.en: By sequencing
       use: '#/$defs/By_sequencing'
     by_fingerprinting:
-      help.en: How identity was determined by fingerprinting, if applicable
+      help.en: How identity was assessed by fingerprinting, if applicable
       label.en: By fingerprinting
       use: '#/$defs/By_fingerprinting'
-    checked:
+    assessed:
       type: keyword
       enum:
         - "Yes"
         - "No"
-      help.en: Wether the identity was confirmed experimentally
+      help.en: Whether the identity was assessed experimentally
       required: true
-      label.en: Checked
+      label.en: Assessed
   label.en: Yes identity
 IdentityEmpty_objectPolymorphic:
   properties:
-    checked:
+    assessed:
       type: keyword
       enum:
         - "Yes"
         - "No"
-      help.en: Wether the identity was confirmed experimentally
+      help.en: Whether the identity was assessed experimentally
       required: true
-      label.en: Checked
+      label.en: Assessed
   label.en: Empty object
 HomogeneityYes_homogeneityPolymorphic:
   properties:
@@ -2181,7 +2478,9 @@ HomogeneityYes_homogeneityPolymorphic:
     expected_number_of_species:
       type: integer
       minimum: 1
-      help.en: The number of species that were expected to be present
+      help.en: The number of species that were expected to be present (e.g. 2 if monomers
+        and dimers are expected to occur as an equilibrium; large aggregates should
+        always be considered as being unexpected in this regard)
       required: true
       label.en: Expected number of species
     number_of_species_observed:
@@ -2190,25 +2489,25 @@ HomogeneityYes_homogeneityPolymorphic:
       help.en: The number of species that was observed to be present
       required: true
       label.en: Number of species observed
-    checked:
+    assessed:
       type: keyword
       enum:
         - "Yes"
         - "No"
-      help.en: Whether or not the homogeneity was checked
+      help.en: Whether or not the homogeneity was assessed
       required: true
-      label.en: Checked
+      label.en: Assessed
   label.en: Yes homogeneity
 HomogeneityEmpty_objectPolymorphic:
   properties:
-    checked:
+    assessed:
       type: keyword
       enum:
         - "Yes"
         - "No"
-      help.en: Whether or not the homogeneity was checked
+      help.en: Whether or not the homogeneity was assessed
       required: true
-      label.en: Checked
+      label.en: Assessed
   label.en: Empty object
 EntityChemicalPolymorphic:
   properties:
@@ -2242,7 +2541,7 @@ EntityChemicalPolymorphic:
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
-        RNase free water, recrystallization, desalting)
+        RNase-free water, recrystallization, desalting)
       ^label.en: Additional specifications
       type: keyword
     id:
@@ -2251,8 +2550,9 @@ EntityChemicalPolymorphic:
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
-        record (e.g. Lysozyme, Serum from Patient 1). This name is referenced in the
-        measurement description to identify the entities present in measured sample
+        record (e.g. Lysozyme, Serum from Patient 1, Ligand A). This name is referenced
+        in the measurement description to identify the entities present in the measured
+        sample
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2272,7 +2572,7 @@ EntityChemicalPolymorphic:
         than one polypeptide chain) or Complex substance. Chemical polymers such as
         PEG 5000 should be described as being a Chemical. Complex substance refers
         to substances which are not exactly specified by their exact chemical composition
-        by the time measurement were performed, but e.g. blood, serum, plant extract
+        by the time measurements were performed, e.g. blood, serum, plant extract
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2330,8 +2630,9 @@ EntityMolecular_assemblyPolymorphic:
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
-        record (e.g. Lysozyme, Serum from Patient 1). This name is referenced in the
-        measurement description to identify the entities present in measured sample
+        record (e.g. Lysozyme, Serum from Patient 1, Ligand A). This name is referenced
+        in the measurement description to identify the entities present in the measured
+        sample
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2351,7 +2652,7 @@ EntityMolecular_assemblyPolymorphic:
         than one polypeptide chain) or Complex substance. Chemical polymers such as
         PEG 5000 should be described as being a Chemical. Complex substance refers
         to substances which are not exactly specified by their exact chemical composition
-        by the time measurement were performed, but e.g. blood, serum, plant extract
+        by the time measurements were performed, e.g. blood, serum, plant extract
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2377,8 +2678,8 @@ Assembly_componentPolymerPolymorphic:
     sequence:
       type: keyword
       help.en: Primary sequence of the polymer, using single letter codes (e.g. SAGRELLE,
-        AGTTA). In case of non-natural amino acids or nucleotides, please place the
-        monomer in brackets
+        AGTTA). In the case of non-natural amino acids or nucleotides, please place
+        the monomer in brackets (e.g. for selenocysteine as SAGREL<Sec>LE)
       mapping:
         copy_to: collected_default_search_fields
       label.en: Sequence
@@ -2389,7 +2690,7 @@ Assembly_componentPolymerPolymorphic:
       use: '#/$defs/Molecular_weight'
     external_databases[]:
       ^minItems: 1
-      ^help.en: List of identifiers to records in external databases containing information
+      ^help.en: List of identifiers of records in external databases containing information
         about the polymer can be specified here (e.g uniprot:Q8KRF6)
       ^label.en: External databases
       type: keyword
@@ -2442,8 +2743,8 @@ Assembly_componentPolymerPolymorphic:
       vocabulary-type: organisms
       type: vocabulary
     modifications:
-      help.en: If the polymer contains modifications such as non-natural aminoacids,
-        post translational modification, or chemically modifications like labeling,
+      help.en: If the polymer contains modifications such as non-natural amino acids,
+        post-translational modification, or chemical modifications like labeling,
         it can be specified here
       label.en: Modifications
       use: '#/$defs/Polymer_modifications'
@@ -2511,7 +2812,7 @@ Assembly_componentChemicalPolymorphic:
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
-        RNase free water, recrystallization, desalting)
+        RNase-free water, recrystallization, desalting)
       ^label.en: Additional specifications
       type: keyword
     name:
@@ -2633,8 +2934,9 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
-        record (e.g. Lysozyme, Serum from Patient 1). This name is referenced in the
-        measurement description to identify the entities present in measured sample
+        record (e.g. Lysozyme, Serum from Patient 1, Ligand A). This name is referenced
+        in the measurement description to identify the entities present in the measured
+        sample
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2654,7 +2956,7 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
         than one polypeptide chain) or Complex substance. Chemical polymers such as
         PEG 5000 should be described as being a Chemical. Complex substance refers
         to substances which are not exactly specified by their exact chemical composition
-        by the time measurement were performed, but e.g. blood, serum, plant extract
+        by the time measurements were performed, e.g. blood, serum, plant extract
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2678,7 +2980,7 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
         - Smooth Endoplasmic Reticulum
         - Vacuole
         - Chloroplast
-      help.en: The subcelluar component e.g. (Ribosome)
+      help.en: The subcelluar component (e.g. Ribosome)
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2689,11 +2991,13 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
       label.en: Organ
     tissue:
       type: keyword
-      help.en: The tissue type the cell fraction was derived from
+      help.en: The tissue type the cell fraction was derived from (e.g. epithelia,
+        muscle)
       label.en: Tissue
     cell_type:
       type: keyword
-      help.en: The cell type the cell fraction was derived from
+      help.en: The cell type the cell fraction was derived from (e.g. macrophage,
+        sperm)
       label.en: Cell type
     health_status:
       type: keyword
@@ -2754,8 +3058,9 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
-        record (e.g. Lysozyme, Serum from Patient 1). This name is referenced in the
-        measurement description to identify the entities present in measured sample
+        record (e.g. Lysozyme, Serum from Patient 1, Ligand A). This name is referenced
+        in the measurement description to identify the entities present in the measured
+        sample
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2775,7 +3080,7 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
         than one polypeptide chain) or Complex substance. Chemical polymers such as
         PEG 5000 should be described as being a Chemical. Complex substance refers
         to substances which are not exactly specified by their exact chemical composition
-        by the time measurement were performed, but e.g. blood, serum, plant extract
+        by the time measurements were performed, e.g. blood, serum, plant extract
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2824,7 +3129,7 @@ Complex_substance_of_biological_originVirionPolymorphic:
       type: vocabulary
     host_cell_type:
       type: keyword
-      help.en: The host cell type the virion was produced in
+      help.en: The host cell type the virion was produced in (e.g. macrophage)
       label.en: Host cell type
     derived_from:
       type: keyword
@@ -2879,8 +3184,9 @@ Complex_substance_of_biological_originVirionPolymorphic:
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
-        record (e.g. Lysozyme, Serum from Patient 1). This name is referenced in the
-        measurement description to identify the entities present in measured sample
+        record (e.g. Lysozyme, Serum from Patient 1, Ligand A). This name is referenced
+        in the measurement description to identify the entities present in the measured
+        sample
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2900,7 +3206,7 @@ Complex_substance_of_biological_originVirionPolymorphic:
         than one polypeptide chain) or Complex substance. Chemical polymers such as
         PEG 5000 should be described as being a Chemical. Complex substance refers
         to substances which are not exactly specified by their exact chemical composition
-        by the time measurement were performed, but e.g. blood, serum, plant extract
+        by the time measurements were performed, e.g. blood, serum, plant extract
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2952,8 +3258,9 @@ EntityComplex_substance_of_environmental_originPolymorphic:
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
-        record (e.g. Lysozyme, Serum from Patient 1). This name is referenced in the
-        measurement description to identify the entities present in measured sample
+        record (e.g. Lysozyme, Serum from Patient 1, Ligand A). This name is referenced
+        in the measurement description to identify the entities present in the measured
+        sample
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -2973,7 +3280,7 @@ EntityComplex_substance_of_environmental_originPolymorphic:
         than one polypeptide chain) or Complex substance. Chemical polymers such as
         PEG 5000 should be described as being a Chemical. Complex substance refers
         to substances which are not exactly specified by their exact chemical composition
-        by the time measurement were performed, but e.g. blood, serum, plant extract
+        by the time measurements were performed, e.g. blood, serum, plant extract
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -3051,8 +3358,9 @@ Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
-        record (e.g. Lysozyme, Serum from Patient 1). This name is referenced in the
-        measurement description to identify the entities present in measured sample
+        record (e.g. Lysozyme, Serum from Patient 1, Ligand A). This name is referenced
+        in the measurement description to identify the entities present in the measured
+        sample
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -3072,7 +3380,7 @@ Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
         than one polypeptide chain) or Complex substance. Chemical polymers such as
         PEG 5000 should be described as being a Chemical. Complex substance refers
         to substances which are not exactly specified by their exact chemical composition
-        by the time measurement were performed, but e.g. blood, serum, plant extract
+        by the time measurements were performed, e.g. blood, serum, plant extract
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -3116,8 +3424,9 @@ EntityComplex_substance_of_industrial_originPolymorphic:
     name:
       type: keyword
       help.en: Short descriptive name (id) of the entity; must be unique within a
-        record (e.g. Lysozyme, Serum from Patient 1). This name is referenced in the
-        measurement description to identify the entities present in measured sample
+        record (e.g. Lysozyme, Serum from Patient 1, Ligand A). This name is referenced
+        in the measurement description to identify the entities present in the measured
+        sample
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -3137,7 +3446,7 @@ EntityComplex_substance_of_industrial_originPolymorphic:
         than one polypeptide chain) or Complex substance. Chemical polymers such as
         PEG 5000 should be described as being a Chemical. Complex substance refers
         to substances which are not exactly specified by their exact chemical composition
-        by the time measurement were performed, but e.g. blood, serum, plant extract
+        by the time measurements were performed, e.g. blood, serum, plant extract
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -3175,7 +3484,7 @@ Chemical_constituentChemicalPolymorphic:
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
-        RNase free water, recrystallization, desalting)
+        RNase-free water, recrystallization, desalting)
       ^label.en: Additional specifications
       type: keyword
     name:
@@ -3220,8 +3529,8 @@ ConstituentPolymerPolymorphic:
     sequence:
       type: keyword
       help.en: Primary sequence of the polymer, using single letter codes (e.g. SAGRELLE,
-        AGTTA). In case of non-natural amino acids or nucleotides, please place the
-        monomer in brackets
+        AGTTA). In the case of non-natural amino acids or nucleotides, please place
+        the monomer in brackets (e.g. for selenocysteine as SAGREL<Sec>LE)
       mapping:
         copy_to: collected_default_search_fields
       label.en: Sequence
@@ -3232,7 +3541,7 @@ ConstituentPolymerPolymorphic:
       use: '#/$defs/Molecular_weight'
     external_databases[]:
       ^minItems: 1
-      ^help.en: List of identifiers to records in external databases containing information
+      ^help.en: List of identifiers of records in external databases containing information
         about the polymer can be specified here (e.g uniprot:Q8KRF6)
       ^label.en: External databases
       type: keyword
@@ -3285,8 +3594,8 @@ ConstituentPolymerPolymorphic:
       vocabulary-type: organisms
       type: vocabulary
     modifications:
-      help.en: If the polymer contains modifications such as non-natural aminoacids,
-        post translational modification, or chemically modifications like labeling,
+      help.en: If the polymer contains modifications such as non-natural amino acids,
+        post-translational modification, or chemical modifications like labeling,
         it can be specified here
       label.en: Modifications
       use: '#/$defs/Polymer_modifications'
@@ -3360,7 +3669,7 @@ ConstituentChemicalPolymorphic:
     additional_specifications[]:
       ^minItems: 1
       ^help.en: Additional information about the chemical can be specified here (e.g.
-        RNase free water, recrystallization, desalting)
+        RNase-free water, recrystallization, desalting)
       ^label.en: Additional specifications
       type: keyword
     name:
@@ -3604,7 +3913,7 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
         - Smooth Endoplasmic Reticulum
         - Vacuole
         - Chloroplast
-      help.en: The subcelluar component e.g. (Ribosome)
+      help.en: The subcelluar component (e.g. Ribosome)
       required: true
       mapping:
         copy_to: collected_default_search_fields
@@ -3615,11 +3924,13 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
       label.en: Organ
     tissue:
       type: keyword
-      help.en: The tissue type the cell fraction was derived from
+      help.en: The tissue type the cell fraction was derived from (e.g. epithelia,
+        muscle)
       label.en: Tissue
     cell_type:
       type: keyword
-      help.en: The cell type the cell fraction was derived from
+      help.en: The cell type the cell fraction was derived from (e.g. macrophage,
+        sperm)
       label.en: Cell type
     health_status:
       type: keyword
@@ -3746,7 +4057,7 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
       type: vocabulary
     host_cell_type:
       type: keyword
-      help.en: The host cell type the virion was produced in
+      help.en: The host cell type the virion was produced in (e.g. macrophage)
       label.en: Host cell type
     derived_from:
       type: keyword
@@ -4705,7 +5016,7 @@ ResultResult_hill_coeffPolymorphic:
       type: keyword
       enum:
         - unitless
-      help.en: Unit of the Hill coefficient
+      help.en: Hill coefficient is unitless
       required: true
       label.en: Unit
     id:
