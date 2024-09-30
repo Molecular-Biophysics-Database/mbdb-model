@@ -36,5 +36,9 @@ VOCABULARY_CUSTOM_FIELD_KEYS = {
     "organisms": None,
     "grants": None,
     "instruments": None,
+    "environment_types": None,
+    "body_fluids": None,
+    "products": None,
+    "cell_fractions": None,
     "chemicals": CHEMICAL_VOCABULARY_KEYS,
 }

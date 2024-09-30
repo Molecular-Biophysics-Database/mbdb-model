@@ -1,0 +1,9 @@
+id:
+    description:        str(equals='The MBDB id of the environment (env:1)', required=False)
+    value:              fulltext(min=1)
+
+title:
+    en:
+        description:    str(equals='The name of the environment type (e.g. marine)',
+                            required=False)
+        value:          fulltext(min=1)

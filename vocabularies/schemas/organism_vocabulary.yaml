@@ -1,5 +1,5 @@
 id:
-    description:        str(equals='NCBI taxid of the organism (e.g. 9606) to the
+    description:        str(equals='NCBI taxid of the organism (e.g. taxid:9606) to the
                              lowest possible taxonomic rank (e.g. species),
                              -1 if no information is present in the NCBI
                              taxonomy at all', required=False)

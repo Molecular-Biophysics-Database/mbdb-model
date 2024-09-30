@@ -1,6 +1,6 @@
 id:
-        description:   str(equals='The number/ID associated with the grant (e.g
-                                   308726)', required=False)
+        description:   str(equals='The OpenAire project id of the grant',
+                           required=False)
         value:         fulltext(min=1)
 
 title:
@@ -16,4 +16,9 @@ props:
     funder_name:
         decription:    str(equals='Name of the funding agency/institution (e.g
                                    Academy of Finland)', required=False)
+        value:         fulltext(min=1)
+
+    grant_ide:
+        decription:    str(equals='The number/ID associated with the grant (e.g
+                                   308726) from th funder', required=False)
         value:         fulltext(min=1)
