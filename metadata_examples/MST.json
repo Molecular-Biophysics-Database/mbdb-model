@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.9.25",
+        "schema_version": "0.10.0",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -146,7 +146,9 @@
             "name": "Human serum",
             "type": "Complex substance of biological origin",
             "derived_from": "Body fluid",
-            "fluid": "Serum",
+            "fluid": {
+              "id": "cf:2"
+            },
             "health_status": "Healthy",
             "source_organism": {
               "id": "taxid:12374"
