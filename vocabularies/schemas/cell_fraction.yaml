@@ -1,0 +1,9 @@
+id:
+    description:        str(equals='The MBDB id of the cell fraction (cf:1)', required=False)
+    value:              fulltext(min=1)
+
+title:
+    en:
+        description:    str(equals='The name of the cell fraction (e.g. Ribosome)',
+                            required=False)
+        value:          fulltext(min=1)

@@ -236,7 +236,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.9.25
+        - 0.10.0
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -948,7 +948,8 @@ Constituent:
   discriminator: type
 Complex_substance_of_biological_origin:
   help.en: Information about what the biological substance is derived from and how
-    it collected and prepared
+    it collected and prepared. Note that "Body fluid" can be from any multicellular
+    organism not just animal
   label.en: Complex substance of biological origin
   schemas:
     Body fluid:
@@ -963,6 +964,10 @@ Complex_substance_of_biological_origin:
       required: true
       label.en: Complex substance of biological origin
       use: '#/$defs/Virion'
+    Solid tissue sample:
+      required: true
+      label.en: Complex substance of biological origin
+      use: '#/$defs/Solid_tissue_sample'
   type: polymorphic
   discriminator: derived_from
 Complex_substance_of_biological_origin_base:
@@ -973,6 +978,7 @@ Complex_substance_of_biological_origin_base:
         - Body fluid
         - Cell fraction
         - Virion
+        - Solid tissue sample
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -1018,21 +1024,23 @@ Complex_substance_of_biological_origin_base:
 Body_fluid:
   properties:
     fluid:
-      type: keyword
-      enum:
-        - Blood
-        - Fecal matter
-        - Milk
-        - Plasma
-        - Saliva
-        - Serum
-        - Urine
-        - Plant extract
       help.en: The body fluid the complex substance is derived from
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
       label.en: Fluid
+      keys:
+        - id
+        - title
+      vocabulary-type: body_fluids
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
     health_status:
       type: keyword
       help.en: Health status of the donor organism where the body fluid was derived
@@ -1043,26 +1051,23 @@ Body_fluid:
 Cell_fraction:
   properties:
     fraction:
-      type: keyword
-      enum:
-        - Ribosome
-        - Cell wall
-        - VesicleCell lysate/Cytoplasm
-        - Cell Membrane
-        - Extracellular matrix
-        - Lysosome
-        - Golgi Apparatus
-        - Mitochondrion
-        - Nucleus
-        - Rough Endoplasmic Reticulum
-        - Smooth Endoplasmic Reticulum
-        - Vacuole
-        - Chloroplast
-      help.en: The subcelluar component (e.g. Ribosome)
+      help.en: The sub-cellular component (e.g. Ribosome)
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
       label.en: Fraction
+      keys:
+        - id
+        - title
+      vocabulary-type: cell_fractions
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
     organ:
       type: keyword
       help.en: The organ the cell fraction was derived from (e.g. heart)
@@ -1130,22 +1135,45 @@ Virion:
       help.en: The host cell type the virion was produced in (e.g. macrophage)
       label.en: Host cell type
   label.en: Virion
+Solid_tissue_sample:
+  properties:
+    organ:
+      type: keyword
+      help.en: The organ the tissue was derived from (e.g. heart)
+      required: true
+      label.en: Organ
+    homogenized:
+      type: boolean
+      help.en: Whether or not the tissue was homogenized
+      required: true
+      label.en: Homogenized
+    health_status:
+      type: keyword
+      help.en: Health status of the donor organism where the tissue was derived from
+        (e.g. healthy, sick, patient with Diabetes type 2)
+      required: true
+      label.en: Health status
+  label.en: Solid tissue sample
 Complex_substance_of_environmental_origin:
   properties:
-    source:
-      type: keyword
-      enum:
-        - Fresh water
-        - Marine
-        - Ice core
-        - Sediment
-        - Sewage
-        - Soil
+    environment_type:
       help.en: The environmental source where the complex substance was derived from
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
-      label.en: Source
+      label.en: Environment type
+      keys:
+        - id
+        - title
+      vocabulary-type: environment_types
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
@@ -1244,17 +1272,24 @@ Lipid_assembly:
 Complex_substance_of_industrial_origin:
   properties:
     product:
-      type: keyword
-      enum:
-        - Beer
-        - Cell medium
-        - Whey
       help.en: The type of product, byproduct, or waste product the complex substance
         was derived from
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
       label.en: Product
+      keys:
+        - id
+        - title
+      vocabulary-type: products
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
@@ -2133,6 +2168,13 @@ Coordinates:
       help.en: The longitude, from west to east, in degrees (decimal notation)
       required: true
       label.en: Longitude
+    altitude:
+      type: double
+      minimum: -6378100.0
+      help.en: The altitude, in meters, above mean sea-level (negative numbers are
+        allowed)
+      required: true
+      label.en: Altitude
   label.en: Coordinates
 CONCENTRATION_UNITS:
   type: keyword
@@ -3152,7 +3194,8 @@ Assembly_componentChemicalPolymorphic:
   label.en: Chemical
 EntityComplex_substance_of_biological_originPolymorphic:
   help.en: Information about what the biological substance is derived from and how
-    it collected and prepared
+    it collected and prepared. Note that "Body fluid" can be from any multicellular
+    organism not just animal
   label.en: Complex substance of biological origin
   schemas:
     Body fluid:
@@ -3167,26 +3210,32 @@ EntityComplex_substance_of_biological_originPolymorphic:
       required: true
       label.en: Complex substance of biological origin
       use: '#/$defs/Complex_substance_of_biological_originVirionPolymorphic'
+    Solid tissue sample:
+      required: true
+      label.en: Complex substance of biological origin
+      use: '#/$defs/Complex_substance_of_biological_originSolid_tissue_samplePolymorphic'
   type: polymorphic
   discriminator: derived_from
 Complex_substance_of_biological_originBody_fluidPolymorphic:
   properties:
     fluid:
-      type: keyword
-      enum:
-        - Blood
-        - Fecal matter
-        - Milk
-        - Plasma
-        - Saliva
-        - Serum
-        - Urine
-        - Plant extract
       help.en: The body fluid the complex substance is derived from
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
       label.en: Fluid
+      keys:
+        - id
+        - title
+      vocabulary-type: body_fluids
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
     health_status:
       type: keyword
       help.en: Health status of the donor organism where the body fluid was derived
@@ -3199,6 +3248,7 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
         - Body fluid
         - Cell fraction
         - Virion
+        - Solid tissue sample
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -3277,26 +3327,23 @@ Complex_substance_of_biological_originBody_fluidPolymorphic:
 Complex_substance_of_biological_originCell_fractionPolymorphic:
   properties:
     fraction:
-      type: keyword
-      enum:
-        - Ribosome
-        - Cell wall
-        - VesicleCell lysate/Cytoplasm
-        - Cell Membrane
-        - Extracellular matrix
-        - Lysosome
-        - Golgi Apparatus
-        - Mitochondrion
-        - Nucleus
-        - Rough Endoplasmic Reticulum
-        - Smooth Endoplasmic Reticulum
-        - Vacuole
-        - Chloroplast
-      help.en: The subcelluar component (e.g. Ribosome)
+      help.en: The sub-cellular component (e.g. Ribosome)
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
       label.en: Fraction
+      keys:
+        - id
+        - title
+      vocabulary-type: cell_fractions
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
     organ:
       type: keyword
       help.en: The organ the cell fraction was derived from (e.g. heart)
@@ -3323,6 +3370,7 @@ Complex_substance_of_biological_originCell_fractionPolymorphic:
         - Body fluid
         - Cell fraction
         - Virion
+        - Solid tissue sample
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -3449,6 +3497,7 @@ Complex_substance_of_biological_originVirionPolymorphic:
         - Body fluid
         - Cell fraction
         - Virion
+        - Solid tissue sample
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -3524,22 +3573,126 @@ Complex_substance_of_biological_originVirionPolymorphic:
         copy_to: collected_default_search_fields
       label.en: Type
   label.en: Virion
-EntityComplex_substance_of_environmental_originPolymorphic:
+Complex_substance_of_biological_originSolid_tissue_samplePolymorphic:
   properties:
-    source:
+    organ:
+      type: keyword
+      help.en: The organ the tissue was derived from (e.g. heart)
+      required: true
+      label.en: Organ
+    homogenized:
+      type: boolean
+      help.en: Whether or not the tissue was homogenized
+      required: true
+      label.en: Homogenized
+    health_status:
+      type: keyword
+      help.en: Health status of the donor organism where the tissue was derived from
+        (e.g. healthy, sick, patient with Diabetes type 2)
+      required: true
+      label.en: Health status
+    derived_from:
       type: keyword
       enum:
-        - Fresh water
-        - Marine
-        - Ice core
-        - Sediment
-        - Sewage
-        - Soil
-      help.en: The environmental source where the complex substance was derived from
+        - Body fluid
+        - Cell fraction
+        - Virion
+        - Solid tissue sample
+      help.en: The biological substance the complex substance is derived from
+      required: true
+      label.en: Derived from
+    source_organism:
+      help.en: Identification of the organism to the lowest taxonomic rank possible
+        e.g. strain. Note that this is based on the NCBI taxonomy
+      required: true
+      label.en: Source organism
+      keys:
+        - id
+        - title
+        - props.rank
+      vocabulary-type: organisms
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
+    preparation_protocol[]:
+      ^minItems: 1
+      ^help.en: List of the steps performed during the preparation of the complex
+        substance
+      ^required: true
+      ^label.en: Preparation protocol
+      use: '#/$defs/Step'
+    storage:
+      help.en: Information about how the complex substance was stored between being
+        acquired and measured, including temperature and duration
+      label.en: Storage
+      use: '#/$defs/Storage'
+    additional_specifications[]:
+      ^minItems: 1
+      ^help.en: Additional information about the complex substance can be specified
+        here
+      ^label.en: Additional specifications
+      type: keyword
+    id:
+      type: keyword
+      label.en: Id
+    name:
+      type: keyword
+      help.en: Short descriptive name (id) of the entity; must be unique within a
+        record (e.g. Lysozyme, Serum from Patient 1, Ligand A). This name is referenced
+        in the measurement description to identify the entities present in the measured
+        sample
       required: true
       mapping:
         copy_to: collected_default_search_fields
-      label.en: Source
+      label.en: Name
+    type:
+      type: keyword
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
+      help.en: The type of the entity, where the options are (biological) Polymer,
+        Chemical, Molecular assembly (also includes all proteins composed of more
+        than one polypeptide chain) or Complex substance. Chemical polymers such as
+        PEG 5000 should be described as being a Chemical. Complex substance refers
+        to substances which are not exactly specified by their exact chemical composition
+        by the time measurements were performed, e.g. blood, serum, plant extract
+      required: true
+      mapping:
+        copy_to: collected_default_search_fields
+      label.en: Type
+  label.en: Solid tissue sample
+EntityComplex_substance_of_environmental_originPolymorphic:
+  properties:
+    environment_type:
+      help.en: The environmental source where the complex substance was derived from
+      required: true
+      label.en: Environment type
+      keys:
+        - id
+        - title
+      vocabulary-type: environment_types
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
@@ -3701,17 +3854,24 @@ Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
 EntityComplex_substance_of_industrial_originPolymorphic:
   properties:
     product:
-      type: keyword
-      enum:
-        - Beer
-        - Cell medium
-        - Whey
       help.en: The type of product, byproduct, or waste product the complex substance
         was derived from
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
       label.en: Product
+      keys:
+        - id
+        - title
+      vocabulary-type: products
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
@@ -4090,7 +4250,8 @@ ConstituentMolecular_assemblyPolymorphic:
   label.en: Molecular assembly
 ConstituentComplex_substance_of_biological_originPolymorphic:
   help.en: Information about what the biological substance is derived from and how
-    it collected and prepared
+    it collected and prepared. Note that "Body fluid" can be from any multicellular
+    organism not just animal
   label.en: Complex substance of biological origin
   schemas:
     Body fluid:
@@ -4105,26 +4266,32 @@ ConstituentComplex_substance_of_biological_originPolymorphic:
       required: true
       label.en: Complex substance of biological origin
       use: '#/$defs/constituent_Complex_substance_of_biological_originVirionPolymorphic'
+    Solid tissue sample:
+      required: true
+      label.en: Complex substance of biological origin
+      use: '#/$defs/constituent_Complex_substance_of_biological_originSolid_tissue_samplePolymorphic'
   type: polymorphic
   discriminator: derived_from
 constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
   properties:
     fluid:
-      type: keyword
-      enum:
-        - Blood
-        - Fecal matter
-        - Milk
-        - Plasma
-        - Saliva
-        - Serum
-        - Urine
-        - Plant extract
       help.en: The body fluid the complex substance is derived from
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
       label.en: Fluid
+      keys:
+        - id
+        - title
+      vocabulary-type: body_fluids
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
     health_status:
       type: keyword
       help.en: Health status of the donor organism where the body fluid was derived
@@ -4137,6 +4304,7 @@ constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
         - Body fluid
         - Cell fraction
         - Virion
+        - Solid tissue sample
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -4210,26 +4378,23 @@ constituent_Complex_substance_of_biological_originBody_fluidPolymorphic:
 constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
   properties:
     fraction:
-      type: keyword
-      enum:
-        - Ribosome
-        - Cell wall
-        - VesicleCell lysate/Cytoplasm
-        - Cell Membrane
-        - Extracellular matrix
-        - Lysosome
-        - Golgi Apparatus
-        - Mitochondrion
-        - Nucleus
-        - Rough Endoplasmic Reticulum
-        - Smooth Endoplasmic Reticulum
-        - Vacuole
-        - Chloroplast
-      help.en: The subcelluar component (e.g. Ribosome)
+      help.en: The sub-cellular component (e.g. Ribosome)
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
       label.en: Fraction
+      keys:
+        - id
+        - title
+      vocabulary-type: cell_fractions
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
     organ:
       type: keyword
       help.en: The organ the cell fraction was derived from (e.g. heart)
@@ -4256,6 +4421,7 @@ constituent_Complex_substance_of_biological_originCell_fractionPolymorphic:
         - Body fluid
         - Cell fraction
         - Virion
+        - Solid tissue sample
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -4377,6 +4543,7 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
         - Body fluid
         - Cell fraction
         - Virion
+        - Solid tissue sample
       help.en: The biological substance the complex substance is derived from
       required: true
       label.en: Derived from
@@ -4447,22 +4614,121 @@ constituent_Complex_substance_of_biological_originVirionPolymorphic:
       label.en: Concentration
       use: '#/$defs/Concentration'
   label.en: Virion
-ConstituentComplex_substance_of_environmental_originPolymorphic:
+constituent_Complex_substance_of_biological_originSolid_tissue_samplePolymorphic:
   properties:
-    source:
+    organ:
+      type: keyword
+      help.en: The organ the tissue was derived from (e.g. heart)
+      required: true
+      label.en: Organ
+    homogenized:
+      type: boolean
+      help.en: Whether or not the tissue was homogenized
+      required: true
+      label.en: Homogenized
+    health_status:
+      type: keyword
+      help.en: Health status of the donor organism where the tissue was derived from
+        (e.g. healthy, sick, patient with Diabetes type 2)
+      required: true
+      label.en: Health status
+    derived_from:
       type: keyword
       enum:
-        - Fresh water
-        - Marine
-        - Ice core
-        - Sediment
-        - Sewage
-        - Soil
-      help.en: The environmental source where the complex substance was derived from
+        - Body fluid
+        - Cell fraction
+        - Virion
+        - Solid tissue sample
+      help.en: The biological substance the complex substance is derived from
+      required: true
+      label.en: Derived from
+    source_organism:
+      help.en: Identification of the organism to the lowest taxonomic rank possible
+        e.g. strain. Note that this is based on the NCBI taxonomy
+      required: true
+      label.en: Source organism
+      keys:
+        - id
+        - title
+        - props.rank
+      vocabulary-type: organisms
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
+    preparation_protocol[]:
+      ^minItems: 1
+      ^help.en: List of the steps performed during the preparation of the complex
+        substance
+      ^required: true
+      ^label.en: Preparation protocol
+      use: '#/$defs/Step'
+    storage:
+      help.en: Information about how the complex substance was stored between being
+        acquired and measured, including temperature and duration
+      label.en: Storage
+      use: '#/$defs/Storage'
+    additional_specifications[]:
+      ^minItems: 1
+      ^help.en: Additional information about the complex substance can be specified
+        here
+      ^label.en: Additional specifications
+      type: keyword
+    name:
+      type: keyword
+      help.en: Short descriptive name (id) of the constituent, must be unique within
+        a record (e.g. NaCl, Human serum P1, Lysozyme, etc.)
       required: true
       mapping:
         copy_to: collected_default_search_fields
-      label.en: Source
+      label.en: Name
+    type:
+      type: keyword
+      enum:
+        - Polymer
+        - Chemical
+        - Molecular assembly
+        - Complex substance of biological origin
+        - Complex substance of environmental origin
+        - Complex substance of chemical origin
+        - Complex substance of industrial origin
+      help.en: The type of the constituent, options are Polymer, Chemical, and defined
+        assembly
+      required: true
+      label.en: Type
+    concentration:
+      help.en: Concentration of the constituent including its relative concentration
+        related to the collected sample or absolute concentration of the constituent
+      required: true
+      label.en: Concentration
+      use: '#/$defs/Concentration'
+  label.en: Solid tissue sample
+ConstituentComplex_substance_of_environmental_originPolymorphic:
+  properties:
+    environment_type:
+      help.en: The environmental source where the complex substance was derived from
+      required: true
+      label.en: Environment type
+      keys:
+        - id
+        - title
+      vocabulary-type: environment_types
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex
@@ -4614,17 +4880,24 @@ constituent_Complex_substance_of_chemical_originLipid_assemblyPolymorphic:
 ConstituentComplex_substance_of_industrial_originPolymorphic:
   properties:
     product:
-      type: keyword
-      enum:
-        - Beer
-        - Cell medium
-        - Whey
       help.en: The type of product, byproduct, or waste product the complex substance
         was derived from
       required: true
-      mapping:
-        copy_to: collected_default_search_fields
       label.en: Product
+      keys:
+        - id
+        - title
+      vocabulary-type: products
+      type: vocabulary
+      extras:
+        title:
+          mapping:
+            properties:
+              en:
+                copy_to: collected_default_search_fields
+        id:
+          mapping:
+            copy_to: collected_default_search_fields
     preparation_protocol[]:
       ^minItems: 1
       ^help.en: List of the steps performed during the preparation of the complex

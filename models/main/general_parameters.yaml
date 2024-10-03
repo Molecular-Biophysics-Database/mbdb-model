@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.9.25')
+        value           : keyword(equals='0.10.0')
 
     record_information:
         description     : str(equals='Information about the record itself',
@@ -613,7 +613,6 @@ Chemically_defined_constituent:
                                  Chemical=include('Chemical'),
                                  Molecular_assembly=include('Molecular_assembly'))
 
-
 Constituent:
     description         : str(equals='The details about the constituent which
                                       can be of chemically well defined
@@ -637,13 +636,16 @@ Constituent:
 Complex_substance_of_biological_origin:
     description         : str(equals='Information about what the biological
                                       substance is derived from and how it
-                                      collected and prepared',
+                                      collected and prepared. Note that
+                                      "Body fluid" can be from any multicellular
+                                      organism not just animal',
                               required=False)
     value               : choose(include('Complex_substance_of_biological_origin_base'),
                                  type_field='derived_from',
                                  Body_fluid=include('Body_fluid'),
                                  Cell_fraction=include('Cell_fraction'),
-                                 Virion=include('Virion'))
+                                 Virion=include('Virion'),
+                                 Solid_tissue_sample=include('Solid_tissue_sample'))
 
 Complex_substance_of_biological_origin_base:
     derived_from:
@@ -651,7 +653,8 @@ Complex_substance_of_biological_origin_base:
                                       substance is derived from')
         value           : enum('Body fluid',
                                'Cell fraction',
-                               'Virion')
+                               'Virion',
+                               'Solid tissue sample')
     source_organism:
         description     : str(equals='Identification of the organism to the
                                       lowest taxonomic rank possible e.g.
@@ -686,9 +689,9 @@ Body_fluid:
                                       substance is derived from',
                               required=False)
         default_search  : True
-        value           : enum('Blood', 'Fecal matter', 'Milk',
-                               'Plasma', 'Saliva', 'Serum', 'Urine',
-                               'Plant extract')
+        value           : vocabulary(vocabulary='body_fluids',
+                                     fields='[id,title]')
+
     health_status:
         description     : str(equals='Health status of the donor organism where
                                       the body fluid was derived from
@@ -699,16 +702,11 @@ Body_fluid:
 
 Cell_fraction:
     fraction:
-        description     : str(equals='The subcelluar component (e.g. Ribosome)',
+        description     : str(equals='The sub-cellular component (e.g. Ribosome)',
                               required=False)
         default_search  : True
-        value           : enum('Ribosome', 'Cell wall', 'Vesicle'
-                               'Cell lysate/Cytoplasm', 'Cell Membrane',
-                               'Extracellular matrix', 'Lysosome',
-                               'Golgi Apparatus', 'Mitochondrion', 'Nucleus',
-                               'Rough Endoplasmic Reticulum',
-                               'Smooth Endoplasmic Reticulum',
-                               'Vacuole','Chloroplast')
+        value           : vocabulary(vocabulary='cell_fractions',
+                                     fields='[id,title]')
 
     organ:
         description     : str(equals='The organ the cell fraction was
@@ -767,16 +765,32 @@ Virion:
                                       produced in (e.g. macrophage)', required=False)
         value           : str(required=False)
 
+Solid_tissue_sample:
+    organ:
+        description     : str(equals='The organ the tissue was derived from (e.g. heart)',
+                              required=False)
+        value           : keyword()
 
+    Homogenized:
+        description     : str(equals='Whether or not the tissue was homogenized',
+                              required=False)
+        value           : bool()
+
+    health_status:
+        description     : str(equals='Health status of the donor organism
+                                      where the tissue was derived from
+                                      (e.g. healthy, sick, patient with
+                                      Diabetes type 2)', required=False)
+        value           : keyword()
 
 Complex_substance_of_environmental_origin:
-    source:
+    environment_type:
         description     : str(equals='The environmental source where the complex
                                       substance was derived from',
                               required=False)
         default_search  : True
-        value           : enum('Fresh water', 'Marine', 'Ice core', 'Sediment',
-                               'Sewage', 'Soil')
+        value           : vocabulary(vocabulary='environment_types',
+                                     fields='[id,title]')
 
     preparation_protocol:
         description     : str(equals='List of the steps performed during the
@@ -802,7 +816,6 @@ Complex_substance_of_environmental_origin:
                                       substance can be specified here',
                               required=False)
         value           : list(str(), required=False)
-
 
 Complex_substance_of_chemical_origin_base:
     class:
@@ -830,7 +843,6 @@ Complex_substance_of_chemical_origin_base:
                                       substance can be specified here',
                               required=False)
         value           : list(str(), required=False)
-
 
 Complex_substance_of_chemical_origin:
     description         : str(equals='Information about what the chemical
@@ -864,14 +876,14 @@ Lipid_assembly:
                               required=False)
         value           : include('Size', required=False)
 
-
 Complex_substance_of_industrial_origin:
     product:
         description     : str(equals='The type of product, byproduct, or waste
                                       product the complex substance was derived
                                       from', required=False)
         default_search  : True
-        value           : enum('Beer', 'Cell medium', 'Whey')
+        value           : vocabulary(vocabulary='products',
+                                     fields='[id,title]')
 
     preparation_protocol:
         description     : str(equals='List of the steps performed during the
@@ -891,7 +903,6 @@ Complex_substance_of_industrial_origin:
                                       substance can be specified here',
                               required=False)
         value           : list(str(), required=False)
-
 ---
 # People, publications, and funding objects
 
@@ -1624,6 +1635,12 @@ Coordinates:
                                       degrees (decimal notation)',
                               required=False)
         value           : num(min=-180, max=180)
+
+    altitude:
+        description     : str(equals='The altitude, in meters, above mean sea-level
+                                      (negative numbers are allowed)',
+                              required=False)
+        value           : num(min=-6378100)
 
 ---
 # Unit definitions

@@ -1,0 +1,9 @@
+id:
+    description:        str(equals='The MBDB id of the industrial source (indus:1)', required=False)
+    value:              fulltext(min=1)
+
+title:
+    en:
+        description:    str(equals='The name of the body fluid (e.g. blood)',
+                            required=False)
+        value:          fulltext(min=1)
