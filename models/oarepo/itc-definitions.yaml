@@ -249,7 +249,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.10.0
+        - 0.10.1
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -1513,15 +1513,6 @@ Result_base:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
-    value:
-      type: double
-      help.en: Numerical value of the result
-      required: true
-      label.en: Value
-    value_error:
-      help.en: The expected error of the result in terms of a 95 % confidence interval
-      label.en: Value error
-      use: '#/$defs/Value_error'
   id: result
   label.en: Result base
 Result:
@@ -1581,6 +1572,15 @@ Result:
   id: result
 Result_concentration:
   properties:
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
     unit:
       help.en: Unit of the concentration
       required: true
@@ -1588,17 +1588,19 @@ Result_concentration:
       use: '#/$defs/CONCENTRATION_UNITS'
   label.en: Result concentration
 Result_stoichiometry:
-  properties:
-    unit:
-      type: keyword
-      enum:
-        - per complex
-      help.en: Unit of the stoichiometry
-      required: true
-      label.en: Unit
+  properties: {}
   label.en: Result stoichiometry
 Result_KA:
   properties:
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
     unit:
       type: keyword
       enum:
@@ -1616,6 +1618,15 @@ Result_KA:
   label.en: Result ka
 Result_KD:
   properties:
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
     unit:
       type: keyword
       enum:
@@ -1633,6 +1644,15 @@ Result_KD:
   label.en: Result kd
 Result_kOn:
   properties:
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
     unit:
       type: keyword
       enum:
@@ -1650,6 +1670,15 @@ Result_kOn:
   label.en: Result kon
 Result_kOff:
   properties:
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
     unit:
       type: keyword
       enum:
@@ -1660,6 +1689,15 @@ Result_kOff:
   label.en: Result koff
 Result_deltaH:
   properties:
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
     unit:
       help.en: Unit of the change in enthalpy
       required: true
@@ -1668,6 +1706,15 @@ Result_deltaH:
   label.en: Result deltah
 Result_deltaS:
   properties:
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
     unit:
       type: keyword
       enum:
@@ -1679,6 +1726,15 @@ Result_deltaS:
   label.en: Result deltas
 Result_deltaG:
   properties:
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
     unit:
       help.en: Unit of the change in Gibbs free energy
       required: true
@@ -1687,6 +1743,15 @@ Result_deltaG:
   label.en: Result deltag
 Result_MW:
   properties:
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
     unit:
       help.en: Unit of the molecular weight
       required: true
@@ -1695,6 +1760,15 @@ Result_MW:
   label.en: Result mw
 Result_EC50:
   properties:
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
     unit:
       help.en: Unit of the half maximal effective concentration
       required: true
@@ -1703,6 +1777,15 @@ Result_EC50:
   label.en: Result ec50
 Result_hill_coeff:
   properties:
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
     unit:
       type: keyword
       enum:
@@ -4988,6 +5071,15 @@ ConstituentComplex_substance_of_industrial_originPolymorphic:
   label.en: Complex substance of industrial origin
 ResultResult_concentrationPolymorphic:
   properties:
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
     unit:
       help.en: Unit of the concentration
       required: true
@@ -5032,25 +5124,9 @@ ResultResult_concentrationPolymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
-    value:
-      type: double
-      help.en: Numerical value of the result
-      required: true
-      label.en: Value
-    value_error:
-      help.en: The expected error of the result in terms of a 95 % confidence interval
-      label.en: Value error
-      use: '#/$defs/Value_error'
   label.en: Result concentration
 ResultResult_stoichiometryPolymorphic:
   properties:
-    unit:
-      type: keyword
-      enum:
-        - per complex
-      help.en: Unit of the stoichiometry
-      required: true
-      label.en: Unit
     id:
       type: keyword
       label.en: Id
@@ -5090,6 +5166,9 @@ ResultResult_stoichiometryPolymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
+  label.en: Result stoichiometry
+ResultResult_KAPolymorphic:
+  properties:
     value:
       type: double
       help.en: Numerical value of the result
@@ -5099,9 +5178,6 @@ ResultResult_stoichiometryPolymorphic:
       help.en: The expected error of the result in terms of a 95 % confidence interval
       label.en: Value error
       use: '#/$defs/Value_error'
-  label.en: Result stoichiometry
-ResultResult_KAPolymorphic:
-  properties:
     unit:
       type: keyword
       enum:
@@ -5155,6 +5231,9 @@ ResultResult_KAPolymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
+  label.en: Result ka
+ResultResult_KDPolymorphic:
+  properties:
     value:
       type: double
       help.en: Numerical value of the result
@@ -5164,9 +5243,6 @@ ResultResult_KAPolymorphic:
       help.en: The expected error of the result in terms of a 95 % confidence interval
       label.en: Value error
       use: '#/$defs/Value_error'
-  label.en: Result ka
-ResultResult_KDPolymorphic:
-  properties:
     unit:
       type: keyword
       enum:
@@ -5220,6 +5296,9 @@ ResultResult_KDPolymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
+  label.en: Result kd
+ResultResult_kOnPolymorphic:
+  properties:
     value:
       type: double
       help.en: Numerical value of the result
@@ -5229,9 +5308,6 @@ ResultResult_KDPolymorphic:
       help.en: The expected error of the result in terms of a 95 % confidence interval
       label.en: Value error
       use: '#/$defs/Value_error'
-  label.en: Result kd
-ResultResult_kOnPolymorphic:
-  properties:
     unit:
       type: keyword
       enum:
@@ -5285,6 +5361,9 @@ ResultResult_kOnPolymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
+  label.en: Result kon
+ResultResult_kOffPolymorphic:
+  properties:
     value:
       type: double
       help.en: Numerical value of the result
@@ -5294,9 +5373,6 @@ ResultResult_kOnPolymorphic:
       help.en: The expected error of the result in terms of a 95 % confidence interval
       label.en: Value error
       use: '#/$defs/Value_error'
-  label.en: Result kon
-ResultResult_kOffPolymorphic:
-  properties:
     unit:
       type: keyword
       enum:
@@ -5343,6 +5419,9 @@ ResultResult_kOffPolymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
+  label.en: Result koff
+ResultResult_deltaHPolymorphic:
+  properties:
     value:
       type: double
       help.en: Numerical value of the result
@@ -5352,9 +5431,6 @@ ResultResult_kOffPolymorphic:
       help.en: The expected error of the result in terms of a 95 % confidence interval
       label.en: Value error
       use: '#/$defs/Value_error'
-  label.en: Result koff
-ResultResult_deltaHPolymorphic:
-  properties:
     unit:
       help.en: Unit of the change in enthalpy
       required: true
@@ -5399,6 +5475,9 @@ ResultResult_deltaHPolymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
+  label.en: Result deltah
+ResultResult_deltaSPolymorphic:
+  properties:
     value:
       type: double
       help.en: Numerical value of the result
@@ -5408,9 +5487,6 @@ ResultResult_deltaHPolymorphic:
       help.en: The expected error of the result in terms of a 95 % confidence interval
       label.en: Value error
       use: '#/$defs/Value_error'
-  label.en: Result deltah
-ResultResult_deltaSPolymorphic:
-  properties:
     unit:
       type: keyword
       enum:
@@ -5458,6 +5534,9 @@ ResultResult_deltaSPolymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
+  label.en: Result deltas
+ResultResult_deltaGPolymorphic:
+  properties:
     value:
       type: double
       help.en: Numerical value of the result
@@ -5467,9 +5546,6 @@ ResultResult_deltaSPolymorphic:
       help.en: The expected error of the result in terms of a 95 % confidence interval
       label.en: Value error
       use: '#/$defs/Value_error'
-  label.en: Result deltas
-ResultResult_deltaGPolymorphic:
-  properties:
     unit:
       help.en: Unit of the change in Gibbs free energy
       required: true
@@ -5514,6 +5590,9 @@ ResultResult_deltaGPolymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
+  label.en: Result deltag
+ResultResult_MWPolymorphic:
+  properties:
     value:
       type: double
       help.en: Numerical value of the result
@@ -5523,9 +5602,6 @@ ResultResult_deltaGPolymorphic:
       help.en: The expected error of the result in terms of a 95 % confidence interval
       label.en: Value error
       use: '#/$defs/Value_error'
-  label.en: Result deltag
-ResultResult_MWPolymorphic:
-  properties:
     unit:
       help.en: Unit of the molecular weight
       required: true
@@ -5570,6 +5646,9 @@ ResultResult_MWPolymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
+  label.en: Result mw
+ResultResult_EC50Polymorphic:
+  properties:
     value:
       type: double
       help.en: Numerical value of the result
@@ -5579,9 +5658,6 @@ ResultResult_MWPolymorphic:
       help.en: The expected error of the result in terms of a 95 % confidence interval
       label.en: Value error
       use: '#/$defs/Value_error'
-  label.en: Result mw
-ResultResult_EC50Polymorphic:
-  properties:
     unit:
       help.en: Unit of the half maximal effective concentration
       required: true
@@ -5626,6 +5702,9 @@ ResultResult_EC50Polymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
+  label.en: Result ec50
+ResultResult_hill_coeffPolymorphic:
+  properties:
     value:
       type: double
       help.en: Numerical value of the result
@@ -5635,9 +5714,6 @@ ResultResult_EC50Polymorphic:
       help.en: The expected error of the result in terms of a 95 % confidence interval
       label.en: Value error
       use: '#/$defs/Value_error'
-  label.en: Result ec50
-ResultResult_hill_coeffPolymorphic:
-  properties:
     unit:
       type: keyword
       enum:
@@ -5684,15 +5760,6 @@ ResultResult_hill_coeffPolymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
-    value:
-      type: double
-      help.en: Numerical value of the result
-      required: true
-      label.en: Value
-    value_error:
-      help.en: The expected error of the result in terms of a 95 % confidence interval
-      label.en: Value error
-      use: '#/$defs/Value_error'
   label.en: Result hill coeff
 Injection_modeSingle_injectionPolymorphic:
   properties:
