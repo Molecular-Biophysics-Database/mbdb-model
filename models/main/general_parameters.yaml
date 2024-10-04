@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.10.0')
+        value           : keyword(equals='0.10.1')
 
     record_information:
         description     : str(equals='Information about the record itself',
@@ -1051,18 +1051,6 @@ Result_base:
                               required=False)
         value           : list(nested_include('Entity_and_stoichiometry'),
                                min=1)
-
-    value:
-        description     : str(equals='Numerical value of the result',
-                              required=False)
-        value           : num()
-
-    value_error:
-        description     : str(equals='The expected error of the result in terms
-                                      of a 95 % confidence interval',
-                              required=False)
-        value           : include('Value_error', required=False)
-
 Result:
     description         : str(equals='Details of the result', required=False)
     value               : choose(include('Result_base'),
@@ -1081,18 +1069,35 @@ Result:
                                 )
 
 Result_concentration:
+    value:
+        description     : str(equals='Numerical value of the result',
+                              required=False)
+        value           : num()
+
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
+
     unit:
         description     : str(equals='Unit of the concentration',
                               required=False)
         value           : include('CONCENTRATION_UNITS')
 
-Result_stoichiometry:
-    unit:
-        description     : str(equals='Unit of the stoichiometry',
-                              required=False)
-        value           : enum('per complex')
+Result_stoichiometry: {}
 
 Result_KA:
+    value:
+        description     : str(equals='Numerical value of the result',
+                              required=False)
+        value           : num()
+
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
     unit:
         description     : str(equals='Unit of the constant of association',
                               required=False)
@@ -1103,6 +1108,17 @@ Result_KA:
                                )
 
 Result_KD:
+    value:
+        description     : str(equals='Numerical value of the result',
+                              required=False)
+        value           : num()
+
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
+
     unit:
         description     : str(equals='Unit of the constant of dissociation',
                               required=False)
@@ -1113,6 +1129,16 @@ Result_KD:
                                )
 
 Result_kOn:
+    value:
+        description     : str(equals='Numerical value of the result',
+                              required=False)
+        value           : num()
+
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
     unit:
         description     : str(equals='Unit of the association rate constant',
                               required=False)
@@ -1122,42 +1148,112 @@ Result_kOn:
                                'nM^-1 s^-1', 'nM^-2 s^-1'
                                )
 Result_kOff:
+    value:
+        description     : str(equals='Numerical value of the result',
+                              required=False)
+        value           : num()
+
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
     unit:
         description     : str(equals='Unit of the dissociation rate constant',
                               required=False)
         value           : enum('s^-1')
 
 Result_deltaH:
+    value:
+        description     : str(equals='Numerical value of the result',
+                              required=False)
+        value           : num()
+
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
     unit:
         description     : str(equals='Unit of the change in enthalpy',
                               required=False)
         value           : include('ENERGY_UNITS')
 
 Result_deltaS:
+    value:
+        description     : str(equals='Numerical value of the result',
+                              required=False)
+        value           : num()
+
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
     unit:
         description     : str(equals='Unit of the change in entropy',
                               required=False)
         value           : enum('kcal/molK','kJ/molK' )
 
 Result_deltaG:
+    value:
+        description     : str(equals='Numerical value of the result',
+                              required=False)
+        value           : num()
+
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
     unit:
         description     : str(equals='Unit of the change in Gibbs free energy',
                               required=False)
         value           : include('ENERGY_UNITS')
 
 Result_MW:
+    value:
+        description     : str(equals='Numerical value of the result',
+                              required=False)
+        value           : num()
+
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
     unit:
         description     : str(equals='Unit of the molecular weight',
                               required=False)
         value           : include('MOLECULAR_WEIGHT_UNITS')
 
 Result_EC50:
+    value:
+        description     : str(equals='Numerical value of the result',
+                              required=False)
+        value           : num()
+
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
     unit:
         description     : str(equals='Unit of the half maximal effective concentration',
                               required=False)
         value           : include('CONCENTRATION_UNITS')
 
 Result_hill_coeff:
+    value:
+        description     : str(equals='Numerical value of the result',
+                              required=False)
+        value           : num()
+
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
     unit:
         description     : str(equals='Hill coefficient is unitless',
                               required=False)
