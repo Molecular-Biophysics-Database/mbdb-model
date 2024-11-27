@@ -26,7 +26,7 @@ from tools.paths import ROOT_DIR, MODEL_DIR
 
 
 def get_words():
-    with open("words.txt", "r") as f:
+    with open(current_dir / "words.txt", "r") as f:
         return f.read().splitlines()
 
 
@@ -56,7 +56,7 @@ class AnnotatedValidator:
         return (
             f"<name={self.name}, "
             f"validator_type={self.validator_type}, "
-            f"constrains={self.constraints}, "
+            f"constraints={self.constraints}, "
             f"is_required={self.is_required}>"
         )
 
@@ -74,7 +74,7 @@ class EnumValidator(AnnotatedValidator):
         return (
             f"<name={self.name}, "
             f"validator_type={self.validator_type}, "
-            f"constrains={self.constraints}, "
+            f"constraints={self.constraints}, "
             f"is_required={self.is_required}, "
             f"args={self.args}>"
         )

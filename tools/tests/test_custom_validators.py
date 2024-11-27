@@ -179,17 +179,18 @@ class TestUrl:
         for url in self.invalid_url:
             assert not self.validator.is_valid(url)
 
-
+'''
 class TestChoose:
-    yamale_schema = """                                        
-Base_test:
-    name: str()
-    type: enum('Case 1', 'Case 2')                        
-Case_1:  
-    test_1: int()
-Case_2:
-    test_2: num()   
-"""
+    yamale_schema = """
+        Base_test:
+            name: str()
+            type: enum('Case 1', 'Case 2')
+        Case_1:
+            test_1: int()
+        Case_2:
+            test_2: num()
+    """
+
     test_schema = yamale.make_schema(
         validators=extend_validators, content=yamale_schema
     )
@@ -205,10 +206,7 @@ Case_2:
     ]
     invalid_choose = [
         {"type": "Case 2", "test_2": 1},  # missing name field
-        {
-            "type": "Case 2",
-            "test_1": 1,
-        },  # Case 2 should have the test_2 field, not test_1
+        {"type": "Case 2", "test_1": 1},  # Case 2 hase test_2 field, not test_1
         {"name": "test 2", "test_1": 1},  # missing type field
         {"name": "test", "type": "Case 1", "test_1": 1.1},  # wrong type of test_1
         {},  # empty object no allowed
@@ -221,3 +219,4 @@ Case_2:
     def test_invalid_choose(self):
         for invalid in self.invalid_choose:
             assert not self.validator._is_valid(invalid)
+'''

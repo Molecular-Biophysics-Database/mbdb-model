@@ -14,7 +14,11 @@ MODEL_DIR="../models"
 
 # Check that test data can still be validated
 MODELS=(BLI MST ITC SPR)
-./validate_examples.py ${MODELS[@]}
+
+if ! ./validate_examples.py ${MODELS[@]}; then
+  printf '%s\n' "Validation failed" >&2
+  exit 1
+fi
 
 # run conversion to oarepo (Invenio) model
 ./yamale2oarepo.py $MODEL_DIR/main/general_parameters.yaml \
@@ -23,7 +27,11 @@ MODELS=(BLI MST ITC SPR)
 
 for model in ${MODELS[@]}
 do
-    ./yamale2oarepo.py $MODEL_DIR/main/$model.yaml \
-        --out_dir $MODEL_DIR/oarepo \
-        --include $MODEL_DIR/main/general_parameters.yaml
+  if ! ./yamale2oarepo.py $MODEL_DIR/main/$model.yaml \
+    --out_dir $MODEL_DIR/oarepo \
+    --include $MODEL_DIR/main/general_parameters.yaml; then
+    printf '%s\n' "Conversion of $model failed" >&2
+    exit 1
+  fi
+
 done
