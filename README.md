@@ -12,6 +12,11 @@ track of various specifications such as:
 It's also where bugs and suggestions to existing specification can be made by
 raising issues.
 
+## Installation 
+
+This a collection of python and bash scripts, which currently is not intended 
+to be used a Python package, hence the installation only involve cloning this repo.
+
 ## Prerequisites
 
 * python 3.9+
@@ -34,7 +39,7 @@ Remember to activate the virtual environment:
 source .venv/bin/activate
 ```
 
-Alternatively, dependencies it can be installed using the requirements.txt with or without virtual environment
+Dependencies can be installed using the requirements.txt with or without virtual environment
 
 ```bash
 pip install -r requirements.txt
@@ -60,7 +65,7 @@ mbdb-model
 ### Model conversion
 
 Various tools for converting to different the different forms of the model
-as well as validating example metadata using the current model/
+as well as validating example metadata using the current model
 
 ```
 mbdb-model
