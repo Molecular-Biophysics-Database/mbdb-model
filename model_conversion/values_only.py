@@ -30,7 +30,7 @@ class SimplifiedSchema:
     def __init__(self):
         self.yaml_docs: List[dict] = []
 
-    def read(self, path: Path) -> List[dict]:
+    def read(self, path: Path) -> None:
         """Reads a YAML file"""
         with open(path, "r") as f_in:
             self.yaml_docs = list(yaml.load_all(f_in, Loader=yaml.CSafeLoader))
@@ -72,6 +72,9 @@ class SimplifiedSchema:
     def _remove_extension_elements(
         self, doc: dict, extension_elements=("ui_file_context",)
     ) -> None:
+        # TODO: Investigate if this method should be removed as
+        #       this feature is no longer needed and looks like it
+        #        would get caught by self._remove_description.
         """
         Recursively remove extension elements from the schema
         """
@@ -89,7 +92,7 @@ class SimplifiedSchema:
                 self._remove_extension_elements((doc[key]))
 
 
-def new_filename(file):
+def new_filename(file: Path):
     parent_folder = file.parent
     file_name = file.name
     return parent_folder, file_name

@@ -7,12 +7,9 @@ from tools.schema_merge import (
 
 
 def test_merge_schema(tmp_path):
-    # Use tmp_path to create a temporary directory
-    temp_dir = tmp_path / "my_temp_dir"
-    temp_dir.mkdir()
 
     # schema (method specific)
-    temp_schema = temp_dir / "test_schema.yaml"
+    temp_schema = tmp_path / "test_schema.yaml"
     temp_schema.write_text(
     """
     UseTest: include('Test')
@@ -20,7 +17,7 @@ def test_merge_schema(tmp_path):
     )
 
     # includes (general parameters)
-    temp_includes = temp_dir / "test_includes.yaml"
+    temp_includes = tmp_path / "test_includes.yaml"
     temp_includes.write_text(
     """
     Test: 
@@ -41,15 +38,16 @@ Test:
     merged = merged_schema(temp_schema,temp_includes)
     assert merged.dict == result.dict
 
+    for k, v in merged.includes.items():
+        assert v.dict == result.includes[k].dict
+
+
 def test_add_include(tmp_path):
 
     content = """Test1: str()"""
     schema = make_schema(content=content)
 
-    temp_dir = tmp_path / "my_temp_dir"
-    temp_dir.mkdir()
-
-    temp_includes = temp_dir / "test_includes.yaml"
+    temp_includes = tmp_path / "test_includes.yaml"
     temp_includes.write_text(
     """
 Test2: 
@@ -69,4 +67,8 @@ Test3:
     testNumber: num()
     """
     result = make_schema(content=result_content)
+    add_includes(temp_includes,schema)
     assert schema.dict == result.dict
+
+    for k, v in schema.includes.items():
+        assert v.dict == result.includes[k].dict
