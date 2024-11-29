@@ -589,7 +589,8 @@ class ModelLink(ModelBase):
         self.target = data.target
         self.fields = data.fields
         if isinstance(self.fields, str):
-            self.fields = ruamel.yaml.safe_load(StringIO(self.fields))
+            yaml = ruamel_YAML(typ="safe", pure=True)
+            self.fields = yaml.load(StringIO(self.fields))
 
     def to_json(self):
         ret = super().to_json()

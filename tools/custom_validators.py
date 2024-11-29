@@ -3,7 +3,7 @@ from io import StringIO
 from threading import local
 from uuid import UUID
 
-import ruamel.yaml
+from ruamel.yaml import YAML
 from yamale.schema.datapath import DataPath
 from yamale.validators import DefaultValidators, Include, String, Validator
 
@@ -36,6 +36,8 @@ class LinkTarget(String):
         super().__init__(*args, **kwargs)
         self.name = name
 
+    def _is_valid(self, value):
+        return super()._is_valid(value) and (len(value) > 0)
 
 class Link(Validator):
     """
@@ -61,7 +63,8 @@ class Link(Validator):
     def __init__(self, *args, target=None, fields=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.target = target
-        self.fields = ruamel.yaml.safe_load(
+        self.fields = YAML(typ="safe", pure=True)
+        self.fields = self.fields.load(
             StringIO("blah: " + (fields or "[id,name]"))
         )["blah"]
 

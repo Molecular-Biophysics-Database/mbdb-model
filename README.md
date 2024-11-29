@@ -25,23 +25,14 @@ raising issues.
 Set up the virtual environment up inside the repository:
 
 ```bash
-python -m virtualenv -p 3.10 .venv
-pipenv install --dev
+python -m virtualenv -p 3.12 .venv
+
 ```
 Remember to activate the virtual environment:
 
 ```bash
-pipenv shell
+source .venv/bin/activate
 ```
-
-Close the shell either by issuing the following command:
-
-```bash
-exit
-```
-or by pressing <kbd>Ctrl</kbd> + <kbd>D</kbd>
-
-#### Using requirements.txt
 
 Alternatively, dependencies it can be installed using the requirements.txt with or without virtual environment
 
