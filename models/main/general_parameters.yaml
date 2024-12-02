@@ -1042,6 +1042,7 @@ Result_base:
                                'Change in enthalpy deltaH',
                                'Change in entropy deltaS',
                                'Change in Gibbs free energy deltaG',
+                               'Correction of active concentration',
                                'Molecular weight')
 
     entities_involved:
@@ -1066,6 +1067,7 @@ Result:
                                  Molecular_weight=include('Result_MW'),
                                  Half_maximal_effective_concentration_EC50=include('Result_EC50'),
                                  Hill_coefficient=include('Result_hill_coeff'),
+                                 Correction_of_active_concentration=include('Active_concentration_correction'),
                                 )
 
 Result_concentration:
@@ -1275,6 +1277,25 @@ Entity_and_stoichiometry:
                                       number would be 2)',
                               required=False)
         value           : num(min=-1)
+
+Active_concentration_correction:
+    value:
+        description     : str(equals='The correction of the deviations between nominal 
+                                    and true active concentration of the entity',
+                              required=False)
+
+        value           : num()
+    
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
+
+    unit:
+        description     : str(equals='The correction of active concentration is unitless',
+                              required=False)
+        value           : enum("unitless")
 
 ---
 # Processing objects
