@@ -1499,6 +1499,7 @@ Result_base:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -1567,6 +1568,10 @@ Result:
       required: true
       label.en: Result
       use: '#/$defs/ResultResult_hill_coeffPolymorphic'
+    Correction of active concentration:
+      required: true
+      label.en: Result
+      use: '#/$defs/ResultActive_concentration_correctionPolymorphic'
   type: polymorphic
   discriminator: type
   id: result
@@ -1815,6 +1820,26 @@ Entity_and_stoichiometry:
       required: true
       label.en: Copy number
   label.en: Entity and stoichiometry
+Active_concentration_correction:
+  properties:
+    value:
+      type: double
+      help.en: The correction of the deviations between nominal and true active concentration
+        of the entity
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
+    unit:
+      type: keyword
+      enum:
+        - unitless
+      help.en: The correction of active concentration is unitless
+      required: true
+      label.en: Unit
+  label.en: Active concentration correction
 Modification:
   properties:
     position:
@@ -5110,6 +5135,7 @@ ResultResult_concentrationPolymorphic:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -5152,6 +5178,7 @@ ResultResult_stoichiometryPolymorphic:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -5217,6 +5244,7 @@ ResultResult_KAPolymorphic:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -5282,6 +5310,7 @@ ResultResult_KDPolymorphic:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -5347,6 +5376,7 @@ ResultResult_kOnPolymorphic:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -5405,6 +5435,7 @@ ResultResult_kOffPolymorphic:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -5461,6 +5492,7 @@ ResultResult_deltaHPolymorphic:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -5520,6 +5552,7 @@ ResultResult_deltaSPolymorphic:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -5576,6 +5609,7 @@ ResultResult_deltaGPolymorphic:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -5632,6 +5666,7 @@ ResultResult_MWPolymorphic:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -5688,6 +5723,7 @@ ResultResult_EC50Polymorphic:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -5746,6 +5782,7 @@ ResultResult_hill_coeffPolymorphic:
         - Change in enthalpy deltaH
         - Change in entropy deltaS
         - Change in Gibbs free energy deltaG
+        - Correction of active concentration
         - Molecular weight
       help.en: The type of physical parameter the result represents
       required: true
@@ -5761,6 +5798,66 @@ ResultResult_hill_coeffPolymorphic:
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
   label.en: Result hill coeff
+ResultActive_concentration_correctionPolymorphic:
+  properties:
+    value:
+      type: double
+      help.en: The correction of the deviations between nominal and true active concentration
+        of the entity
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
+    unit:
+      type: keyword
+      enum:
+        - unitless
+      help.en: The correction of active concentration is unitless
+      required: true
+      label.en: Unit
+    id:
+      type: keyword
+      label.en: Id
+    name:
+      type: keyword
+      help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and VHH2).
+        Must be unique within a record
+      required: true
+      mapping:
+        copy_to: collected_default_search_fields
+      label.en: Name
+    type:
+      type: keyword
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Correction of active concentration
+        - Molecular weight
+      help.en: The type of physical parameter the result represents
+      required: true
+      mapping:
+        copy_to: collected_default_search_fields
+      label.en: Type
+    entities_involved[]:
+      ^minItems: 1
+      ^help.en: List of chemical or molecular assemblies the result describes and
+        how many copies of each are involved
+      ^required: true
+      ^label.en: Entities involved
+      use: '#/$defs/Entity_and_stoichiometry'
+      type: nested
+  label.en: Active concentration correction
 Injection_modeSingle_injectionPolymorphic:
   properties:
     volume:
