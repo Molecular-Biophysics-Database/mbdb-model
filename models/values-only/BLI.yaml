@@ -2,12 +2,12 @@ general_parameters: include('General_parameters')
 method_specific_parameters: include('BLI_specific_parameters')
 ---
 BLI_specific_parameters:
-  schema_version: keyword(equals='0.9.7')
+  schema_version: keyword(equals='0.9.8')
   experiment_type: enum('Affinity','Quantification', 'Other')
   plates: list(include('Plate'), min=1)
   sensors: list(include('Sensor'), min=1)
   measurement_protocol: list(include('BLI_protocol_step'), min=1)
-  measurements: list(include('BLI_Measurement'), min=1)
+  measurements: list(include('BLI_Measurement'))
   data_analysis: list(include('BLI_data_analysis'), required=False)
 BLI_Measurement:
   id: link_target(name='bli-measurement')
@@ -36,7 +36,7 @@ Sensor:
   ligand: include('Ligand_information', required=False)
   sensor_id: str(required=False)
   surface_properties: str(required=False)
-  supplier: include('Supplier')
+  supplier: include('Supplier', required=False)
   hydration_time: include('Time_duration', required=False)
   previously_used: bool(required=False)
 Ligand_information:
@@ -47,15 +47,15 @@ Plate:
   id: link_target(name='plate')
   name: str()
   wells: enum("96","384")
-  type: str()
-  supplier: include('Supplier')
+  type: str(required=False)
+  supplier: include('Supplier', required=False)
   sealing: str(required=False)
   surface_modification: include('Plate_surface_modification', required=False)
 Plate_surface_modification:
   type: str(required=False)
   protocol: list(include('Step'))
 BLI_data_analysis:
-  results: list(link(target='result'),  required=False)
+  results: list(link(target='result'), required=False)
   measurements: list(link(target='bli-measurement'), required=False)
   data_processing: list(include('Processing_step'), required=False)
   data_fitting: include('Data_fitting', required=False)

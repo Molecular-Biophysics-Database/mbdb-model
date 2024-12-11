@@ -3,7 +3,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.10.1
+        - 0.11.0
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -50,11 +50,6 @@ General_parameters:
       required: true
       label.en: Technique
       use: '#/$defs/SUPPORTED_TECHNIQUES'
-    collection_start_time:
-      type: date
-      help.en: The date when collection of the raw data began
-      required: true
-      label.en: Collection start time
     instrument:
       help.en: Information about the instrument being used to collect (measure) the
         raw data annotated by this record
@@ -361,7 +356,8 @@ Assembly_component_base:
     copy_number:
       type: double
       minimum: -1.0
-      help.en: Number of copies of the component within the assembly, -1 if unknown
+      help.en: The number of copies of the component within the assembly, -1 if unknown
+        (e.g. for homodimer, the copy number would be 2)
       required: true
       label.en: Copy number
   label.en: Assembly component base
@@ -398,9 +394,11 @@ Polymer:
       label.en: Polymer type
     sequence:
       type: keyword
-      help.en: Primary sequence of the polymer, using single letter codes (e.g. SAGRELLE,
-        AGTTA). In the case of non-natural amino acids or nucleotides, please place
-        the monomer in brackets (e.g. for selenocysteine as SAGREL<Sec>LE)
+      help.en: Primary sequence of the polymer using single letter codes (e.g. SAGRELLE,
+        AGTTA). This should be the sequence of the polymer that was used in the experiment
+        including mutations, purification tags etc. For non-canonical amino acids
+        or nucleotides, please place the full name of the monomer in angle brackets
+        (e.g. SAGREL<3-Sulfinoalanine>LE)
       mapping:
         copy_to: collected_default_search_fields
       label.en: Sequence
@@ -419,9 +417,9 @@ Polymer:
         copy_to: collected_default_search_fields
     variant:
       type: keyword
-      help.en: Descriptive name indicating differences of primary sequence of the
-        polymer as compared to the most common form, or wildtype, including mutations,
-        purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
+      help.en: Annotation of the primary sequence can be specified here (e.g. Wildtype,
+        C-terminal 6x-histag). Note that this also applies to polymers of unknown
+        sequence
       mapping:
         copy_to: collected_default_search_fields
       label.en: Variant
@@ -481,13 +479,6 @@ Polymer:
   label.en: Polymer
 Polymer_modifications:
   properties:
-    synthesis[]:
-      ^minItems: 1
-      ^help.en: Modifications (e.g. non-natural amino acids) of the polymer made during
-        synthesis (e.g. translation) of the polymer
-      ^label.en: Synthesis
-      use: '#/$defs/Modification'
-      type: nested
     biological_postprocessing[]:
       ^minItems: 1
       ^help.en: Modifications of the polymer made after synthesis (e.g. post-translational
@@ -1546,8 +1537,9 @@ Entity_and_stoichiometry:
       type: double
       minimum: -1.0
       help.en: Number of copies of the entity that contribute to the result, -1 if
-        unknown (e.g. if two individual copies of a polymer bind to another, the copy
-        number would be 2)
+        unknown (e.g. if two metals ions binds independent of each other to a monomeric
+        protein, the copy number would be be 2 and 1 for the metal ions and protein,
+        respectively)
       required: true
       label.en: Copy number
   label.en: Entity and stoichiometry
@@ -1555,7 +1547,9 @@ Modification:
   properties:
     position:
       type: keyword
-      help.en: The position where the modification occurs (e.g. 23)
+      help.en: The position in the primary sequence where the modification occurs
+        (e.g. 23). Please indicate if the numbering differs from that implied by the
+        sequence field
       label.en: Position
     type:
       type: keyword
@@ -2399,9 +2393,11 @@ EntityPolymerPolymorphic:
       label.en: Polymer type
     sequence:
       type: keyword
-      help.en: Primary sequence of the polymer, using single letter codes (e.g. SAGRELLE,
-        AGTTA). In the case of non-natural amino acids or nucleotides, please place
-        the monomer in brackets (e.g. for selenocysteine as SAGREL<Sec>LE)
+      help.en: Primary sequence of the polymer using single letter codes (e.g. SAGRELLE,
+        AGTTA). This should be the sequence of the polymer that was used in the experiment
+        including mutations, purification tags etc. For non-canonical amino acids
+        or nucleotides, please place the full name of the monomer in angle brackets
+        (e.g. SAGREL<3-Sulfinoalanine>LE)
       mapping:
         copy_to: collected_default_search_fields
       label.en: Sequence
@@ -2420,9 +2416,9 @@ EntityPolymerPolymorphic:
         copy_to: collected_default_search_fields
     variant:
       type: keyword
-      help.en: Descriptive name indicating differences of primary sequence of the
-        polymer as compared to the most common form, or wildtype, including mutations,
-        purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
+      help.en: Annotation of the primary sequence can be specified here (e.g. Wildtype,
+        C-terminal 6x-histag). Note that this also applies to polymers of unknown
+        sequence
       mapping:
         copy_to: collected_default_search_fields
       label.en: Variant
@@ -2802,9 +2798,11 @@ Assembly_componentPolymerPolymorphic:
       label.en: Polymer type
     sequence:
       type: keyword
-      help.en: Primary sequence of the polymer, using single letter codes (e.g. SAGRELLE,
-        AGTTA). In the case of non-natural amino acids or nucleotides, please place
-        the monomer in brackets (e.g. for selenocysteine as SAGREL<Sec>LE)
+      help.en: Primary sequence of the polymer using single letter codes (e.g. SAGRELLE,
+        AGTTA). This should be the sequence of the polymer that was used in the experiment
+        including mutations, purification tags etc. For non-canonical amino acids
+        or nucleotides, please place the full name of the monomer in angle brackets
+        (e.g. SAGREL<3-Sulfinoalanine>LE)
       mapping:
         copy_to: collected_default_search_fields
       label.en: Sequence
@@ -2823,9 +2821,9 @@ Assembly_componentPolymerPolymorphic:
         copy_to: collected_default_search_fields
     variant:
       type: keyword
-      help.en: Descriptive name indicating differences of primary sequence of the
-        polymer as compared to the most common form, or wildtype, including mutations,
-        purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
+      help.en: Annotation of the primary sequence can be specified here (e.g. Wildtype,
+        C-terminal 6x-histag). Note that this also applies to polymers of unknown
+        sequence
       mapping:
         copy_to: collected_default_search_fields
       label.en: Variant
@@ -2901,7 +2899,8 @@ Assembly_componentPolymerPolymorphic:
     copy_number:
       type: double
       minimum: -1.0
-      help.en: Number of copies of the component within the assembly, -1 if unknown
+      help.en: The number of copies of the component within the assembly, -1 if unknown
+        (e.g. for homodimer, the copy number would be 2)
       required: true
       label.en: Copy number
   label.en: Polymer
@@ -2959,7 +2958,8 @@ Assembly_componentChemicalPolymorphic:
     copy_number:
       type: double
       minimum: -1.0
-      help.en: Number of copies of the component within the assembly, -1 if unknown
+      help.en: The number of copies of the component within the assembly, -1 if unknown
+        (e.g. for homodimer, the copy number would be 2)
       required: true
       label.en: Copy number
   label.en: Chemical
@@ -3771,9 +3771,11 @@ ConstituentPolymerPolymorphic:
       label.en: Polymer type
     sequence:
       type: keyword
-      help.en: Primary sequence of the polymer, using single letter codes (e.g. SAGRELLE,
-        AGTTA). In the case of non-natural amino acids or nucleotides, please place
-        the monomer in brackets (e.g. for selenocysteine as SAGREL<Sec>LE)
+      help.en: Primary sequence of the polymer using single letter codes (e.g. SAGRELLE,
+        AGTTA). This should be the sequence of the polymer that was used in the experiment
+        including mutations, purification tags etc. For non-canonical amino acids
+        or nucleotides, please place the full name of the monomer in angle brackets
+        (e.g. SAGREL<3-Sulfinoalanine>LE)
       mapping:
         copy_to: collected_default_search_fields
       label.en: Sequence
@@ -3792,9 +3794,9 @@ ConstituentPolymerPolymorphic:
         copy_to: collected_default_search_fields
     variant:
       type: keyword
-      help.en: Descriptive name indicating differences of primary sequence of the
-        polymer as compared to the most common form, or wildtype, including mutations,
-        purification tags, etc. (A53T, C-terminal GFP, N-terminal 6xHis-tag)
+      help.en: Annotation of the primary sequence can be specified here (e.g. Wildtype,
+        C-terminal 6x-histag). Note that this also applies to polymers of unknown
+        sequence
       mapping:
         copy_to: collected_default_search_fields
       label.en: Variant

@@ -2,6 +2,7 @@ content_type: enum('text', 'binary','text and binary')
 context: enum('raw measurement data', 'derived measurement data', 'quality control
   report')
 originates_from: enum('Instrument software', 'User', 'MBDB')
+creation_date: day()
 description: str(required=False)
 recommended_software: str(required=False)
 processing_steps: list(include('Processing_step'))
