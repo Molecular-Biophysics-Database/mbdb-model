@@ -22,7 +22,7 @@ BLI_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       BLI method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.9.7')
+        value           : keyword(equals='0.9.8')
 
     experiment_type:
         description     : str(equals='Which type of parameter is sought with the
@@ -30,8 +30,8 @@ BLI_specific_parameters:
         value           : enum('Affinity','Quantification', 'Other')
 
     plates              :
-        description     : str(equals='List of the plate types used for the
-                                      measurements',required=False)
+        description     : str(equals='Information about the plates used for the
+                                      measurements', required=False)
         value           : list(include('Plate'), min=1)
 
     sensors:
@@ -49,7 +49,7 @@ BLI_specific_parameters:
         description     : str(equals='List of measurement where each step from
                                       each sensor is considered a single
                                       measurement', required=False)
-        value           : list(include('BLI_Measurement'), min=1)
+        value           : list(include('BLI_Measurement'))
 
     data_analysis:
         description     : str(equals='The details of how data analysis
@@ -196,7 +196,7 @@ Sensor:
     supplier:
         description     : str(equals='Information about the supplier of the
                                       sensor',required=False)
-        value           : include('Supplier')
+        value           : include('Supplier', required=False)
 
 
     hydration_time:
@@ -209,7 +209,6 @@ Sensor:
                                       previous measurements', required=False)
         value           : bool(required=False)
 
-
 Ligand_information:
     entity:
         description     : str(equals='Name (id) of the ligand (entity that is
@@ -219,8 +218,8 @@ Ligand_information:
         value           : link(target='entity', required=False)
 
     immobilization_chemistry:
-        description     : str(equals='The type of chemistry on the ligands 
-                                      that allows for immobilization on 
+        description     : str(equals='The type of chemistry on the ligands
+                                      that allows for immobilization on
                                       the sensor', required=False)
         value           : str(required=False)
 
@@ -250,12 +249,12 @@ Plate:
     type:
         description     : str(equals='The type of the plate (e.g. half-area black
                                       polystyrene)', required=False)
-        value           : str()
+        value           : str(required=False)
 
     supplier:
         description     : str(equals='Information about the supplier of the
                                       plate',required=False)
-        value           : include('Supplier')
+        value           : include('Supplier', required=False)
 
     sealing:
         description     : str(equals='The type of sealing used to seal the top
@@ -288,7 +287,7 @@ BLI_data_analysis:
                                       defined in the general parameters',
                                       required=False)
 
-        value           : list(link(target='result'),  required=False)
+        value           : list(link(target='result'), required=False)
 
     measurements:
         description     : str(equals='List of measurement links that was

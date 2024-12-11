@@ -16,6 +16,10 @@ originates_from:
     description     : str(equals='What is the source of the file')
     value           : enum('Instrument software', 'User', 'MBDB')
 
+creation_date:
+    description     : str(equals='The date when the file was created
+                                  (e.g. the measurement date)', required=False)
+    value           : day()
 
 description:
     description     : str(equals='Short description of what the file
