@@ -22,7 +22,7 @@ SPR_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       SPR method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.9.6')
+        value           : keyword(equals='0.9.7')
 
     experiment_type:
         description     : str(equals='Which type of parameter is sought with
@@ -203,7 +203,7 @@ Measurement_step:
         value           : include('Time_duration')
 
     flow:
-        description     : str(equals='Information about the liquid flow during 
+        description     : str(equals='Information about the liquid flow during
                                       the measurement step', required=False)
         value           : include('Flow')
 
@@ -241,8 +241,8 @@ Ligand_information:
         value           : link(target='entity', required=False)
 
     immobilization_chemistry:
-        description     : str(equals='The type of chemistry on the ligands 
-                                      that allows for immobilization on 
+        description     : str(equals='The type of chemistry on the ligands
+                                      that allows for immobilization on
                                       the sensor', required=False)
         value           : str(required=False)
 

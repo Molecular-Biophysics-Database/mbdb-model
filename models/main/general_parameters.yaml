@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.10.1')
+        value           : keyword(equals='0.11.0')
 
     record_information:
         description     : str(equals='Information about the record itself',
@@ -47,11 +47,6 @@ General_parameters:
                                       for collecting the raw data annotated by
                                       this record', required=False)
         value           : include('SUPPORTED_TECHNIQUES')
-
-    collection_start_time:
-        description     : str(equals='The date when collection of the raw data
-                                      began', required=False)
-        value           : day()
 
     instrument:
         description     : str(equals='Information about the instrument being
@@ -317,14 +312,15 @@ Assembly_component_base:
                                'Chemical')
 
     copy_number:
-        description     : str(equals='Number of copies of the component within
-                                      the assembly, -1 if unknown',
-                              required=False)
+        description     : str(equals='The number of copies of the component
+                                      within the assembly, -1 if unknown (e.g.
+                                      for homodimer, the copy number would be
+                                      2)', required=False)
         value           : num(min=-1)
 
 Assembly_component:
     description     : str(equals='Details about the assembly component',
-                                      required=False)
+                          required=False)
     value           : choose(include('Assembly_component_base'),
                              Polymer=include('Polymer'),
                              Chemical=include('Chemical'))
@@ -347,12 +343,17 @@ Polymer:
                                'polyribonucleotide')
 # make annoying popup if users do not provide a sequence
     sequence:
-        description     : str(equals='Primary sequence of the polymer, using
-                                      single letter codes (e.g. SAGRELLE, AGTTA).
-                                      In the case of non-natural amino acids or
-                                      nucleotides, please place the monomer in
-                                      brackets (e.g. for selenocysteine
-                                      as SAGREL<Sec>LE)', required=False)
+        description     : str(equals='Primary sequence of the polymer using
+                                      single letter codes (e.g. SAGRELLE,
+                                      AGTTA). This should be the sequence of
+                                      the polymer that was used in the
+                                      experiment including mutations,
+                                      purification tags etc. For non-canonical
+                                      amino acids or nucleotides, please place
+                                      the full name of the monomer in angle
+                                      brackets (e.g.
+                                      SAGREL<3-Sulfinoalanine>LE)',
+                              required=False)
         default_search  : True
         value           : str(required=False)
 
@@ -371,13 +372,11 @@ Polymer:
         value           : list(database_id(), required=False)
 
     variant:
-        description     : str(equals='Descriptive name indicating differences of
-                                      primary sequence of the polymer as
-                                      compared to the most common form, or
-                                      wildtype, including mutations,
-                                      purification tags, etc. (A53T,
-                                      C-terminal GFP, N-terminal 6xHis-tag)',
-                              required=False)
+        description     : str(equals="Annotation of the primary sequence
+                                      can be specified here (e.g. Wildtype,
+                                      C-terminal 6x-histag). Note that this
+                                      also applies to polymers of unknown
+                                      sequence", required=False)
         default_search  : True
         value           : str(required=False)
 
@@ -426,19 +425,12 @@ Polymer:
 
 
 Polymer_modifications:
-    synthesis:
-        description     : str(equals='Modifications (e.g. non-natural amino
-                                      acids) of the polymer made during
-                                      synthesis (e.g. translation) of the
-                                      polymer', required=False)
-        value           : list(nested_include('Modification'), required=False)
-
     biological_postprocessing:
-        description     : str(equals='Modifications of the polymer made
-                                      after synthesis (e.g. post-translational
-                                      modifications, DNA methylation) by the
-                                      organism where synthesis occurred
-                                      (e.g. glycosylation)', required=False)
+        description     : str(equals='Modifications of the polymer after its
+                                      synthesis (e.g. post-translational
+                                      modifications and DNA methylation) by the
+                                      organism where the synthesis occurred',
+                              required=False)
         value           : list(nested_include('Modification'), required=False)
 
     chemical:
@@ -1272,9 +1264,11 @@ Entity_and_stoichiometry:
     copy_number:
         description     : str(equals='Number of copies of the entity that
                                       contribute to the result, -1
-                                      if unknown (e.g. if two individual copies
-                                      of a polymer bind to another, the copy
-                                      number would be 2)',
+                                      if unknown (e.g. if two metals ions
+                                      binds independent of each other to a
+                                      monomeric protein, the copy number would
+                                      be be 2 and 1 for the metal ions and
+                                      protein, respectively)',
                               required=False)
         value           : num(min=-1)
 
@@ -1302,8 +1296,11 @@ Active_concentration_correction:
 
 Modification:
     position:
-        description     : str(equals='The position where the modification
-                                      occurs (e.g. 23)', required=False)
+        description     : str(equals='The position in the primary sequence
+                                      where the modification occurs (e.g. 23).
+                                      Please indicate if the numbering
+                                      differs from that implied by the
+                                      sequence field', required=False)
         value           : str(required=False)
 
     type:

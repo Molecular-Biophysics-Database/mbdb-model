@@ -28,6 +28,11 @@ properties:
     help.en: What is the source of the file
     required: true
     label.en: Originates from
+  creation_date:
+    type: date
+    help.en: The date when the file was created (e.g. the measurement date)
+    required: true
+    label.en: Creation date
   description:
     type: keyword
     help.en: Short description of what the file contains

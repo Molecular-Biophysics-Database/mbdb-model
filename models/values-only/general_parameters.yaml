@@ -1,14 +1,13 @@
 general_parameters: include('General_parameters')
 ---
 General_parameters:
-  schema_version: keyword(equals='0.10.1')
+  schema_version: keyword(equals='0.11.0')
   record_information: include('Record_information')
   depositors: include('Depositors')
   associated_publication: include('Publication', required=False)
   funding_references: list(vocabulary(vocabulary='grants', fields='[id,title,props.funder_name,props.grant_id]'),
     required=False)
   technique: include('SUPPORTED_TECHNIQUES')
-  collection_start_time: day()
   instrument: vocabulary(vocabulary='instruments', fields='[id,title,props.manufacturer]')
   entities_of_interest: list(nested_include('Entity'), min=1)
   chemical_environments: list(nested_include('Chemical_environment'), min=1)
@@ -83,7 +82,6 @@ Polymer:
   quality_controls: include('Quality_controls', required=False)
   additional_specifications: list(str(), required=False)
 Polymer_modifications:
-  synthesis: list(nested_include('Modification'), required=False)
   biological_postprocessing: list(nested_include('Modification'), required=False)
   chemical: list(nested_include('Modification'), required=False)
 ---
