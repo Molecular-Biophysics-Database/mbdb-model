@@ -825,9 +825,8 @@ Polymer_modifications:
   properties:
     biological_postprocessing[]:
       ^minItems: 1
-      ^help.en: Modifications of the polymer made after synthesis (e.g. post-translational
-        modifications, DNA methylation) by the organism where synthesis occurred (e.g.
-        glycosylation)
+      ^help.en: Modifications of the polymer after its synthesis (e.g. post-translational
+        modifications and DNA methylation) by the organism where the synthesis occurred
       ^label.en: Biological postprocessing
       use: '#/$defs/Modification'
       type: nested
