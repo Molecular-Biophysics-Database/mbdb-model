@@ -101,7 +101,7 @@ general_parameters:
           type: 'Complex substance of biological origin'
           derived_from: 'Body fluid'
           fluid:
-            id: 'cf:2'
+            id: 'bf:2'
           health_status: 'Healthy'
           source_organism:
               id: 'taxid:12374'
