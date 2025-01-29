@@ -100,7 +100,7 @@ MST_data_analysis:
         value           : list(link(target='result'), required=False)
 
     measurements:
-        description     : str(equals='List of the measurements that was
+        description     : str(equals='List of the measurements that were
                                       analyzed together for a specific
                                       parameter', required=False)
 

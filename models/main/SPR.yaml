@@ -69,7 +69,7 @@ SPR_data_analysis:
 
 
     measurements:
-        description     : str(equals='List of measurement links that was
+        description     : str(equals='List of measurement links that were
                                       analyzed together', required=False)
 
         value           : list(link(target='spr-measurement'), required=False)

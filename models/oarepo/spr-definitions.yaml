@@ -60,7 +60,7 @@ SPR_data_analysis:
         - name
     measurements[]:
       ^minItems: 1
-      ^help.en: List of measurement links that was analyzed together
+      ^help.en: List of measurement links that were analyzed together
       ^label.en: Measurements
       type: relation
       model: '#spr-measurement'
