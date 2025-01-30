@@ -90,7 +90,7 @@ MST_data_analysis:
         - name
     measurements[]:
       ^minItems: 1
-      ^help.en: List of the measurements that was analyzed together for a specific
+      ^help.en: List of the measurements that were analyzed together for a specific
         parameter
       ^label.en: Measurements
       type: relation
