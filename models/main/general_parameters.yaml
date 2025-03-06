@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.11.0')
+        value           : keyword(equals='0.12.0')
 
     record_information:
         description     : str(equals='Information about the record itself',
@@ -42,11 +42,11 @@ General_parameters:
                                           fields='[id,title,props.funder_name,props.grant_id]'),
                                           required=False)
 
-    technique:
-        description     : str(equals='The type of experimental technique used
+    method:
+        description     : str(equals='The type of experimental method used
                                       for collecting the raw data annotated by
                                       this record', required=False)
-        value           : include('SUPPORTED_TECHNIQUES')
+        value           : include('SUPPORTED_METHODS')
 
     instrument:
         description     : str(equals='Information about the instrument being
@@ -118,7 +118,7 @@ Record_information_base:
     resource_type:
         description : str(equals='DataCite item which shows type of dataset the
                                   record is and corresponds directly to which
-                                  kind of technique was used (BLI/ITC/MST/SPR)',
+                                  kind of method was used (BLI/ITC/MST/SPR)',
                           required=False)
         value       : keyword()
 
@@ -1274,12 +1274,12 @@ Entity_and_stoichiometry:
 
 Active_concentration_correction:
     value:
-        description     : str(equals='The correction of the deviations between nominal 
+        description     : str(equals='The correction of the deviations between nominal
                                     and true active concentration of the entity',
                               required=False)
 
         value           : num()
-    
+
     value_error:
         description     : str(equals='The expected error of the result in terms
                                       of a 95 % confidence interval',
@@ -1487,6 +1487,18 @@ Atmosphere:
                                       atmosphere was composed of',
                               required=False)
         value           : list(nested_include('Chemical_constituent'), min=1)
+
+Flow_rate:
+    value:
+        description     : str(equals='Numerical value of the flow-rate',
+                                      required=False)
+        value           : num(min=0)
+
+    unit:
+        description     : str(equals='The unit of the flow-rate',
+                                      required=false)
+
+        value           : include('FLOWRATE_UNITS')
 
 Time_duration:
     value:
@@ -1782,11 +1794,11 @@ LENGTH_UNITS            : enum('Å', 'nm', 'μm', 'mm', 'cm', 'm', required=Fals
 MOLECULAR_WEIGHT_UNITS  : enum('g/mol', 'Da', 'kDa', 'MDa', required=False)
 VOLUME_UNITS            : enum('ml', 'µl', required=False)
 ---
-# Techniques and company definitions
+# Methods and company definitions
 
-SUPPORTED_TECHNIQUES    : enum('Bio-layer interferometry (BLI)',
-                               'Microscale thermophoresis/Temperature related
-                                intensity change (MST/TRIC)',
-                               'Surface plasmon resonance (SPR)',
-                               'Isothermal Titration Calorimetry (ITC)',
-                               required=False)
+SUPPORTED_METHODS    : enum('Bio-layer interferometry (BLI)',
+                            'Microscale thermophoresis/Temperature related
+                             intensity change (MST/TRIC)',
+                            'Surface plasmon resonance (SPR)',
+                            'Isothermal Titration Calorimetry (ITC)',
+                            required=False)

@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.11.0",
+        "schema_version": "0.12.0",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -69,7 +69,7 @@
             "id": "oa:aka_________::05f51e273cb679ac343eb5be8ecbd9b5"
           }
         ],
-        "technique": "Bio-layer interferometry (BLI)",
+        "method": "Bio-layer interferometry (BLI)",
         "instrument": {
           "id": "ins:32"
         },
