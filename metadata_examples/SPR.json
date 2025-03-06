@@ -2,7 +2,7 @@
   {
     "metadata": {
       "general_parameters": {
-        "schema_version": "0.11.0",
+        "schema_version": "0.12.0",
         "record_information": {
           "publisher": "MBDB",
           "resource_type_general": "Dataset",
@@ -69,7 +69,7 @@
             "id": "oa:aka_________::05f51e273cb679ac343eb5be8ecbd9b5"
           }
         ],
-        "technique": "Surface plasmon resonance (SPR)",
+        "method": "Surface plasmon resonance (SPR)",
         "instrument": {
           "id": "ins:37"
         },
@@ -379,7 +379,7 @@
         ]
       },
       "method_specific_parameters": {
-        "schema_version": "0.9.7",
+        "schema_version": "0.10.0",
         "experiment_type": "Affinity",
         "sensor": {
           "surface_properties": "protein G",
@@ -420,8 +420,10 @@
               "unit": "seconds"
             },
             "flow": {
-              "rate": 0.1,
-              "unit": "µl/s",
+              "rate": {
+                "value": 0.1,
+                "unit": "µl/s"
+              },
               "path": [
                 [
                   {

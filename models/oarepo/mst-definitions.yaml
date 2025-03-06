@@ -236,7 +236,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.11.0
+        - 0.12.0
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -277,12 +277,12 @@ General_parameters:
         id:
           mapping:
             copy_to: collected_default_search_fields
-    technique:
-      help.en: The type of experimental technique used for collecting the raw data
-        annotated by this record
+    method:
+      help.en: The type of experimental method used for collecting the raw data annotated
+        by this record
       required: true
-      label.en: Technique
-      use: '#/$defs/SUPPORTED_TECHNIQUES'
+      label.en: Method
+      use: '#/$defs/SUPPORTED_METHODS'
     instrument:
       help.en: Information about the instrument being used to collect (measure) the
         raw data annotated by this record
@@ -365,7 +365,7 @@ Record_information_base:
     resource_type:
       type: keyword
       help.en: DataCite item which shows type of dataset the record is and corresponds
-        directly to which kind of technique was used (BLI/ITC/MST/SPR)
+        directly to which kind of method was used (BLI/ITC/MST/SPR)
       required: true
       label.en: Resource type
     external_identifier:
@@ -2345,14 +2345,14 @@ MOLECULAR_WEIGHT_UNITS:
     - kDa
     - MDa
   label.en: Molecular weight units
-SUPPORTED_TECHNIQUES:
+SUPPORTED_METHODS:
   type: keyword
   enum:
     - Bio-layer interferometry (BLI)
     - Microscale thermophoresis/Temperature related intensity change (MST/TRIC)
     - Surface plasmon resonance (SPR)
     - Isothermal Titration Calorimetry (ITC)
-  label.en: Supported techniques
+  label.en: Supported methods
 Record_informationOpen_accessPolymorphic:
   properties:
     copyright:
@@ -2417,7 +2417,7 @@ Record_informationOpen_accessPolymorphic:
     resource_type:
       type: keyword
       help.en: DataCite item which shows type of dataset the record is and corresponds
-        directly to which kind of technique was used (BLI/ITC/MST/SPR)
+        directly to which kind of method was used (BLI/ITC/MST/SPR)
       required: true
       label.en: Resource type
     external_identifier:
@@ -2507,7 +2507,7 @@ record_information_Record_informationOpen_accessPolymorphic:
     resource_type:
       type: keyword
       help.en: DataCite item which shows type of dataset the record is and corresponds
-        directly to which kind of technique was used (BLI/ITC/MST/SPR)
+        directly to which kind of method was used (BLI/ITC/MST/SPR)
       required: true
       label.en: Resource type
     external_identifier:
@@ -2580,7 +2580,7 @@ Record_informationRestricted_accessPolymorphic:
     resource_type:
       type: keyword
       help.en: DataCite item which shows type of dataset the record is and corresponds
-        directly to which kind of technique was used (BLI/ITC/MST/SPR)
+        directly to which kind of method was used (BLI/ITC/MST/SPR)
       required: true
       label.en: Resource type
     external_identifier:
