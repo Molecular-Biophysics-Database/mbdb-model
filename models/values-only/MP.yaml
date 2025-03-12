@@ -1,0 +1,45 @@
+general_parameters: include('General_parameters')
+method_specific_parameters: include('MP_specific_parameters')
+---
+MP_specific_parameters:
+  schema_version: keyword(equals='0.1.0')
+  calibrants: list(include("Calibrant"))
+  mode: include('MP_mode')
+  measurements: list(include('Measurement'))
+  data_analysis: list(include('MP_data_analysis'), required=False)
+---
+MP_mode_base:
+  type: enum('Flow', 'Static')
+MP_mode: choose(include('MP_mode_base'), Flow=include('Flow_mode'), Static=include('Static_mode'))
+Static_mode:
+  sample_carrier:
+    surface_modification: str()
+    material: str(required=False)
+    supplier: include('Supplier', required=False)
+    cleaning_protocol: list(include('Step'), required=False)
+Flow_mode:
+  flow_cell: include('Flow_rate')
+  sample_flowrate: include('Flow_rate')
+  buffer_flowrate: include('Flow_rate')
+Calibrant:
+  name: str()
+  type: enum('polyribonucleotide', 'polypeptide(D)', 'chemical', 'molecular assembly',
+    'virion', )
+  molecular_weight: include('Molecular_weight')
+  modifications: list(include('Modification'), required=False)
+MP_data_analysis:
+  data_processing: list(include('Processing_step'), required=False)
+  results: list(link(target='result'), required=False)
+  measurements: list(link(target='mp-measurement'), required=False)
+  data_fitting: include('Data_fitting', required=False)
+---
+Measurement:
+  id: link_target(name='mp-measurement')
+  name: str()
+  sample: include('MP_sample')
+  duration: include('Time_duration')
+  temperature: include('Temperature', required=False)
+MP_sample:
+  targets: list(include('Entity_constituent'), min=1)
+  chemical_environment: link(target='chemical-environment')
+  preparation_protocol: list(include('Step'), required=False)

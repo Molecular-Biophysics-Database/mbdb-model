@@ -1,0 +1,215 @@
+# Beginning of schema
+general_parameters:
+    description         : str(equals='The general parameter of the experiment',
+                                      required=False)
+    value               : include('General_parameters')
+
+method_specific_parameters:
+    description         : str(equals='The parameters of the experiment that is
+                                      specific to MP',
+                                      required=False)
+    value               : include('MP_specific_parameters')
+
+# End of schema
+
+---
+# Support objects (includes)
+
+MP_specific_parameters:
+    schema_version:
+        description     : str(equals='The schema version used to annotate the
+                                      MP method specific parameters',
+                              required=False)
+        value           : keyword(equals='0.1.0')
+
+    calibrants:
+        description     : str(equals='List of objects that was used to
+                                      create the calibration curve for
+                                      converting contrast to molecular
+                                      weight', required=False)
+        value           : list(include("Calibrant"))
+
+    mode:
+        description     : str(equals='The details of how data analysis
+                                        was performed to obtain results',
+                                required=False)
+        value           : include('MP_mode')
+
+    measurements:
+        description     : str(equals='The list of measurements (not including calibration)',
+                              required=False)
+        value           : list(include('Measurement'))
+
+    data_analysis:
+        description     : str(equals='The details of how data analysis
+                                      was performed to obtain results',
+                              required=False)
+        value           : list(include('MP_data_analysis'), required=False)
+
+# Experimental mode
+---
+MP_mode_base:
+    type:
+        description     : str(equals='Wether the measurement was done with
+                                      on a flowing sample ("Flow") or statically
+                                      placed sample("Static")', required=False)
+        value           : enum('Flow', 'Static')
+
+MP_mode:
+    description     : str(equals='Wether the measurement was done on a
+                                  a flowing sample ("Flow") or statically
+                                  placed sample', required=False)
+    value           : choose(include('MP_mode_base'),
+                             Flow=include('Flow_mode'),
+                             Static=include('Static_mode'))
+
+Static_mode:
+    sample_carrier:
+        surface_modification:
+            description : str(equals='Information about coating or other types
+                                      of surface modification of the coverslip',
+                                      required=False)
+            value       : str()
+
+        material:
+            description : str(equals='The material the sample carrier (slide) is
+                                      composed of', required=False)
+            value       : str(required=False)
+
+        supplier:
+            description : str(equals='Information about the supplier of the
+                                      coverslip', required=False)
+            value       : include('Supplier', required=False)
+
+        cleaning_protocol:
+            description : str(equals='List of steps taken to clean the coverslip', required=False)
+            value       : list(include('Step'), required=False)
+
+Flow_mode:
+    flow_cell:
+        description     : str(equals='Numerical value of the sample rate',
+                             required=False)
+        value           : include('Flow_rate')
+
+    sample_flowrate:
+        description     : str(equals='Numerical value of the sample rate',
+                                      required=False)
+        value           : include('Flow_rate')
+
+    buffer_flowrate:
+        description     : str(equals='Numerical value of the buffer flowrate',
+                                      required=False)
+        value           : include('Flow_rate')
+
+# Experimental parameters definitions
+
+Calibrant:
+    name:
+        description     : str(equals='The name of the calibrant', required=False)
+        value           : str()
+
+    type:
+        description     : str(equals='The type of the calibrant (Polymer)', required=False)
+        value           : enum('polyribonucleotide',
+                               'polypeptide(D)',
+                               'chemical',
+                               'molecular assembly',
+                               'virion',
+                               )
+
+    molecular_weight:
+        description: str(equals='The molecular weight of the calibrant', required=False)
+        value: include('Molecular_weight')
+
+    modifications:
+        description     : str(equals='If the calibration contained modifications
+                                      they can be specified here (e.g.
+                                      PEGylation)', required=False)
+        value           : list(include('Modification'), required=False)
+
+# Data analysis definitions
+MP_data_analysis:
+    data_processing:
+        description     : str(equals='Describe the steps in the data analysis
+                                      prior to fitting (removing outliers in the
+                                      raw data, applying smoothing filters,
+                                      etc.)', required=False)
+
+        value           : list(include('Processing_step'), required=False)
+
+    results:
+        description     : str(equals='Link to the result(s) that was obtained
+                                      by the data analysis. The link is to the
+                                      results defined in the general parameters',
+                                      required=False)
+        value           : list(link(target='result'), required=False)
+
+    measurements:
+        description     : str(equals='List of the measurements that was
+                                      analyzed together for a specific
+                                      parameter', required=False)
+
+        value           : list(link(target='mp-measurement'), required=False)
+
+    data_fitting:
+        description     : str(equals='The details of how data fitting
+                                      was performed to obtain the result', required=False)
+        value           : include('Data_fitting', required=False)
+
+---
+# Measurement definitions
+Measurement:
+    id:
+        description     : str(equals='Unique ID to be used as a link target',
+                              required=False)
+        value           : link_target(name='mp-measurement')
+
+    name:
+        description     : str(equals='Name (id) of the measurement which must be
+                                      unique within a record (i.e. triplicates
+                                      must be named individually in the raw data
+                                      file). The name must allow location of the
+                                      measurement data within the raw data file
+                                      as well as processed data files if these
+                                      are present', required=False)
+        value           : str()
+
+    sample:
+        description     : str(equals='Composition of the solution in the cell
+                                      including targets and chemical environment',
+                              required=False)
+        value           : include('MP_sample')
+
+    duration:
+        description     : str(equals='The time duration of the measurement')
+        value           : include('Time_duration')
+
+    temperature:
+        description     : str(equals='The temperature the measurement was
+                                      performed at', required=False)
+        value           : include('Temperature', required=False)
+
+MP_sample:
+    targets:
+        description     : str(equals='List of names (ids), from the entities of
+                                      interest defined in the general
+                                      parameters, of directly measured entities',
+                                      required=False)
+        value           : list(include('Entity_constituent'), min=1)
+
+    chemical_environment:
+        description     : str(equals='Name (id) of the chemical environment of
+                                      the sample (from the chemical environments
+                                      defined in the general parameters)',
+                                      required=False)
+        value           : link(target='chemical-environment')
+
+    preparation_protocol:
+        description     : str(equals='List of steps taken to prepare the
+                                      sample, ending at the point where
+                                      it was placed in the measurement
+                                      container. Information include
+                                      operations like filtration and which
+                                      filter material and pore-size was used
+                                      should be added', required=False)
+        value           : list(include('Step'), required=False)

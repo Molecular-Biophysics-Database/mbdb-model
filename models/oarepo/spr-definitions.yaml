@@ -328,7 +328,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.12.0
+        - 0.13.0
       help.en: The schema version used to annotate the general parameters of the record
       required: true
       label.en: Schema version
@@ -2481,6 +2481,7 @@ SUPPORTED_METHODS:
     - Microscale thermophoresis/Temperature related intensity change (MST/TRIC)
     - Surface plasmon resonance (SPR)
     - Isothermal Titration Calorimetry (ITC)
+    - Mass photometry (MP)
   label.en: Supported methods
 Record_informationOpen_accessPolymorphic:
   properties:
