@@ -1,53 +1,170 @@
-BLI_specific_parameters:
+MP_specific_parameters:
   properties:
     schema_version:
       type: keyword
       enum:
-        - 0.9.8
-      help.en: The schema version used to annotate the BLI method specific parameters
+        - 0.1.0
+      help.en: The schema version used to annotate the MP method specific parameters
       required: true
       label.en: Schema version
-    experiment_type:
-      type: keyword
-      enum:
-        - Affinity
-        - Quantification
-        - Other
-      help.en: Which type of parameter is sought with the measurements
+    calibrants[]:
+      ^minItems: 1
+      ^help.en: List of objects that was used to create the calibration curve for
+        converting contrast to molecular weight
+      ^required: true
+      ^label.en: Calibrants
+      use: '#/$defs/Calibrant'
+    mode:
+      help.en: The details of how data analysis was performed to obtain results
       required: true
-      label.en: Experiment type
-    plates[]:
-      ^minItems: 1
-      ^help.en: Information about the plates used for the measurements
-      ^required: true
-      ^label.en: Plates
-      use: '#/$defs/Plate'
-    sensors[]:
-      ^minItems: 1
-      ^help.en: List of the sensors used for the measurements, reference sensors included
-      ^required: true
-      ^label.en: Sensors
-      use: '#/$defs/Sensor'
-    measurement_protocol[]:
-      ^minItems: 1
-      ^help.en: List of the steps in the measurement protocol
-      ^required: true
-      ^label.en: Measurement protocol
-      use: '#/$defs/BLI_protocol_step'
+      label.en: Mode
+      use: '#/$defs/MP_mode'
     measurements[]:
       ^minItems: 1
-      ^help.en: List of measurement where each step from each sensor is considered
-        a single measurement
+      ^help.en: The list of measurements (not including calibration)
       ^required: true
       ^label.en: Measurements
-      use: '#/$defs/BLI_Measurement'
+      use: '#/$defs/Measurement'
     data_analysis[]:
       ^minItems: 1
       ^help.en: The details of how data analysis was performed to obtain results
       ^label.en: Data analysis
-      use: '#/$defs/BLI_data_analysis'
-  label.en: Bli specific parameters
-BLI_Measurement:
+      use: '#/$defs/MP_data_analysis'
+  label.en: Mp specific parameters
+MP_mode_base:
+  properties:
+    type:
+      type: keyword
+      enum:
+        - Flow
+        - Static
+      help.en: Wether the measurement was done with on a flowing sample ("Flow") or
+        statically placed sample("Static")
+      required: true
+      label.en: Type
+  label.en: Mp mode base
+MP_mode:
+  help.en: Wether the measurement was done on a a flowing sample ("Flow") or statically
+    placed sample
+  label.en: Mp mode
+  schemas:
+    Flow:
+      required: true
+      label.en: Mp mode
+      use: '#/$defs/MP_modeFlow_modePolymorphic'
+    Static:
+      required: true
+      label.en: Mp mode
+      use: '#/$defs/MP_modeStatic_modePolymorphic'
+  type: polymorphic
+  discriminator: type
+Static_mode:
+  properties:
+    sample_carrier:
+      properties:
+        surface_modification:
+          type: keyword
+          help.en: Information about coating or other types of surface modification
+            of the coverslip
+          required: true
+          label.en: Surface modification
+        material:
+          type: keyword
+          help.en: The material the sample carrier (slide) is composed of
+          label.en: Material
+        supplier:
+          help.en: Information about the supplier of the coverslip
+          label.en: Supplier
+          use: '#/$defs/Supplier'
+        cleaning_protocol[]:
+          ^minItems: 1
+          ^help.en: List of steps taken to clean the coverslip
+          ^label.en: Cleaning protocol
+          use: '#/$defs/Step'
+      label.en: Sample carrier
+  label.en: Static mode
+Flow_mode:
+  properties:
+    flow_cell:
+      help.en: Numerical value of the sample rate
+      required: true
+      label.en: Flow cell
+      use: '#/$defs/Flow_rate'
+    sample_flowrate:
+      help.en: Numerical value of the sample rate
+      required: true
+      label.en: Sample flowrate
+      use: '#/$defs/Flow_rate'
+    buffer_flowrate:
+      help.en: Numerical value of the buffer flowrate
+      required: true
+      label.en: Buffer flowrate
+      use: '#/$defs/Flow_rate'
+  label.en: Flow mode
+Calibrant:
+  properties:
+    name:
+      type: keyword
+      help.en: The name of the calibrant
+      required: true
+      label.en: Name
+    type:
+      type: keyword
+      enum:
+        - polyribonucleotide
+        - polypeptide(D)
+        - chemical
+        - molecular assembly
+        - virion
+      help.en: The type of the calibrant (Polymer)
+      required: true
+      label.en: Type
+    molecular_weight:
+      help.en: The molecular weight of the calibrant
+      required: true
+      label.en: Molecular weight
+      use: '#/$defs/Molecular_weight'
+    modifications[]:
+      ^minItems: 1
+      ^help.en: If the calibration contained modifications they can be specified here
+        (e.g. PEGylation)
+      ^label.en: Modifications
+      use: '#/$defs/Modification'
+  label.en: Calibrant
+MP_data_analysis:
+  properties:
+    data_processing[]:
+      ^minItems: 1
+      ^help.en: Describe the steps in the data analysis prior to fitting (removing
+        outliers in the raw data, applying smoothing filters, etc.)
+      ^label.en: Data processing
+      use: '#/$defs/Processing_step'
+    results[]:
+      ^minItems: 1
+      ^help.en: Link to the result(s) that was obtained by the data analysis. The
+        link is to the results defined in the general parameters
+      ^label.en: Results
+      type: relation
+      model: '#result'
+      keys:
+        - id
+        - name
+    measurements[]:
+      ^minItems: 1
+      ^help.en: List of the measurements that was analyzed together for a specific
+        parameter
+      ^label.en: Measurements
+      type: relation
+      model: '#mp-measurement'
+      keys:
+        - id
+        - name
+    data_fitting:
+      help.en: The details of how data fitting was performed to obtain the result
+      label.en: Data fitting
+      use: '#/$defs/Data_fitting'
+  label.en: Mp data analysis
+Measurement:
   properties:
     id:
       help.en: Unique ID to be used as a link target
@@ -62,48 +179,32 @@ BLI_Measurement:
         processed data files if these are present
       required: true
       label.en: Name
-    sensor:
-      help.en: link to the sensor used for the measurement
-      required: true
-      label.en: Sensor
-      type: relation
-      model: '#bli-sensor'
-      keys:
-        - id
-        - name
-    measurement_protocol_step:
-      help.en: link to one of the measurement steps
-      required: true
-      label.en: Measurement protocol step
-      type: relation
-      model: '#bli-protocol-step'
-      keys:
-        - id
-        - name
     sample:
-      help.en: Sample the sensor was in contact with during the measurement
+      help.en: Composition of the solution in the cell including targets and chemical
+        environment
       required: true
       label.en: Sample
-      use: '#/$defs/Sample'
-  id: bli-measurement
-  label.en: Bli measurement
-Sample:
+      use: '#/$defs/MP_sample'
+    duration:
+      help.en: The time duration of the measurement
+      required: true
+      label.en: Duration
+      use: '#/$defs/Time_duration'
+    temperature:
+      help.en: The temperature the measurement was performed at
+      label.en: Temperature
+      use: '#/$defs/Temperature'
+  id: mp-measurement
+  label.en: Measurement
+MP_sample:
   properties:
-    plate:
-      help.en: link to one of the plates
-      required: true
-      label.en: Plate
-      type: relation
-      model: '#plate'
-      keys:
-        - id
-        - name
-    well_position:
-      type: keyword
-      help.en: The position the well (in the plate) where the sample was during the
-        measurement
-      required: true
-      label.en: Well position
+    targets[]:
+      ^minItems: 1
+      ^help.en: List of names (ids), from the entities of interest defined in the
+        general parameters, of directly measured entities
+      ^required: true
+      ^label.en: Targets
+      use: '#/$defs/Entity_constituent'
     chemical_environment:
       help.en: Name (id) of the chemical environment of the sample (from the chemical
         environments defined in the general parameters)
@@ -114,216 +215,15 @@ Sample:
       keys:
         - id
         - name
-    analytes[]:
-      ^minItems: 1
-      ^help.en: List of names (ids) of entities (from the entities of interest defined
-        in the general parameters) that was used to alter the behavior of the target(s)
-        or entities present at varying concentrations for a series of measurements
-        and their concentrations
-      ^label.en: Analytes
-      use: '#/$defs/Entity_constituent'
-    temperature:
-      help.en: Temperature of the sample while being measured
-      label.en: Temperature
-      use: '#/$defs/Temperature'
     preparation_protocol[]:
       ^minItems: 1
-      ^help.en: List of steps taken to prepare the sample
+      ^help.en: List of steps taken to prepare the sample, ending at the point where
+        it was placed in the measurement container. Information include operations
+        like filtration and which filter material and pore-size was used should be
+        added
       ^label.en: Preparation protocol
       use: '#/$defs/Step'
-  label.en: Sample
-BLI_protocol_step:
-  properties:
-    id:
-      help.en: id to be used for internal links
-      required: true
-      label.en: Id
-      type: keyword
-    name:
-      type: keyword
-      help.en: Descriptive name (id) of the a step in the measurement protocol which
-        must be unique within a record
-      required: true
-      label.en: Name
-    type:
-      type: keyword
-      enum:
-        - Association
-        - Baseline
-        - Dissociation
-        - Regeneration
-        - Load
-        - Wash
-        - Activation
-      help.en: Which type of step in the measurement protocol this refers to
-      required: true
-      label.en: Type
-    start_time:
-      help.en: The numerical value of the start point of the measurement step relative
-        to the beginning of the measurement in the units defined in the general parameters
-      required: true
-      label.en: Start time
-      use: '#/$defs/Time_duration'
-    time_length:
-      help.en: The numerical value of the total time of the measurement step took
-        in the units defined in the general parameters
-      required: true
-      label.en: Time length
-      use: '#/$defs/Time_duration'
-    shaking_speed:
-      help.en: The numerical value of the shaking speed of the plate during the measurement
-        step in the units defined in the general parameters
-      required: true
-      label.en: Shaking speed
-      use: '#/$defs/Shaking_and_stirring_speed'
-  id: bli-protocol-step
-  label.en: Bli protocol step
-Sensor:
-  properties:
-    id:
-      help.en: id to be used for internal links
-      required: true
-      label.en: Id
-      type: keyword
-    name:
-      type: keyword
-      help.en: Descriptive name of the sensor
-      required: true
-      label.en: Name
-    ligand:
-      help.en: Information about the ligand and how it was immobilized
-      label.en: Ligand
-      use: '#/$defs/Ligand_information'
-    sensor_id:
-      type: keyword
-      help.en: The id of the sensor as given by the supplier
-      label.en: Sensor id
-    surface_properties:
-      type: keyword
-      help.en: The type of surface properties the sensor has, e.g. Protein A
-      label.en: Surface properties
-    supplier:
-      help.en: Information about the supplier of the sensor
-      label.en: Supplier
-      use: '#/$defs/Supplier'
-    hydration_time:
-      help.en: How long the sensor was hydrated before being employed
-      label.en: Hydration time
-      use: '#/$defs/Time_duration'
-    previously_used:
-      type: boolean
-      help.en: Whether or not the sensor was used for previous measurements
-      label.en: Previously used
-  id: bli-sensor
-  label.en: Sensor
-Ligand_information:
-  properties:
-    entity:
-      help.en: Name (id) of the ligand (entity that is immobilized, from the list
-        of entities of interest defined in the general parameters)
-      label.en: Entity
-      type: relation
-      model: '#entity'
-      keys:
-        - id
-        - name
-    immobilization_chemistry:
-      type: keyword
-      help.en: The type of chemistry on the ligands that allows for immobilization
-        on the sensor
-      label.en: Immobilization chemistry
-    immobilization_protocol[]:
-      ^minItems: 1
-      ^help.en: List of steps for immobilizing the ligand on the surface of the sensor
-      ^label.en: Immobilization protocol
-      use: '#/$defs/Step'
-  label.en: Ligand information
-Plate:
-  properties:
-    id:
-      help.en: id to be used for internal links
-      required: true
-      label.en: Id
-      type: keyword
-    name:
-      type: keyword
-      help.en: Name (id) of the plate which must be unique within a record
-      required: true
-      label.en: Name
-    wells:
-      type: keyword
-      enum:
-        - '96'
-        - '384'
-      help.en: Number of wells in the plate
-      required: true
-      label.en: Wells
-    type:
-      type: keyword
-      help.en: The type of the plate (e.g. half-area black polystyrene)
-      label.en: Type
-    supplier:
-      help.en: Information about the supplier of the plate
-      label.en: Supplier
-      use: '#/$defs/Supplier'
-    sealing:
-      type: keyword
-      help.en: The type of sealing used to seal the top of the plate
-      label.en: Sealing
-    surface_modification:
-      help.en: If the plate had a modified surface, the modification can specified
-        here (e.g. Non-binding surface)
-      label.en: Surface modification
-      use: '#/$defs/Plate_surface_modification'
-  id: plate
-  label.en: Plate
-Plate_surface_modification:
-  properties:
-    type:
-      type: keyword
-      help.en: The expected type of surface of the wells after the modification (e.g.
-        BSA coated)
-      label.en: Type
-    protocol[]:
-      ^minItems: 1
-      ^help.en: List of protocol steps used to modify the surface of the wells
-      ^required: true
-      ^label.en: Protocol
-      use: '#/$defs/Step'
-  label.en: Plate surface modification
-BLI_data_analysis:
-  properties:
-    results[]:
-      ^minItems: 1
-      ^help.en: Link to a result that was defined in the general parameters
-      ^label.en: Results
-      type: relation
-      model: '#result'
-      keys:
-        - id
-        - name
-    measurements[]:
-      ^minItems: 1
-      ^help.en: List of measurement links that was analyzed together
-      ^label.en: Measurements
-      type: relation
-      model: '#bli-measurement'
-      keys:
-        - id
-        - name
-    data_processing[]:
-      ^minItems: 1
-      ^help.en: Describe the steps in the data analysis prior to fitting (removing
-        outliers in the raw data, applying data filter, placing data at same start
-        time etc. )
-      ^label.en: Data processing
-      use: '#/$defs/Processing_step'
-    data_fitting:
-      help.en: The details of how data fitting of the data to obtain the result was
-        performed
-      label.en: Data fitting
-      use: '#/$defs/Data_fitting'
-  label.en: Bli data analysis
+  label.en: Mp sample
 General_parameters:
   properties:
     schema_version:
@@ -2042,6 +1942,20 @@ Temperature:
       label.en: Unit
       use: '#/$defs/TEMPERATURE_UNITS'
   label.en: Temperature
+Flow_rate:
+  properties:
+    value:
+      type: double
+      minimum: 0.0
+      help.en: Numerical value of the flow-rate
+      required: true
+      label.en: Value
+    unit:
+      help.en: The unit of the flow-rate
+      required: true
+      label.en: Unit
+      use: '#/$defs/FLOWRATE_UNITS'
+  label.en: Flow rate
 Time_duration:
   properties:
     value:
@@ -2328,22 +2242,6 @@ Yes_homogeneity:
       required: true
       label.en: Number of species observed
   label.en: Yes homogeneity
-Shaking_and_stirring_speed:
-  properties:
-    value:
-      type: integer
-      minimum: 0
-      help.en: The numerical value of the shaking/stirring speed
-      required: true
-      label.en: Value
-    unit:
-      type: keyword
-      enum:
-        - RPM
-      help.en: The unit of the shaking/stirring speed)
-      required: true
-      label.en: Unit
-  label.en: Shaking and stirring speed
 Storage:
   properties:
     temperature:
@@ -2426,6 +2324,12 @@ CONCENTRATION_UNITS:
     - U/ml
     - '% saturated'
   label.en: Concentration units
+FLOWRATE_UNITS:
+  type: keyword
+  enum:
+    - mL/min
+    - µl/s
+  label.en: Flowrate units
 TEMPERATURE_UNITS:
   type: keyword
   enum:
@@ -5945,3 +5849,64 @@ ResultActive_concentration_correctionPolymorphic:
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
   label.en: Active concentration correction
+MP_modeFlow_modePolymorphic:
+  properties:
+    flow_cell:
+      help.en: Numerical value of the sample rate
+      required: true
+      label.en: Flow cell
+      use: '#/$defs/Flow_rate'
+    sample_flowrate:
+      help.en: Numerical value of the sample rate
+      required: true
+      label.en: Sample flowrate
+      use: '#/$defs/Flow_rate'
+    buffer_flowrate:
+      help.en: Numerical value of the buffer flowrate
+      required: true
+      label.en: Buffer flowrate
+      use: '#/$defs/Flow_rate'
+    type:
+      type: keyword
+      enum:
+        - Flow
+        - Static
+      help.en: Wether the measurement was done with on a flowing sample ("Flow") or
+        statically placed sample("Static")
+      required: true
+      label.en: Type
+  label.en: Flow mode
+MP_modeStatic_modePolymorphic:
+  properties:
+    sample_carrier:
+      properties:
+        surface_modification:
+          type: keyword
+          help.en: Information about coating or other types of surface modification
+            of the coverslip
+          required: true
+          label.en: Surface modification
+        material:
+          type: keyword
+          help.en: The material the sample carrier (slide) is composed of
+          label.en: Material
+        supplier:
+          help.en: Information about the supplier of the coverslip
+          label.en: Supplier
+          use: '#/$defs/Supplier'
+        cleaning_protocol[]:
+          ^minItems: 1
+          ^help.en: List of steps taken to clean the coverslip
+          ^label.en: Cleaning protocol
+          use: '#/$defs/Step'
+      label.en: Sample carrier
+    type:
+      type: keyword
+      enum:
+        - Flow
+        - Static
+      help.en: Wether the measurement was done with on a flowing sample ("Flow") or
+        statically placed sample("Static")
+      required: true
+      label.en: Type
+  label.en: Static mode

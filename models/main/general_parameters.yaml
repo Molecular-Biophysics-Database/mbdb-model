@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.12.0')
+        value           : keyword(equals='0.13.0')
 
     record_information:
         description     : str(equals='Information about the record itself',
@@ -1801,4 +1801,5 @@ SUPPORTED_METHODS    : enum('Bio-layer interferometry (BLI)',
                              intensity change (MST/TRIC)',
                             'Surface plasmon resonance (SPR)',
                             'Isothermal Titration Calorimetry (ITC)',
+                            'Mass photometry (MP)',
                             required=False)

@@ -3,9 +3,9 @@ general_parameters:
     record_information:
         publisher: 'MBDB'
         resource_type_general: 'Dataset'
-        resource_type: 'ITC'
+        resource_type: 'MP'
         access_rights: 'open'
-        title: 'ITC measurement of hemoglobin serum elements'
+        title: 'MP measurement of hemoglobin serum elements'
         deposition_date: 2022-01-23
         date_available: 2023-01-23
         subject_category: 'Biophysics'
@@ -44,10 +44,10 @@ general_parameters:
         - id: "oa:aka_________::0138cbca472312ad7dd56c2cdb8a55c2"
         - id: "oa:aka_________::05f51e273cb679ac343eb5be8ecbd9b5"
 
-    method: 'Isothermal Titration Calorimetry (ITC)'
+    method: 'Mass photometry (MP)'
 
     instrument:
-        id: 'ins:4'
+        id: "ins:60"
 
     chemical_environments:
         - id: 'chem-env-measurement-buffer'
@@ -68,6 +68,7 @@ general_parameters:
                  concentration:
                     value: 50
                     unit: 'v/v %'
+
           ph: 7.4
 
           constituents:
@@ -120,7 +121,6 @@ general_parameters:
               temperature:
                   value: -80
                   unit: '°C'
-                  controlled: True
               storage_preparation:
                   - name: "Flash freezing in liquid nitrogen"
                     description: 'Aliquotes were placed in liquid
@@ -158,7 +158,6 @@ general_parameters:
                 expression_source_type: 'Natively'
                 external_databases:
                     - 'Uniprot:P69905'
-
 
               - name: 'Hemoglobin subunit beta'
                 type: 'Polymer'
@@ -205,7 +204,6 @@ general_parameters:
                 external_databases:
                     - 'Uniprot:P68871'
 
-
     results:
         - id: 'de-par-kd-hemo'
           name: 'KD of hemoglobin to unknown component in serum'
@@ -223,64 +221,91 @@ general_parameters:
           unit: 'nM'
 
 method_specific_parameters:
-  schema_version: '0.1.0'
-  measurements:
-      - id: 'pos_1_rep_1'
-        name: '1 nM hemoglobin + 10 mg/ml Human serum'
-        sample_in_cell:
-          targets:
-            - entity:
-                $ref: 'eoi-human-hemoglobin'
-                name: 'human Hemoglobin'
-              concentration:
-                value: 1
-                unit: 'nM'
-          chemical_environment:
-            $ref: 'chem-env-measurement-buffer'
-            name: 'Measurement buffer'
-        sample_in_syringe:
-          targets:
-              - entity:
-                  $ref: 'eoi-human-serum'
-                  name: 'Human serum'
-                concentration:
-                    value: 10
-                    unit: 'mg/mL'
-          chemical_environment:
-            $ref: 'chem-env-measurement-buffer'
-            name: 'Measurement buffer'
+    schema_version: '0.1.0'
 
-  injection_mode:
-    type: 'Titration'
-    number_injections: 25
-    injection_parameters:
-        - n_injections: 1
-          volume:
-            value: 0.4
-            unit: 'ml'
-        - n_injections: 24
-          volume:
-            value: 0.5
-            unit: 'ml'
+    calibrants:
+      - name: BSA monomer
+        type: polypeptide(D)
+        molecular_weight:
+          value: 66.5
+          unit: kDa
+      - name: BSA dimer
+        type: molecular assembly
+        molecular_weight:
+          value: 133
+          unit: kDa
 
-  cell_temperature:
-    value: 298
-    unit: 'K'
-  cell_volume:
-    value: 0.6
-    unit: 'ml'
-  reference_power:
-    value: 11
-    unit: 'µcal/s'
-  stirring_speed:
-      value: 1000
-      unit: 'RPM'
-  feedback_mode: 'Low'
-  data_analysis:
-    - type: 'Simple model'
-      data_fitting:
-        model: '1:1'
-        software_name: 'AFFINImeter Software'
-      results:
-        - $ref: 'de-par-kd-hemo'
-          name: 'KD of hemoglobin to unknown component in serum'
+    mode:
+        type: Static
+        sample_carrier:
+            surface_modification: "None"
+
+    data_analysis:
+        - results:
+            - $ref: 'de-par-kd-hemo'
+              name: 'KD of hemoglobin to unknown component in serum'
+          data_fitting:
+            model: '1:1'
+            software_name: 'MO.Affinity Analysis Software'
+          measurements:
+            - $ref: 'pos_1_rep_1'
+              name: '1 nM hemoglobin + 10 mg/ml Human serum'
+            - $ref: 'pos_2_rep_1'
+              name: '1 nM hemoglobin + 20 mg/ml Human serum'
+            - $ref: 'pos_3_rep_1'
+              name: '1 nM hemoglobin + 40 mg/ml Human serum'
+
+    measurements:
+        - id: 'rep_1'
+          name: '1 nM hemoglobin + 10 mg/ml Human serum'
+          sample:
+              targets:
+                  - entity:
+                      $ref: 'eoi-human-hemoglobin'
+                      name: 'human Hemoglobin'
+                    concentration:
+                        value: 1
+                        unit: 'nM'
+              chemical_environment:
+                  $ref: 'chem-env-measurement-buffer'
+                  name: 'Measurement buffer'
+          temperature:
+            value: 25
+            unit: '°C'
+          duration:
+            value: 50
+            unit: "seconds"
+
+        - id: 'rep_2'
+          name: '1 nM hemoglobin + 20 mg/ml Human serum'
+          sample:
+              targets:
+                  - entity:
+                      $ref: 'eoi-human-hemoglobin'
+                      name: 'human Hemoglobin'
+                    concentration:
+                        value: 1
+                        unit: 'nM'
+              chemical_environment:
+                  $ref: 'chem-env-measurement-buffer'
+                  name: 'Measurement buffer'
+          duration:
+            value: 50
+            unit: "seconds"
+
+        - id: 'rep_3'
+          name: '1 nM hemoglobin + 40 mg/ml Human serum'
+          sample:
+              targets:
+                  - entity:
+                      $ref: 'eoi-human-hemoglobin'
+                      name: 'human Hemoglobin'
+                    concentration:
+                        value: 1
+                        unit: 'nM'
+              chemical_environment:
+                  $ref: 'chem-env-measurement-buffer'
+                  name: 'Measurement buffer'
+          duration:
+            value: 50
+            unit: "seconds"

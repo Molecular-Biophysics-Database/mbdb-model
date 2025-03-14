@@ -13,7 +13,7 @@ MODEL_DIR="../models"
 --includes $MODEL_DIR/values-only/general_parameters.yaml
 
 # Check that test data can still be validated
-MODELS=(BLI MST ITC SPR)
+MODELS=(BLI MST MP ITC SPR)
 
 if ! ./validate_examples.py ${MODELS[@]}; then
   printf '%s\n' "Validation failed" >&2
