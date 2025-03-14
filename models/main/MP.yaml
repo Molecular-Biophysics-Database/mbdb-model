@@ -20,7 +20,7 @@ MP_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MP method specific parameters',
                               required=False)
-        value           : keyword(equals='0.1.0')
+        value           : keyword(equals='0.2.0')
 
     calibrants:
         description     : str(equals='List of objects that was used to
@@ -87,9 +87,9 @@ Static_mode:
 
 Flow_mode:
     flow_cell:
-        description     : str(equals='Numerical value of the sample rate',
+        description     : str(equals="Type (description) of the flow cell",
                              required=False)
-        value           : include('Flow_rate')
+        value           : str()
 
     sample_flowrate:
         description     : str(equals='Numerical value of the sample rate',
