@@ -3,7 +3,7 @@ MP_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.1.0
+        - 0.2.0
       help.en: The schema version used to annotate the MP method specific parameters
       required: true
       label.en: Schema version
@@ -86,10 +86,10 @@ Static_mode:
 Flow_mode:
   properties:
     flow_cell:
-      help.en: Numerical value of the sample rate
+      type: keyword
+      help.en: Type (description) of the flow cell
       required: true
       label.en: Flow cell
-      use: '#/$defs/Flow_rate'
     sample_flowrate:
       help.en: Numerical value of the sample rate
       required: true
@@ -5852,10 +5852,10 @@ ResultActive_concentration_correctionPolymorphic:
 MP_modeFlow_modePolymorphic:
   properties:
     flow_cell:
-      help.en: Numerical value of the sample rate
+      type: keyword
+      help.en: Type (description) of the flow cell
       required: true
       label.en: Flow cell
-      use: '#/$defs/Flow_rate'
     sample_flowrate:
       help.en: Numerical value of the sample rate
       required: true
