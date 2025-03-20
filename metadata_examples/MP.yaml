@@ -221,7 +221,7 @@ general_parameters:
           unit: 'nM'
 
 method_specific_parameters:
-    schema_version: '0.2.0'
+    schema_version: '0.2.1'
 
     calibrants:
       - name: BSA monomer

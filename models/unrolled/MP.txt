@@ -278,7 +278,7 @@
 "  |    |    |   is_relative                                                                 ('singular', 'required', ['Boolean'], {}) "
 "  |    |   unit                                                                             ('singular', 'required', ['Enum'], {}) "
 " method_specific_parameters                                                                 ('singular', 'required', ['dict'], {}) "
-"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.2.0'}) "
+"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '0.2.1'}) "
 "  |   calibrants                                                                            ('list', 'required', ['dict'], {}) "
 "  |    |   name                                                                             ('singular', 'required', ['String'], {}) "
 "  |    |   type                                                                             ('singular', 'required', ['Enum'], {}) "
