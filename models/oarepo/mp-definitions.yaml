@@ -3,7 +3,7 @@ MP_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.2.0
+        - 0.2.1
       help.en: The schema version used to annotate the MP method specific parameters
       required: true
       label.en: Schema version
@@ -15,7 +15,7 @@ MP_specific_parameters:
       ^label.en: Calibrants
       use: '#/$defs/Calibrant'
     mode:
-      help.en: The details of how data analysis was performed to obtain results
+      help.en: The details of which mode of data acquisition (Flow or Static)
       required: true
       label.en: Mode
       use: '#/$defs/MP_mode'
@@ -91,12 +91,12 @@ Flow_mode:
       required: true
       label.en: Flow cell
     sample_flowrate:
-      help.en: Numerical value of the sample rate
+      help.en: Numerical value and unit of the sample flow rate
       required: true
       label.en: Sample flowrate
       use: '#/$defs/Flow_rate'
     buffer_flowrate:
-      help.en: Numerical value of the buffer flowrate
+      help.en: Numerical value and unit of the buffer flow rate
       required: true
       label.en: Buffer flowrate
       use: '#/$defs/Flow_rate'
@@ -5857,12 +5857,12 @@ MP_modeFlow_modePolymorphic:
       required: true
       label.en: Flow cell
     sample_flowrate:
-      help.en: Numerical value of the sample rate
+      help.en: Numerical value and unit of the sample flow rate
       required: true
       label.en: Sample flowrate
       use: '#/$defs/Flow_rate'
     buffer_flowrate:
-      help.en: Numerical value of the buffer flowrate
+      help.en: Numerical value and unit of the buffer flow rate
       required: true
       label.en: Buffer flowrate
       use: '#/$defs/Flow_rate'
