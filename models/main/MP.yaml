@@ -222,11 +222,12 @@ MP_sample:
 
 MP_sample_dilution:
     dilution_buffer:
-        description     : str(equals='Name (id) of the chemical environment
+        chemical_environment:
+            description     : str(equals='Name (id) of the chemical environment
                                       that was used as the dilution buffer
                                       (from the chemical environment defined
                                       in the general parameters', required=False)
-        value           : link(target='chemical-environment')
+            value           : link(target='chemical-environment')
 
     dilution_factor:
         description     : str(equals='F-fold dilution; for Static Mode
