@@ -412,6 +412,15 @@
                 "name": "Measurement buffer"
               }
             },
+            "sample_dilution": {
+              "dilution_buffer": {
+                "chemical_environment": {
+                  "id": "chem-env-measurement-buffer",
+                  "name": "Measurement buffer"
+                }
+              },
+              "dilution_factor": 2
+            },
             "duration": {
               "value": 50,
               "unit": "seconds"
@@ -437,6 +446,15 @@
                 "id": "chem-env-measurement-buffer",
                 "name": "Measurement buffer"
               }
+            },
+            "sample_dilution": {
+              "dilution_buffer": {
+                "chemical_environment": {
+                  "id": "chem-env-measurement-buffer",
+                  "name": "Measurement buffer"
+                }
+              },
+              "dilution_factor": 2
             },
             "duration": {
               "value": 50,
