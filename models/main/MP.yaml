@@ -183,7 +183,7 @@ Measurement:
 
     sample_dilution:
         description     : str(equals='Parameters describing how the sample was diluted
-                                      within the measurement', required=False)
+                                      within the measurement in flow mode', required=False)
         value           : include('MP_sample_dilution', required=False)
 
     duration:
@@ -230,14 +230,7 @@ MP_sample_dilution:
             value           : link(target='chemical-environment')
 
     dilution_factor:
-        description     : str(equals='F-fold dilution; for Static Mode
-                                      F = V_final / V_solute, where F
-                                      is the dilution factor, V_final is
-                                      the final volume (initial volume of
-                                      the sample + volume of the dilution
-                                      buffer) and V_solute is the initial
-                                      volume of the sample that contains the
-                                      entity/entities of interest; for Flow Mode
+        description     : str(equals='F-fold dilution;
                                       F = Q_buffer / Q_sample, where Q_buffer
                                       is buffer flowrate, Q_sample is sample
                                       flowrate. For low dilution factors,
