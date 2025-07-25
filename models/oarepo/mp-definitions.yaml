@@ -190,7 +190,7 @@ Measurement:
       use: '#/$defs/MP_sample'
     sample_dilution:
       help.en: Parameters describing how the sample was diluted within the 
-        measurement
+        measurement in flow mode
       label.en: Sample dilution
       use: '#/$defs/MP_sample_dilution'
     duration:
@@ -251,13 +251,9 @@ MP_sample_dilution:
     dilution_factor:
       type: double
       minimum: 1.0
-      help.en: F-fold dilution; for Static Mode F = V_final / V_solute, where F 
-        is the dilution factor, V_final is the final volume (initial volume of 
-        the sample + volume of the dilution buffer) and V_solute is the initial 
-        volume of the sample that contains the entity/entities of interest; for 
-        Flow Mode F = Q_buffer / Q_sample, where Q_buffer is buffer flowrate, 
-        Q_sample is sample flowrate. For low dilution factors, use more  precise
-        formula (Q_buffer + Q_sample) / (Q_sample)
+      help.en: F-fold dilution; F = Q_buffer / Q_sample, where Q_buffer is 
+        buffer flowrate, Q_sample is sample flowrate. For low dilution factors, 
+        use more  precise formula (Q_buffer + Q_sample) / (Q_sample)
       required: true
       label.en: Dilution factor
   label.en: Mp sample dilution
