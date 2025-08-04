@@ -221,7 +221,7 @@ general_parameters:
           unit: 'nM'
 
 method_specific_parameters:
-    schema_version: '0.2.1'
+    schema_version: '0.3.0'
 
     calibrants:
       - name: BSA monomer
@@ -269,6 +269,12 @@ method_specific_parameters:
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
                   name: 'Measurement buffer'
+          sample_dilution:
+              dilution_buffer:
+                  chemical_environment:
+                      $ref: 'chem-env-measurement-buffer'
+                      name: 'Measurement buffer'
+              dilution_factor: 2
           temperature:
             value: 25
             unit: '°C'
@@ -289,6 +295,12 @@ method_specific_parameters:
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
                   name: 'Measurement buffer'
+          sample_dilution:
+              dilution_buffer:
+                  chemical_environment:
+                      $ref: 'chem-env-measurement-buffer'
+                      name: 'Measurement buffer'
+              dilution_factor: 2
           duration:
             value: 50
             unit: "seconds"
@@ -306,6 +318,12 @@ method_specific_parameters:
               chemical_environment:
                   $ref: 'chem-env-measurement-buffer'
                   name: 'Measurement buffer'
+          sample_dilution:
+              dilution_buffer:
+                  chemical_environment:
+                      $ref: 'chem-env-measurement-buffer'
+                      name: 'Measurement buffer'
+              dilution_factor: 2
           duration:
             value: 50
             unit: "seconds"

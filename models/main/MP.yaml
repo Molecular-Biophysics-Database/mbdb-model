@@ -20,7 +20,7 @@ MP_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MP method specific parameters',
                               required=False)
-        value           : keyword(equals='0.2.1')
+        value           : keyword(equals='0.3.0')
 
     calibrants:
         description     : str(equals='List of objects that was used to
@@ -112,6 +112,7 @@ Calibrant:
         description     : str(equals='The type of the calibrant (Polymer)', required=False)
         value           : enum('polyribonucleotide',
                                'polypeptide(D)',
+                               'polypeptide(L)',
                                'chemical',
                                'molecular assembly',
                                'virion',
@@ -180,6 +181,11 @@ Measurement:
                               required=False)
         value           : include('MP_sample')
 
+    sample_dilution:
+        description     : str(equals='Parameters describing how the sample was diluted
+                                      within the measurement in flow mode', required=False)
+        value           : include('MP_sample_dilution', required=False)
+
     duration:
         description     : str(equals='The time duration of the measurement')
         value           : include('Time_duration')
@@ -213,3 +219,21 @@ MP_sample:
                                       filter material and pore-size was used
                                       should be added', required=False)
         value           : list(include('Step'), required=False)
+
+MP_sample_dilution:
+    dilution_buffer:
+        chemical_environment:
+            description     : str(equals='Name (id) of the chemical environment
+                                      that was used as the dilution buffer
+                                      (from the chemical environment defined
+                                      in the general parameters', required=False)
+            value           : link(target='chemical-environment')
+
+    dilution_factor:
+        description     : str(equals='F-fold dilution;
+                                      F = Q_buffer / Q_sample, where Q_buffer
+                                      is buffer flowrate, Q_sample is sample
+                                      flowrate. For low dilution factors,
+                                      use more  precise formula
+                                      (Q_buffer + Q_sample) / (Q_sample)', required=False)
+        value           : num(min=1)

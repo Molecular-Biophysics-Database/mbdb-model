@@ -5,8 +5,8 @@ properties:
       - text
       - binary
       - text and binary
-    help.en: Type of the file content in terms of how it can be read (text, binary,
-      etc.)
+    help.en: Type of the file content in terms of how it can be read (text, 
+      binary, etc.)
     required: true
     label.en: Content type
   context:
@@ -15,8 +15,8 @@ properties:
       - raw measurement data
       - derived measurement data
       - quality control report
-    help.en: The context the file should be understood within (e.g. raw measurement
-      data)
+    help.en: The context the file should be understood within (e.g. raw 
+      measurement data)
     required: true
     label.en: Context
   originates_from:
@@ -39,13 +39,13 @@ properties:
     label.en: Description
   recommended_software:
     type: keyword
-    help.en: The name of the software recommended for opening and working with the
-      file
+    help.en: The name of the software recommended for opening and working with 
+      the file
     label.en: Recommended software
   processing_steps[]:
     ^minItems: 1
-    ^help.en: List of the processing steps performed on the file before it was deposited
-      (e.g. exported to xlsx)
+    ^help.en: List of the processing steps performed on the file before it was 
+      deposited (e.g. exported to xlsx)
     ^required: true
     ^label.en: Processing steps
     use: '#/$defs/Processing_step'
