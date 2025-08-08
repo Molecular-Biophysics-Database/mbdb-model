@@ -125,7 +125,6 @@ Calibrant:
 
     size:
         description     : str(equals='The size of the calibrant', required=False)
-                              required=False)
         value           : include('Size', required=False)
 
     modifications:
