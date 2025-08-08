@@ -224,11 +224,15 @@ method_specific_parameters:
     schema_version: '0.4.0'
 
     calibrants:
-      - name: BSA monomer
-        type: polypeptide(D)
+      - name: gold nanoparticle 1
+        type: nanoparticle
         molecular_weight:
           value: 66.5
           unit: kDa
+        size:
+          type: radius
+          mean: 10
+          unit: nm
       - name: BSA dimer
         type: molecular assembly
         molecular_weight:
