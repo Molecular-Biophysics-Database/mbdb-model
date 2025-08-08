@@ -1302,7 +1302,7 @@ Result_size:
     value:
         description     : str(equals='Numerical value of the result',
                               required=False)
-        value           : num(min=0)
+        value           : num()
 
     value_error:
         description     : str(equals='The expected error of the result in terms

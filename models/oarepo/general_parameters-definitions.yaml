@@ -1616,7 +1616,6 @@ Result_size:
       label.en: Size type
     value:
       type: double
-      minimum: 0.0
       help.en: Numerical value of the result
       required: true
       label.en: Value
@@ -5654,7 +5653,6 @@ ResultResult_sizePolymorphic:
       label.en: Size type
     value:
       type: double
-      minimum: 0.0
       help.en: Numerical value of the result
       required: true
       label.en: Value

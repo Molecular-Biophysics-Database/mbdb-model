@@ -219,6 +219,17 @@ general_parameters:
                 copy_number: -1
           value: 10.3
           unit: 'nM'
+        - id: 'de-par-size-hemo'
+          name: 'size of unknown component in serum'
+          type: 'Size'
+          entities_involved:
+              - entity:
+                    $ref: 'eoi-human-serum'
+                    name: 'Human serum'
+                copy_number: -1
+          size_type: diameter
+          value: 15
+          unit: 'nm'
 
 method_specific_parameters:
     schema_version: '0.4.0'
@@ -226,9 +237,6 @@ method_specific_parameters:
     calibrants:
       - name: gold nanoparticle 1
         type: nanoparticle
-        molecular_weight:
-          value: 66.5
-          unit: kDa
         size:
           type: radius
           mean: 10

@@ -267,7 +267,7 @@ Active_concentration_correction:
   unit: enum("unitless")
 Result_size:
   size_type: enum('radius', 'diameter')
-  value: num(min=0)
+  value: num()
   value_error: include('Value_error', required=False)
   unit: include('LENGTH_UNITS')
 ---

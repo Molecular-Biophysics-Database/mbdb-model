@@ -271,7 +271,7 @@
 "  |    |   entities_involved                                                                ('list', 'required', ['dict'], {}) "
 "  |    |    |   entity                                                                      ('singular', 'required', ['Link'], {}) "
 "  |    |    |   copy_number                                                                 ('singular', 'required', ['Number'], {'min': -1}) "
-"  |    |   value                                                                            ('singular', 'required', ['Number'], {'min': 0}) "
+"  |    |   value                                                                            ('singular', 'required', ['Number'], {}) "
 "  |    |   value_error                                                                      ('singular', 'required', ['dict'], {}) "
 "  |    |    |   lower                                                                       ('singular', 'required', ['Number'], {}) "
 "  |    |    |   upper                                                                       ('singular', 'required', ['Number'], {}) "
