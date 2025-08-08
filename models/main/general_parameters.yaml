@@ -1294,7 +1294,7 @@ Active_concentration_correction:
         value           : enum("unitless")
 
 Result_size:
-    type:
+    size_type:
         description     : str(equals='The type of size (radius or diameter)',
                               required=False)
         value           : enum('radius', 'diameter')
