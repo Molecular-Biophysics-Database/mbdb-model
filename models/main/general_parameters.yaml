@@ -1036,7 +1036,7 @@ Result_base:
                                'Change in Gibbs free energy deltaG',
                                'Correction of active concentration',
                                'Molecular weight',
-                               'Size')
+                               'Size of spherically represented entity')
 
     entities_involved:
         description     : str(equals='List of chemical or molecular assemblies
@@ -1061,7 +1061,7 @@ Result:
                                  Half_maximal_effective_concentration_EC50=include('Result_EC50'),
                                  Hill_coefficient=include('Result_hill_coeff'),
                                  Correction_of_active_concentration=include('Active_concentration_correction'),
-                                 Size=include('Result_size')
+                                 Size_of_spherically_represented_entity=include('Size_spherical_representation')
                                 )
 
 Result_concentration:
@@ -1293,7 +1293,7 @@ Active_concentration_correction:
                               required=False)
         value           : enum("unitless")
 
-Result_size:
+Size_spherical_representation:
     size_type:
         description     : str(equals='The type of size (radius or diameter)',
                               required=False)
