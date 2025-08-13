@@ -1247,7 +1247,7 @@ Result_base:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -1319,10 +1319,10 @@ Result:
       required: true
       label.en: Result
       use: '#/$defs/ResultActive_concentration_correctionPolymorphic'
-    Size:
+    Size of spherically represented entity:
       required: true
       label.en: Result
-      use: '#/$defs/ResultResult_sizePolymorphic'
+      use: '#/$defs/ResultSize_spherical_representationPolymorphic'
   type: polymorphic
   discriminator: type
   id: result
@@ -1604,7 +1604,7 @@ Active_concentration_correction:
       required: true
       label.en: Unit
   label.en: Active concentration correction
-Result_size:
+Size_spherical_representation:
   properties:
     size_type:
       type: keyword
@@ -1629,7 +1629,7 @@ Result_size:
       required: true
       label.en: Unit
       use: '#/$defs/LENGTH_UNITS'
-  label.en: Result size
+  label.en: Size spherical representation
 Modification:
   properties:
     position:
@@ -4896,7 +4896,7 @@ ResultResult_concentrationPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -4940,7 +4940,7 @@ ResultResult_stoichiometryPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5008,7 +5008,7 @@ ResultResult_KAPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5076,7 +5076,7 @@ ResultResult_KDPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5144,7 +5144,7 @@ ResultResult_kOnPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5205,7 +5205,7 @@ ResultResult_kOffPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5264,7 +5264,7 @@ ResultResult_deltaHPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5326,7 +5326,7 @@ ResultResult_deltaSPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5385,7 +5385,7 @@ ResultResult_deltaGPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5444,7 +5444,7 @@ ResultResult_MWPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5503,7 +5503,7 @@ ResultResult_EC50Polymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5564,7 +5564,7 @@ ResultResult_hill_coeffPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5626,7 +5626,7 @@ ResultActive_concentration_correctionPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5641,7 +5641,7 @@ ResultActive_concentration_correctionPolymorphic:
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
   label.en: Active concentration correction
-ResultResult_sizePolymorphic:
+ResultSize_spherical_representationPolymorphic:
   properties:
     size_type:
       type: keyword
@@ -5693,7 +5693,7 @@ ResultResult_sizePolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
-        - Size
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5707,4 +5707,4 @@ ResultResult_sizePolymorphic:
       ^label.en: Entities involved
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
-  label.en: Result size
+  label.en: Size spherical representation

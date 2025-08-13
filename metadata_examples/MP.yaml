@@ -221,13 +221,13 @@ general_parameters:
           unit: 'nM'
         - id: 'de-par-size-hemo'
           name: 'size of unknown component in serum'
-          type: 'Size'
+          type: 'Size of spherically represented entity'
           entities_involved:
               - entity:
                     $ref: 'eoi-human-serum'
                     name: 'Human serum'
                 copy_number: -1
-          size_type: diameter
+          size_type: radius
           value: 15
           unit: 'nm'
 
