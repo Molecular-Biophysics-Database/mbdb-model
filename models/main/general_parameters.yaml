@@ -915,7 +915,7 @@ Depositors:
     contributors:
         description : str(equals='List of other people who contributed to
                                   generating the deposited data, metadata,
-                                  results , or the deposition
+                                  results, or the deposition
                                   itself', required=False)
         value       : list(nested_include('Person'), required=False)
 
@@ -1692,7 +1692,7 @@ Yes_homogeneity:
     expected_number_of_species:
         description         : str(equals="The number of species that were expected to
                                           be present (e.g. 2 if monomers and dimers are
-                                          expected to occur as an equilibrium;
+                                          expected to occur at an equilibrium;
                                           large aggregates should always be considered
                                           as being unexpected in this regard)",
                                   required=False)

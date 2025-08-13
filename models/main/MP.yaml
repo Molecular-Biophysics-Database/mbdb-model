@@ -26,7 +26,9 @@ MP_specific_parameters:
         description     : str(equals='List of objects that was used to
                                       create the calibration curve for
                                       converting contrast to molecular
-                                      weight', required=False)
+                                      weight or converting the position
+                                      of optimum contrast to particle
+                                      size', required=False)
         value           : list(include("Calibrant"))
 
     mode:
