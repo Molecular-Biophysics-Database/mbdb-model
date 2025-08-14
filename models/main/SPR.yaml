@@ -190,15 +190,13 @@ Measurement_step:
     start_time:
         description     : str(equals='The numerical value of the start point of
                                       the measurement step relative to the
-                                      beginning of the measurement in the units
-                                      defined in the general parameters',
+                                      beginning of the measurement',
                                       required=False)
         value           : include('Time_duration')
 
     time_length:
         description     : str(equals='The numerical value of the total time of
-                                      the measurement step took in the units
-                                      defined in the general parameters',
+                                      the measurement step',
                                       required=False)
         value           : include('Time_duration')
 
