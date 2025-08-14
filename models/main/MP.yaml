@@ -200,8 +200,8 @@ Measurement:
 MP_sample:
     targets:
         description     : str(equals='List of names (ids), from the entities of
-                                      interest defined in the general
-                                      parameters, of directly measured entities',
+                                      interest defined in the record,
+                                      of directly measured entities',
                                       required=False)
         value           : list(include('Entity_constituent'), min=1)
 
