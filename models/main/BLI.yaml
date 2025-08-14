@@ -22,7 +22,7 @@ BLI_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       BLI method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.9.8')
+        value           : keyword(equals='0.9.9')
 
     experiment_type:
         description     : str(equals='Which type of parameter is sought with the

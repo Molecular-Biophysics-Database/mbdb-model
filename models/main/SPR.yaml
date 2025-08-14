@@ -22,7 +22,7 @@ SPR_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       SPR method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.10.0')
+        value           : keyword(equals='0.10.1')
 
     experiment_type:
         description     : str(equals='Which type of parameter is sought with

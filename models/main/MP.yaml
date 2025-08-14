@@ -20,7 +20,7 @@ MP_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MP method specific parameters',
                               required=False)
-        value           : keyword(equals='0.4.0')
+        value           : keyword(equals='0.4.1')
 
     calibrants:
         description     : str(equals='List of objects that was used to
