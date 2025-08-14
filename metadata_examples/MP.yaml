@@ -1,5 +1,5 @@
 general_parameters:
-    schema_version: '0.14.0'
+    schema_version: '0.14.1'
     record_information:
         publisher: 'MBDB'
         resource_type_general: 'Dataset'
@@ -232,7 +232,7 @@ general_parameters:
           unit: 'nm'
 
 method_specific_parameters:
-    schema_version: '0.4.0'
+    schema_version: '0.4.1'
 
     calibrants:
       - name: gold nanoparticle 1
