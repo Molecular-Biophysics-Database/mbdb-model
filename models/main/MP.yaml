@@ -143,7 +143,7 @@ MP_data_analysis:
     results:
         description     : str(equals='Link to the result(s) that was obtained
                                       by the data analysis. The link is to the
-                                      results defined in the general parameters',
+                                      results defined in the record',
                                       required=False)
         value           : list(link(target='result'), required=False)
 
@@ -208,7 +208,7 @@ MP_sample:
     chemical_environment:
         description     : str(equals='Name (id) of the chemical environment of
                                       the sample (from the chemical environments
-                                      defined in the general parameters)',
+                                      defined in the record)',
                                       required=False)
         value           : link(target='chemical-environment')
 
@@ -227,8 +227,8 @@ MP_sample_dilution:
         chemical_environment:
             description     : str(equals='Name (id) of the chemical environment
                                       that was used as the dilution buffer
-                                      (from the chemical environment defined
-                                      in the general parameters', required=False)
+                                      (from the chemical environments defined
+                                      in the record', required=False)
             value           : link(target='chemical-environment')
 
     dilution_factor:
