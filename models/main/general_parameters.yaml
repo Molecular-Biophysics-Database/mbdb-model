@@ -237,7 +237,7 @@ Entity_constituent:
     entity:
         description     : str(equals='Name (id) of the entity (from the
                                       entities of interest defined in the
-                                      general parameters)', required=False)
+                                      record)', required=False)
         value           : link(target='entity')
 
 
@@ -1257,7 +1257,7 @@ Entity_and_stoichiometry:
     entity:
         description     : str(equals='Name (id) of the entity (from the
                                       entities of interest defined in the
-                                      general parameters)', required=False)
+                                      record)', required=False)
         value           : link(target='entity')
 
 
