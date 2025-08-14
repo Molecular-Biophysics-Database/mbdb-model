@@ -1,5 +1,5 @@
 general_parameters:
-    schema_version: '0.13.0'
+    schema_version: '0.14.0'
     record_information:
         publisher: 'MBDB'
         resource_type_general: 'Dataset'
@@ -219,16 +219,28 @@ general_parameters:
                 copy_number: -1
           value: 10.3
           unit: 'nM'
+        - id: 'de-par-size-hemo'
+          name: 'size of unknown component in serum'
+          type: 'Size of spherically represented entity'
+          entities_involved:
+              - entity:
+                    $ref: 'eoi-human-serum'
+                    name: 'Human serum'
+                copy_number: -1
+          size_type: radius
+          value: 15
+          unit: 'nm'
 
 method_specific_parameters:
-    schema_version: '0.3.0'
+    schema_version: '0.4.0'
 
     calibrants:
-      - name: BSA monomer
-        type: polypeptide(D)
-        molecular_weight:
-          value: 66.5
-          unit: kDa
+      - name: gold nanoparticle 1
+        type: nanoparticle
+        size:
+          type: radius
+          mean: 10
+          unit: nm
       - name: BSA dimer
         type: molecular assembly
         molecular_weight:

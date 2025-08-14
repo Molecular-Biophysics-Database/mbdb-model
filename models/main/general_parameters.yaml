@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.13.0')
+        value           : keyword(equals='0.14.0')
 
     record_information:
         description     : str(equals='Information about the record itself',
@@ -1035,7 +1035,8 @@ Result_base:
                                'Change in entropy deltaS',
                                'Change in Gibbs free energy deltaG',
                                'Correction of active concentration',
-                               'Molecular weight')
+                               'Molecular weight',
+                               'Size of spherically represented entity')
 
     entities_involved:
         description     : str(equals='List of chemical or molecular assemblies
@@ -1060,6 +1061,7 @@ Result:
                                  Half_maximal_effective_concentration_EC50=include('Result_EC50'),
                                  Hill_coefficient=include('Result_hill_coeff'),
                                  Correction_of_active_concentration=include('Active_concentration_correction'),
+                                 Size_of_spherically_represented_entity=include('Size_spherical_representation')
                                 )
 
 Result_concentration:
@@ -1291,6 +1293,27 @@ Active_concentration_correction:
                               required=False)
         value           : enum("unitless")
 
+Size_spherical_representation:
+    size_type:
+        description     : str(equals='The type of size (radius or diameter)',
+                              required=False)
+        value           : enum('radius', 'diameter')
+
+    value:
+        description     : str(equals='Numerical value of the result',
+                              required=False)
+        value           : num()
+
+    value_error:
+        description     : str(equals='The expected error of the result in terms
+                                      of a 95 % confidence interval',
+                              required=False)
+        value           : include('Value_error', required=False)
+
+    unit:
+        description     : str(equals='Unit of the size of the entity',
+                              required=False)
+        value           : include('LENGTH_UNITS')
 ---
 # Processing objects
 
