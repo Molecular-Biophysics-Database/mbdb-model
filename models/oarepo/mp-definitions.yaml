@@ -3,7 +3,7 @@ MP_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.3.0
+        - 0.4.0
       help.en: The schema version used to annotate the MP method specific 
         parameters
       required: true
@@ -118,14 +118,18 @@ Calibrant:
         - chemical
         - molecular assembly
         - virion
+        - nanoparticle
       help.en: The type of the calibrant (Polymer)
       required: true
       label.en: Type
     molecular_weight:
       help.en: The molecular weight of the calibrant
-      required: true
       label.en: Molecular weight
       use: '#/$defs/Molecular_weight'
+    size:
+      help.en: The size of the calibrant
+      label.en: Size
+      use: '#/$defs/Size'
     modifications[]:
       ^minItems: 1
       ^help.en: If the calibration contained modifications they can be specified
@@ -262,7 +266,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.13.0
+        - 0.14.0
       help.en: The schema version used to annotate the general parameters of the
         record
       required: true
@@ -1524,6 +1528,7 @@ Result_base:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -1595,6 +1600,10 @@ Result:
       required: true
       label.en: Result
       use: '#/$defs/ResultActive_concentration_correctionPolymorphic'
+    Size of spherically represented entity:
+      required: true
+      label.en: Result
+      use: '#/$defs/ResultSize_spherical_representationPolymorphic'
   type: polymorphic
   discriminator: type
   id: result
@@ -1876,6 +1885,32 @@ Active_concentration_correction:
       required: true
       label.en: Unit
   label.en: Active concentration correction
+Size_spherical_representation:
+  properties:
+    size_type:
+      type: keyword
+      enum:
+        - radius
+        - diameter
+      help.en: The type of size (radius or diameter)
+      required: true
+      label.en: Size type
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence 
+        interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
+    unit:
+      help.en: Unit of the size of the entity
+      required: true
+      label.en: Unit
+      use: '#/$defs/LENGTH_UNITS'
+  label.en: Size spherical representation
 Modification:
   properties:
     position:
@@ -5240,6 +5275,7 @@ ResultResult_concentrationPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5283,6 +5319,7 @@ ResultResult_stoichiometryPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5350,6 +5387,7 @@ ResultResult_KAPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5417,6 +5455,7 @@ ResultResult_KDPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5484,6 +5523,7 @@ ResultResult_kOnPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5544,6 +5584,7 @@ ResultResult_kOffPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5602,6 +5643,7 @@ ResultResult_deltaHPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5663,6 +5705,7 @@ ResultResult_deltaSPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5721,6 +5764,7 @@ ResultResult_deltaGPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5779,6 +5823,7 @@ ResultResult_MWPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5837,6 +5882,7 @@ ResultResult_EC50Polymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5897,6 +5943,7 @@ ResultResult_hill_coeffPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5958,6 +6005,7 @@ ResultActive_concentration_correctionPolymorphic:
         - Change in Gibbs free energy deltaG
         - Correction of active concentration
         - Molecular weight
+        - Size of spherically represented entity
       help.en: The type of physical parameter the result represents
       required: true
       mapping:
@@ -5972,6 +6020,73 @@ ResultActive_concentration_correctionPolymorphic:
       use: '#/$defs/Entity_and_stoichiometry'
       type: nested
   label.en: Active concentration correction
+ResultSize_spherical_representationPolymorphic:
+  properties:
+    size_type:
+      type: keyword
+      enum:
+        - radius
+        - diameter
+      help.en: The type of size (radius or diameter)
+      required: true
+      label.en: Size type
+    value:
+      type: double
+      help.en: Numerical value of the result
+      required: true
+      label.en: Value
+    value_error:
+      help.en: The expected error of the result in terms of a 95 % confidence 
+        interval
+      label.en: Value error
+      use: '#/$defs/Value_error'
+    unit:
+      help.en: Unit of the size of the entity
+      required: true
+      label.en: Unit
+      use: '#/$defs/LENGTH_UNITS'
+    id:
+      type: keyword
+      label.en: Id
+    name:
+      type: keyword
+      help.en: Descriptive name (id) of the result (e.g. Kd of Lysozyme and 
+        VHH2). Must be unique within a record
+      required: true
+      mapping:
+        copy_to: collected_default_search_fields
+      label.en: Name
+    type:
+      type: keyword
+      enum:
+        - Concentration
+        - Stoichiometry
+        - Constant of association KA
+        - Constant of dissociation KD
+        - Half maximal effective concentration EC50
+        - Hill coefficient
+        - Association rate kOn
+        - Dissociation rate kOff
+        - Change in enthalpy deltaH
+        - Change in entropy deltaS
+        - Change in Gibbs free energy deltaG
+        - Correction of active concentration
+        - Molecular weight
+        - Size of spherically represented entity
+      help.en: The type of physical parameter the result represents
+      required: true
+      mapping:
+        copy_to: collected_default_search_fields
+      label.en: Type
+    entities_involved[]:
+      ^minItems: 1
+      ^help.en: List of chemical or molecular assemblies the result describes 
+        and how many copies of each are involved
+      ^required: true
+      ^label.en: Entities involved
+      use: '#/$defs/Entity_and_stoichiometry'
+      type: nested
+  label.en: Size spherical representation
 MP_modeFlow_modePolymorphic:
   properties:
     flow_cell:

@@ -20,7 +20,7 @@ MP_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MP method specific parameters',
                               required=False)
-        value           : keyword(equals='0.3.0')
+        value           : keyword(equals='0.4.0')
 
     calibrants:
         description     : str(equals='List of objects that was used to
@@ -116,11 +116,16 @@ Calibrant:
                                'chemical',
                                'molecular assembly',
                                'virion',
+                               'nanoparticle',
                                )
 
     molecular_weight:
         description: str(equals='The molecular weight of the calibrant', required=False)
-        value: include('Molecular_weight')
+        value: include('Molecular_weight', required=False)
+
+    size:
+        description     : str(equals='The size of the calibrant', required=False)
+        value           : include('Size', required=False)
 
     modifications:
         description     : str(equals='If the calibration contained modifications
