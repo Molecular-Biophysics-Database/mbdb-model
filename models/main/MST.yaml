@@ -94,7 +94,7 @@ MST_data_analysis:
     results:
         description     : str(equals='Link to the result(s) that was obtained
                                       by the data analysis. The link is to the
-                                      results defined in the general parameters',
+                                      results defined in the record',
                                       required=False)
 
         value           : list(link(target='result'), required=False)
@@ -192,15 +192,15 @@ Measurement:
 Sample:
     targets:
         description     : str(equals='List of names (ids), from the entities of
-                                      interest defined in the general
-                                      parameters, of directly measured entities',
+                                      interest defined in the record,
+                                       of directly measured entities',
                                       required=False)
         value           : list(include('Entity_constituent'), min=1)
 
     ligands:
         description     : str(equals='List of names (ids) of entities (from the
                                       entities of interest defined in the
-                                      general parameters) that were used to
+                                      record) that were used to
                                       alter the behavior of the target(s)',
                                       required=False)
         value           : list(include('Entity_constituent'))
@@ -208,7 +208,7 @@ Sample:
     chemical_environment:
         description     : str(equals='Name (id) of the chemical environment of
                                       the sample (from the chemical environments
-                                      defined in the general parameters)',
+                                      defined in the record)',
                                       required=False)
         value           : link(target='chemical-environment')
 
