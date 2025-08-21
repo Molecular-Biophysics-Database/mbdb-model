@@ -9,7 +9,7 @@ general_parameters:
     value               : include('General_parameters')
 
 method_specific_parameters:
-    description         : str(equals='The parameters of the experiment that is
+    description         : str(equals='The parameters of the experiment that are
                                       specific to BLI', required=False)
     value               : include('BLI_specific_parameters')
 

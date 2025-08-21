@@ -9,7 +9,7 @@ general_parameters:
 
 
 method_specific_parameters:
-    description         : str(equals='The parameters of the experiment that is
+    description         : str(equals='The parameters of the experiment that are
                                       specific to SPR', required=False)
     value               : include('SPR_specific_parameters')
 

@@ -8,7 +8,7 @@ general_parameters:
     value               : include('General_parameters')
 
 method_specific_parameters:
-    description         : str(equals='The parameters of the experiment that is
+    description         : str(equals='The parameters of the experiment that are
                                       specific to MST/TRIC/Spectral Shift',
                                       required=False)
     value               : include('MST_specific_parameters')

@@ -5,7 +5,7 @@ general_parameters:
     value               : include('General_parameters')
 
 method_specific_parameters:
-    description         : str(equals='The parameters of the experiment that is
+    description         : str(equals='The parameters of the experiment that are
                                       specific to MP',
                                       required=False)
     value               : include('MP_specific_parameters')
@@ -52,13 +52,13 @@ MP_specific_parameters:
 ---
 MP_mode_base:
     type:
-        description     : str(equals='Wether the measurement was done with
+        description     : str(equals='Whether the measurement was done
                                       on a flowing sample ("Flow") or statically
                                       placed sample("Static")', required=False)
         value           : enum('Flow', 'Static')
 
 MP_mode:
-    description     : str(equals='Wether the measurement was done on a
+    description     : str(equals='Whether the measurement was done on a
                                   a flowing sample ("Flow") or statically
                                   placed sample', required=False)
     value           : choose(include('MP_mode_base'),
@@ -111,7 +111,7 @@ Calibrant:
         value           : str()
 
     type:
-        description     : str(equals='The type of the calibrant (Polymer)', required=False)
+        description     : str(equals='The type of the calibrant (e.g. polypeptide(L))', required=False)
         value           : enum('polyribonucleotide',
                                'polypeptide(D)',
                                'polypeptide(L)',
