@@ -59,7 +59,7 @@ MP_mode_base:
 
 MP_mode:
     description     : str(equals='Whether the measurement was done on a
-                                  a flowing sample ("Flow") or statically
+                                  flowing sample ("Flow") or statically
                                   placed sample', required=False)
     value           : choose(include('MP_mode_base'),
                              Flow=include('Flow_mode'),
