@@ -227,7 +227,7 @@ general_parameters:
                     $ref: 'eoi-human-serum'
                     name: 'Human serum'
                 copy_number: -1
-          size_type: radius
+          size_type: Radius
           value: 15
           unit: 'nm'
 

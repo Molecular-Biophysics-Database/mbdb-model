@@ -1609,8 +1609,8 @@ Size_spherical_representation:
     size_type:
       type: keyword
       enum:
-        - radius
-        - diameter
+        - Radius
+        - Diameter
       help.en: The type of size (radius or diameter)
       required: true
       label.en: Size type
@@ -5646,8 +5646,8 @@ ResultSize_spherical_representationPolymorphic:
     size_type:
       type: keyword
       enum:
-        - radius
-        - diameter
+        - Radius
+        - Diameter
       help.en: The type of size (radius or diameter)
       required: true
       label.en: Size type

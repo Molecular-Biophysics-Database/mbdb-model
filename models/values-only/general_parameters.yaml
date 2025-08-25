@@ -268,7 +268,7 @@ Active_concentration_correction:
   value_error: include('Value_error', required=False)
   unit: enum("unitless")
 Size_spherical_representation:
-  size_type: enum('radius', 'diameter')
+  size_type: enum('Radius', 'Diameter')
   value: num()
   value_error: include('Value_error', required=False)
   unit: include('LENGTH_UNITS')

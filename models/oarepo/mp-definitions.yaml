@@ -40,13 +40,13 @@ MP_mode_base:
       enum:
         - Flow
         - Static
-      help.en: Wether the measurement was done with on a flowing sample ("Flow")
-        or statically placed sample("Static")
+      help.en: Whether the measurement was done on a flowing sample ("Flow") or 
+        statically placed sample("Static")
       required: true
       label.en: Type
   label.en: Mp mode base
 MP_mode:
-  help.en: Wether the measurement was done on a a flowing sample ("Flow") or 
+  help.en: Whether the measurement was done on a flowing sample ("Flow") or 
     statically placed sample
   label.en: Mp mode
   schemas:
@@ -120,7 +120,7 @@ Calibrant:
         - molecular assembly
         - virion
         - nanoparticle
-      help.en: The type of the calibrant (Polymer)
+      help.en: The type of the calibrant (e.g. polypeptide(L))
       required: true
       label.en: Type
     molecular_weight:
@@ -1891,8 +1891,8 @@ Size_spherical_representation:
     size_type:
       type: keyword
       enum:
-        - radius
-        - diameter
+        - Radius
+        - Diameter
       help.en: The type of size (radius or diameter)
       required: true
       label.en: Size type
@@ -6026,8 +6026,8 @@ ResultSize_spherical_representationPolymorphic:
     size_type:
       type: keyword
       enum:
-        - radius
-        - diameter
+        - Radius
+        - Diameter
       help.en: The type of size (radius or diameter)
       required: true
       label.en: Size type
@@ -6110,8 +6110,8 @@ MP_modeFlow_modePolymorphic:
       enum:
         - Flow
         - Static
-      help.en: Wether the measurement was done with on a flowing sample ("Flow")
-        or statically placed sample("Static")
+      help.en: Whether the measurement was done on a flowing sample ("Flow") or 
+        statically placed sample("Static")
       required: true
       label.en: Type
   label.en: Flow mode
@@ -6144,8 +6144,8 @@ MP_modeStatic_modePolymorphic:
       enum:
         - Flow
         - Static
-      help.en: Wether the measurement was done with on a flowing sample ("Flow")
-        or statically placed sample("Static")
+      help.en: Whether the measurement was done on a flowing sample ("Flow") or 
+        statically placed sample("Static")
       required: true
       label.en: Type
   label.en: Static mode
