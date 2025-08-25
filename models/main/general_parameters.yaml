@@ -1297,7 +1297,7 @@ Size_spherical_representation:
     size_type:
         description     : str(equals='The type of size (radius or diameter)',
                               required=False)
-        value           : enum('radius', 'diameter')
+        value           : enum('Radius', 'Diameter')
 
     value:
         description     : str(equals='Numerical value of the result',
