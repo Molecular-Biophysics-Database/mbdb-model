@@ -4,7 +4,7 @@ general_parameters:
   label.en: General parameters
   use: '#/$defs/General_parameters'
 method_specific_parameters:
-  help.en: The parameters of the experiment that is specific to SPR
+  help.en: The parameters of the experiment that are specific to SPR
   required: true
   label.en: Method specific parameters
   use: '#/$defs/SPR_specific_parameters'

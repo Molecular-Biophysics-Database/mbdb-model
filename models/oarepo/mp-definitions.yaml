@@ -3,7 +3,7 @@ MP_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.4.0
+        - 0.4.1
       help.en: The schema version used to annotate the MP method specific 
         parameters
       required: true
@@ -11,7 +11,8 @@ MP_specific_parameters:
     calibrants[]:
       ^minItems: 1
       ^help.en: List of objects that was used to create the calibration curve 
-        for converting contrast to molecular weight
+        for converting contrast to molecular weight or converting the position 
+        of optimum contrast to particle size
       ^required: true
       ^label.en: Calibrants
       use: '#/$defs/Calibrant'
@@ -39,13 +40,13 @@ MP_mode_base:
       enum:
         - Flow
         - Static
-      help.en: Wether the measurement was done with on a flowing sample ("Flow")
-        or statically placed sample("Static")
+      help.en: Whether the measurement was done on a flowing sample ("Flow") or 
+        statically placed sample("Static")
       required: true
       label.en: Type
   label.en: Mp mode base
 MP_mode:
-  help.en: Wether the measurement was done on a a flowing sample ("Flow") or 
+  help.en: Whether the measurement was done on a flowing sample ("Flow") or 
     statically placed sample
   label.en: Mp mode
   schemas:
@@ -119,7 +120,7 @@ Calibrant:
         - molecular assembly
         - virion
         - nanoparticle
-      help.en: The type of the calibrant (Polymer)
+      help.en: The type of the calibrant (e.g. polypeptide(L))
       required: true
       label.en: Type
     molecular_weight:
@@ -148,7 +149,7 @@ MP_data_analysis:
     results[]:
       ^minItems: 1
       ^help.en: Link to the result(s) that was obtained by the data analysis. 
-        The link is to the results defined in the general parameters
+        The link is to the results defined in the record
       ^label.en: Results
       type: relation
       model: '#result'
@@ -213,13 +214,13 @@ MP_sample:
     targets[]:
       ^minItems: 1
       ^help.en: List of names (ids), from the entities of interest defined in 
-        the general parameters, of directly measured entities
+        the record, of directly measured entities
       ^required: true
       ^label.en: Targets
       use: '#/$defs/Entity_constituent'
     chemical_environment:
       help.en: Name (id) of the chemical environment of the sample (from the 
-        chemical environments defined in the general parameters)
+        chemical environments defined in the record)
       required: true
       label.en: Chemical environment
       type: relation
@@ -242,8 +243,8 @@ MP_sample_dilution:
       properties:
         chemical_environment:
           help.en: Name (id) of the chemical environment that was used as the 
-            dilution buffer (from the chemical environment defined in the 
-            general parameters
+            dilution buffer (from the chemical environments defined in the 
+            record
           required: true
           label.en: Chemical environment
           type: relation
@@ -266,7 +267,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.14.0
+        - 0.14.1
       help.en: The schema version used to annotate the general parameters of the
         record
       required: true
@@ -563,7 +564,7 @@ Entity_constituent:
   properties:
     entity:
       help.en: Name (id) of the entity (from the entities of interest defined in
-        the general parameters)
+        the record)
       required: true
       label.en: Entity
       type: relation
@@ -1364,7 +1365,7 @@ Depositors:
     contributors[]:
       ^minItems: 1
       ^help.en: List of other people who contributed to generating the deposited
-        data, metadata, results , or the deposition itself
+        data, metadata, results, or the deposition itself
       ^label.en: Contributors
       use: '#/$defs/Person'
       type: nested
@@ -1846,7 +1847,7 @@ Entity_and_stoichiometry:
   properties:
     entity:
       help.en: Name (id) of the entity (from the entities of interest defined in
-        the general parameters)
+        the record)
       required: true
       label.en: Entity
       type: relation
@@ -1890,8 +1891,8 @@ Size_spherical_representation:
     size_type:
       type: keyword
       enum:
-        - radius
-        - diameter
+        - Radius
+        - Diameter
       help.en: The type of size (radius or diameter)
       required: true
       label.en: Size type
@@ -2332,7 +2333,7 @@ Yes_homogeneity:
       type: integer
       minimum: 1
       help.en: The number of species that were expected to be present (e.g. 2 if
-        monomers and dimers are expected to occur as an equilibrium; large 
+        monomers and dimers are expected to occur at an equilibrium; large 
         aggregates should always be considered as being unexpected in this 
         regard)
       required: true
@@ -3080,7 +3081,7 @@ HomogeneityYes_homogeneityPolymorphic:
       type: integer
       minimum: 1
       help.en: The number of species that were expected to be present (e.g. 2 if
-        monomers and dimers are expected to occur as an equilibrium; large 
+        monomers and dimers are expected to occur at an equilibrium; large 
         aggregates should always be considered as being unexpected in this 
         regard)
       required: true
@@ -6025,8 +6026,8 @@ ResultSize_spherical_representationPolymorphic:
     size_type:
       type: keyword
       enum:
-        - radius
-        - diameter
+        - Radius
+        - Diameter
       help.en: The type of size (radius or diameter)
       required: true
       label.en: Size type
@@ -6109,8 +6110,8 @@ MP_modeFlow_modePolymorphic:
       enum:
         - Flow
         - Static
-      help.en: Wether the measurement was done with on a flowing sample ("Flow")
-        or statically placed sample("Static")
+      help.en: Whether the measurement was done on a flowing sample ("Flow") or 
+        statically placed sample("Static")
       required: true
       label.en: Type
   label.en: Flow mode
@@ -6143,8 +6144,8 @@ MP_modeStatic_modePolymorphic:
       enum:
         - Flow
         - Static
-      help.en: Wether the measurement was done with on a flowing sample ("Flow")
-        or statically placed sample("Static")
+      help.en: Whether the measurement was done on a flowing sample ("Flow") or 
+        statically placed sample("Static")
       required: true
       label.en: Type
   label.en: Static mode

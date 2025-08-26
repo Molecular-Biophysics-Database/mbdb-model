@@ -3,7 +3,7 @@ ITC_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.1.0
+        - 0.1.1
       help.en: The schema version used to annotate the ITC method specific 
         parameters
       required: true
@@ -166,7 +166,7 @@ ITC_data_analysis:
     results[]:
       ^minItems: 1
       ^help.en: Link to the result(s) that was obtained by the data analysis. 
-        The link is to the results defined in the general parameters
+        The link is to the results defined in the record
       ^label.en: Results
       type: relation
       model: '#result'
@@ -223,13 +223,13 @@ ITC_sample:
     targets[]:
       ^minItems: 1
       ^help.en: List of names (ids), from the entities of interest defined in 
-        the general parameters, of directly measured entities
+        the record, of directly measured entities
       ^required: true
       ^label.en: Targets
       use: '#/$defs/Entity_constituent'
     chemical_environment:
       help.en: Name (id) of the chemical environment of the sample (from the 
-        chemical environments defined in the general parameters)
+        chemical environments defined in the record)
       required: true
       label.en: Chemical environment
       type: relation
@@ -251,7 +251,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.14.0
+        - 0.14.1
       help.en: The schema version used to annotate the general parameters of the
         record
       required: true
@@ -548,7 +548,7 @@ Entity_constituent:
   properties:
     entity:
       help.en: Name (id) of the entity (from the entities of interest defined in
-        the general parameters)
+        the record)
       required: true
       label.en: Entity
       type: relation
@@ -1349,7 +1349,7 @@ Depositors:
     contributors[]:
       ^minItems: 1
       ^help.en: List of other people who contributed to generating the deposited
-        data, metadata, results , or the deposition itself
+        data, metadata, results, or the deposition itself
       ^label.en: Contributors
       use: '#/$defs/Person'
       type: nested
@@ -1831,7 +1831,7 @@ Entity_and_stoichiometry:
   properties:
     entity:
       help.en: Name (id) of the entity (from the entities of interest defined in
-        the general parameters)
+        the record)
       required: true
       label.en: Entity
       type: relation
@@ -1875,8 +1875,8 @@ Size_spherical_representation:
     size_type:
       type: keyword
       enum:
-        - radius
-        - diameter
+        - Radius
+        - Diameter
       help.en: The type of size (radius or diameter)
       required: true
       label.en: Size type
@@ -2303,7 +2303,7 @@ Yes_homogeneity:
       type: integer
       minimum: 1
       help.en: The number of species that were expected to be present (e.g. 2 if
-        monomers and dimers are expected to occur as an equilibrium; large 
+        monomers and dimers are expected to occur at an equilibrium; large 
         aggregates should always be considered as being unexpected in this 
         regard)
       required: true
@@ -3056,7 +3056,7 @@ HomogeneityYes_homogeneityPolymorphic:
       type: integer
       minimum: 1
       help.en: The number of species that were expected to be present (e.g. 2 if
-        monomers and dimers are expected to occur as an equilibrium; large 
+        monomers and dimers are expected to occur at an equilibrium; large 
         aggregates should always be considered as being unexpected in this 
         regard)
       required: true
@@ -6001,8 +6001,8 @@ ResultSize_spherical_representationPolymorphic:
     size_type:
       type: keyword
       enum:
-        - radius
-        - diameter
+        - Radius
+        - Diameter
       help.en: The type of size (radius or diameter)
       required: true
       label.en: Size type

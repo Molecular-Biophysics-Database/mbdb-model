@@ -1,5 +1,5 @@
 general_parameters:
-    schema_version: '0.14.0'
+    schema_version: '0.14.1'
     record_information:
         publisher: 'MBDB'
         resource_type_general: 'Dataset'
@@ -289,7 +289,7 @@ general_parameters:
           unit: 'nM'
 
 method_specific_parameters:
-    schema_version: '0.10.0'
+    schema_version: '0.10.1'
     experiment_type: 'Affinity'
     sensor:
         surface_properties: 'protein G'

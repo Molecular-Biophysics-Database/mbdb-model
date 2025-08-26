@@ -4,7 +4,7 @@ general_parameters:
   label.en: General parameters
   use: '#/$defs/General_parameters'
 method_specific_parameters:
-  help.en: The parameters of the experiment that is specific to ITC
+  help.en: The parameters of the experiment that are specific to ITC
   required: true
   label.en: Method specific parameters
   use: '#/$defs/ITC_specific_parameters'

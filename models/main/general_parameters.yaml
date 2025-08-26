@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.14.0')
+        value           : keyword(equals='0.14.1')
 
     record_information:
         description     : str(equals='Information about the record itself',
@@ -237,7 +237,7 @@ Entity_constituent:
     entity:
         description     : str(equals='Name (id) of the entity (from the
                                       entities of interest defined in the
-                                      general parameters)', required=False)
+                                      record)', required=False)
         value           : link(target='entity')
 
 
@@ -915,7 +915,7 @@ Depositors:
     contributors:
         description : str(equals='List of other people who contributed to
                                   generating the deposited data, metadata,
-                                  results , or the deposition
+                                  results, or the deposition
                                   itself', required=False)
         value       : list(nested_include('Person'), required=False)
 
@@ -1259,7 +1259,7 @@ Entity_and_stoichiometry:
     entity:
         description     : str(equals='Name (id) of the entity (from the
                                       entities of interest defined in the
-                                      general parameters)', required=False)
+                                      record)', required=False)
         value           : link(target='entity')
 
 
@@ -1297,7 +1297,7 @@ Size_spherical_representation:
     size_type:
         description     : str(equals='The type of size (radius or diameter)',
                               required=False)
-        value           : enum('radius', 'diameter')
+        value           : enum('Radius', 'Diameter')
 
     value:
         description     : str(equals='Numerical value of the result',
@@ -1715,7 +1715,7 @@ Yes_homogeneity:
     expected_number_of_species:
         description         : str(equals="The number of species that were expected to
                                           be present (e.g. 2 if monomers and dimers are
-                                          expected to occur as an equilibrium;
+                                          expected to occur at an equilibrium;
                                           large aggregates should always be considered
                                           as being unexpected in this regard)",
                                   required=False)

@@ -9,7 +9,7 @@ general_parameters:
 
 
 method_specific_parameters:
-    description         : str(equals='The parameters of the experiment that is
+    description         : str(equals='The parameters of the experiment that are
                                       specific to SPR', required=False)
     value               : include('SPR_specific_parameters')
 
@@ -22,7 +22,7 @@ SPR_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       SPR method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.10.0')
+        value           : keyword(equals='0.10.1')
 
     experiment_type:
         description     : str(equals='Which type of parameter is sought with
@@ -62,7 +62,7 @@ SPR_specific_parameters:
 SPR_data_analysis:
     results:
         description     : str(equals='Link to a result that was
-                                      defined in the general parameters',
+                                      defined in the record',
                                       required=False)
 
         value           : list(link(target='result'), required=False)
@@ -144,14 +144,14 @@ Sample:
     chemical_environment:
         description     : str(equals='Name (id) of the chemical environment of
                                       the sample (from the chemical environments
-                                      defined in the general parameters)',
+                                      defined in the record)',
                                       required=False)
         value           : link(target='chemical-environment')
 
     analytes:
         description     : str(equals='List of names (ids) of entities (from the
                                       entities of interest defined in the
-                                      general parameters) that was used to alter
+                                      record) that was used to alter
                                       the behavior of the target(s) or entities
                                       present at varying concentrations for a
                                       series of measurements', required=False)
@@ -190,15 +190,13 @@ Measurement_step:
     start_time:
         description     : str(equals='The numerical value of the start point of
                                       the measurement step relative to the
-                                      beginning of the measurement in the units
-                                      defined in the general parameters',
+                                      beginning of the measurement',
                                       required=False)
         value           : include('Time_duration')
 
     time_length:
         description     : str(equals='The numerical value of the total time of
-                                      the measurement step took in the units
-                                      defined in the general parameters',
+                                      the measurement step',
                                       required=False)
         value           : include('Time_duration')
 
@@ -236,8 +234,8 @@ Ligand_information:
     entity:
         description     : str(equals='Name (id) of the ligand (entity that is
                                       immobilized, from the list of entities of
-                                      interest defined in the general
-                                      parameters)', required=False)
+                                      interest defined in the record)',
+                                      required=False)
         value           : link(target='entity', required=False)
 
     immobilization_chemistry:
