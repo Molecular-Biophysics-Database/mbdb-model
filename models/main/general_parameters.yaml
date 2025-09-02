@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.14.1')
+        value           : keyword(equals='0.14.2')
 
     record_information:
         description     : str(equals='Information about the record itself',
@@ -1513,12 +1513,12 @@ Atmosphere:
 
 Flow_rate:
     value:
-        description     : str(equals='Numerical value of the flow-rate',
+        description     : str(equals='Numerical value of the flowrate',
                                       required=False)
         value           : num(min=0)
 
     unit:
-        description     : str(equals='The unit of the flow-rate',
+        description     : str(equals='The unit of the flowrate',
                                       required=false)
 
         value           : include('FLOWRATE_UNITS')
