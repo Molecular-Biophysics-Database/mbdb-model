@@ -241,6 +241,12 @@ method_specific_parameters:
           type: radius
           mean: 10
           unit: nm
+        additional_specifications:
+          - "Purchased from Nanopartz, Inc."
+          - "Catalog number: A10-5"
+          - "Lot number: 12345"
+          - "Concentration: 1e11 particles/mL"
+          - "Stabilized with citrate"
       - name: BSA dimer
         type: molecular assembly
         molecular_weight:

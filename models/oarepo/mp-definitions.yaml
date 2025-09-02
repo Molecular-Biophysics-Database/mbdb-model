@@ -3,7 +3,7 @@ MP_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.4.1
+        - 0.5.1
       help.en: The schema version used to annotate the MP method specific 
         parameters
       required: true
@@ -93,12 +93,12 @@ Flow_mode:
       required: true
       label.en: Flow cell
     sample_flowrate:
-      help.en: Numerical value and unit of the sample flow rate
+      help.en: Numerical value and unit of the sample flowrate
       required: true
       label.en: Sample flowrate
       use: '#/$defs/Flow_rate'
     buffer_flowrate:
-      help.en: Numerical value and unit of the buffer flow rate
+      help.en: Numerical value and unit of the buffer flowrate
       required: true
       label.en: Buffer flowrate
       use: '#/$defs/Flow_rate'
@@ -137,6 +137,11 @@ Calibrant:
         here (e.g. PEGylation)
       ^label.en: Modifications
       use: '#/$defs/Modification'
+    additional_specifications[]:
+      ^minItems: 1
+      ^help.en: Additional information about the calibrant can be specified here
+      ^label.en: Additional specifications
+      type: keyword
   label.en: Calibrant
 MP_data_analysis:
   properties:
@@ -267,7 +272,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.14.1
+        - 0.14.2
       help.en: The schema version used to annotate the general parameters of the
         record
       required: true
@@ -2049,11 +2054,11 @@ Flow_rate:
     value:
       type: double
       minimum: 0.0
-      help.en: Numerical value of the flow-rate
+      help.en: Numerical value of the flowrate
       required: true
       label.en: Value
     unit:
-      help.en: The unit of the flow-rate
+      help.en: The unit of the flowrate
       required: true
       label.en: Unit
       use: '#/$defs/FLOWRATE_UNITS'
@@ -6096,12 +6101,12 @@ MP_modeFlow_modePolymorphic:
       required: true
       label.en: Flow cell
     sample_flowrate:
-      help.en: Numerical value and unit of the sample flow rate
+      help.en: Numerical value and unit of the sample flowrate
       required: true
       label.en: Sample flowrate
       use: '#/$defs/Flow_rate'
     buffer_flowrate:
-      help.en: Numerical value and unit of the buffer flow rate
+      help.en: Numerical value and unit of the buffer flowrate
       required: true
       label.en: Buffer flowrate
       use: '#/$defs/Flow_rate'
