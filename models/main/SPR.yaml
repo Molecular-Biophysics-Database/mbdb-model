@@ -22,7 +22,7 @@ SPR_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       SPR method specific parameters',
                                       required=False)
-        value           : keyword(equals='0.10.1')
+        value           : keyword(equals='0.10.2')
 
     experiment_type:
         description     : str(equals='Which type of parameter is sought with
@@ -278,7 +278,7 @@ Sensor:
 
 Flow:
     rate:
-        description     : str(equals='The numerical value and unit of the flow-rate',
+        description     : str(equals='The numerical value and unit of the flowrate',
                                       required=False)
         value           : include('Flow_rate')
 

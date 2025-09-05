@@ -20,7 +20,7 @@ MP_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MP method specific parameters',
                               required=False)
-        value           : keyword(equals='0.4.1')
+        value           : keyword(equals='0.5.1')
 
     calibrants:
         description     : str(equals='List of objects that was used to
@@ -94,12 +94,12 @@ Flow_mode:
         value           : str()
 
     sample_flowrate:
-        description     : str(equals='Numerical value and unit of the sample flow rate',
+        description     : str(equals='Numerical value and unit of the sample flowrate',
                               required=False)
         value           : include('Flow_rate')
 
     buffer_flowrate:
-        description     : str(equals='Numerical value and unit of the buffer flow rate',
+        description     : str(equals='Numerical value and unit of the buffer flowrate',
                               required=False)
         value           : include('Flow_rate')
 
@@ -134,6 +134,11 @@ Calibrant:
                                       they can be specified here (e.g.
                                       PEGylation)', required=False)
         value           : list(include('Modification'), required=False)
+
+    additional_specifications:
+        description     : str(equals='Additional information about the calibrant
+                                      can be specified here', required=False)
+        value           : list(str(), required=False)
 
 # Data analysis definitions
 MP_data_analysis:

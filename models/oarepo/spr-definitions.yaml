@@ -3,7 +3,7 @@ SPR_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.10.1
+        - 0.10.2
       help.en: The schema version used to annotate the SPR method specific 
         parameters
       required: true
@@ -299,7 +299,7 @@ Sensor:
 Flow:
   properties:
     rate:
-      help.en: The numerical value and unit of the flow-rate
+      help.en: The numerical value and unit of the flowrate
       required: true
       label.en: Rate
       use: '#/$defs/Flow_rate'
@@ -332,7 +332,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.14.1
+        - 0.14.2
       help.en: The schema version used to annotate the general parameters of the
         record
       required: true
@@ -2114,11 +2114,11 @@ Flow_rate:
     value:
       type: double
       minimum: 0.0
-      help.en: Numerical value of the flow-rate
+      help.en: Numerical value of the flowrate
       required: true
       label.en: Value
     unit:
-      help.en: The unit of the flow-rate
+      help.en: The unit of the flowrate
       required: true
       label.en: Unit
       use: '#/$defs/FLOWRATE_UNITS'
