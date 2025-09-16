@@ -1556,6 +1556,17 @@ Molecular_weight:
                               required=False)
         value           : include('MOLECULAR_WEIGHT_UNITS')
 
+Wavelength:
+    value:
+        description     : str(equals='Numerical value of the wavelength',
+                                      required=False)
+        value           : num(min=0)
+
+    unit:
+        description     : str(equals='The unit of the wavelength',
+                                      required=false)
+
+        value           : include('LENGTH_UNITS')
 Size:
     type:
         description     : str(equals='The type of size (e.g. radius)',
