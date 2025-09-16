@@ -234,6 +234,10 @@ general_parameters:
 method_specific_parameters:
     schema_version: '0.6.0'
 
+    primary_laser_wavelength:
+        value: 525
+        unit: 'nm'
+
     calibrants:
       - name: gold nanoparticle 1
         type: nanoparticle

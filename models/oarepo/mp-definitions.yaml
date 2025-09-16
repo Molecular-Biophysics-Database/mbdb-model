@@ -3,11 +3,15 @@ MP_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.5.1
+        - 0.6.0
       help.en: The schema version used to annotate the MP method specific 
         parameters
       required: true
       label.en: Schema version
+    primary_laser_wavelength:
+      help.en: The primary illumination laser wavelength used in the experiment
+      label.en: Primary laser wavelength
+      use: '#/$defs/Wavelength'
     calibrants[]:
       ^minItems: 1
       ^help.en: List of objects that was used to create the calibration curve 
@@ -272,7 +276,7 @@ General_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.14.2
+        - 0.15.0
       help.en: The schema version used to annotate the general parameters of the
         record
       required: true
@@ -2105,6 +2109,20 @@ Molecular_weight:
       label.en: Unit
       use: '#/$defs/MOLECULAR_WEIGHT_UNITS'
   label.en: Molecular weight
+Wavelength:
+  properties:
+    value:
+      type: double
+      minimum: 0.0
+      help.en: Numerical value of the wavelength
+      required: true
+      label.en: Value
+    unit:
+      help.en: The unit of the wavelength
+      required: true
+      label.en: Unit
+      use: '#/$defs/LENGTH_UNITS'
+  label.en: Wavelength
 Size:
   properties:
     type:
