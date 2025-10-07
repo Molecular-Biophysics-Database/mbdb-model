@@ -11,7 +11,7 @@ General_parameters:
     schema_version:
         description     : str(equals='The schema version used to annotate the
                                       general parameters of the record', required=False)
-        value           : keyword(equals='0.14.2')
+        value           : keyword(equals='0.15.0')
 
     record_information:
         description     : str(equals='Information about the record itself',
@@ -1556,6 +1556,17 @@ Molecular_weight:
                               required=False)
         value           : include('MOLECULAR_WEIGHT_UNITS')
 
+Wavelength:
+    value:
+        description     : str(equals='Numerical value of the wavelength',
+                                      required=False)
+        value           : num(min=0)
+
+    unit:
+        description     : str(equals='The unit of the wavelength',
+                                      required=false)
+
+        value           : include('LENGTH_UNITS')
 Size:
     type:
         description     : str(equals='The type of size (e.g. radius)',
