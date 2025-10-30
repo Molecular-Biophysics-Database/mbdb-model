@@ -215,10 +215,11 @@ class Vocabulary(Validator):
 
     tag = "vocabulary"
 
-    def __init__(self, *args, fields=None, vocabulary=None, **kwargs):
+    def __init__(self, *args, fields=None, vocabulary=None, pid_field=None, **kwargs):
         super().__init__(*args, fields=fields, **kwargs)
         self.vocabulary = vocabulary
         self.fields = fields
+        self.pid_field = pid_field
 
     def _is_valid(self, value):
         if value is None:

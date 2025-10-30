@@ -946,8 +946,9 @@ Person:
                                       Registry (ROR)', required=False)
         default_search  : True
         value           : list(vocabulary(vocabulary='affiliations',
-                               fields='[id, title, props.city, props.state, props.country]'),
-                               required=False)
+                               fields='[id, title, props.city, props.state, props.country]', 
+                               pid_field='Vocabulary.pid.with_type_ctx("affiliations")'),
+                               required=False, )
 
 Publication_base:
     pid:
