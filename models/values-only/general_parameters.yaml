@@ -180,7 +180,8 @@ Person:
   family_name: str()
   identifiers: list(person_id(), required=False)
   affiliations: list(vocabulary(vocabulary='affiliations', fields='[id, title, props.city,
-    props.state, props.country]'), required=False)
+    props.state, props.country]', pid_field='Vocabulary.pid.with_type_ctx("affiliations")'),
+    required=False, )
 Publication_base:
   pid: publication_id()
   title: str(required=False)

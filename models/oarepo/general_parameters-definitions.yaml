@@ -1125,6 +1125,7 @@ Person:
         - props.country
       vocabulary-type: affiliations
       type: vocabulary
+      pid-field: Vocabulary.pid.with_type_ctx("affiliations")
       extras:
         title:
           mapping:

@@ -620,6 +620,7 @@ class ModelVocabulary(ModelLink):
         data.target = None
         super().__init__(data, path, default_search, label)
         self.vocabulary = data.vocabulary
+        self.pid_field = data.pid_field
 
     def to_json(self):
         # Calling grandparents method instead of parent method is a sign that
@@ -632,6 +633,10 @@ class ModelVocabulary(ModelLink):
             "vocabulary-type": self.vocabulary,
             "type": "vocabulary",
         }
+
+        if self.pid_field:
+            vocab_fields["pid-field"] = self.pid_field
+
         ret.update(vocab_fields)
         if self.default_search:
             # searching for vocabulary needs to be placed in extra
