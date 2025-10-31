@@ -49,6 +49,8 @@ SPR_specific_parameters:
       ^label.en: Data analysis
       use: '#/$defs/SPR_data_analysis'
   label.en: Spr specific parameters
+  marshmallow:
+    base-classes: [common.services.records.schema.VersionUpdateSchema]
 SPR_data_analysis:
   properties:
     results[]:

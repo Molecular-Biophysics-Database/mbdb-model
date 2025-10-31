@@ -49,6 +49,8 @@ BLI_specific_parameters:
       ^label.en: Data analysis
       use: '#/$defs/BLI_data_analysis'
   label.en: Bli specific parameters
+  marshmallow:
+    base-classes: [common.services.records.schema.VersionUpdateSchema]
 BLI_Measurement:
   properties:
     id:

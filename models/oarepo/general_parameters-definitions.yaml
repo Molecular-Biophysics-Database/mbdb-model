@@ -95,6 +95,8 @@ General_parameters:
       use: '#/$defs/Result'
       type: polymorphic
   label.en: General parameters
+  marshmallow:
+    base-classes: [common.services.records.schema.VersionUpdateSchema]
 Record_information_base:
   properties:
     title:

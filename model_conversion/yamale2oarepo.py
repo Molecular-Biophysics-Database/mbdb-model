@@ -15,6 +15,7 @@ import ruamel
 import yamale
 from ruamel.yaml import YAML as ruamel_YAML
 from ruamel.yaml.scalarstring import DoubleQuotedScalarString
+from ruamel.yaml.comments import CommentedMap, CommentedSeq
 from yamale2oarepo_config import (
     PRIMITIVES_MAPPING,
     VOCABULARY_CUSTOM_FIELD_KEYS,
@@ -717,7 +718,7 @@ def parse_described_value(d, path, includes):
     value.extension_elements = {
         k: parse(v, f"{path}/{k}", includes)
         for k, v in d.items()
-        if k not in ("description", "value", "default_search", "label")
+        if k not in ("description", "value", "default_search", "label", "marshmallow")
     }
 
     return value
@@ -858,12 +859,35 @@ def json_to_yaml(json_dict):
     yaml.sort_base_mapping_type_on_output = True
     yaml.Representer = NonAliasingRTRepresenter
     yaml.indent(mapping=2, sequence=4, offset=2)
+
+    # normalize
     io = StringIO()
     yaml.dump(ruamel_quote_booleans(json_dict), io)
     io.seek(0)
-    loaded = yaml.load(io)
+
+    # reload normalized data
+    data = yaml.load(io)
+
+    # fix marshmallow
+    def fix_flow_style(node):
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key == "marshmallow" and isinstance(value, dict):
+                    bc = value.get("base-classes")
+                    if isinstance(bc, list):
+                        from ruamel.yaml.comments import CommentedSeq
+                        seq = CommentedSeq(bc)
+                        seq.fa.set_flow_style()
+                        value["base-classes"] = seq
+                fix_flow_style(value)
+        elif isinstance(node, list):
+            for item in node:
+                fix_flow_style(item)
+
+    fix_flow_style(data)
+
     io = StringIO()
-    yaml.dump(loaded, io)
+    yaml.dump(data, io)
     return io.getvalue()
 
 
@@ -886,6 +910,13 @@ def ruamel_quote_booleans(d):
     else:
         return d
 
+def attach_marshmallow(defs, targets):
+    from ruamel.yaml.comments import CommentedMap, CommentedSeq
+    for name, schema in defs.items():
+        if name in targets and "marshmallow" not in schema:
+            seq = CommentedSeq(["common.services.records.schema.VersionUpdateSchema"])
+            seq.fa.set_flow_style()
+            schema["marshmallow"] = CommentedMap({"base-classes": seq})
 
 @click.command()
 @click.argument(
@@ -901,6 +932,7 @@ def ruamel_quote_booleans(d):
     default=MODEL_DIR / "main" / "general_parameters.yaml",
     required=False,
 )
+
 def run(input_file, debug, out_dir, only_defs, include):
     if debug:
         logging.basicConfig(level=logging.DEBUG)
@@ -913,7 +945,15 @@ def run(input_file, debug, out_dir, only_defs, include):
     model.set_links()
     model.propagate_polymorphic_base_schemas()
 
-    out = [(model.to_defs(), "definitions", model.package)]
+    defs = model.to_defs()
+
+    pkg = model.package
+    if pkg == "general_parameters":
+        attach_marshmallow(defs, {"General_parameters"})
+    else:
+        attach_marshmallow(defs, {f"{pkg.upper()}_specific_parameters"})
+
+    out = [(defs, "definitions", model.package)]
 
     if not only_defs:
         out += [
