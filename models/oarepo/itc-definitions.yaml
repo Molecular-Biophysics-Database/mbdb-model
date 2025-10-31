@@ -57,6 +57,8 @@ ITC_specific_parameters:
       ^label.en: Data analysis
       use: '#/$defs/ITC_data_analysis'
   label.en: Itc specific parameters
+  marshmallow:
+    base-classes: [common.services.records.schema.VersionUpdateSchema]
 Reference_power:
   properties:
     value:

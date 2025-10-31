@@ -81,6 +81,8 @@ MST_specific_parameters:
       ^label.en: Data analysis
       use: '#/$defs/MST_data_analysis'
   label.en: Mst specific parameters
+  marshmallow:
+    base-classes: [common.services.records.schema.VersionUpdateSchema]
 MST_data_analysis:
   properties:
     results[]:
