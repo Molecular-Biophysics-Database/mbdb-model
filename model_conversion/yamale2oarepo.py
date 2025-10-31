@@ -15,6 +15,7 @@ import ruamel
 import yamale
 from ruamel.yaml import YAML as ruamel_YAML
 from ruamel.yaml.scalarstring import DoubleQuotedScalarString
+from ruamel.yaml.comments import CommentedMap, CommentedSeq
 from yamale2oarepo_config import (
     PRIMITIVES_MAPPING,
     VOCABULARY_CUSTOM_FIELD_KEYS,
@@ -661,7 +662,15 @@ class Model:
         return self.model.to_json()["properties"]
 
     def to_defs(self):
-        return {k: v.to_json() for k, v in self.includes.items()}
+        defs = {k: v.to_json() for k, v in self.includes.items()}
+
+        # Add marshmallow only if not already present
+        for name, schema in defs.items():
+            if name == "General_parameters" or name.endswith("_specific_parameters"):
+                if "marshmallow" not in schema:
+                    seq = CommentedSeq(["common.services.records.schema.VersionUpdateSchema"])
+                    schema["marshmallow"] = CommentedMap({"base-classes": seq})
+        return defs
 
     @staticmethod
     def to_files_meta(filename):
@@ -858,12 +867,35 @@ def json_to_yaml(json_dict):
     yaml.sort_base_mapping_type_on_output = True
     yaml.Representer = NonAliasingRTRepresenter
     yaml.indent(mapping=2, sequence=4, offset=2)
+
+    # normalize
     io = StringIO()
     yaml.dump(ruamel_quote_booleans(json_dict), io)
     io.seek(0)
-    loaded = yaml.load(io)
+
+    # reload normalized data
+    data = yaml.load(io)
+
+    # fix marshmallow
+    def fix_flow_style(node):
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key == "marshmallow" and isinstance(value, dict):
+                    bc = value.get("base-classes")
+                    if isinstance(bc, list):
+                        from ruamel.yaml.comments import CommentedSeq
+                        seq = CommentedSeq(bc)
+                        seq.fa.set_flow_style()
+                        value["base-classes"] = seq
+                fix_flow_style(value)
+        elif isinstance(node, list):
+            for item in node:
+                fix_flow_style(item)
+
+    fix_flow_style(data)
+
     io = StringIO()
-    yaml.dump(loaded, io)
+    yaml.dump(data, io)
     return io.getvalue()
 
 
