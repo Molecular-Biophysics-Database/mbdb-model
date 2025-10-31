@@ -662,15 +662,7 @@ class Model:
         return self.model.to_json()["properties"]
 
     def to_defs(self):
-        defs = {k: v.to_json() for k, v in self.includes.items()}
-
-        # Add marshmallow only if not already present
-        for name, schema in defs.items():
-            if name == "General_parameters" or name.endswith("_specific_parameters"):
-                if "marshmallow" not in schema:
-                    seq = CommentedSeq(["common.services.records.schema.VersionUpdateSchema"])
-                    schema["marshmallow"] = CommentedMap({"base-classes": seq})
-        return defs
+        return {k: v.to_json() for k, v in self.includes.items()}
 
     @staticmethod
     def to_files_meta(filename):
@@ -726,7 +718,7 @@ def parse_described_value(d, path, includes):
     value.extension_elements = {
         k: parse(v, f"{path}/{k}", includes)
         for k, v in d.items()
-        if k not in ("description", "value", "default_search", "label")
+        if k not in ("description", "value", "default_search", "label", "marshmallow")
     }
 
     return value
@@ -918,6 +910,13 @@ def ruamel_quote_booleans(d):
     else:
         return d
 
+def attach_marshmallow(defs, targets):
+    from ruamel.yaml.comments import CommentedMap, CommentedSeq
+    for name, schema in defs.items():
+        if name in targets and "marshmallow" not in schema:
+            seq = CommentedSeq(["common.services.records.schema.VersionUpdateSchema"])
+            seq.fa.set_flow_style()
+            schema["marshmallow"] = CommentedMap({"base-classes": seq})
 
 @click.command()
 @click.argument(
@@ -933,6 +932,7 @@ def ruamel_quote_booleans(d):
     default=MODEL_DIR / "main" / "general_parameters.yaml",
     required=False,
 )
+
 def run(input_file, debug, out_dir, only_defs, include):
     if debug:
         logging.basicConfig(level=logging.DEBUG)
@@ -945,7 +945,15 @@ def run(input_file, debug, out_dir, only_defs, include):
     model.set_links()
     model.propagate_polymorphic_base_schemas()
 
-    out = [(model.to_defs(), "definitions", model.package)]
+    defs = model.to_defs()
+
+    pkg = model.package
+    if pkg == "general_parameters":
+        attach_marshmallow(defs, {"General_parameters"})
+    else:
+        attach_marshmallow(defs, {f"{pkg.upper()}_specific_parameters"})
+
+    out = [(defs, "definitions", model.package)]
 
     if not only_defs:
         out += [
