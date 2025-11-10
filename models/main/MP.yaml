@@ -72,14 +72,15 @@ MP_mode:
 
 Static_mode:
     sample_carrier:
-        description : str(equals='Properties, modifications and preparation of the sample carrier',
+        description : str(equals='Properties and preparation of the sample carrier',
                                   required=False)
         value       : include('MP_sample_carrier')
 
 MP_sample_carrier:
         surface_modification:
             description : str(equals='Information about coating or other types
-                                      of surface modification of the coverslip',
+                                      of surface modification of the coverslip,
+                                      ("None" if not modified)',
                                       required=False)
             value       : str()
 

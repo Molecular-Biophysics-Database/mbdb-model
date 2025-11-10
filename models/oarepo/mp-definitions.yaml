@@ -69,7 +69,7 @@ MP_mode:
 Static_mode:
   properties:
     sample_carrier:
-      help.en: Properties, modifications and preparation of the sample carrier
+      help.en: Properties and preparation of the sample carrier
       required: true
       label.en: Sample carrier
       use: '#/$defs/MP_sample_carrier'
@@ -79,7 +79,7 @@ MP_sample_carrier:
     surface_modification:
       type: keyword
       help.en: Information about coating or other types of surface modification 
-        of the coverslip
+        of the coverslip, ("None" if not modified)
       required: true
       label.en: Surface modification
     material:
@@ -6149,7 +6149,7 @@ MP_modeFlow_modePolymorphic:
 MP_modeStatic_modePolymorphic:
   properties:
     sample_carrier:
-      help.en: Properties, modifications and preparation of the sample carrier
+      help.en: Properties and preparation of the sample carrier
       required: true
       label.en: Sample carrier
       use: '#/$defs/MP_sample_carrier'
