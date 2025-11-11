@@ -20,7 +20,7 @@ MP_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MP method specific parameters',
                               required=False)
-        value           : keyword(equals='0.6.0')
+        value           : keyword(equals='1.0.0')
 
     primary_laser_wavelength:
         description     : str(equals='The primary illumination laser wavelength used in the experiment',
@@ -72,9 +72,15 @@ MP_mode:
 
 Static_mode:
     sample_carrier:
+        description : str(equals='Properties and preparation of the sample carrier',
+                                  required=False)
+        value       : include('MP_sample_carrier')
+
+MP_sample_carrier:
         surface_modification:
             description : str(equals='Information about coating or other types
-                                      of surface modification of the coverslip',
+                                      of surface modification of the coverslip,
+                                      ("None" if not modified)',
                                       required=False)
             value       : str()
 

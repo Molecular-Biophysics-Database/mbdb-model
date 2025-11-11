@@ -3,7 +3,7 @@ MP_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 0.6.0
+        - 1.0.0
       help.en: The schema version used to annotate the MP method specific 
         parameters
       required: true
@@ -69,28 +69,33 @@ MP_mode:
 Static_mode:
   properties:
     sample_carrier:
-      properties:
-        surface_modification:
-          type: keyword
-          help.en: Information about coating or other types of surface 
-            modification of the coverslip
-          required: true
-          label.en: Surface modification
-        material:
-          type: keyword
-          help.en: The material the sample carrier (slide) is composed of
-          label.en: Material
-        supplier:
-          help.en: Information about the supplier of the coverslip
-          label.en: Supplier
-          use: '#/$defs/Supplier'
-        cleaning_protocol[]:
-          ^minItems: 1
-          ^help.en: List of steps taken to clean the coverslip
-          ^label.en: Cleaning protocol
-          use: '#/$defs/Step'
+      help.en: Properties and preparation of the sample carrier
+      required: true
       label.en: Sample carrier
+      use: '#/$defs/MP_sample_carrier'
   label.en: Static mode
+MP_sample_carrier:
+  properties:
+    surface_modification:
+      type: keyword
+      help.en: Information about coating or other types of surface modification 
+        of the coverslip, ("None" if not modified)
+      required: true
+      label.en: Surface modification
+    material:
+      type: keyword
+      help.en: The material the sample carrier (slide) is composed of
+      label.en: Material
+    supplier:
+      help.en: Information about the supplier of the coverslip
+      label.en: Supplier
+      use: '#/$defs/Supplier'
+    cleaning_protocol[]:
+      ^minItems: 1
+      ^help.en: List of steps taken to clean the coverslip
+      ^label.en: Cleaning protocol
+      use: '#/$defs/Step'
+  label.en: Mp sample carrier
 Flow_mode:
   properties:
     flow_cell:
@@ -6144,27 +6149,10 @@ MP_modeFlow_modePolymorphic:
 MP_modeStatic_modePolymorphic:
   properties:
     sample_carrier:
-      properties:
-        surface_modification:
-          type: keyword
-          help.en: Information about coating or other types of surface 
-            modification of the coverslip
-          required: true
-          label.en: Surface modification
-        material:
-          type: keyword
-          help.en: The material the sample carrier (slide) is composed of
-          label.en: Material
-        supplier:
-          help.en: Information about the supplier of the coverslip
-          label.en: Supplier
-          use: '#/$defs/Supplier'
-        cleaning_protocol[]:
-          ^minItems: 1
-          ^help.en: List of steps taken to clean the coverslip
-          ^label.en: Cleaning protocol
-          use: '#/$defs/Step'
+      help.en: Properties and preparation of the sample carrier
+      required: true
       label.en: Sample carrier
+      use: '#/$defs/MP_sample_carrier'
     type:
       type: keyword
       enum:
