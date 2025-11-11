@@ -71,7 +71,7 @@
         ],
         "method": "Mass photometry (MP)",
         "instrument": {
-          "id": "ins:60"
+          "id": "ins:57"
         },
         "chemical_environments": [
           {
@@ -348,8 +348,27 @@
         ],
         "mode": {
           "type": "Static",
-          "sample_carrier": {
-            "surface_modification": "None"
+          "sample_carrier":{
+            "surface_modification": "Polylysine coating",
+            "material": "Glass",
+            "supplier": {
+              "name": "Refeyn"
+            },
+            "cleaning_protocol": [
+              {
+                "name": "Sonication in isopropanol",
+                "description": "Sonicated the coverslips in isopropanol for 10 min"
+              },
+              {
+                "name": "Rinsing with deionized water",
+                "description": "Rinsed the coverslips 3 times with deionized water"
+              },
+              {
+                "name": "Drying with nitrogen stream",
+                "description": "Dried the coverslips using a nitrogen stream"
+              }
+
+            ]
           }
         },
         "data_analysis": [
@@ -366,15 +385,15 @@
             },
             "measurements": [
               {
-                "id": "pos_1_rep_1",
+                "id": "rep_1",
                 "name": "1 nM hemoglobin + 10 mg/ml Human serum"
               },
               {
-                "id": "pos_2_rep_1",
+                "id": "rep_1",
                 "name": "1 nM hemoglobin + 20 mg/ml Human serum"
               },
               {
-                "id": "pos_3_rep_1",
+                "id": "rep_1",
                 "name": "1 nM hemoglobin + 40 mg/ml Human serum"
               }
             ]
