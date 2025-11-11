@@ -348,7 +348,7 @@
         ],
         "mode": {
           "type": "Static",
-          "sample_carrier":{
+          "sample_carrier": {
             "surface_modification": "Polylysine coating",
             "material": "Glass",
             "supplier": {
@@ -367,7 +367,6 @@
                 "name": "Drying with nitrogen stream",
                 "description": "Dried the coverslips using a nitrogen stream"
               }
-
             ]
           }
         },

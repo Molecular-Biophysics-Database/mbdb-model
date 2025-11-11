@@ -47,7 +47,7 @@ general_parameters:
     method: 'Mass photometry (MP)'
 
     instrument:
-        id: "ins:60"
+        id: "ins:57"
 
     chemical_environments:
         - id: 'chem-env-measurement-buffer'
@@ -260,7 +260,17 @@ method_specific_parameters:
     mode:
         type: Static
         sample_carrier:
-            surface_modification: "None"
+            surface_modification: "Polylysine coating"
+            material: "Glass"
+            supplier:
+              name: "Refeyn"
+            cleaning_protocol:
+                - name: "Sonication in isopropanol"
+                  description: "Sonicated the coverslips in isopropanol for 10 min"
+                - name: "Rinsing with deionized water"
+                  description: "Rinsed the coverslips 3 times with deionized water"
+                - name: "Drying with nitrogen stream"
+                  description: "Dried the coverslips using a nitrogen stream"
 
     data_analysis:
         - results:
@@ -270,11 +280,11 @@ method_specific_parameters:
             model: '1:1'
             software_name: 'MO.Affinity Analysis Software'
           measurements:
-            - $ref: 'pos_1_rep_1'
+            - $ref: 'rep_1'
               name: '1 nM hemoglobin + 10 mg/ml Human serum'
-            - $ref: 'pos_2_rep_1'
+            - $ref: 'rep_1'
               name: '1 nM hemoglobin + 20 mg/ml Human serum'
-            - $ref: 'pos_3_rep_1'
+            - $ref: 'rep_1'
               name: '1 nM hemoglobin + 40 mg/ml Human serum'
 
     measurements:
