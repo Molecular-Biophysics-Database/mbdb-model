@@ -20,10 +20,10 @@ MP_specific_parameters:
         description     : str(equals='The schema version used to annotate the
                                       MP method specific parameters',
                               required=False)
-        value           : keyword(equals='1.0.0')
+        value           : keyword(equals='1.0.1')
 
     primary_laser_wavelength:
-        description     : str(equals='The primary illumination laser wavelength used in the experiment',
+        description     : str(equals='Wavelength of the laser used for measurement of the mass photometry signal',
                                 required=False)
         value           : include('Wavelength', required=False)
 
