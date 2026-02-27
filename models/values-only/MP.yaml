@@ -2,7 +2,7 @@ general_parameters: include('General_parameters')
 method_specific_parameters: include('MP_specific_parameters')
 ---
 MP_specific_parameters:
-  schema_version: keyword(equals='1.0.0')
+  schema_version: keyword(equals='1.0.1')
   primary_laser_wavelength: include('Wavelength', required=False)
   calibrants: list(include("Calibrant"))
   mode: include('MP_mode')

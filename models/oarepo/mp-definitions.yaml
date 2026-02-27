@@ -3,13 +3,14 @@ MP_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 1.0.0
+        - 1.0.1
       help.en: The schema version used to annotate the MP method specific 
         parameters
       required: true
       label.en: Schema version
     primary_laser_wavelength:
-      help.en: The primary illumination laser wavelength used in the experiment
+      help.en: Wavelength of the laser used for measurement of the mass 
+        photometry signal
       label.en: Primary laser wavelength
       use: '#/$defs/Wavelength'
     calibrants[]:
