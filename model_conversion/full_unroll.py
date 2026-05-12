@@ -16,15 +16,28 @@ from tools import custom_validators
 from tools.paths import MODEL_DIR
 
 
+class ExpandedChoose:
+    """Container that keeps the original Choose validator and expanded options."""
+
+    def __init__(self, validator, options):
+        self.validator = validator
+        self.options = options
+
+    def __repr__(self):
+        return f"ExpandedChoose(validator={self.validator!r}, options={self.options!r})"
+
+
 class YamaleTree:
     """Class for building and storing unrolled yaml tree"""
 
     def __init__(self, schema_file: Path):
         self.schema = yamale.make_schema(
-            schema_file, validators=custom_validators.extend_validators
+            schema_file, validators=custom_validators.extend_validators # custom_validators.extend_validators are our custom validators defined in tools/custom_validators.py
         )
-        self.includes = self.schema.includes
-        self.tree = deepcopy(self.schema._schema)
+        self.includes = self.schema.includes # This is a dictionary that gets populated with the includes from schema when the Schema object is created. It maps include names to their content.
+        self.tree = deepcopy(self.schema._schema) # This is the actual unrolled tree that will be built by replacing include references with their content. The unrolling process will modify this tree in place.
+                                                  # self.schema._schema is the processed version of the original raw schema dict, where all validation strings have been replaced with their corresponding validator objects.
+                                                  # A deep copy constructs a new compound object and then, recursively, inserts copies into it of the objects found in the original
 
     def add_external_includes(self, *args: Path) -> None:
         """adds includes from external schemas"""
@@ -50,7 +63,7 @@ class YamaleTree:
         iteratively to _construct_tree until it no longer changes
         """
         while True:
-            old_tree_string = str(deepcopy(self.tree))
+            old_tree_string = str(self.tree)
             self._construct_tree(self.tree)
             new_tree_string = str(self.tree)
             if old_tree_string == new_tree_string:
@@ -75,6 +88,9 @@ class YamaleTree:
     @staticmethod
     def _value_summary(value) -> Tuple[str, str, List[str], dict]:
         """Helper function to extract summary information from yamale objects"""
+        if isinstance(value, ExpandedChoose):
+            value = value.validator
+
         value_multiplicity = "singular"
         value_importance = ""
         value_types = [type(value).__name__]
@@ -88,7 +104,12 @@ class YamaleTree:
             value_constraints = value.kwargs
             if value_types[0] == "List":
                 value_multiplicity = "list"
-                value_types = [type(val).__name__ for val in value.args]
+                value_types = [
+                    type(val.validator).__name__
+                    if isinstance(val, ExpandedChoose)
+                    else type(val).__name__
+                    for val in value.args
+                ]
         return value_multiplicity, value_importance, value_types, value_constraints
 
     def _walk_tree(self, tree, level=0):
@@ -108,33 +129,70 @@ class YamaleTree:
                 for arg in value.args:
                     if isinstance(arg, dict):
                         yield from self._walk_tree(arg, level=level + 1)
+                    elif isinstance(arg, ExpandedChoose):
+                        for option_name, option_fields in arg.options.items():
+                            yield option_name, option_fields, level + 1
+                            if isinstance(option_fields, dict):
+                                yield from self._walk_tree(option_fields, level=level + 2)
+
+            elif isinstance(value, ExpandedChoose):
+                for option_name, option_fields in value.options.items():
+                    yield option_name, option_fields, level + 1
+                    if isinstance(option_fields, dict):
+                        yield from self._walk_tree(option_fields, level=level + 2)
 
     def _get_include(self, value, att="dict"):
         """Helper function to extract the content of a yamale include"""
         if att == "dict":
-            return self.includes[value.include_name].dict
+            return deepcopy(self.includes[value.include_name].dict)
         elif att == "_schema":
-            return self.includes[value.include_name]._schema
-        elif att == "choose":
-            return self._from_choose(value)
+            return deepcopy(self.includes[value.include_name]._schema)
         else:
             return
 
-    def _from_choose(self, value, tree=None):
-        if tree is None:
-            tree = {}
-        value = yamale.make_schema(
+    @staticmethod
+    def _is_choose_validator(value) -> bool:
+        return hasattr(value, "base_schema") and hasattr(value, "detailed_schemas")
+
+    def _parse_choose_string(self, value: str):
+        parsed = yamale.make_schema(
             content=f"tmp: {value}", validators=custom_validators.extend_validators
         )
-        value = value.dict["tmp"]
-        tree.update(deepcopy(self.includes[value.base_schema.include_name].dict))
-        for v in value.detailed_schemas.values():
-            inc = self.includes[v.include_name].dict
-            if not isinstance(inc, str):
-                tree.update(inc)
-            else:
-                self._from_choose(inc, tree)
-        return tree
+        return parsed.dict["tmp"]
+
+    def _resolve_choose(self, value):
+        """Expand choose(...) into per-option merged field dictionaries."""
+        choose_value = value
+        if isinstance(choose_value, str):
+            choose_value = self._parse_choose_string(choose_value)
+
+        base_fields = {}
+        if hasattr(choose_value, "base_schema") and isinstance(
+            choose_value.base_schema, validators.Include
+        ):
+            base_data = self.includes.get(choose_value.base_schema.include_name)
+            if base_data is not None:
+                base_dict = base_data.dict if hasattr(base_data, "dict") else base_data
+                if isinstance(base_dict, dict):
+                    base_fields = deepcopy(base_dict)
+
+        options = {}
+        for option_name, option_include in choose_value.detailed_schemas.items():
+            option_fields = {}
+            if isinstance(option_include, validators.Include):
+                option_data = self.includes.get(option_include.include_name)
+                if option_data is not None:
+                    option_dict = (
+                        option_data.dict if hasattr(option_data, "dict") else option_data
+                    )
+                    if isinstance(option_dict, dict):
+                        option_fields = deepcopy(option_dict)
+
+            merged = deepcopy(base_fields)
+            merged.update(option_fields)
+            options[option_name] = merged
+
+        return ExpandedChoose(choose_value, options)
 
     def _construct_tree(self, tree):
         """
@@ -146,7 +204,12 @@ class YamaleTree:
             key,
             value,
         ) in tree.items():
-            if isinstance(value, dict):
+            if isinstance(value, ExpandedChoose):
+                for option_fields in value.options.values():
+                    if isinstance(option_fields, dict):
+                        self._construct_tree(option_fields)
+
+            elif isinstance(value, dict):
                 self._construct_tree(value)
 
             elif isinstance(value, validators.Include):
@@ -155,7 +218,12 @@ class YamaleTree:
                 include = self._get_include(value)
                 if isinstance(include, str):
                     include = self._get_include(value, "_schema")
+                if self._is_choose_validator(include):
+                    include = self._resolve_choose(include)
                 tree.update({key: include})
+
+            elif self._is_choose_validator(value):
+                tree.update({key: self._resolve_choose(value)})
 
             elif isinstance(value, validators.List):
                 includes = []
@@ -166,11 +234,20 @@ class YamaleTree:
                         ## debugging
                         # print(f'list: {key}')
                         include = self._get_include(arg)
+                        if isinstance(include, str):
+                            include = self._get_include(arg, "_schema")
+                        if self._is_choose_validator(include):
+                            include = self._resolve_choose(include)
                     elif isinstance(arg, dict):
                         self._construct_tree(arg)
-                    # choose validator ends up being of type str
-                    elif isinstance(arg, str):
-                        include = self._get_include(arg, "choose")
+                    elif isinstance(arg, ExpandedChoose):
+                        for option_fields in arg.options.values():
+                            if isinstance(option_fields, dict):
+                                self._construct_tree(option_fields)
+                    elif isinstance(arg, str) and "choose(" in arg:
+                        include = self._resolve_choose(arg)
+                    elif self._is_choose_validator(arg):
+                        include = self._resolve_choose(arg)
                     includes.append(include)
                 if includes:
                     tree.update({key: value_class(*includes)})
@@ -192,13 +269,14 @@ def _mk_arg_parser() -> ArgumentParser:
         nargs="+",
         type=Path,
         help="Input Yamale schema files without descriptions",
-        default=[MODEL_DIR / "models" / "values-only" / "MST.yaml"],
+        default=[MODEL_DIR / "values-only" / "MST.yaml"], # list expected because of nargs="+"
+                                                                     # MODEL_DIR is a Path object, therefore MODEL_DIR / "string" automatically creates a new Path object for the combined path
     )
     parser.add_argument(
         "--output-folder",
         type=Path,
         help="Output folder where the unrolled structures will be stored",
-        default=MODEL_DIR / "models" / "unrolled" / "fully-unrolled",
+        default=MODEL_DIR / "unrolled" / "fully-unrolled",
     )
     parser.add_argument(
         "--includes",
