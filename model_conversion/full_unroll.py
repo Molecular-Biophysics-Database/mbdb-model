@@ -180,7 +180,7 @@ class YamaleTree:
 
 def new_filename(file):
     parent_folder = file.parent
-    file_name = file.name.replace(".yaml", ".txt")
+    file_name = file.name.replace(".yaml", "-full.txt")
     return parent_folder, file_name
 
 
@@ -198,7 +198,7 @@ def _mk_arg_parser() -> ArgumentParser:
         "--output-folder",
         type=Path,
         help="Output folder where the unrolled structures will be stored",
-        default=MODEL_DIR / "models" / "unrolled",
+        default=MODEL_DIR / "models" / "unrolled" / "fully-unrolled",
     )
     parser.add_argument(
         "--includes",
