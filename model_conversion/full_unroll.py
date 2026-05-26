@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 #MODEL_DIR='../models'
+#./full_unroll.py --schema-files $MODEL_DIR/values-only/MST.yaml --includes $MODEL_DIR/values-only/general_parameters.yaml
+
 #./full_unroll.py --schema-files $MODEL_DIR/values-only/*.yaml --includes $MODEL_DIR/values-only/general_parameters.yaml
 
 import sys
@@ -147,6 +149,7 @@ class YamaleTree:
 
             # make sure all elements of a subcategory is extracted
             if isinstance(value, dict):
+                #print(f"{key}: {value}")  # debugging
                 yield from self._walk_tree(value, level=level + 1)
 
             # make sure all elements in a yamale list or any object is extracted
@@ -173,6 +176,8 @@ class YamaleTree:
                                                                         #self.includes[value.include_name] is the Schema object created for the 'General_parameters' include,
                                                                         #and self.includes[value.include_name].dict is the original raw schema dict for that include, which is what we want to insert into the tree to replace the include reference.
         elif att == "_schema":
+            # #debugging
+            #print(value.include_name, value)
             return deepcopy(self.includes[value.include_name]._schema)
         else:
             return
@@ -185,13 +190,17 @@ class YamaleTree:
         parsed = yamale.make_schema(
             content=f"tmp: {value}", validators=custom_validators.extend_validators
         )
+        # debugging
+        #print(parsed.dict["tmp"])
         return parsed.dict["tmp"]
 
     def _resolve_choose(self, value):
         """Expand choose(...) into per-option merged field dictionaries."""
         choose_value = value
         if isinstance(choose_value, str):
-            choose_value = self._parse_choose_string(choose_value)
+            choose_value = self._parse_choose_string(choose_value) # in some cases the choose validator may not be recognized as a custom validator , but string.
+            # parse_choose_string turns it to the actual Choose object.
+            #The parsing is done by creating a temporary schema with the choose string as the content, and then extracting the parsed value from the resulting schema dict.
 
         base_fields = {}
         if hasattr(choose_value, "base_schema") and isinstance(
@@ -204,13 +213,13 @@ class YamaleTree:
                     base_fields = deepcopy(base_dict)
 
         options = {}
-        for option_name, option_include in choose_value.detailed_schemas.items():
+        for option_name, option_include in choose_value.detailed_schemas.items(): # example: detailed_schemas: {'Yes': Include(('Yes_purity',), {}), 'No': Include(('Empty_object',), {})}
             option_fields = {}
             if isinstance(option_include, validators.Include):
-                option_data = self.includes.get(option_include.include_name)
+                option_data = self.includes.get(option_include.include_name) # option_data is the schema object corresponding to the include's reference
                 if option_data is not None:
                     option_dict = (
-                        option_data.dict if hasattr(option_data, "dict") else option_data
+                        option_data.dict if hasattr(option_data, "dict") else option_data # option_dict is the original raw schema dict for that include if it exists
                     )
                     if isinstance(option_dict, dict):
                         option_fields = deepcopy(option_dict)
@@ -242,31 +251,49 @@ class YamaleTree:
             elif isinstance(value, validators.Include):
                 ## debugging
                 # print(f'direct: {key}')
-                is_required = value.is_required if hasattr(value, "is_required") else "N/A"
+                #is_required = value.is_required if hasattr(value, "is_required") else "N/A"
                 include = self._get_include(value) # this is the content of the include, which can be a dict (the original schema) or a yamale validator object depending on the structure of the included schema
                 if isinstance(include, str):
                     include = self._get_include(value, "_schema")
+                    #debugging
+                    #print(include, type(include)) # e.g. 'Choose((), {})' or 'Enum(('K', '°C', '°F'), {})'
                 if self._is_choose_validator(include):
+                    #debugging
+                    #print(f'base_schema: {include.base_schema}, detailed_schemas: {include.detailed_schemas}') # base_detailed_schemas.txt
+                    #print(include, type(include)) # the include: 'Choose((), {})'  <class 'tools.custom_validators.Choose'>
                     include = self._resolve_choose(include)
+                    #debugging
+                    #print(f'include after resolve_choose: {include}, type: {type(include)}') # include_after_resolve_choose.txt
                 tree.update({key: include})
 
             elif self._is_choose_validator(value):
+                ## debugging
+                #print(f'key: {key}, value: {value}, value_type: {type(value)}, value_is_str: {isinstance(value, str)}') # choose_validator.txt
                 tree.update({key: self._resolve_choose(value)})
 
             elif isinstance(value, validators.List):
                 includes = []
-                value_class = value.__class__
+                value_class = value.__class__ # this is the List class from yamale
                 for arg in value.args:
                     include = arg
-                    if isinstance(arg, validators.Include):
+                    if isinstance(arg, validators.Include): #e.g. nested_include('Entity') in list(nested_include('Entity'), min=1)
                         ## debugging
-                        # print(f'list: {key}')
-                        include = self._get_include(arg)
-                        if isinstance(include, str):
+                        #print(f'list: {key}') # e.g. list: entities_of_interest
+                        #print(f'arg: {arg}, type(arg): {type(arg)}') # e.g. arg: Nested_include(('Entity',), {}), type(arg): <class 'tools.custom_validators.Nested_include'>
+                        include = self._get_include(arg) # returns the raw dict for the include's Schema
+                        if isinstance(include, str): # if the returned include is a string, we need to get the _schema instead to resolve choose validator correctly
+                            #debugging
+                            #print(include, type(include)) # list_include_string.txt, e.g. choose(include('Entity_base'),...) <class 'str'>
+                            #print(arg, type(arg)) # Nested_include(('Entity',), {}) <class 'tools.custom_validators.Nested_include'>
                             include = self._get_include(arg, "_schema")
+                            #debugging
+                            #print(include, type(include)) # list_include_string_schema.txt, e.g. Choose((), {}) <class 'tools.custom_validators.Choose'>
                         if self._is_choose_validator(include):
+                            #print(include.base_schema, type(include)) #e.g. Include(('Entity_base',), {}) <class 'tools.custom_validators.Choose'>
                             include = self._resolve_choose(include)
                     elif isinstance(arg, dict):
+                        ##debugging
+                        #print(f"dict arg: {arg}") # list_dict_arg.txt
                         self._construct_tree(arg)
                     elif isinstance(arg, ExpandedChoose):
                         for option_fields in arg.options.values():
