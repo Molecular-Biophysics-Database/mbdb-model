@@ -344,7 +344,14 @@ class YamaleTree:
                         include = self._resolve_choose(arg)
                     includes.append(include)
                 if includes:
-                    tree.update({key: value_class(*includes)})
+                    list_kwargs = deepcopy(value.kwargs)
+                    list_kwargs.update(
+                        {
+                            "required": value.is_required,
+                            "none": value.can_be_none,
+                        }
+                    )
+                    tree.update({key: value_class(*includes, **list_kwargs)})
             else:
                 continue
 
@@ -401,8 +408,8 @@ def main():
         #     #self.includes[value.include_name].dict
         yt.build()
         # #debugging
-        for key, value in yt.tree.items():
-            print(f"key: {key}, value: {value}, value_type: {type(value)}, value_required: {value.is_required if issubclass(value.__class__, yamale.validators.Validator) else 'N/A'}") #yt_after_build.txt, yt_after_build2.txt, yt_after_build3.txt
+        # for key, value in yt.tree.items():
+        #     print(f"key: {key}, value: {value}, value_type: {type(value)}, value_required: {value.is_required if issubclass(value.__class__, yamale.validators.Validator) else 'N/A'}") #yt_after_build.txt, yt_after_build2.txt, yt_after_build3.txt
         parent, name = new_filename(path)
         if args.output_folder:
             parent = args.output_folder
