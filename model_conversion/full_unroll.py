@@ -22,6 +22,17 @@ from tools import custom_validators
 from tools.paths import MODEL_DIR
 
 
+class ExpandedInclude:
+    """Container that keeps the original include reference and its expanded content."""
+
+    def __init__(self, validator, included):
+        self.validator = validator
+        self.included = included
+
+    def __repr__(self):
+        return f"ExpandedInclude(validator={self.validator!r}, included={self.included!r})"
+
+
 class ExpandedChoose:
     """Container that keeps the original Choose validator and expanded options."""
 
@@ -103,6 +114,9 @@ class YamaleTree:
         """Helper function to extract summary information from yamale objects"""
         if isinstance(value, ExpandedChoose):
             value = value.validator
+        
+        if isinstance(value, ExpandedInclude):
+            value = value.validator
 
         value_multiplicity = "singular"
         value_importance = ""
@@ -120,7 +134,7 @@ class YamaleTree:
             # val = "value: " + str(value) + "\n"
             # with open(p.joinpath("dict.txt"), "a") as f:
             #     f.write(val)
-            value_importance = "required"
+            value_importance = "-"
 
         if issubclass(value.__class__, yamale.validators.Validator):
             # #debugging
@@ -131,12 +145,22 @@ class YamaleTree:
             value_constraints = value.kwargs
             if value_types[0] == "List":
                 value_multiplicity = "list"
+                #print(f"key: {key}, List value: {value}, is_required: {value.is_required}") # debugging, summary_list.txt
                 value_types = [
                     type(val.validator).__name__
-                    if isinstance(val, ExpandedChoose)
+                    if isinstance(val, ExpandedChoose) or isinstance(val, ExpandedInclude)
                     else type(val).__name__
                     for val in value.args
                 ]
+                # for val in value.args:
+                #     if isinstance(val, ExpandedInclude):
+                #         value_importance = {True: "required", False: "optional"}[val.validator.is_required]
+                #     elif isinstance(val, ExpandedChoose):
+                #         #print(f"choose value: {val}") # debugging
+                #         value_importance = {True: "required", False: "optional"}[val.validator.is_required]
+                #     elif isinstance(val, validators.Validator):
+                #         print(f"key: {key}, validator value: {val}, is_required: {val.is_required}") # debugging
+                #         value_importance = {True: "required", False: "optional"}[val.is_required]
         return value_multiplicity, value_importance, value_types, value_constraints
 
     def _walk_tree(self, tree, level=0):
@@ -162,6 +186,13 @@ class YamaleTree:
                             yield option_name, option_fields, level + 1
                             if isinstance(option_fields, dict):
                                 yield from self._walk_tree(option_fields, level=level + 2)
+                    elif isinstance(arg, ExpandedInclude):
+                        if isinstance(arg.included, dict):
+                            yield from self._walk_tree(arg.included, level=level + 1)
+
+            elif isinstance(value, ExpandedInclude):
+                if isinstance(value.included, dict):
+                    yield from self._walk_tree(value.included, level=level + 1)
 
             elif isinstance(value, ExpandedChoose):
                 for option_name, option_fields in value.options.items():
@@ -245,6 +276,10 @@ class YamaleTree:
                     if isinstance(option_fields, dict):
                         self._construct_tree(option_fields)
 
+            elif isinstance(value, ExpandedInclude):
+                if isinstance(value.included, dict):
+                    self._construct_tree(value.included)
+
             elif isinstance(value, dict):
                 self._construct_tree(value)
 
@@ -252,16 +287,17 @@ class YamaleTree:
                 ## debugging
                 # print(f'direct: {key}')
                 #is_required = value.is_required if hasattr(value, "is_required") else "N/A"
-                include = self._get_include(value) # this is the content of the include, which can be a dict (the original schema) or a yamale validator object depending on the structure of the included schema
-                if isinstance(include, str):
-                    include = self._get_include(value, "_schema")
+                included = self._get_include(value) # this is the content of the include, which can be a dict (the original schema) or a yamale validator object depending on the structure of the included schema
+                if isinstance(included, str):
+                    included = self._get_include(value, "_schema")
                     #debugging
-                    #print(include, type(include)) # e.g. 'Choose((), {})' or 'Enum(('K', '°C', '°F'), {})'
-                if self._is_choose_validator(include):
+                    #print(included, type(included)) # e.g. 'Choose((), {})' or 'Enum(('K', '°C', '°F'), {})'
+                include = ExpandedInclude(value, included)
+                if self._is_choose_validator(included):
                     #debugging
                     #print(f'base_schema: {include.base_schema}, detailed_schemas: {include.detailed_schemas}') # base_detailed_schemas.txt
                     #print(include, type(include)) # the include: 'Choose((), {})'  <class 'tools.custom_validators.Choose'>
-                    include = self._resolve_choose(include)
+                    include = self._resolve_choose(included)
                     #debugging
                     #print(f'include after resolve_choose: {include}, type: {type(include)}') # include_after_resolve_choose.txt
                 tree.update({key: include})
@@ -295,6 +331,9 @@ class YamaleTree:
                         ##debugging
                         #print(f"dict arg: {arg}") # list_dict_arg.txt
                         self._construct_tree(arg)
+                    # elif isinstance(arg, ExpandedInclude):
+                    #     if isinstance(arg.included, dict):
+                    #         self._construct_tree(arg.included)
                     elif isinstance(arg, ExpandedChoose):
                         for option_fields in arg.options.values():
                             if isinstance(option_fields, dict):
@@ -361,9 +400,9 @@ def main():
         #     print(f"key: {key}, value: {value}, value_name: {value.include_name}, referred_include: {yt.includes[value.include_name].dict}, value_required: {value.is_required if issubclass(value.__class__, yamale.validators.Validator) else 'N/A'}") #yt_before_build.txt
         #     #self.includes[value.include_name].dict
         yt.build()
-        #debugging
-        # for key, value in yt.tree.items():
-        #     print(f"key: {key}, value: {value}, value_type: {type(value)}, value_required: {value.is_required if issubclass(value.__class__, yamale.validators.Validator) else 'N/A'}") #yt_after_build.txt
+        # #debugging
+        for key, value in yt.tree.items():
+            print(f"key: {key}, value: {value}, value_type: {type(value)}, value_required: {value.is_required if issubclass(value.__class__, yamale.validators.Validator) else 'N/A'}") #yt_after_build.txt, yt_after_build2.txt, yt_after_build3.txt
         parent, name = new_filename(path)
         if args.output_folder:
             parent = args.output_folder
