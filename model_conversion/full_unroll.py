@@ -112,10 +112,13 @@ class YamaleTree:
         # with open(p.joinpath("value.txt"), "w") as f:
         #     f.write(val)
         """Helper function to extract summary information from yamale objects"""
-        if isinstance(value, ExpandedChoose):
-            value = value.validator
-        
         if isinstance(value, ExpandedInclude):
+            include_required = {True: "required", False: "optional"}[value.validator.is_required]
+            if isinstance(value.included, ExpandedChoose):
+                return "singular", include_required, ["Choose"], value.validator.kwargs
+            value = value.validator
+
+        if isinstance(value, ExpandedChoose):
             value = value.validator
 
         value_multiplicity = "singular"
@@ -189,10 +192,20 @@ class YamaleTree:
                     elif isinstance(arg, ExpandedInclude):
                         if isinstance(arg.included, dict):
                             yield from self._walk_tree(arg.included, level=level + 1)
+                        elif isinstance(arg.included, ExpandedChoose):
+                            for option_name, option_fields in arg.included.options.items():
+                                yield option_name, option_fields, level + 1
+                                if isinstance(option_fields, dict):
+                                    yield from self._walk_tree(option_fields, level=level + 2)
 
             elif isinstance(value, ExpandedInclude):
                 if isinstance(value.included, dict):
                     yield from self._walk_tree(value.included, level=level + 1)
+                elif isinstance(value.included, ExpandedChoose):
+                    for option_name, option_fields in value.included.options.items():
+                        yield option_name, option_fields, level + 1
+                        if isinstance(option_fields, dict):
+                            yield from self._walk_tree(option_fields, level=level + 2)
 
             elif isinstance(value, ExpandedChoose):
                 for option_name, option_fields in value.options.items():
@@ -279,6 +292,10 @@ class YamaleTree:
             elif isinstance(value, ExpandedInclude):
                 if isinstance(value.included, dict):
                     self._construct_tree(value.included)
+                if isinstance(value.included, ExpandedChoose):
+                    for option_fields in value.included.options.values():
+                        if isinstance(option_fields, dict):
+                            self._construct_tree(option_fields)
 
             elif isinstance(value, dict):
                 self._construct_tree(value)
@@ -292,14 +309,14 @@ class YamaleTree:
                     included = self._get_include(value, "_schema")
                     #debugging
                     #print(included, type(included)) # e.g. 'Choose((), {})' or 'Enum(('K', '°C', '°F'), {})'
-                include = ExpandedInclude(value, included)
                 if self._is_choose_validator(included):
                     #debugging
                     #print(f'base_schema: {include.base_schema}, detailed_schemas: {include.detailed_schemas}') # base_detailed_schemas.txt
                     #print(include, type(include)) # the include: 'Choose((), {})'  <class 'tools.custom_validators.Choose'>
-                    include = self._resolve_choose(included)
+                    included = self._resolve_choose(included)
                     #debugging
                     #print(f'include after resolve_choose: {include}, type: {type(include)}') # include_after_resolve_choose.txt
+                include = ExpandedInclude(value, included)
                 tree.update({key: include})
 
             elif self._is_choose_validator(value):
