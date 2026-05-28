@@ -155,15 +155,6 @@ class YamaleTree:
                     else type(val).__name__
                     for val in value.args
                 ]
-                # for val in value.args:
-                #     if isinstance(val, ExpandedInclude):
-                #         value_importance = {True: "required", False: "optional"}[val.validator.is_required]
-                #     elif isinstance(val, ExpandedChoose):
-                #         #print(f"choose value: {val}") # debugging
-                #         value_importance = {True: "required", False: "optional"}[val.validator.is_required]
-                #     elif isinstance(val, validators.Validator):
-                #         print(f"key: {key}, validator value: {val}, is_required: {val.is_required}") # debugging
-                #         value_importance = {True: "required", False: "optional"}[val.is_required]
         return value_multiplicity, value_importance, value_types, value_constraints
 
     def _walk_tree(self, tree, level=0):
