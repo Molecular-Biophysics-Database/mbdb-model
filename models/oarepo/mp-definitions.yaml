@@ -3,7 +3,7 @@ MP_specific_parameters:
     schema_version:
       type: keyword
       enum:
-        - 1.0.1
+        - 1.0.2
       help.en: The schema version used to annotate the MP method specific 
         parameters
       required: true
@@ -126,6 +126,7 @@ Calibrant:
       type: keyword
       enum:
         - polyribonucleotide
+        - polydeoxyribonucleotide
         - polypeptide(D)
         - polypeptide(L)
         - chemical

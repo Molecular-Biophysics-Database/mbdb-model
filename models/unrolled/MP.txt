@@ -279,7 +279,7 @@
 "  |    |   unit                                                                             ('singular', 'optional', ['Enum'], {}) "
 "  |    |   size_type                                                                        ('singular', 'required', ['Enum'], {}) "
 " method_specific_parameters                                                                 ('singular', 'required', ['dict'], {}) "
-"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '1.0.1'}) "
+"  |   schema_version                                                                        ('singular', 'required', ['Keyword'], {'equals': '1.0.2'}) "
 "  |   primary_laser_wavelength                                                              ('singular', 'required', ['dict'], {}) "
 "  |    |   value                                                                            ('singular', 'required', ['Number'], {'min': 0}) "
 "  |    |   unit                                                                             ('singular', 'optional', ['Enum'], {}) "
