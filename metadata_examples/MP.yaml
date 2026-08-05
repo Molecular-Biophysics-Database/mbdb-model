@@ -232,7 +232,7 @@ general_parameters:
           unit: 'nm'
 
 method_specific_parameters:
-    schema_version: '1.0.1'
+    schema_version: '1.0.2'
 
     primary_laser_wavelength:
         value: 525
@@ -255,6 +255,11 @@ method_specific_parameters:
         type: molecular assembly
         molecular_weight:
           value: 133
+          unit: kDa
+      - name: DNA oligomer
+        type: polydeoxyribonucleotide
+        molecular_weight:
+          value: 50
           unit: kDa
 
     mode:

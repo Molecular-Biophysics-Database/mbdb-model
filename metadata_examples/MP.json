@@ -315,7 +315,7 @@
         ]
       },
       "method_specific_parameters": {
-        "schema_version": "1.0.1",
+        "schema_version": "1.0.2",
         "primary_laser_wavelength": {
           "value": 525,
           "unit": "nm"
@@ -342,6 +342,14 @@
             "type": "molecular assembly",
             "molecular_weight": {
               "value": 133,
+              "unit": "kDa"
+            }
+          },
+          {
+            "name": "DNA oligomer",
+            "type": "polydeoxyribonucleotide",
+            "molecular_weight": {
+              "value": 50,
               "unit": "kDa"
             }
           }

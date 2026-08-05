@@ -2,7 +2,7 @@ general_parameters: include('General_parameters')
 method_specific_parameters: include('MP_specific_parameters')
 ---
 MP_specific_parameters:
-  schema_version: keyword(equals='1.0.1')
+  schema_version: keyword(equals='1.0.2')
   primary_laser_wavelength: include('Wavelength', required=False)
   calibrants: list(include("Calibrant"))
   mode: include('MP_mode')
@@ -25,8 +25,8 @@ Flow_mode:
   buffer_flowrate: include('Flow_rate')
 Calibrant:
   name: str()
-  type: enum('polyribonucleotide', 'polypeptide(D)', 'polypeptide(L)', 'chemical',
-    'molecular assembly', 'virion', 'nanoparticle', )
+  type: enum('polyribonucleotide', 'polydeoxyribonucleotide', 'polypeptide(D)', 'polypeptide(L)',
+    'chemical', 'molecular assembly', 'virion', 'nanoparticle', )
   molecular_weight: include('Molecular_weight', required=False)
   size: include('Size', required=False)
   modifications: list(include('Modification'), required=False)
