@@ -12,33 +12,29 @@ VOCABULARY_MAPPING = {
 }
 
 CHEMICAL_VOCABULARY_KEYS = [
-    "id",
-    "title",
-    {"key": "chemical_formula", "model": {"type": "keyword"}},
+    {"id": {"type": "keyword"}},
+    {"title": {"type": "i18ndict"}},
+    {"chemical_formula": {"type": "keyword"}},
     {
-        "key": "additional_identifiers",
-        "model": {"type": "array", "items": {"type": "keyword"}},
+        "additional_identifiers": {"type": "array", "items": {"type": "keyword"}},
     },
-    {
-        "key": "molecular_weight",
-        "model": {
-            "type": "object",
-            "properties": {
-                "value": {"type": "float"},
-                "unit": {"type": "keyword"},
-            },
-        },
+    {"molecular_weight": {
+        "type": "object",
+        "properties": {
+            "value": {"type": "float"},
+            "unit": {"type": "keyword"},
+        }},
     },
 ]
 
 VOCABULARY_CUSTOM_FIELD_KEYS = {
-    "affiliations": None,
-    "organisms": None,
-    "grants": None,
-    "instruments": None,
-    "environment_types": None,
-    "body_fluids": None,
-    "products": None,
-    "cell_fractions": None,
+    "affiliations": [{'id': {'type': 'keyword'}}, {'title': {'type': 'i18ndict'}}, {'props.city': {'type': 'keyword'}}, {'props.state': {'type': 'keyword'}}, {'props.country': {'type': 'keyword'}}],
+    "organisms": [{'id': {'type': 'keyword'}}, {'title': {'type': 'i18ndict'}}, {'props.rank': {'type': 'keyword'}}],
+    "grants": [{"id": {"type": "keyword"}}, {"title": {"type": "i18ndict"}}, {"props.funder_name": {"type": "keyword"}}, {"props.grant_id": {"type": "keyword"}}],
+    "instruments": [{'id': {'type': 'keyword'}}, {'title': {'type': 'i18ndict'}}, {'props.manufacturer': {'type': 'keyword'}}],
+    "environment_types": [{'id': {"type": "keyword"}}, {'title': {"type": "i18ndict"}}],
+    "body_fluids": [{'id': {"type": "keyword"}}, {'title': {"type": "i18ndict"}}],
+    "products": [{'id': {"type": "keyword"}}, {'title': {"type": "i18ndict"}}],
+    "cell_fractions": [{'id': {"type": "keyword"}}, {'title': {"type": "i18ndict"}}],
     "chemicals": CHEMICAL_VOCABULARY_KEYS,
 }

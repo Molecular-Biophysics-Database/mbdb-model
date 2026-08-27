@@ -21,15 +21,16 @@ if ! ./validate_examples.py ${MODELS[@]}; then
 fi
 
 # run conversion to oarepo (Invenio) model
-./yamale2oarepo.py $MODEL_DIR/main/general_parameters.yaml \
+./yamale2oarepo_redo.py $MODEL_DIR/main/general_parameters.yaml \
         --out_dir $MODEL_DIR/oarepo \
         --only_defs True
 
 for model in ${MODELS[@]}
 do
-  if ! ./yamale2oarepo.py $MODEL_DIR/main/$model.yaml \
+  if ! ./yamale2oarepo_redo.py $MODEL_DIR/main/$model.yaml \
     --out_dir $MODEL_DIR/oarepo \
-    --include $MODEL_DIR/main/general_parameters.yaml; then
+    --include $MODEL_DIR/main/general_parameters.yaml \
+    --exclude-types $MODEL_DIR/oarepo/general_parameters-definitions.yaml; then
     printf '%s\n' "Conversion of $model failed" >&2
     exit 1
   fi
