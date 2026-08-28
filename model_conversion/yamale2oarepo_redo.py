@@ -59,6 +59,12 @@ from tools.paths import MODEL_DIR
 
 log = logging.getLogger("yamale2oarepo")
 
+# Compiled models are mounted under the InvenioRDM record's "metadata" property
+# (see the `out` tuple in `run()`, which writes model.to_json() as the
+# "metadata" section). internal-relation targets must be qualified from the
+# record root, so they need this same prefix.
+RECORD_METADATA_SECTION = "metadata"
+
 
 class NonAliasingRTRepresenter(ruamel.yaml.RoundTripRepresenter):
     def ignore_aliases(self, data):
@@ -178,7 +184,7 @@ class ModelBase:
     def get_links(self, links, path, defs):
         raise NotImplementedError(f"Not implemented for {type(self)}")
 
-    def set_links(self, links, defs):
+    def set_links(self, links, defs, section):
         raise NotImplementedError(f"Not implemented for {type(self)}")
 
     def get_referenced_includes(self, referenced_includes, defs):
@@ -226,9 +232,9 @@ class ModelObject(ModelBase):
             child_path = f"{path}/{k}" if path else k
             v.get_links(links, child_path, defs)
 
-    def set_links(self, links, defs):
+    def set_links(self, links, defs, section):
         for v in self.children.values():
-            v.set_links(links, defs)
+            v.set_links(links, defs, section)
 
     def get_referenced_includes(self, referenced_includes, defs):
         for v in self.children.values():
@@ -317,8 +323,8 @@ class ModelArray(ModelBase):
     def get_links(self, links, path, defs):
         self.item.get_links(links, path, defs)
 
-    def set_links(self, links, defs):
-        self.item.set_links(links, defs)
+    def set_links(self, links, defs, section):
+        self.item.set_links(links, defs, section)
 
     def get_referenced_includes(self, referenced_includes, defs):
         self.item.get_referenced_includes(referenced_includes, defs)
@@ -361,7 +367,7 @@ class ModelPrimitive(ModelBase):
     def get_links(self, links, path, defs):
         pass
 
-    def set_links(self, links, defs):
+    def set_links(self, links, defs, section):
         pass
 
     def get_referenced_includes(self, referenced_includes, defs):
@@ -402,9 +408,9 @@ class ModelInclude(ModelBase):
         target = defs[self.include]
         target.get_links(links, path, defs)
 
-    def set_links(self, links, defs):
+    def set_links(self, links, defs, section):
         target = defs[self.include]
-        target.set_links(links, defs)
+        target.set_links(links, defs, section)
 
     def get_referenced_includes(self, referenced_includes, defs):
         referenced_includes.add(self.include)
@@ -464,10 +470,10 @@ class ModelChoose(ModelBase):
         ):
             self.link_id = base_schema.children["id"].name
 
-    def set_links(self, links, defs):
-        self.base_schema.set_links(links, defs)
+    def set_links(self, links, defs, section):
+        self.base_schema.set_links(links, defs, section)
         for v in self.subschemas.values():
-            v.set_links(links, defs)
+            v.set_links(links, defs, section)
 
     def get_referenced_includes(self, referenced_includes, defs):
         self.base_schema.get_referenced_includes(referenced_includes, defs)
@@ -577,7 +583,7 @@ class ModelLinkTarget(ModelBase):
             raise ValueError(f"Duplicated id on paths {path} and {links[self.name]}")
         links[self.name] = "/".join(path.split("/")[:-1])
 
-    def set_links(self, links, defs):
+    def set_links(self, links, defs, section):
         pass
 
     def get_referenced_includes(self, referenced_includes, defs):
@@ -610,8 +616,8 @@ class ModelLink(ModelBase):
     def get_links(self, links, path, defs):
         pass
 
-    def set_links(self, links, defs):
-        self.model = links[self.target].replace("/", ".")
+    def set_links(self, links, defs, section):
+        self.model = f"{section}.{links[self.target]}".replace("/", ".")
 
     def get_referenced_includes(self, referenced_includes, defs):
         pass
@@ -654,7 +660,7 @@ class ModelVocabulary(ModelLink):
             ret["extras"] = VOCABULARY_MAPPING
         return ret
 
-    def set_links(self, links, defs):
+    def set_links(self, links, defs, section):
         pass
 
 
@@ -674,11 +680,11 @@ class Model:
     def to_files_meta(filename):
         return parse_file(filename, modelbase_only=True).to_json()
 
-    def set_links(self):
+    def set_links(self, section):
         links = {}
         self.model.get_links(links, "", self.includes)
         print(links)
-        self.model.set_links(links, self.includes)
+        self.model.set_links(links, self.includes, section)
 
     def remove_unused_includes(self):
         referenced_includes = set()
@@ -962,7 +968,7 @@ def run(input_file, debug, out_dir, only_defs, include, exclude_types):
     if include:
         model.add_includes_from(include)
     model.remove_unused_includes()
-    model.set_links()
+    model.set_links(RECORD_METADATA_SECTION)
     model.propagate_polymorphic_base_schemas()
     if exclude_types:
         excluded_types_set = load_excluded_types(exclude_types)
@@ -981,7 +987,7 @@ def run(input_file, debug, out_dir, only_defs, include, exclude_types):
 
     if not only_defs:
         out += [
-            (model.to_json(), "metadata", model.package),
+            (model.to_json(), RECORD_METADATA_SECTION, model.package),
             (model.to_files_meta(filename=attachment), "files", ""),
         ]
 
