@@ -1007,7 +1007,16 @@ def run(input_file, debug, out_dir, only_defs, include, exclude_types):
         convert_use_to_type(json_dict)
         for k in excluded_types_set:
             json_dict.pop(k, None)
-        yaml_text = json_to_yaml(json_dict)
+
+        header = ""
+        if name == RECORD_METADATA_SECTION:
+            json_dict = {"Metadata": {"properties": json_dict}}
+            header = (
+                f"# Definition of metadata for {model_package}. Please do not add ccmm model here,\n"
+                f"# add the ccmm_preset instead.\n"
+            )
+
+        yaml_text = header + json_to_yaml(json_dict)
 
 
         if out_dir:
